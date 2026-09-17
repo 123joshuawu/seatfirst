@@ -1,0 +1,48 @@
+{
+  "name": "@seatfirst/mobile-web",
+  "version": "0.0.0",
+  "private": true,
+  "main": "expo-router/entry",
+  "description": "Expo React Native app — iOS, Android, and web via react-native-web (architecture §2)",
+  "scripts": {
+    "dev": "expo start",
+    "build": "expo export --platform web && node scripts/relocate-vendor-assets.mjs",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --passWithNoTests",
+    "test:coverage": "vitest run --coverage",
+    "clean": "rm -rf dist .expo .turbo"
+  },
+  "dependencies": {
+    "@expo-google-fonts/archivo": "0.4.2",
+    "@expo-google-fonts/ibm-plex-sans": "0.4.1",
+    "@seatfirst/core": "workspace:*",
+    "@tanstack/react-query": "5.101.4",
+    "@trpc/client": "11.18.0",
+    "@trpc/react-query": "11.18.0",
+    "expo": "57.0.8",
+    "expo-font": "57.0.1",
+    "expo-router": "57.0.8",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "react-native": "0.86.2",
+    "react-native-web": "0.21.2",
+    "zustand": "5.0.15"
+  },
+  "devDependencies": {
+    "@seatfirst/config": "workspace:*",
+    "@seatfirst/server": "workspace:*",
+    "@testing-library/jest-native": "5.4.3",
+    "@testing-library/react-native": "14.0.1",
+    "@trpc/server": "11.18.0",
+    "@types/react": "19.2.17",
+    "@types/react-test-renderer": "19.1.0",
+    "@vitest/coverage-v8": "4.1.10",
+    "expo-secure-store": "^57.0.1",
+    "jest-axe": "^11.0.0",
+    "jsdom": "^30.0.1",
+    "react-test-renderer": "19.2.0",
+    "test-renderer": "1.2.0",
+    "typescript": "6.0.3",
+    "vitest": "4.1.10"
+  }
+}

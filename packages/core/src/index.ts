@@ -1,0 +1,23 @@
+// ADR 0003 closes architecture gate 2: schemas are the source of truth and types are inferred.
+export * from "./search-spec.js";
+export * from "./result-contracts.js";
+export { sha256 } from "./sha256.js";
+export * from "./ids.js";
+export * from "./performance-policy.js";
+export * from "./local-time.js";
+export * from "./theatre.js";
+export * from "./bitmap.js";
+export * from "./layout.js";
+export * from "./fingerprint.js";
+export * from "./metrics.js";
+export * from "./region.js";
+export * from "./scoring.js";
+export * from "./group-assembly.js";
+export * from "./answer-assembly.js";
+export * from "./recovery-ladder.js";
+export * from "./facet-presets.js";
+export * from "./facet-contracts.js";
+export * from "./capacity-contracts.js";
+export * from "./resolve-place-contracts.js";
+export * from "./suggest-place-contracts.js";
+export * from "./candidate-rank.js";

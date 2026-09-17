@@ -1,0 +1,22 @@
+{
+  "grid": {
+    "rows": 1,
+    "columns": 1,
+    "cells": [
+      {
+        "row": 1,
+        "column": 1,
+        "kind": "STANDARD",
+        "rawType": "SYNTHETIC_SELF_TEST_SEAT",
+        "available": true,
+        "visible": true
+      }
+    ]
+  },
+  "minPrice": null,
+  "priceBasis": "UNKNOWN",
+  "providerMeta": {
+    "synthetic": true,
+    "note": "Self-test payload for packages/providers/test/support/replay.ts only — never a captured upstream response. See CONTRIBUTING.md #Fixtures and docs/backend-work-plan.md P2 non-goals."
+  }
+}

@@ -1,0 +1,13 @@
+# Shared base image for all seatfirst Node containers. Built once, referenced by
+# Dockerfile.app, Dockerfile.fetch-worker, and Dockerfile.mobile-web.dev via the
+# BASE_IMAGE build arg. Deduplicates the node + corepack + pnpm layer so rebuilds
+# of the downstream Dockerfiles never re-cache it independently.
+#
+# Build: `docker compose build base` (or the equivalent for docker-compose.dev.yml).
+# The downstream Dockerfiles default BASE_IMAGE to seatfirst-base:latest, matching
+# the `image:` tag the compose services assign to this build.
+
+FROM node:24-bookworm-slim
+# Pin the exact repo pnpm (package.json packageManager) — a bare `corepack enable`
+# shim resolves `latest`, and newer pnpm majors change install-script strictness.
+RUN corepack enable && corepack install --global pnpm@11.5.2

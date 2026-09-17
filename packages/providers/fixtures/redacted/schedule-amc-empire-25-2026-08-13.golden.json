@@ -1,0 +1,3374 @@
+{
+  "ok": true,
+  "value": [
+    {
+      "showtimeId": "amc:showtime:145866536",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:07.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Dolby Cinema at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date="
+      },
+      "theatreId": "amc:theatre:552",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T20:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T16:00:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "dolbycinemaatamcprime",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "dolbycinemaatamcprime",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145254767",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:07.000Z",
+        "rawStatus": "AlmostFull",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Dolby Cinema at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date="
+      },
+      "theatreId": "amc:theatre:552",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T23:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T19:30:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "LOW_AVAILABILITY",
+      "attributes": [
+        "dolbycinemaatamcprime",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "dolbycinemaatamcprime",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145866537",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:07.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Dolby Cinema at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date="
+      },
+      "theatreId": "amc:theatre:552",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T03:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T23:00:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "dolbycinemaatamcprime",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "dolbycinemaatamcprime",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145956171",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:07.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "RealD 3D",
+        "rawAttributeNames": [
+          "AMC Club Rockers",
+          "Laser at AMC",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date="
+      },
+      "theatreId": "amc:theatre:552",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T22:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T18:30:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "reald3d",
+        "amcclubrockers",
+        "laseratamc",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "reald3d",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145956172",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:07.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "RealD 3D",
+        "rawAttributeNames": [
+          "AMC Club Rockers",
+          "Laser at AMC",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date="
+      },
+      "theatreId": "amc:theatre:552",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T02:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T22:00:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "reald3d",
+        "amcclubrockers",
+        "laseratamc",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "reald3d",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:144187652",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:07.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "RealD 3D",
+        "rawAttributeNames": [
+          "XL at AMC",
+          "AMC Club Rockers",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date="
+      },
+      "theatreId": "amc:theatre:552",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T19:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T15:30:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "reald3d",
+        "xl",
+        "amcclubrockers",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "reald3d",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145956199",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:07.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "XL at AMC",
+        "rawAttributeNames": [
+          "AMC Club Rockers",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date="
+      },
+      "theatreId": "amc:theatre:552",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T18:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T14:30:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "xl",
+        "amcclubrockers",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "xl",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:144187653",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:07.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "XL at AMC",
+        "rawAttributeNames": [
+          "AMC Club Rockers",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date="
+      },
+      "theatreId": "amc:theatre:552",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T23:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T19:00:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "xl",
+        "amcclubrockers",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "xl",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:144187654",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:07.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "XL at AMC",
+        "rawAttributeNames": [
+          "AMC Club Rockers",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date="
+      },
+      "theatreId": "amc:theatre:552",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T02:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T22:30:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "xl",
+        "amcclubrockers",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "xl",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145982771",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:07.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Club Rockers",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date="
+      },
+      "theatreId": "amc:theatre:552",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T01:15:00.000Z",
+      "showDateTimeLocal": "2026-08-13T21:15:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "amcclubrockers",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:146079237",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:07.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Club Rockers",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date="
+      },
+      "theatreId": "amc:theatre:552",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T03:45:00.000Z",
+      "showDateTimeLocal": "2026-08-13T23:45:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "amcclubrockers",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:146079353",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:07.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Club Rockers",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date="
+      },
+      "theatreId": "amc:theatre:552",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T04:30:00.000Z",
+      "showDateTimeLocal": "2026-08-14T00:30:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "amcclubrockers",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145956261",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:07.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "PRIME at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "AMC Artisan Films",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date="
+      },
+      "theatreId": "amc:theatre:552",
+      "movieId": "amc:movie:76238",
+      "movieTitle": "The Odyssey",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T22:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T18:00:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "amcprime",
+        "reclinerseating",
+        "amcartisanfilms",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "amcprime",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145956262",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:07.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "PRIME at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "AMC Artisan Films",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date="
+      },
+      "theatreId": "amc:theatre:552",
+      "movieId": "amc:movie:76238",
+      "movieTitle": "The Odyssey",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T02:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T22:00:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "amcprime",
+        "reclinerseating",
+        "amcartisanfilms",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "amcprime",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145254737",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:07.000Z",
+        "rawStatus": "AlmostFull",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "IMAX with Laser at AMC",
+        "rawAttributeNames": [
+          "IMAX at AMC",
+          "AMC Club Rockers",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date="
+      },
+      "theatreId": "amc:theatre:552",
+      "movieId": "amc:movie:71226",
+      "movieTitle": "The End of Oak Street",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T20:15:00.000Z",
+      "showDateTimeLocal": "2026-08-13T16:15:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "LOW_AVAILABILITY",
+      "attributes": [
+        "imaxlaseratamc",
+        "imax",
+        "amcclubrockers",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "imaxlaseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145254738",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:07.000Z",
+        "rawStatus": "AlmostFull",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "IMAX with Laser at AMC",
+        "rawAttributeNames": [
+          "IMAX at AMC",
+          "AMC Club Rockers",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date="
+      },
+      "theatreId": "amc:theatre:552",
+      "movieId": "amc:movie:71226",
+      "movieTitle": "The End of Oak Street",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T23:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T19:00:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "LOW_AVAILABILITY",
+      "attributes": [
+        "imaxlaseratamc",
+        "imax",
+        "amcclubrockers",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "imaxlaseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145254739",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:07.000Z",
+        "rawStatus": "AlmostFull",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "IMAX with Laser at AMC",
+        "rawAttributeNames": [
+          "IMAX at AMC",
+          "AMC Club Rockers",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date="
+      },
+      "theatreId": "amc:theatre:552",
+      "movieId": "amc:movie:71226",
+      "movieTitle": "The End of Oak Street",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T01:45:00.000Z",
+      "showDateTimeLocal": "2026-08-13T21:45:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "LOW_AVAILABILITY",
+      "attributes": [
+        "imaxlaseratamc",
+        "imax",
+        "amcclubrockers",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "imaxlaseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145254760",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:07.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "IMAX with Laser at AMC",
+        "rawAttributeNames": [
+          "IMAX at AMC",
+          "AMC Club Rockers",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date="
+      },
+      "theatreId": "amc:theatre:552",
+      "movieId": "amc:movie:71226",
+      "movieTitle": "The End of Oak Street",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T04:30:00.000Z",
+      "showDateTimeLocal": "2026-08-14T00:30:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "imaxlaseratamc",
+        "imax",
+        "amcclubrockers",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "imaxlaseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145956214",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:07.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "XL at AMC",
+        "rawAttributeNames": [
+          "AMC Club Rockers",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date="
+      },
+      "theatreId": "amc:theatre:552",
+      "movieId": "amc:movie:71226",
+      "movieTitle": "The End of Oak Street",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T21:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T17:00:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "xl",
+        "amcclubrockers",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "xl",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145956198",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:07.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "XL at AMC",
+        "rawAttributeNames": [
+          "AMC Club Rockers",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date="
+      },
+      "theatreId": "amc:theatre:552",
+      "movieId": "amc:movie:71226",
+      "movieTitle": "The End of Oak Street",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T03:45:00.000Z",
+      "showDateTimeLocal": "2026-08-13T23:45:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "xl",
+        "amcclubrockers",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "xl",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145254778",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:07.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Club Rockers",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date="
+      },
+      "theatreId": "amc:theatre:552",
+      "movieId": "amc:movie:71226",
+      "movieTitle": "The End of Oak Street",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T19:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T15:00:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "amcclubrockers",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145254779",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:07.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Club Rockers",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date="
+      },
+      "theatreId": "amc:theatre:552",
+      "movieId": "amc:movie:71226",
+      "movieTitle": "The End of Oak Street",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T21:45:00.000Z",
+      "showDateTimeLocal": "2026-08-13T17:45:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "amcclubrockers",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145956215",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:07.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Club Rockers",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date="
+      },
+      "theatreId": "amc:theatre:552",
+      "movieId": "amc:movie:71226",
+      "movieTitle": "The End of Oak Street",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T23:45:00.000Z",
+      "showDateTimeLocal": "2026-08-13T19:45:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "amcclubrockers",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145254780",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:07.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Club Rockers",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date="
+      },
+      "theatreId": "amc:theatre:552",
+      "movieId": "amc:movie:71226",
+      "movieTitle": "The End of Oak Street",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T00:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T20:30:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "amcclubrockers",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145254781",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:07.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Club Rockers",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date="
+      },
+      "theatreId": "amc:theatre:552",
+      "movieId": "amc:movie:71226",
+      "movieTitle": "The End of Oak Street",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T03:15:00.000Z",
+      "showDateTimeLocal": "2026-08-13T23:15:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "amcclubrockers",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:146148283",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:07.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Club Rockers",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date="
+      },
+      "theatreId": "amc:theatre:552",
+      "movieId": "amc:movie:76344",
+      "movieTitle": "PAW Patrol: The Dino Movie",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T19:15:00.000Z",
+      "showDateTimeLocal": "2026-08-13T15:15:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "amcclubrockers",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145254808",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:07.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Club Rockers",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date="
+      },
+      "theatreId": "amc:theatre:552",
+      "movieId": "amc:movie:76344",
+      "movieTitle": "PAW Patrol: The Dino Movie",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T20:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T16:30:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "amcclubrockers",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145254810",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:07.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Club Rockers",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date="
+      },
+      "theatreId": "amc:theatre:552",
+      "movieId": "amc:movie:76344",
+      "movieTitle": "PAW Patrol: The Dino Movie",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T22:55:00.000Z",
+      "showDateTimeLocal": "2026-08-13T18:55:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "amcclubrockers",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:144187457",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:07.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Club Rockers",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date="
+      },
+      "theatreId": "amc:theatre:552",
+      "movieId": "amc:movie:83719",
+      "movieTitle": "The Brink of War",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T21:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T17:00:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "amcclubrockers",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:144187456",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:07.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Club Rockers",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date="
+      },
+      "theatreId": "amc:theatre:552",
+      "movieId": "amc:movie:83719",
+      "movieTitle": "The Brink of War",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T00:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T20:00:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "amcclubrockers",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145956294",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:07.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Club Rockers",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date="
+      },
+      "theatreId": "amc:theatre:552",
+      "movieId": "amc:movie:83394",
+      "movieTitle": "Six: The Musical Live!",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T18:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T14:30:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "amcclubrockers",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145956295",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:07.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Club Rockers",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date="
+      },
+      "theatreId": "amc:theatre:552",
+      "movieId": "amc:movie:83394",
+      "movieTitle": "Six: The Musical Live!",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T23:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T19:00:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "amcclubrockers",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145956223",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:07.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Club Rockers",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date="
+      },
+      "theatreId": "amc:theatre:552",
+      "movieId": "amc:movie:80552",
+      "movieTitle": "One Night Only",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T20:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T16:00:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "amcclubrockers",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145956224",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:07.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Club Rockers",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date="
+      },
+      "theatreId": "amc:theatre:552",
+      "movieId": "amc:movie:80552",
+      "movieTitle": "One Night Only",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T22:45:00.000Z",
+      "showDateTimeLocal": "2026-08-13T18:45:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "amcclubrockers",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145956225",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:07.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Club Rockers",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date="
+      },
+      "theatreId": "amc:theatre:552",
+      "movieId": "amc:movie:80552",
+      "movieTitle": "One Night Only",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T01:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T21:30:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "amcclubrockers",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145251549",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:07.000Z",
+        "rawStatus": "AlmostFull",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Club Rockers",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date="
+      },
+      "theatreId": "amc:theatre:552",
+      "movieId": "amc:movie:83495",
+      "movieTitle": "Nimrods",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T21:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T17:00:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "LOW_AVAILABILITY",
+      "attributes": [
+        "laseratamc",
+        "amcclubrockers",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145251550",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:07.000Z",
+        "rawStatus": "AlmostFull",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Club Rockers",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date="
+      },
+      "theatreId": "amc:theatre:552",
+      "movieId": "amc:movie:83495",
+      "movieTitle": "Nimrods",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T23:45:00.000Z",
+      "showDateTimeLocal": "2026-08-13T19:45:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "LOW_AVAILABILITY",
+      "attributes": [
+        "laseratamc",
+        "amcclubrockers",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145956271",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:07.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Club Rockers",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date="
+      },
+      "theatreId": "amc:theatre:552",
+      "movieId": "amc:movie:83495",
+      "movieTitle": "Nimrods",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T02:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T22:30:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "amcclubrockers",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145956285",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:07.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Club Rockers",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date="
+      },
+      "theatreId": "amc:theatre:552",
+      "movieId": "amc:movie:83495",
+      "movieTitle": "Nimrods",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T04:00:00.000Z",
+      "showDateTimeLocal": "2026-08-14T00:00:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "amcclubrockers",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:146148286",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:07.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Club Rockers",
+          "Reserved Seating",
+          "Alternative Content",
+          "Excluded from A-List",
+          "No Passes"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date="
+      },
+      "theatreId": "amc:theatre:552",
+      "movieId": "amc:movie:83778",
+      "movieTitle": "KATSEYE: WILD HEARTS",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T19:45:00.000Z",
+      "showDateTimeLocal": "2026-08-13T15:45:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "amcclubrockers",
+        "reservedseating",
+        "alternativecontent",
+        "excludedfromalist",
+        "nopasses"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145062280",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:07.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Club Rockers",
+          "Reserved Seating",
+          "Alternative Content",
+          "Excluded from A-List",
+          "No Passes"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date="
+      },
+      "theatreId": "amc:theatre:552",
+      "movieId": "amc:movie:83778",
+      "movieTitle": "KATSEYE: WILD HEARTS",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T23:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T19:00:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "amcclubrockers",
+        "reservedseating",
+        "alternativecontent",
+        "excludedfromalist",
+        "nopasses"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:146148287",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:07.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Club Rockers",
+          "Reserved Seating",
+          "Alternative Content",
+          "Excluded from A-List",
+          "No Passes"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date="
+      },
+      "theatreId": "amc:theatre:552",
+      "movieId": "amc:movie:83778",
+      "movieTitle": "KATSEYE: WILD HEARTS",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T01:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T21:30:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "amcclubrockers",
+        "reservedseating",
+        "alternativecontent",
+        "excludedfromalist",
+        "nopasses"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:144556659",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:07.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Club Rockers",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date="
+      },
+      "theatreId": "amc:theatre:552",
+      "movieId": "amc:movie:82341",
+      "movieTitle": "Super Troopers 3",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T23:15:00.000Z",
+      "showDateTimeLocal": "2026-08-13T19:15:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "amcclubrockers",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145956274",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:07.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Club Rockers",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date="
+      },
+      "theatreId": "amc:theatre:552",
+      "movieId": "amc:movie:72482",
+      "movieTitle": "Toy Story 5",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T19:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T15:00:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "amcclubrockers",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145956265",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:07.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Club Rockers",
+          "AMC Artisan Films",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date="
+      },
+      "theatreId": "amc:theatre:552",
+      "movieId": "amc:movie:82596",
+      "movieTitle": "The Rivals of Amziah King",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T18:45:00.000Z",
+      "showDateTimeLocal": "2026-08-13T14:45:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "amcclubrockers",
+        "amcartisanfilms",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145656856",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:07.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Club Rockers",
+          "AMC Artisan Films",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date="
+      },
+      "theatreId": "amc:theatre:552",
+      "movieId": "amc:movie:82596",
+      "movieTitle": "The Rivals of Amziah King",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T22:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T18:00:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "amcclubrockers",
+        "amcartisanfilms",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145656857",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:07.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Club Rockers",
+          "AMC Artisan Films",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date="
+      },
+      "theatreId": "amc:theatre:552",
+      "movieId": "amc:movie:82596",
+      "movieTitle": "The Rivals of Amziah King",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T01:15:00.000Z",
+      "showDateTimeLocal": "2026-08-13T21:15:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "amcclubrockers",
+        "amcartisanfilms",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145956283",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:07.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Club Rockers",
+          "Reserved Seating",
+          "Closed Caption"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date="
+      },
+      "theatreId": "amc:theatre:552",
+      "movieId": "amc:movie:82326",
+      "movieTitle": "Elijah Peel",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T19:45:00.000Z",
+      "showDateTimeLocal": "2026-08-13T15:45:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "amcclubrockers",
+        "reservedseating",
+        "closedcaption"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145672027",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:07.000Z",
+        "rawStatus": "AlmostFull",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Club Rockers",
+          "Reserved Seating",
+          "Closed Caption"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date="
+      },
+      "theatreId": "amc:theatre:552",
+      "movieId": "amc:movie:82326",
+      "movieTitle": "Elijah Peel",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T22:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T18:30:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "LOW_AVAILABILITY",
+      "attributes": [
+        "laseratamc",
+        "amcclubrockers",
+        "reservedseating",
+        "closedcaption"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145982772",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:07.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Club Rockers",
+          "Reserved Seating",
+          "Closed Caption"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date="
+      },
+      "theatreId": "amc:theatre:552",
+      "movieId": "amc:movie:82326",
+      "movieTitle": "Elijah Peel",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T03:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T23:00:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "amcclubrockers",
+        "reservedseating",
+        "closedcaption"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145644986",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:07.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Club Rockers",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date="
+      },
+      "theatreId": "amc:theatre:552",
+      "movieId": "amc:movie:83781",
+      "movieTitle": "The Wrong Girls",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T20:20:00.000Z",
+      "showDateTimeLocal": "2026-08-13T16:20:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "amcclubrockers",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145644981",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:07.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Club Rockers",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date="
+      },
+      "theatreId": "amc:theatre:552",
+      "movieId": "amc:movie:83781",
+      "movieTitle": "The Wrong Girls",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T23:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T19:00:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "amcclubrockers",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145644982",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:07.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Club Rockers",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date="
+      },
+      "theatreId": "amc:theatre:552",
+      "movieId": "amc:movie:83781",
+      "movieTitle": "The Wrong Girls",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T01:45:00.000Z",
+      "showDateTimeLocal": "2026-08-13T21:45:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "amcclubrockers",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145956175",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:07.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Club Rockers",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date="
+      },
+      "theatreId": "amc:theatre:552",
+      "movieId": "amc:movie:83781",
+      "movieTitle": "The Wrong Girls",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T04:30:00.000Z",
+      "showDateTimeLocal": "2026-08-14T00:30:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "amcclubrockers",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145675687",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:07.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "English Language Dubbed with No Subtitles",
+        "rawAttributeNames": [
+          "AMC Club Rockers",
+          "Laser at AMC",
+          "Reserved Seating",
+          "International Films"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date="
+      },
+      "theatreId": "amc:theatre:552",
+      "movieId": "amc:movie:83876",
+      "movieTitle": "Your Name. 10th Anniversary",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T21:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T17:00:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "englishdubbed",
+        "amcclubrockers",
+        "laseratamc",
+        "reservedseating",
+        "intfilms"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145956196",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:07.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Japanese Spoken with English Subtitles",
+        "rawAttributeNames": [
+          "XL at AMC",
+          "AMC Club Rockers",
+          "Reserved Seating",
+          "International Films"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date="
+      },
+      "theatreId": "amc:theatre:552",
+      "movieId": "amc:movie:83876",
+      "movieTitle": "Your Name. 10th Anniversary",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T22:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T18:00:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "japaneseenglishsubtitle",
+        "xl",
+        "amcclubrockers",
+        "reservedseating",
+        "intfilms"
+      ],
+      "formatCode": "xl",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145956197",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:07.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Japanese Spoken with English Subtitles",
+        "rawAttributeNames": [
+          "XL at AMC",
+          "AMC Club Rockers",
+          "Reserved Seating",
+          "International Films"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date="
+      },
+      "theatreId": "amc:theatre:552",
+      "movieId": "amc:movie:83876",
+      "movieTitle": "Your Name. 10th Anniversary",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T01:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T21:00:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "japaneseenglishsubtitle",
+        "xl",
+        "amcclubrockers",
+        "reservedseating",
+        "intfilms"
+      ],
+      "formatCode": "xl",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145675688",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:07.000Z",
+        "rawStatus": "AlmostFull",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Japanese Spoken with English Subtitles",
+        "rawAttributeNames": [
+          "AMC Club Rockers",
+          "Laser at AMC",
+          "Reserved Seating",
+          "International Films"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date="
+      },
+      "theatreId": "amc:theatre:552",
+      "movieId": "amc:movie:83876",
+      "movieTitle": "Your Name. 10th Anniversary",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T23:45:00.000Z",
+      "showDateTimeLocal": "2026-08-13T19:45:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "LOW_AVAILABILITY",
+      "attributes": [
+        "japaneseenglishsubtitle",
+        "amcclubrockers",
+        "laseratamc",
+        "reservedseating",
+        "intfilms"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145699701",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:07.000Z",
+        "rawStatus": "AlmostFull",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Japanese Spoken with English Subtitles",
+        "rawAttributeNames": [
+          "AMC Club Rockers",
+          "Laser at AMC",
+          "Reserved Seating",
+          "International Films"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date="
+      },
+      "theatreId": "amc:theatre:552",
+      "movieId": "amc:movie:83876",
+      "movieTitle": "Your Name. 10th Anniversary",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T00:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T20:30:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "LOW_AVAILABILITY",
+      "attributes": [
+        "japaneseenglishsubtitle",
+        "amcclubrockers",
+        "laseratamc",
+        "reservedseating",
+        "intfilms"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145956281",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:07.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Club Rockers",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date="
+      },
+      "theatreId": "amc:theatre:552",
+      "movieId": "amc:movie:77563",
+      "movieTitle": "Minions & Monsters",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T20:40:00.000Z",
+      "showDateTimeLocal": "2026-08-13T16:40:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "amcclubrockers",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145956176",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:07.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Korean Spoken with English Subtitles",
+        "rawAttributeNames": [
+          "AMC Club Rockers",
+          "Laser at AMC",
+          "Thrills & Chills",
+          "Reserved Seating",
+          "International Films"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date="
+      },
+      "theatreId": "amc:theatre:552",
+      "movieId": "amc:movie:83345",
+      "movieTitle": "Train to Busan - 10th Anniversary Remastered & Revived",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T20:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T16:00:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "koreanenglishsubtitle",
+        "amcclubrockers",
+        "laseratamc",
+        "thrlschls",
+        "reservedseating",
+        "intfilms"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145956230",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:07.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "ID Required",
+          "AMC Club Rockers",
+          "Thrills & Chills",
+          "Reserved Seating",
+          "Closed Caption"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date="
+      },
+      "theatreId": "amc:theatre:552",
+      "movieId": "amc:movie:83358",
+      "movieTitle": "Ice Cream Man",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T01:15:00.000Z",
+      "showDateTimeLocal": "2026-08-13T21:15:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "idrequired",
+        "amcclubrockers",
+        "thrlschls",
+        "reservedseating",
+        "closedcaption"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145735534",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:07.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Club Rockers",
+          "AMC Artisan Films",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date="
+      },
+      "theatreId": "amc:theatre:552",
+      "movieId": "amc:movie:83859",
+      "movieTitle": "Tony",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T20:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T16:00:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "amcclubrockers",
+        "amcartisanfilms",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:146148290",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:07.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Club Rockers",
+          "AMC Artisan Films",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date="
+      },
+      "theatreId": "amc:theatre:552",
+      "movieId": "amc:movie:83859",
+      "movieTitle": "Tony",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T21:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T17:00:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "amcclubrockers",
+        "amcartisanfilms",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145960990",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:07.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Club Rockers",
+          "AMC Artisan Films",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date="
+      },
+      "theatreId": "amc:theatre:552",
+      "movieId": "amc:movie:83859",
+      "movieTitle": "Tony",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T22:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T18:30:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "amcclubrockers",
+        "amcartisanfilms",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145735535",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:07.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Club Rockers",
+          "AMC Artisan Films",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date="
+      },
+      "theatreId": "amc:theatre:552",
+      "movieId": "amc:movie:83859",
+      "movieTitle": "Tony",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T22:45:00.000Z",
+      "showDateTimeLocal": "2026-08-13T18:45:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "amcclubrockers",
+        "amcartisanfilms",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:146148288",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:07.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Club Rockers",
+          "AMC Artisan Films",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date="
+      },
+      "theatreId": "amc:theatre:552",
+      "movieId": "amc:movie:83859",
+      "movieTitle": "Tony",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T01:15:00.000Z",
+      "showDateTimeLocal": "2026-08-13T21:15:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "amcclubrockers",
+        "amcartisanfilms",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145735536",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:07.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Club Rockers",
+          "AMC Artisan Films",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date="
+      },
+      "theatreId": "amc:theatre:552",
+      "movieId": "amc:movie:83859",
+      "movieTitle": "Tony",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T01:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T21:30:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "amcclubrockers",
+        "amcartisanfilms",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145956182",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:07.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Club Rockers",
+          "AMC Artisan Films",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date="
+      },
+      "theatreId": "amc:theatre:552",
+      "movieId": "amc:movie:83859",
+      "movieTitle": "Tony",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T04:15:00.000Z",
+      "showDateTimeLocal": "2026-08-14T00:15:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "amcclubrockers",
+        "amcartisanfilms",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145960991",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:07.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "XL at AMC",
+        "rawAttributeNames": [
+          "AMC Club Rockers",
+          "Thrills & Chills",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date="
+      },
+      "theatreId": "amc:theatre:552",
+      "movieId": "amc:movie:82941",
+      "movieTitle": "Teenage Sex and Death at Camp Miasma",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T23:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T19:30:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "xl",
+        "amcclubrockers",
+        "thrlschls",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "xl",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145956217",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:07.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "XL at AMC",
+        "rawAttributeNames": [
+          "AMC Club Rockers",
+          "Thrills & Chills",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date="
+      },
+      "theatreId": "amc:theatre:552",
+      "movieId": "amc:movie:82941",
+      "movieTitle": "Teenage Sex and Death at Camp Miasma",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T03:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T23:00:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "xl",
+        "amcclubrockers",
+        "thrlschls",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "xl",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145956275",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:07.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Club Rockers",
+          "Thrills & Chills",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date="
+      },
+      "theatreId": "amc:theatre:552",
+      "movieId": "amc:movie:82941",
+      "movieTitle": "Teenage Sex and Death at Camp Miasma",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T21:45:00.000Z",
+      "showDateTimeLocal": "2026-08-13T17:45:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "amcclubrockers",
+        "thrlschls",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145672010",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:07.000Z",
+        "rawStatus": "AlmostFull",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Club Rockers",
+          "Thrills & Chills",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date="
+      },
+      "theatreId": "amc:theatre:552",
+      "movieId": "amc:movie:82941",
+      "movieTitle": "Teenage Sex and Death at Camp Miasma",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T23:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T19:00:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "LOW_AVAILABILITY",
+      "attributes": [
+        "laseratamc",
+        "amcclubrockers",
+        "thrlschls",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145956204",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:07.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Club Rockers",
+          "Thrills & Chills",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date="
+      },
+      "theatreId": "amc:theatre:552",
+      "movieId": "amc:movie:82941",
+      "movieTitle": "Teenage Sex and Death at Camp Miasma",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T01:45:00.000Z",
+      "showDateTimeLocal": "2026-08-13T21:45:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "amcclubrockers",
+        "thrlschls",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145910771",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:07.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Club Rockers",
+          "Thrills & Chills",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date="
+      },
+      "theatreId": "amc:theatre:552",
+      "movieId": "amc:movie:82941",
+      "movieTitle": "Teenage Sex and Death at Camp Miasma",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T02:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T22:30:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "amcclubrockers",
+        "thrlschls",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145956205",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:07.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Club Rockers",
+          "Thrills & Chills",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date="
+      },
+      "theatreId": "amc:theatre:552",
+      "movieId": "amc:movie:82941",
+      "movieTitle": "Teenage Sex and Death at Camp Miasma",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T04:30:00.000Z",
+      "showDateTimeLocal": "2026-08-14T00:30:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "amcclubrockers",
+        "thrlschls",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145956290",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:07.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Tamil Spoken with English Subtitles",
+        "rawAttributeNames": [
+          "AMC Club Rockers",
+          "Laser at AMC",
+          "Reserved Seating",
+          "International Films",
+          "Excluded from A-List",
+          "No Passes"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date="
+      },
+      "theatreId": "amc:theatre:552",
+      "movieId": "amc:movie:84494",
+      "movieTitle": "Vishwanath & Sons",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T02:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T22:00:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "tamilenglishsubtitle",
+        "amcclubrockers",
+        "laseratamc",
+        "reservedseating",
+        "intfilms",
+        "excludedfromalist",
+        "nopasses"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145956202",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:07.000Z",
+        "rawStatus": "AlmostFull",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Club Rockers",
+          "Reserved Seating",
+          "Closed Caption"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date="
+      },
+      "theatreId": "amc:theatre:552",
+      "movieId": "amc:movie:83319",
+      "movieTitle": "Hadestown: The Musical",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T19:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T15:30:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "LOW_AVAILABILITY",
+      "attributes": [
+        "laseratamc",
+        "amcclubrockers",
+        "reservedseating",
+        "closedcaption"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:146148291",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:07.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Tamil Spoken with English Subtitles",
+        "rawAttributeNames": [
+          "AMC Club Rockers",
+          "Laser at AMC",
+          "Reserved Seating",
+          "International Films"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date="
+      },
+      "theatreId": "amc:theatre:552",
+      "movieId": "amc:movie:84568",
+      "movieTitle": "DC",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T02:15:00.000Z",
+      "showDateTimeLocal": "2026-08-13T22:15:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "tamilenglishsubtitle",
+        "amcclubrockers",
+        "laseratamc",
+        "reservedseating",
+        "intfilms"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145956288",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:07.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Club Rockers",
+          "Reserved Seating",
+          "International Films"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date="
+      },
+      "theatreId": "amc:theatre:552",
+      "movieId": "amc:movie:84070",
+      "movieTitle": "Namaslay",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T20:15:00.000Z",
+      "showDateTimeLocal": "2026-08-13T16:15:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "amcclubrockers",
+        "reservedseating",
+        "intfilms"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:146148284",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:07.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Club Rockers",
+          "Reserved Seating",
+          "Closed Caption"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date="
+      },
+      "theatreId": "amc:theatre:552",
+      "movieId": "amc:movie:83178",
+      "movieTitle": "I Want Your Sex",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T01:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T21:30:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "amcclubrockers",
+        "reservedseating",
+        "closedcaption"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145956201",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:07.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Club Rockers",
+          "Reserved Seating",
+          "Closed Caption"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date="
+      },
+      "theatreId": "amc:theatre:552",
+      "movieId": "amc:movie:83178",
+      "movieTitle": "I Want Your Sex",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T03:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T23:00:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "amcclubrockers",
+        "reservedseating",
+        "closedcaption"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145956220",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:07.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Club Rockers",
+          "Reserved Seating",
+          "Closed Caption"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date="
+      },
+      "theatreId": "amc:theatre:552",
+      "movieId": "amc:movie:83178",
+      "movieTitle": "I Want Your Sex",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T04:15:00.000Z",
+      "showDateTimeLocal": "2026-08-14T00:15:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "amcclubrockers",
+        "reservedseating",
+        "closedcaption"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:146148285",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:07.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Club Rockers",
+          "Thrills & Chills",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date="
+      },
+      "theatreId": "amc:theatre:552",
+      "movieId": "amc:movie:82063",
+      "movieTitle": "Obsession",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T02:15:00.000Z",
+      "showDateTimeLocal": "2026-08-13T22:15:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "amcclubrockers",
+        "thrlschls",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145956178",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:07.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Club Rockers",
+          "Thrills & Chills",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-empire-25/showtimes?date="
+      },
+      "theatreId": "amc:theatre:552",
+      "movieId": "amc:movie:82063",
+      "movieTitle": "Obsession",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T04:00:00.000Z",
+      "showDateTimeLocal": "2026-08-14T00:00:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "amcclubrockers",
+        "thrlschls",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "providerMeta": {
+    "note": "Self-test payload only — never a captured upstream response.",
+    "synthetic": true
+  },
+  "priceBasis": "TICKET_ONLY",
+  "minPrice": 12.5,
+  "grid": {
+    "cells": [
+      {
+        "visible": true,
+        "available": true,
+        "rawType": "SYNTHETIC_SELF_TEST_SEAT_A",
+        "kind": "STANDARD",
+        "column": 1,
+        "row": 1
+      },
+      {
+        "name": "A2",
+        "available": false,
+        "tier": "premium",
+        "visible": true,
+        "rawType": "SYNTHETIC_SELF_TEST_SEAT_B",
+        "kind": "WHEELCHAIR",
+        "column": 2,
+        "row": 1
+      }
+    ],
+    "columns": 2,
+    "rows": 2
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "extends": "@seatfirst/config/tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": ".",
+    "outDir": "dist",
+    "types": ["node"],
+
+    // Type-checking covers the tests too: they are the deliverable here, and
+    // eslint's project service resolves this file for them. `build` emits
+    // from tsconfig.build.json, which narrows rootDir/include back to src.
+    "noEmit": true
+  },
+  "include": ["src/**/*.ts", "test/**/*.ts", "scripts/**/*.ts", "vitest.config.ts"],
+  "exclude": ["dist", "node_modules"]
+}

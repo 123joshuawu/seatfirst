@@ -1,0 +1,6 @@
+{
+  "ok": false,
+  "code": "UPSTREAM_CHANGED",
+  "message": "Could not locate PublicTheatreSummary shape in Flight payload",
+  "providerMeta": {}
+}
