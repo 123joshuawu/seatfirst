@@ -1,0 +1,13 @@
+{
+  "grid": {
+    "rows": 1,
+    "columns": 1,
+    "cells": []
+  },
+  "minPrice": -5,
+  "priceBasis": "UNKNOWN",
+  "providerMeta": {
+    "synthetic": true,
+    "note": "Self-test payload only — deliberately fails SeatPageResultSchema (negative minPrice) to prove NORMALIZE_FAILED fails loudly. Never a captured upstream response."
+  }
+}

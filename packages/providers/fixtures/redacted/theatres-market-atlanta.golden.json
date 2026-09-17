@@ -1,0 +1,175 @@
+{
+  "ok": true,
+  "value": [
+    {
+      "id": "amc:theatre:402",
+      "providerId": "amc",
+      "name": "AMC North Dekalb 16",
+      "location": {
+        "lat": 33.806903,
+        "lng": -84.277669
+      },
+      "timezone": "America/New_York",
+      "city": "Decatur",
+      "address": "2042 Lawrenceville Hwy, Decatur, GA, 30033",
+      "slugs": {
+        "atlanta": "amc-north-dekalb-16"
+      },
+      "firstSeenAt": "2026-08-15T23:35:06.000Z",
+      "lastSeenAt": "2026-08-15T23:35:06.000Z"
+    },
+    {
+      "id": "amc:theatre:403",
+      "providerId": "amc",
+      "name": "AMC Sugarloaf Mills 18",
+      "location": {
+        "lat": 33.981351,
+        "lng": -84.078528
+      },
+      "timezone": "America/New_York",
+      "city": "Lawrenceville",
+      "address": "5900 Sugarloaf Parkway, Lawrenceville, GA, 30043-0000",
+      "slugs": {
+        "atlanta": "amc-sugarloaf-mills-18"
+      },
+      "firstSeenAt": "2026-08-15T23:35:06.000Z",
+      "lastSeenAt": "2026-08-15T23:35:06.000Z"
+    },
+    {
+      "id": "amc:theatre:404",
+      "providerId": "amc",
+      "name": "AMC Avenue Forsyth 12",
+      "location": {
+        "lat": 34.154757,
+        "lng": -84.173975
+      },
+      "timezone": "America/New_York",
+      "city": "Cumming",
+      "address": "350 Peachtree Pkwy, Cumming, GA, 30041",
+      "slugs": {
+        "atlanta": "amc-avenue-forsyth-12"
+      },
+      "firstSeenAt": "2026-08-15T23:35:06.000Z",
+      "lastSeenAt": "2026-08-15T23:35:06.000Z"
+    },
+    {
+      "id": "amc:theatre:405",
+      "providerId": "amc",
+      "name": "AMC North Point Mall 12",
+      "location": {
+        "lat": 34.048321,
+        "lng": -84.296374
+      },
+      "timezone": "America/New_York",
+      "city": "Alpharetta",
+      "address": "4500 North Point Circle, Alpharetta, GA, 30022",
+      "slugs": {
+        "atlanta": "amc-north-point-mall-12"
+      },
+      "firstSeenAt": "2026-08-15T23:35:06.000Z",
+      "lastSeenAt": "2026-08-15T23:35:06.000Z"
+    },
+    {
+      "id": "amc:theatre:410",
+      "providerId": "amc",
+      "name": "AMC Phipps Plaza 14",
+      "location": {
+        "lat": 33.852954,
+        "lng": -84.362683
+      },
+      "timezone": "America/New_York",
+      "city": "Atlanta",
+      "address": "3500 Peachtree Road N.e., Atlanta, GA, 30326",
+      "slugs": {
+        "atlanta": "amc-phipps-plaza-14"
+      },
+      "firstSeenAt": "2026-08-15T23:35:06.000Z",
+      "lastSeenAt": "2026-08-15T23:35:06.000Z"
+    },
+    {
+      "id": "amc:theatre:411",
+      "providerId": "amc",
+      "name": "AMC Colonial 18",
+      "location": {
+        "lat": 33.9693232208,
+        "lng": -84.0189974628
+      },
+      "timezone": "America/New_York",
+      "city": "Lawrenceville",
+      "address": "825 Lawrenceville-suwanee Rd, Lawrenceville, GA, 30043-5484",
+      "slugs": {
+        "atlanta": "amc-colonial-18"
+      },
+      "firstSeenAt": "2026-08-15T23:35:06.000Z",
+      "lastSeenAt": "2026-08-15T23:35:06.000Z"
+    },
+    {
+      "id": "amc:theatre:415",
+      "providerId": "amc",
+      "name": "AMC Madison Yards 8",
+      "location": {
+        "lat": 33.745322,
+        "lng": -84.3591397
+      },
+      "timezone": "America/New_York",
+      "city": "Atlanta",
+      "address": "975 Memorial Drive, Atlanta, GA, 30316",
+      "slugs": {
+        "atlanta": "amc-madison-yards-8"
+      },
+      "firstSeenAt": "2026-08-15T23:35:06.000Z",
+      "lastSeenAt": "2026-08-15T23:35:06.000Z"
+    },
+    {
+      "id": "amc:theatre:416",
+      "providerId": "amc",
+      "name": "AMC Southlake 24",
+      "location": {
+        "lat": 33.563531,
+        "lng": -84.328914
+      },
+      "timezone": "America/New_York",
+      "city": "Morrow",
+      "address": "7065 Mount Zion Circle, Morrow, GA, 30260-0000",
+      "slugs": {
+        "atlanta": "amc-southlake-24"
+      },
+      "firstSeenAt": "2026-08-15T23:35:06.000Z",
+      "lastSeenAt": "2026-08-15T23:35:06.000Z"
+    },
+    {
+      "id": "amc:theatre:417",
+      "providerId": "amc",
+      "name": "AMC Barrett Commons 24",
+      "location": {
+        "lat": 34.015629,
+        "lng": -84.571376
+      },
+      "timezone": "America/New_York",
+      "city": "Kennesaw",
+      "address": "2600 Cobb Place Lane Nw, Kennesaw, GA, 30144-0000",
+      "slugs": {
+        "atlanta": "amc-barrett-commons-24"
+      },
+      "firstSeenAt": "2026-08-15T23:35:06.000Z",
+      "lastSeenAt": "2026-08-15T23:35:06.000Z"
+    },
+    {
+      "id": "amc:theatre:801",
+      "providerId": "amc",
+      "name": "AMC Parkway Pointe 15",
+      "location": {
+        "lat": 33.87901129,
+        "lng": -84.45605292
+      },
+      "timezone": "America/New_York",
+      "city": "Atlanta",
+      "address": "3101 Cobb Pkwy, Atlanta, GA, 30339-3497",
+      "slugs": {
+        "atlanta": "amc-parkway-pointe-15"
+      },
+      "firstSeenAt": "2026-08-15T23:35:06.000Z",
+      "lastSeenAt": "2026-08-15T23:35:06.000Z"
+    }
+  ]
+}

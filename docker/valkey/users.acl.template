@@ -1,0 +1,8 @@
+# Valkey ACL template (tracked, no secrets) — rendered at container startup by
+# render-acl.sh into /etc/valkey/users.acl (gitignored, never committed) using the
+# required REDIS_PASSWORD / REDIS_READONLY_PASSWORD secrets from .env.secrets.
+# Both secrets are required with no defaults; a missing secret fails the container
+# loudly at boot. Placeholders below are substituted literally; never put a real
+# password in this file.
+user default on >__REDIS_PASSWORD__ ~* &* +@all
+user agent_readonly on >__REDIS_READONLY_PASSWORD__ ~* &* +@read -@write -@dangerous +ping

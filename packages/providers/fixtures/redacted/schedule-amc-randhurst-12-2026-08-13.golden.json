@@ -1,0 +1,2148 @@
+{
+  "ok": true,
+  "value": [
+    {
+      "showtimeId": "amc:showtime:145941454",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:27.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "RealD 3D",
+        "rawAttributeNames": [
+          "Laser at AMC",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date="
+      },
+      "theatreId": "amc:theatre:130",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T14:45:00.000Z",
+      "showDateTimeLocal": "2026-08-13T09:45:00",
+      "utcOffset": "-05:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "reald3d",
+        "laseratamc",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "reald3d",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:144159919",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:27.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "RealD 3D",
+        "rawAttributeNames": [
+          "Laser at AMC",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date="
+      },
+      "theatreId": "amc:theatre:130",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T18:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T13:00:00",
+      "utcOffset": "-05:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "reald3d",
+        "laseratamc",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "reald3d",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145941505",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:27.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "RealD 3D",
+        "rawAttributeNames": [
+          "Laser at AMC",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date="
+      },
+      "theatreId": "amc:theatre:130",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T20:35:00.000Z",
+      "showDateTimeLocal": "2026-08-13T15:35:00",
+      "utcOffset": "-05:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "reald3d",
+        "laseratamc",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "reald3d",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:144159920",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:27.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "RealD 3D",
+        "rawAttributeNames": [
+          "Laser at AMC",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date="
+      },
+      "theatreId": "amc:theatre:130",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T21:15:00.000Z",
+      "showDateTimeLocal": "2026-08-13T16:15:00",
+      "utcOffset": "-05:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "reald3d",
+        "laseratamc",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "reald3d",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:144159921",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:27.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "RealD 3D",
+        "rawAttributeNames": [
+          "Laser at AMC",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date="
+      },
+      "theatreId": "amc:theatre:130",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T00:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T19:30:00",
+      "utcOffset": "-05:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "reald3d",
+        "laseratamc",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "reald3d",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145941507",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:27.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "RealD 3D",
+        "rawAttributeNames": [
+          "Laser at AMC",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date="
+      },
+      "theatreId": "amc:theatre:130",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T02:10:00.000Z",
+      "showDateTimeLocal": "2026-08-13T21:10:00",
+      "utcOffset": "-05:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "reald3d",
+        "laseratamc",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "reald3d",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145941563",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:27.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "XL at AMC",
+        "rawAttributeNames": [
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date="
+      },
+      "theatreId": "amc:theatre:130",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T14:15:00.000Z",
+      "showDateTimeLocal": "2026-08-13T09:15:00",
+      "utcOffset": "-05:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "xl",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "xl",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145941567",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:27.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "XL at AMC",
+        "rawAttributeNames": [
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date="
+      },
+      "theatreId": "amc:theatre:130",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T17:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T12:30:00",
+      "utcOffset": "-05:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "xl",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "xl",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145941566",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:27.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "XL at AMC",
+        "rawAttributeNames": [
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date="
+      },
+      "theatreId": "amc:theatre:130",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T20:45:00.000Z",
+      "showDateTimeLocal": "2026-08-13T15:45:00",
+      "utcOffset": "-05:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "xl",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "xl",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145941564",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:27.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "XL at AMC",
+        "rawAttributeNames": [
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date="
+      },
+      "theatreId": "amc:theatre:130",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T00:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T19:00:00",
+      "utcOffset": "-05:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "xl",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "xl",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145941565",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:27.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "XL at AMC",
+        "rawAttributeNames": [
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date="
+      },
+      "theatreId": "amc:theatre:130",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T03:15:00.000Z",
+      "showDateTimeLocal": "2026-08-13T22:15:00",
+      "utcOffset": "-05:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "xl",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "xl",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145941549",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:27.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date="
+      },
+      "theatreId": "amc:theatre:130",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T15:45:00.000Z",
+      "showDateTimeLocal": "2026-08-13T10:45:00",
+      "utcOffset": "-05:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145941575",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:27.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date="
+      },
+      "theatreId": "amc:theatre:130",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T16:45:00.000Z",
+      "showDateTimeLocal": "2026-08-13T11:45:00",
+      "utcOffset": "-05:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:144160077",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:27.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date="
+      },
+      "theatreId": "amc:theatre:130",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T19:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T14:00:00",
+      "utcOffset": "-05:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145941531",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:27.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date="
+      },
+      "theatreId": "amc:theatre:130",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T21:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T16:30:00",
+      "utcOffset": "-05:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:144160078",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:27.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date="
+      },
+      "theatreId": "amc:theatre:130",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T22:15:00.000Z",
+      "showDateTimeLocal": "2026-08-13T17:15:00",
+      "utcOffset": "-05:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145941608",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:27.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date="
+      },
+      "theatreId": "amc:theatre:130",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T23:15:00.000Z",
+      "showDateTimeLocal": "2026-08-13T18:15:00",
+      "utcOffset": "-05:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145941530",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:27.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date="
+      },
+      "theatreId": "amc:theatre:130",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T00:45:00.000Z",
+      "showDateTimeLocal": "2026-08-13T19:45:00",
+      "utcOffset": "-05:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:144160079",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:27.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date="
+      },
+      "theatreId": "amc:theatre:130",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T01:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T20:30:00",
+      "utcOffset": "-05:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145941529",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:27.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Artisan Films",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date="
+      },
+      "theatreId": "amc:theatre:130",
+      "movieId": "amc:movie:76238",
+      "movieTitle": "The Odyssey",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T15:10:00.000Z",
+      "showDateTimeLocal": "2026-08-13T10:10:00",
+      "utcOffset": "-05:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "amcartisanfilms",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145941607",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:27.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Artisan Films",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date="
+      },
+      "theatreId": "amc:theatre:130",
+      "movieId": "amc:movie:76238",
+      "movieTitle": "The Odyssey",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T16:35:00.000Z",
+      "showDateTimeLocal": "2026-08-13T11:35:00",
+      "utcOffset": "-05:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "amcartisanfilms",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:146138198",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:27.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Artisan Films",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date="
+      },
+      "theatreId": "amc:theatre:130",
+      "movieId": "amc:movie:76238",
+      "movieTitle": "The Odyssey",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T18:25:00.000Z",
+      "showDateTimeLocal": "2026-08-13T13:25:00",
+      "utcOffset": "-05:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "amcartisanfilms",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:146134129",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:27.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Artisan Films",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date="
+      },
+      "theatreId": "amc:theatre:130",
+      "movieId": "amc:movie:76238",
+      "movieTitle": "The Odyssey",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T22:05:00.000Z",
+      "showDateTimeLocal": "2026-08-13T17:05:00",
+      "utcOffset": "-05:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "amcartisanfilms",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:146138197",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:27.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Artisan Films",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date="
+      },
+      "theatreId": "amc:theatre:130",
+      "movieId": "amc:movie:76238",
+      "movieTitle": "The Odyssey",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T00:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T19:00:00",
+      "utcOffset": "-05:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "amcartisanfilms",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145941579",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:27.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Artisan Films",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date="
+      },
+      "theatreId": "amc:theatre:130",
+      "movieId": "amc:movie:76238",
+      "movieTitle": "The Odyssey",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T02:15:00.000Z",
+      "showDateTimeLocal": "2026-08-13T21:15:00",
+      "utcOffset": "-05:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "amcartisanfilms",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145941632",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:27.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date="
+      },
+      "theatreId": "amc:theatre:130",
+      "movieId": "amc:movie:80552",
+      "movieTitle": "One Night Only",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T14:15:00.000Z",
+      "showDateTimeLocal": "2026-08-13T09:15:00",
+      "utcOffset": "-05:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145941631",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:27.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date="
+      },
+      "theatreId": "amc:theatre:130",
+      "movieId": "amc:movie:80552",
+      "movieTitle": "One Night Only",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T16:50:00.000Z",
+      "showDateTimeLocal": "2026-08-13T11:50:00",
+      "utcOffset": "-05:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145941635",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:27.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date="
+      },
+      "theatreId": "amc:theatre:130",
+      "movieId": "amc:movie:80552",
+      "movieTitle": "One Night Only",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T19:25:00.000Z",
+      "showDateTimeLocal": "2026-08-13T14:25:00",
+      "utcOffset": "-05:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145941633",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:27.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date="
+      },
+      "theatreId": "amc:theatre:130",
+      "movieId": "amc:movie:80552",
+      "movieTitle": "One Night Only",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T01:55:00.000Z",
+      "showDateTimeLocal": "2026-08-13T20:55:00",
+      "utcOffset": "-05:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:146134128",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:27.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date="
+      },
+      "theatreId": "amc:theatre:130",
+      "movieId": "amc:movie:82341",
+      "movieTitle": "Super Troopers 3",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T14:10:00.000Z",
+      "showDateTimeLocal": "2026-08-13T09:10:00",
+      "utcOffset": "-05:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:146138199",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:27.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date="
+      },
+      "theatreId": "amc:theatre:130",
+      "movieId": "amc:movie:82341",
+      "movieTitle": "Super Troopers 3",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T22:10:00.000Z",
+      "showDateTimeLocal": "2026-08-13T17:10:00",
+      "utcOffset": "-05:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145941652",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:27.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date="
+      },
+      "theatreId": "amc:theatre:130",
+      "movieId": "amc:movie:82341",
+      "movieTitle": "Super Troopers 3",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T03:35:00.000Z",
+      "showDateTimeLocal": "2026-08-13T22:35:00",
+      "utcOffset": "-05:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145941604",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:27.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "ID Required",
+          "Thrills & Chills",
+          "Reserved Seating",
+          "Closed Caption"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date="
+      },
+      "theatreId": "amc:theatre:130",
+      "movieId": "amc:movie:83358",
+      "movieTitle": "Ice Cream Man",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T14:15:00.000Z",
+      "showDateTimeLocal": "2026-08-13T09:15:00",
+      "utcOffset": "-05:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "idrequired",
+        "thrlschls",
+        "reservedseating",
+        "closedcaption"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145941583",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:27.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "RealD 3D",
+        "rawAttributeNames": [
+          "Laser at AMC",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date="
+      },
+      "theatreId": "amc:theatre:130",
+      "movieId": "amc:movie:72482",
+      "movieTitle": "Toy Story 5",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T16:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T11:30:00",
+      "utcOffset": "-05:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "reald3d",
+        "laseratamc",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "reald3d",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145941580",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:27.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "RealD 3D",
+        "rawAttributeNames": [
+          "Laser at AMC",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date="
+      },
+      "theatreId": "amc:theatre:130",
+      "movieId": "amc:movie:72482",
+      "movieTitle": "Toy Story 5",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T21:25:00.000Z",
+      "showDateTimeLocal": "2026-08-13T16:25:00",
+      "utcOffset": "-05:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "reald3d",
+        "laseratamc",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "reald3d",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:146134127",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:27.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date="
+      },
+      "theatreId": "amc:theatre:130",
+      "movieId": "amc:movie:72482",
+      "movieTitle": "Toy Story 5",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T18:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T13:00:00",
+      "utcOffset": "-05:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145941476",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:27.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date="
+      },
+      "theatreId": "amc:theatre:130",
+      "movieId": "amc:movie:72482",
+      "movieTitle": "Toy Story 5",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T19:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T14:00:00",
+      "utcOffset": "-05:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145941582",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:27.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "RealD 3D",
+        "rawAttributeNames": [
+          "Laser at AMC",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date="
+      },
+      "theatreId": "amc:theatre:130",
+      "movieId": "amc:movie:77563",
+      "movieTitle": "Minions & Monsters",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T14:05:00.000Z",
+      "showDateTimeLocal": "2026-08-13T09:05:00",
+      "utcOffset": "-05:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "reald3d",
+        "laseratamc",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "reald3d",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145941584",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:27.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "RealD 3D",
+        "rawAttributeNames": [
+          "Laser at AMC",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date="
+      },
+      "theatreId": "amc:theatre:130",
+      "movieId": "amc:movie:77563",
+      "movieTitle": "Minions & Monsters",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T19:05:00.000Z",
+      "showDateTimeLocal": "2026-08-13T14:05:00",
+      "utcOffset": "-05:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "reald3d",
+        "laseratamc",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "reald3d",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145941475",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:27.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date="
+      },
+      "theatreId": "amc:theatre:130",
+      "movieId": "amc:movie:77563",
+      "movieTitle": "Minions & Monsters",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T16:40:00.000Z",
+      "showDateTimeLocal": "2026-08-13T11:40:00",
+      "utcOffset": "-05:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145941477",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:27.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date="
+      },
+      "theatreId": "amc:theatre:130",
+      "movieId": "amc:movie:77563",
+      "movieTitle": "Minions & Monsters",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T21:35:00.000Z",
+      "showDateTimeLocal": "2026-08-13T16:35:00",
+      "utcOffset": "-05:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145941581",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:27.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date="
+      },
+      "theatreId": "amc:theatre:130",
+      "movieId": "amc:movie:77563",
+      "movieTitle": "Minions & Monsters",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T23:55:00.000Z",
+      "showDateTimeLocal": "2026-08-13T18:55:00",
+      "utcOffset": "-05:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145941651",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:27.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date="
+      },
+      "theatreId": "amc:theatre:130",
+      "movieId": "amc:movie:72474",
+      "movieTitle": "Moana",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T15:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T10:30:00",
+      "utcOffset": "-05:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145941606",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:27.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date="
+      },
+      "theatreId": "amc:theatre:130",
+      "movieId": "amc:movie:72474",
+      "movieTitle": "Moana",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T20:20:00.000Z",
+      "showDateTimeLocal": "2026-08-13T15:20:00",
+      "utcOffset": "-05:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145941605",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:27.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date="
+      },
+      "theatreId": "amc:theatre:130",
+      "movieId": "amc:movie:72474",
+      "movieTitle": "Moana",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T02:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T21:30:00",
+      "utcOffset": "-05:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145941448",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:27.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date="
+      },
+      "theatreId": "amc:theatre:130",
+      "movieId": "amc:movie:83719",
+      "movieTitle": "The Brink of War",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T16:10:00.000Z",
+      "showDateTimeLocal": "2026-08-13T11:10:00",
+      "utcOffset": "-05:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145941650",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:27.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date="
+      },
+      "theatreId": "amc:theatre:130",
+      "movieId": "amc:movie:83719",
+      "movieTitle": "The Brink of War",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T00:45:00.000Z",
+      "showDateTimeLocal": "2026-08-13T19:45:00",
+      "utcOffset": "-05:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145142258",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:27.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date="
+      },
+      "theatreId": "amc:theatre:130",
+      "movieId": "amc:movie:76344",
+      "movieTitle": "PAW Patrol: The Dino Movie",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T19:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T14:00:00",
+      "utcOffset": "-05:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145142260",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:27.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date="
+      },
+      "theatreId": "amc:theatre:130",
+      "movieId": "amc:movie:76344",
+      "movieTitle": "PAW Patrol: The Dino Movie",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T21:20:00.000Z",
+      "showDateTimeLocal": "2026-08-13T16:20:00",
+      "utcOffset": "-05:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145142262",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:27.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date="
+      },
+      "theatreId": "amc:theatre:130",
+      "movieId": "amc:movie:76344",
+      "movieTitle": "PAW Patrol: The Dino Movie",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T23:45:00.000Z",
+      "showDateTimeLocal": "2026-08-13T18:45:00",
+      "utcOffset": "-05:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145941447",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:27.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date="
+      },
+      "theatreId": "amc:theatre:130",
+      "movieId": "amc:movie:76344",
+      "movieTitle": "PAW Patrol: The Dino Movie",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T02:05:00.000Z",
+      "showDateTimeLocal": "2026-08-13T21:05:00",
+      "utcOffset": "-05:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145941528",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:27.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date="
+      },
+      "theatreId": "amc:theatre:130",
+      "movieId": "amc:movie:83394",
+      "movieTitle": "Six: The Musical Live!",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T19:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T14:00:00",
+      "utcOffset": "-05:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145941503",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:27.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date="
+      },
+      "theatreId": "amc:theatre:130",
+      "movieId": "amc:movie:83394",
+      "movieTitle": "Six: The Musical Live!",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T23:45:00.000Z",
+      "showDateTimeLocal": "2026-08-13T18:45:00",
+      "utcOffset": "-05:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145142322",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:27.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date="
+      },
+      "theatreId": "amc:theatre:130",
+      "movieId": "amc:movie:71226",
+      "movieTitle": "The End of Oak Street",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T20:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T15:00:00",
+      "utcOffset": "-05:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145142325",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:27.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date="
+      },
+      "theatreId": "amc:theatre:130",
+      "movieId": "amc:movie:71226",
+      "movieTitle": "The End of Oak Street",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T22:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T17:30:00",
+      "utcOffset": "-05:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145142326",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:27.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date="
+      },
+      "theatreId": "amc:theatre:130",
+      "movieId": "amc:movie:71226",
+      "movieTitle": "The End of Oak Street",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T01:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T20:00:00",
+      "utcOffset": "-05:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145941574",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:27.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-randhurst-12/showtimes?date="
+      },
+      "theatreId": "amc:theatre:130",
+      "movieId": "amc:movie:71226",
+      "movieTitle": "The End of Oak Street",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T03:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T22:30:00",
+      "utcOffset": "-05:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    }
+  ]
+}

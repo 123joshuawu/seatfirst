@@ -1,0 +1,124 @@
+import type { ReactElement } from "react";
+import { StyleSheet, Pressable, View } from "react-native";
+import { colors } from "@/theme/colors";
+import { AppText } from "./AppText";
+
+export interface ChipProps {
+  label: string;
+  active: boolean;
+  onPress: () => void;
+  /** 'pill' covers Format/Dates/Time of day/Seat location chips. 'square' is the party-size picker. */
+  shape?: "pill" | "square";
+  /** Renders the checkbox glyph used by the seat-location preference chips. */
+  checkbox?: boolean;
+  disabled?: boolean;
+}
+
+export function Chip({
+  label,
+  active,
+  onPress,
+  shape = "pill",
+  checkbox = false,
+  disabled = false,
+}: ChipProps): ReactElement {
+  const isSquare = shape === "square";
+  const role: "button" | "checkbox" = checkbox ? "checkbox" : "button";
+  const state = checkbox
+    ? { checked: active, disabled: !!disabled }
+    : { selected: active, disabled: !!disabled };
+  return (
+    <Pressable
+      onPress={disabled ? undefined : onPress}
+      disabled={disabled}
+      accessibilityRole={role}
+      accessibilityLabel={label}
+      accessibilityState={state}
+      focusable={!disabled}
+      style={[
+        isSquare ? styles.squareBase : styles.pillBase,
+        active ? styles.activeBase : styles.inactiveBase,
+        disabled && styles.disabled,
+      ]}
+    >
+      {checkbox ? (
+        <View
+          style={[styles.checkbox, active ? styles.checkboxOn : styles.checkboxOff]}
+          accessible={false}
+          importantForAccessibility="no"
+        >
+          {active ? (
+            <AppText weight="700" style={styles.checkboxGlyph}>
+              ✓
+            </AppText>
+          ) : null}
+        </View>
+      ) : null}
+      <AppText
+        weight={isSquare ? (active ? "700" : "600") : active ? "600" : "500"}
+        style={[
+          isSquare ? styles.squareLabel : styles.pillLabel,
+          { color: active ? colors.amberTagText : colors.textPrimary },
+        ]}
+      >
+        {label}
+      </AppText>
+    </Pressable>
+  );
+}
+
+const styles = StyleSheet.create({
+  pillBase: {
+    paddingVertical: 9,
+    paddingHorizontal: 16,
+    borderRadius: 999,
+    borderWidth: 1.5,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+  },
+  squareBase: {
+    width: 44,
+    height: 44,
+    borderRadius: 10,
+    borderWidth: 1.5,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  activeBase: {
+    borderColor: colors.brand,
+    backgroundColor: colors.brandSoft,
+  },
+  inactiveBase: {
+    borderColor: colors.borderStrong,
+    backgroundColor: colors.cardMutedBg,
+  },
+  pillLabel: {
+    fontSize: 13,
+  },
+  squareLabel: {
+    fontSize: 14,
+  },
+  checkbox: {
+    width: 14,
+    height: 14,
+    borderRadius: 4,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  checkboxOn: {
+    backgroundColor: colors.brandDark,
+  },
+  checkboxOff: {
+    borderWidth: 1.5,
+    borderColor: colors.checkboxOffBorder,
+  },
+  checkboxGlyph: {
+    fontSize: 10,
+    lineHeight: 10,
+    color: colors.white,
+  },
+  disabled: {
+    opacity: 0.5,
+  },
+});

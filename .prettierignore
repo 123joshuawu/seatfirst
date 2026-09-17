@@ -1,0 +1,20 @@
+node_modules
+dist
+coverage
+.turbo
+.expo
+cdk.out
+pnpm-lock.yaml
+*.tsbuildinfo
+
+# Captured AMC page payloads — machine-generated data artifacts (compact single-line JSON),
+# not hand-authored code. Formatting them is pure churn with no semantic value.
+packages/providers/fixtures/redacted/
+
+# Dev-only synthetic fixtures (dev/fixtures/amc/README.md) — verbatim copies of, or a byte-
+# level re-key of, the same kind of captured payload above. Reformatting the re-keyed seat
+# fixture in particular would risk corrupting the exact byte content its embedded JSON
+# parses from. Scoped to the two fixture-body subdirectories only — dev/fixtures/amc/'s own
+# README.md is hand-authored prose and stays formatted normally.
+dev/fixtures/amc/schedule/
+dev/fixtures/amc/seats/

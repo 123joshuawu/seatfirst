@@ -1,0 +1,838 @@
+{
+  "ok": true,
+  "value": [
+    {
+      "showtimeId": "amc:showtime:144238162",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-norridge-6/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:30.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "RealD 3D",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Laser at AMC",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-norridge-6/showtimes?date="
+      },
+      "theatreId": "amc:theatre:136",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T17:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T12:30:00",
+      "utcOffset": "-05:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "reald3d",
+        "reclinerseating",
+        "laseratamc",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "reald3d",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:144238223",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-norridge-6/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:30.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "RealD 3D",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Laser at AMC",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-norridge-6/showtimes?date="
+      },
+      "theatreId": "amc:theatre:136",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T20:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T15:00:00",
+      "utcOffset": "-05:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "reald3d",
+        "reclinerseating",
+        "laseratamc",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "reald3d",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:144238224",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-norridge-6/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:30.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "RealD 3D",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Laser at AMC",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-norridge-6/showtimes?date="
+      },
+      "theatreId": "amc:theatre:136",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T23:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T18:30:00",
+      "utcOffset": "-05:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "reald3d",
+        "reclinerseating",
+        "laseratamc",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "reald3d",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:144238163",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-norridge-6/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:30.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-norridge-6/showtimes?date="
+      },
+      "theatreId": "amc:theatre:136",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T21:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T16:00:00",
+      "utcOffset": "-05:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:144238164",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-norridge-6/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:30.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-norridge-6/showtimes?date="
+      },
+      "theatreId": "amc:theatre:136",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T00:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T19:30:00",
+      "utcOffset": "-05:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:144238167",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-norridge-6/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:30.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-norridge-6/showtimes?date="
+      },
+      "theatreId": "amc:theatre:136",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T03:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T22:00:00",
+      "utcOffset": "-05:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145781998",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-norridge-6/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:30.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "AMC Artisan Films",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-norridge-6/showtimes?date="
+      },
+      "theatreId": "amc:theatre:136",
+      "movieId": "amc:movie:76238",
+      "movieTitle": "The Odyssey",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T17:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T12:00:00",
+      "utcOffset": "-05:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "amcartisanfilms",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145782055",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-norridge-6/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:30.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "AMC Artisan Films",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-norridge-6/showtimes?date="
+      },
+      "theatreId": "amc:theatre:136",
+      "movieId": "amc:movie:76238",
+      "movieTitle": "The Odyssey",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T19:15:00.000Z",
+      "showDateTimeLocal": "2026-08-13T14:15:00",
+      "utcOffset": "-05:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "amcartisanfilms",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145782054",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-norridge-6/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:30.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "AMC Artisan Films",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-norridge-6/showtimes?date="
+      },
+      "theatreId": "amc:theatre:136",
+      "movieId": "amc:movie:76238",
+      "movieTitle": "The Odyssey",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T23:10:00.000Z",
+      "showDateTimeLocal": "2026-08-13T18:10:00",
+      "utcOffset": "-05:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "amcartisanfilms",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145782053",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-norridge-6/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:30.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "AMC Artisan Films",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-norridge-6/showtimes?date="
+      },
+      "theatreId": "amc:theatre:136",
+      "movieId": "amc:movie:76238",
+      "movieTitle": "The Odyssey",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T02:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T21:30:00",
+      "utcOffset": "-05:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "amcartisanfilms",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145929453",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-norridge-6/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:30.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-norridge-6/showtimes?date="
+      },
+      "theatreId": "amc:theatre:136",
+      "movieId": "amc:movie:80552",
+      "movieTitle": "One Night Only",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T18:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T13:00:00",
+      "utcOffset": "-05:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145929452",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-norridge-6/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:30.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-norridge-6/showtimes?date="
+      },
+      "theatreId": "amc:theatre:136",
+      "movieId": "amc:movie:80552",
+      "movieTitle": "One Night Only",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T20:45:00.000Z",
+      "showDateTimeLocal": "2026-08-13T15:45:00",
+      "utcOffset": "-05:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145929451",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-norridge-6/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:30.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-norridge-6/showtimes?date="
+      },
+      "theatreId": "amc:theatre:136",
+      "movieId": "amc:movie:80552",
+      "movieTitle": "One Night Only",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T23:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T18:30:00",
+      "utcOffset": "-05:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145929386",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-norridge-6/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:30.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-norridge-6/showtimes?date="
+      },
+      "theatreId": "amc:theatre:136",
+      "movieId": "amc:movie:80552",
+      "movieTitle": "One Night Only",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T03:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T22:00:00",
+      "utcOffset": "-05:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145929432",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-norridge-6/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:30.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-norridge-6/showtimes?date="
+      },
+      "theatreId": "amc:theatre:136",
+      "movieId": "amc:movie:76344",
+      "movieTitle": "PAW Patrol: The Dino Movie",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T19:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T14:00:00",
+      "utcOffset": "-05:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145929431",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-norridge-6/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:30.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-norridge-6/showtimes?date="
+      },
+      "theatreId": "amc:theatre:136",
+      "movieId": "amc:movie:76344",
+      "movieTitle": "PAW Patrol: The Dino Movie",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T21:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T16:30:00",
+      "utcOffset": "-05:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145929430",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-norridge-6/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:30.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-norridge-6/showtimes?date="
+      },
+      "theatreId": "amc:theatre:136",
+      "movieId": "amc:movie:76344",
+      "movieTitle": "PAW Patrol: The Dino Movie",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T00:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T19:00:00",
+      "utcOffset": "-05:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145929450",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-norridge-6/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:30.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-norridge-6/showtimes?date="
+      },
+      "theatreId": "amc:theatre:136",
+      "movieId": "amc:movie:76344",
+      "movieTitle": "PAW Patrol: The Dino Movie",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T02:15:00.000Z",
+      "showDateTimeLocal": "2026-08-13T21:15:00",
+      "utcOffset": "-05:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145929248",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-norridge-6/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:30.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-norridge-6/showtimes?date="
+      },
+      "theatreId": "amc:theatre:136",
+      "movieId": "amc:movie:71226",
+      "movieTitle": "The End of Oak Street",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T21:15:00.000Z",
+      "showDateTimeLocal": "2026-08-13T16:15:00",
+      "utcOffset": "-05:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145929249",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-norridge-6/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:30.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-norridge-6/showtimes?date="
+      },
+      "theatreId": "amc:theatre:136",
+      "movieId": "amc:movie:71226",
+      "movieTitle": "The End of Oak Street",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T00:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T19:00:00",
+      "utcOffset": "-05:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145929247",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-norridge-6/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:30.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/chicago/amc-norridge-6/showtimes?date="
+      },
+      "theatreId": "amc:theatre:136",
+      "movieId": "amc:movie:71226",
+      "movieTitle": "The End of Oak Street",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T02:45:00.000Z",
+      "showDateTimeLocal": "2026-08-13T21:45:00",
+      "utcOffset": "-05:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    }
+  ]
+}

@@ -1,0 +1,78 @@
+# docker-compose.ci.yml — CI-local synthetic compose overlay (ADR 0084)
+#
+# Overrides docker-compose.yml for offline CI smoke tests:
+# 1. Replaces Tailscale sidecar with a stable synthetic network namespace container
+#    with container-level extra_hosts denying AMC hostnames to 127.0.0.1.
+# 2. Replaces fetch-worker entrypoint with fixture-backed synthetic dev-entrypoint.mjs.
+# 3. Sets SEATFIRST_ENV: ci across all services.
+# 4. Sets fast-passing healthcheck on tailscale stub so dependent services start immediately.
+
+services:
+  tailscale:
+    entrypoint: ["/bin/sh", "-c", "sleep infinity"]
+    restart: "no"
+    extra_hosts:
+      - "amctheatres.com:127.0.0.1"
+      - "www.amctheatres.com:127.0.0.1"
+      - "queue.amctheatres.com:127.0.0.1"
+      - "api.amctheatres.com:127.0.0.1"
+      - "cdn.amctheatres.com:127.0.0.1"
+    healthcheck:
+      test: ["CMD-SHELL", "exit 0"]
+      interval: 1s
+      timeout: 1s
+      retries: 1
+      start_period: 0s
+
+  fetch-worker:
+    command: ["node", "/app/dev-entrypoint.mjs"]
+    volumes:
+      - ./docker/fetch-worker/dev-entrypoint.mjs:/app/dev-entrypoint.mjs:ro
+      - ./dev/fixtures/amc:/app/dev/fixtures/amc:ro
+    environment:
+      SEATFIRST_ENV: ci
+      SKIP_EGRESS_VERIFY: "true"
+    # ci-smoke runs this stack inside a nested dockerd (docker/setup-docker-action
+    # started inside an already-containerized GitHub Actions job). That nesting
+    # depth doesn't get the memory cgroup controller delegated into a domain
+    # (non-threaded) subtree, so any container requesting a memory ceiling fails
+    # outright: "cannot enter cgroupv2 .../docker with domain controllers -- it
+    # is in threaded mode". Verified directly: the identical `docker run
+    # --memory=2048m` (the base compose file's ADR 0084 ceiling) fails with that
+    # exact error in a matching nested-dockerd repro, while `--memory=0`
+    # (Docker's "no limit" value) does not. The production ceiling in
+    # docker-compose.yml is untouched; this override only relaxes the
+    # CI-synthetic stack's copy.
+    deploy:
+      resources:
+        limits:
+          memory: "0"
+
+  app:
+    environment:
+      SEATFIRST_ENV: ci
+
+  relay:
+    environment:
+      SEATFIRST_ENV: ci
+      RELAY_POLL_INTERVAL_MS: ${RELAY_POLL_INTERVAL_MS:-1000}
+      RELAY_BATCH_SIZE: ${RELAY_BATCH_SIZE:-10}
+      RELAY_RETRY_BACKOFF: ${RELAY_RETRY_BACKOFF:-5 seconds}
+      RELAY_ALARM_THRESHOLD_MS: ${RELAY_ALARM_THRESHOLD_MS:-30000}
+      RELAY_HEALTH_PORT: ${RELAY_HEALTH_PORT:-8082}
+
+  sweeper:
+    environment:
+      SEATFIRST_ENV: ci
+      SWEEP_PG_POOL_MAX: ${SWEEP_PG_POOL_MAX:-5}
+      SWEEP_PG_POOL_IDLE_TIMEOUT_MS: ${SWEEP_PG_POOL_IDLE_TIMEOUT_MS:-30000}
+      SWEEP_PG_CONNECT_TIMEOUT_MS: ${SWEEP_PG_CONNECT_TIMEOUT_MS:-5000}
+      SWEEP_TICK_INTERVAL_MS: ${SWEEP_TICK_INTERVAL_MS:-1000}
+      SWEEP_OUTBOX_BATCH: ${SWEEP_OUTBOX_BATCH:-10}
+      SWEEP_REARM_AGE: ${SWEEP_REARM_AGE:-5 minutes}
+      SWEEP_MAX_ATTEMPTS: ${SWEEP_MAX_ATTEMPTS:-3}
+      SWEEP_SNAPSHOT_AGE: ${SWEEP_SNAPSHOT_AGE:-1 hour}
+
+  tmdb:
+    environment:
+      SEATFIRST_ENV: ci

@@ -1,0 +1,42 @@
+{
+  "name": "seatfirst",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@11.5.2",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "build": "turbo run build",
+    "typecheck": "turbo run typecheck",
+    "test": "turbo run test --filter=!@seatfirst/durability",
+    "test:coverage": "turbo run test:coverage --filter=!@seatfirst/durability",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "lint:docs": "markdownlint-cli2 \"**/*.md\" && node scripts/check-doc-refs.mjs",
+    "test:scripts": "vitest run --config vitest.config.scripts.mjs",
+    "clean": "turbo run clean && rm -rf node_modules",
+    "test:durability": "turbo run test --filter=@seatfirst/durability",
+    "test:durability:extended": "pnpm --filter @seatfirst/durability test:extended",
+    "cleanup:chrome": "node scripts/cleanup-dangling-chrome.mjs",
+    "capture:ui-seeds": "node scripts/capture-ui-seeds.mjs"
+  },
+  "devDependencies": {
+    "@eslint/js": "10.0.1",
+    "@seatfirst/config": "workspace:*",
+    "@types/node": "24.13.3",
+    "@vitest/coverage-v8": "4.1.10",
+    "eslint": "10.8.0",
+    "github-slugger": "2.0.0",
+    "globals": "17.9.0",
+    "markdownlint-cli2": "0.23.2",
+    "prettier": "3.9.6",
+    "turbo": "2.10.7",
+    "typescript": "6.0.3",
+    "typescript-eslint": "8.65.0",
+    "vitest": "4.1.10"
+  }
+}

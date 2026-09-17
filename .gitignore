@@ -1,0 +1,54 @@
+node_modules/
+.pnpm-store/
+dist/
+build/
+coverage/
+.turbo/
+*.tsbuildinfo
+
+# Expo / React Native
+.expo/
+.expo-shared/
+web-build/
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+
+# Infra
+cdk.out/
+*.cdk.staging/
+# Rendered Valkey ACL (ADR 0077 D4) — container-local output of render-acl.sh, never commit.
+infra/config/valkey/users.acl
+
+# Env & secrets — never commit
+.env
+.env.*
+!.env.example
+!.env.dev.example
+!.env.secrets.example
+!.env.dev.secrets.example
+
+# Adapter fixtures are gated on the legal/data-use ADR (architecture §15 gates 1, 7).
+# Nothing captured from the upstream may land here until that ADR exists.
+packages/providers/fixtures/raw/
+
+# P7's browser-driven capture tool writes captured payloads to the same discipline: raw
+# captures are gitignored everywhere, never committed (architecture §15 gate 7).
+apps/server/fixtures/raw/
+
+# Editors / OS
+.DS_Store
+.idea/
+.vscode/*
+!.vscode/extensions.json
+*.log
+
+# Screenshots generated during development or testing
+screenshots/
+
+.agents
+.claude
+.codex
+.pi

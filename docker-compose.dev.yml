@@ -1,0 +1,487 @@
+# Local-dev-backend stack (dev/README.md). NOT the production home-hosted stack
+# (docker-compose.yml, ADR 0004) — no wal-g/S3/Tailscale. ADR 0046 splits local configuration
+# (`.env.dev`) from credentials (`.env.dev.secrets`); load both files explicitly. AMC traffic is fixture-only by
+# default in every mode below; real AMC traffic is available but requires the explicit
+# opt-in described under `AMC_LIVE_FETCH` further down. Observability (Prometheus/Loki/
+# Tempo/Grafana) is not part of this file either — it's a decoupled, independent-lifecycle
+# Compose project, `docker-compose.observability.yml`, that this file can optionally be run
+# alongside for local telemetry testing (`docker compose -f docker-compose.observability.yml
+# up -d`); it is never started implicitly by any command below.
+#
+# Safe to run on the same machine as the production stack (docker-compose.yml) at the same
+# time: distinct Compose project names (`seatfirst` vs `seatfirst-dev`) namespace every
+# container/volume/image apart; the two external telemetry networks
+# (`seatfirst-prod-telemetry` / `seatfirst-dev-telemetry`) are separately named; neither
+# stack publishes a host port the other also claims (prod publishes none at all; dev's `api`/
+# `web`/`tmdb` ports default to 4000/8081/none); no bind mount or named volume path is
+# shared between the two files. The one thing Compose-level isolation CANNOT guarantee: if
+# the production `tailscale` service (`network_mode: host`, exit-node routing) is active on
+# the same host, ADR 0004 states that route "applies to the host's kernel routing, which is
+# what all container egress... rides through" — so it may also carry this stack's egress when
+# `AMC_LIVE_FETCH=true` below, not just production's. Verify the actual egress IP yourself
+# before relying on it being distinct (see `AMC_LIVE_FETCH`'s note below and `dev/README.md`);
+# this file cannot detect or prevent that on its own. Never run this stack's
+# `AMC_LIVE_FETCH=true` at the same time as a production fetch pass — the two stacks have
+# entirely separate Postgres/Valkey, so there is no shared one-in-flight semaphore between
+# them, and running both live simultaneously can produce concurrent AMC requests that neither
+# stack alone would ever issue. This is an operator discipline this file enforces with a
+# startup warning, not a technical lock — see `dev/README.md`.
+#
+# Two structural modes, one file, distinguished by Compose profiles:
+#
+#   api-only (default `docker compose -f docker-compose.dev.yml --env-file .env.dev --env-file
+#   .env.dev.secrets up`): postgres + valkey +
+#   api only. A one-shot seed step (`run --rm seed`, not part of `up`) pre-populates real
+#   theatre/schedule/seat-bitmap cache rows using real durability transactions and real
+#   parsers — no live dispatch. Browsing/searching/scoring are fully real;
+#   `showtimes.recheck` legitimately times out (nothing processes RUN jobs) — expected, not
+#   a bug.
+#
+#   full (`docker compose -f docker-compose.dev.yml --env-file .env.dev --env-file
+#   .env.dev.secrets --profile full up`): adds relay +
+#   sweeper + fetch-worker. The fetch-worker runs the real image; whether its network hop is
+#   fake or real is controlled independently by `AMC_LIVE_FETCH`, below — the `full` profile
+#   only decides whether the pipeline exists at all. `recheck` resolves for real
+#   (AVAILABLE/GONE) through the actual RUN/lease/dispatch pipeline either way.
+# `migrate` is a one-shot init service that runs automatically on every `up` (no
+# profile) and must complete successfully before any DB-using service starts; `seed`
+# is a one-shot service with its own `seed` profile so it never runs as part of a
+# bare `up` OR `--profile full up` — always invoked explicitly (`run --rm seed`),
+# the same "run once per fresh volume" operator step in both modes. See
+# `dev/README.md` for the exact sequence.
+#
+# Two orthogonal, data-gated opt-ins (no extra `--profile` flag needed for either — each
+# turns on purely because you supplied the value it needs):
+#
+#   tmdb (`TMDB_API_KEY` set in `.env.dev.secrets`): the real TMDB metadata worker (ADR 0019) making
+#   REAL calls to api.themoviedb.org with your own key. Leave `TMDB_API_KEY` blank and the
+#   `tmdb` service starts, logs that it's skipping, and exits cleanly — no separate profile,
+#   no crash loop. Entirely unrelated to AMC; enables no AMC traffic.
+#
+#   AMC_LIVE_FETCH=true (set in `.env.dev`, only takes effect within `--profile full`):
+#   **decided by Josh Wu (ADR 0034, config-flag path, 2026-08-23) — real AMC traffic from a
+#   local dev machine, explicit config-flag risk accepted.** When unset/false (default), the
+#   fetch-worker runs `dev-entrypoint.mjs`'s fixture-only seam exactly as before — zero live
+#   AMC traffic, structurally enforced (`apps/server/src/fetch-worker/entrypoint.ts` now
+#   threads that seam into both the RUN actor and the S26 catalogue-crawl loop). When `true`,
+#   the fetch-worker instead runs the SAME real `entrypoint.mjs` production uses: real Chrome,
+#   real navigation, real requests to `www.amctheatres.com`, for BOTH the RUN provider-fetch
+#   actor (seat/schedule fetches) and the S26/ADR-0022 catalogue-crawl loop (theatre-directory
+#   crawl) — they share one entrypoint, so the flag affects both. It reuses the exact same
+#   production request-discipline code (one-in-flight, jitter, backoff, halt-on-challenge,
+#   audit logging — ADR 0002 §2.3/§2.8) unmodified; this flag changes which entrypoint runs,
+#   not what that code enforces. See `dev/README.md` and
+#   `docs/adr/0034-local-dev-real-amc-fetch-session-mode.md` for the full picture, including
+#   the same-machine-as-production caveats above.
+
+name: seatfirst-dev
+
+services:
+  # ---- Shared base image (see docker-compose.yml's base service) ----
+  base:
+    build:
+      context: .
+      dockerfile: Dockerfile.base
+    image: seatfirst-base:latest
+    command: ["true"]
+    restart: "no"
+
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required — copy .env.dev.secrets.example to .env.dev.secrets}
+      POSTGRES_READONLY_PASSWORD: ${POSTGRES_READONLY_PASSWORD:?POSTGRES_READONLY_PASSWORD is required — copy .env.dev.secrets.example to .env.dev.secrets}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./docker/postgres/12-readonly-role.sh:/docker-entrypoint-initdb.d/12-readonly-role.sh:ro
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+
+  # Identical service block to the prod compose (persistence off — broker is a delivery
+  # hint only, ADR 0004:131-140).
+  valkey:
+    image: valkey/valkey:7.2-alpine
+    command:
+      ["valkey-server", "--save", "", "--appendonly", "no", "--aclfile", "/etc/valkey/users.acl"]
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD:?REDIS_PASSWORD is required (see .env.dev.secrets.example)}
+      REDIS_READONLY_PASSWORD: ${REDIS_READONLY_PASSWORD:?REDIS_READONLY_PASSWORD is required (see .env.dev.secrets.example)}
+    volumes:
+      - ./docker/valkey/users.acl.template:/etc/valkey/users.acl.template:ro
+      - ./docker/valkey/render-acl.sh:/usr/local/bin/render-acl.sh:ro
+    entrypoint: ["/bin/sh", "/usr/local/bin/render-acl.sh"]
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", 'valkey-cli --user default --pass "$$REDIS_PASSWORD" ping | grep -q PONG']
+      interval: 2s
+      timeout: 3s
+      retries: 30
+
+  # One-shot migration runner (ADR 0005 §G) — no profile, runs on every `up` and must
+  # complete before any DB-using service starts (`service_completed_successfully`).
+  migrate:
+    build:
+      context: .
+      dockerfile: Dockerfile.app
+      args:
+        BASE_IMAGE: seatfirst-base:latest
+    command: ["node", "/app/packages/durability/dist/src/migrate-cli.js"]
+    restart: "no"
+    environment:
+      DATABASE_URL: ${DATABASE_URL:?}
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  seed:
+    build:
+      context: .
+      dockerfile: Dockerfile.app
+      args:
+        BASE_IMAGE: seatfirst-base:latest
+    profiles: ["seed"]
+    command: ["node", "/app/packages/durability/dist/scripts/seed-dev-fixtures.js"]
+    environment:
+      DATABASE_URL: ${DATABASE_URL:?}
+    volumes:
+      - ./dev/fixtures/amc:/app/dev/fixtures/amc:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+      # Seeding writes into tables the migrations create, so it must not run against an
+      # unmigrated volume. `run --rm seed` starts this dependency chain on its own, which
+      # is the documented way to seed (dev/README.md).
+      migrate:
+        condition: service_completed_successfully
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.app
+      args:
+        BASE_IMAGE: seatfirst-base:latest
+    command: ["node", "dist/index.js", "api"]
+    restart: unless-stopped
+    # `default` (seatfirst-dev-telemetry) is `--internal` (I4). `api` and `web` also join
+    # `published`, a plain Compose-managed bridge, purely to expose their ports to the host.
+    # `tmdb` instead joins the separate `tmdb-egress` bridge for its outbound metadata calls.
+    # This publishes no tmdb host port and enables no AMC traffic. Every other service stays
+    # on `default` only: it does not publish a host port or need outbound reachability.
+    networks:
+      - default
+      - published
+    ports:
+      - "${API_PORT:-4000}:${API_PORT:-4000}"
+    environment:
+      NODE_ENV: development
+      SEATFIRST_ENV: dev
+      DATABASE_URL: ${DATABASE_URL:?}
+      REDIS_URL: ${REDIS_URL:?}
+      API_PORT: ${API_PORT:?}
+      APP_PG_POOL_MAX: ${APP_PG_POOL_MAX:?}
+      APP_PG_POOL_IDLE_TIMEOUT_MS: ${APP_PG_POOL_IDLE_TIMEOUT_MS:?}
+      APP_PG_CONNECT_TIMEOUT_MS: ${APP_PG_CONNECT_TIMEOUT_MS:?}
+      COOKIE_SECRET: ${COOKIE_SECRET:?}
+      NONCE_SECRET: ${NONCE_SECRET:?}
+      RELAY_PEER_CIDR: ${RELAY_PEER_CIDR:?}
+      FRESHNESS_MS: ${FRESHNESS_MS:?}
+      RETRY_AFTER_SECONDS: ${RETRY_AFTER_SECONDS:?}
+      STREAM_BLOCK_TIMEOUT_MS: ${STREAM_BLOCK_TIMEOUT_MS:?}
+      RECHECK_DEADLINE_MS: ${RECHECK_DEADLINE_MS:?}
+      RECHECK_RECOVERY_ROW_WEIGHT: ${RECHECK_RECOVERY_ROW_WEIGHT:?}
+      ASN_DATABASE_PATH: ${ASN_DATABASE_PATH:?}
+      SEARCH_LIMITS_JSON: ${SEARCH_LIMITS_JSON:?}
+      RATE_LIMIT_CONFIG_JSON: ${RATE_LIMIT_CONFIG_JSON:?}
+      SESSION_COOKIE_POLICY_JSON: ${SESSION_COOKIE_POLICY_JSON:?}
+      PROVIDER_HOST_ALLOWLISTS_JSON: ${PROVIDER_HOST_ALLOWLISTS_JSON:?}
+      CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS:?}
+      # S51 (ADR 0045 §2) — Mapbox token requiredString (gate 14). In dev the placeholder
+      # `dev-only-mapbox-token-not-for-prod` from .env.dev.secrets.example satisfies the gate without
+      # a live call (tests inject a stub).
+      MAPBOX_ACCESS_TOKEN: ${MAPBOX_ACCESS_TOKEN:?}
+      # O5.9/O5.10 — LOG_LEVEL optional; the reader (@seatfirst/config/logger) defaults
+      # to "info" when unset. OTel is optional too.
+      LOG_LEVEL: ${LOG_LEVEL:-}
+      OTEL_EXPORTER_OTLP_ENDPOINT: ${OTEL_EXPORTER_OTLP_ENDPOINT:-}
+      OTEL_RESOURCE_ATTRIBUTES: ${OTEL_RESOURCE_ATTRIBUTES:-}
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+      postgres:
+        condition: service_healthy
+      valkey:
+        condition: service_healthy
+
+  # Expo web dev server (apps/mobile-web) — Mode 1 (api-only), not gated behind the
+  # `full` profile, since theatres.search/theatres.movies already work against api alone.
+  # See Dockerfile.mobile-web.dev's header for why this service (unlike every other one
+  # in this file) bind-mounts editable source instead of only baking a static build.
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.mobile-web.dev
+      args:
+        BASE_IMAGE: seatfirst-base:latest
+    command: ["pnpm", "dev"]
+    restart: unless-stopped
+    ports:
+      - "${WEB_PORT:-8081}:8081"
+    volumes:
+      - ./apps/mobile-web/src:/repo/apps/mobile-web/src
+      - ./apps/mobile-web/app:/repo/apps/mobile-web/app
+      - ./apps/mobile-web/app.json:/repo/apps/mobile-web/app.json
+      - ./apps/mobile-web/tsconfig.json:/repo/apps/mobile-web/tsconfig.json
+    networks:
+      - default
+      - published
+    environment:
+      NODE_ENV: development
+      # Read by the browser, not the container — apps/mobile-web/src/lib/trpc.ts's
+      # getApiUrl() is inlined into the bundle Metro serves, then executed by the host's
+      # browser, so this must be the api port's host-published address (matching
+      # CORS_ALLOWED_ORIGINS's http://localhost:${WEB_PORT} origin below), never the
+      # in-network `api:${API_PORT}` service address.
+      EXPO_PUBLIC_API_URL: http://localhost:${API_PORT:-4000}
+    depends_on:
+      - api
+
+  relay:
+    build:
+      context: .
+      dockerfile: Dockerfile.app
+      args:
+        BASE_IMAGE: seatfirst-base:latest
+    profiles: ["full"]
+    command: ["node", "dist/index.js", "relay"]
+    restart: unless-stopped
+    environment:
+      NODE_ENV: development
+      SEATFIRST_ENV: dev
+      DATABASE_URL: ${DATABASE_URL:?}
+      REDIS_URL: ${REDIS_URL:?}
+      LOG_LEVEL: ${LOG_LEVEL:-}
+      OTEL_EXPORTER_OTLP_ENDPOINT: ${OTEL_EXPORTER_OTLP_ENDPOINT:-}
+      OTEL_RESOURCE_ATTRIBUTES: ${OTEL_RESOURCE_ATTRIBUTES:-}
+      RELAY_POLL_INTERVAL_MS: ${RELAY_POLL_INTERVAL_MS:?}
+      RELAY_BATCH_SIZE: ${RELAY_BATCH_SIZE:?}
+      RELAY_RETRY_BACKOFF: ${RELAY_RETRY_BACKOFF:?}
+      RELAY_ALARM_THRESHOLD_MS: ${RELAY_ALARM_THRESHOLD_MS:?}
+      RELAY_HEALTH_PORT: ${RELAY_HEALTH_PORT:?}
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+      postgres:
+        condition: service_healthy
+      valkey:
+        condition: service_healthy
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "fetch('http://127.0.0.1:' + process.env.RELAY_HEALTH_PORT + '/healthz').then((r) => process.exit(r.ok ? 0 : 1), () => process.exit(1))",
+        ]
+
+  sweeper:
+    build:
+      context: .
+      dockerfile: Dockerfile.app
+      args:
+        BASE_IMAGE: seatfirst-base:latest
+    profiles: ["full"]
+    command: ["node", "dist/index.js", "sweeper"]
+    restart: unless-stopped
+    environment:
+      NODE_ENV: development
+      SEATFIRST_ENV: dev
+      DATABASE_URL: ${DATABASE_URL:?}
+      REDIS_URL: ${REDIS_URL:?}
+      LOG_LEVEL: ${LOG_LEVEL:-}
+      OTEL_EXPORTER_OTLP_ENDPOINT: ${OTEL_EXPORTER_OTLP_ENDPOINT:-}
+      OTEL_RESOURCE_ATTRIBUTES: ${OTEL_RESOURCE_ATTRIBUTES:-}
+      SWEEP_TICK_INTERVAL_MS: ${SWEEP_TICK_INTERVAL_MS:?}
+      SWEEP_OUTBOX_BATCH: ${SWEEP_OUTBOX_BATCH:?}
+      SWEEP_REARM_AGE: ${SWEEP_REARM_AGE:?}
+      SWEEP_MAX_ATTEMPTS: ${SWEEP_MAX_ATTEMPTS:?}
+      SWEEP_SNAPSHOT_AGE: ${SWEEP_SNAPSHOT_AGE:?}
+      SWEEP_PG_POOL_MAX: ${SWEEP_PG_POOL_MAX:?}
+      SWEEP_PG_POOL_IDLE_TIMEOUT_MS: ${SWEEP_PG_POOL_IDLE_TIMEOUT_MS:?}
+      SWEEP_PG_CONNECT_TIMEOUT_MS: ${SWEEP_PG_CONNECT_TIMEOUT_MS:?}
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+      postgres:
+        condition: service_healthy
+      valkey:
+        condition: service_healthy
+
+  # Real fetch-worker image, real Chrome, real navigation. Whether the network hop is fake
+  # or real is controlled by `AMC_LIVE_FETCH` below (default false — fixture-only, via
+  # `dev-entrypoint.mjs`'s fetchHop seam, bind-mounted below, answering from
+  # `dev/fixtures/amc/`). `AMC_LIVE_FETCH=true` runs the SAME real `entrypoint.mjs`
+  # production's image already contains (baked in by `Dockerfile.fetch-worker`, unaffected
+  # by this override either way) instead — see the top-of-file header for the full decision
+  # record (ADR 0034) and same-machine-as-production caveats.
+  fetch-worker:
+    build:
+      context: .
+      dockerfile: Dockerfile.fetch-worker
+      args:
+        BASE_IMAGE: seatfirst-base:latest
+    profiles: ["full"]
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        if [ "$${AMC_LIVE_FETCH:-false}" = "true" ]; then
+          echo "[fetch-worker] AMC_LIVE_FETCH=true -- running the REAL entrypoint against the live network (real requests to www.amctheatres.com, both the RUN actor and the S26 catalogue-crawl loop). See dev/README.md and docs/adr/0034-local-dev-real-amc-fetch-session-mode.md. Confirm the production stack is not live-fetching on this machine right now before proceeding."
+          exec node /app/entrypoint.mjs
+        else
+          exec node /app/dev-entrypoint.mjs
+        fi
+    init: true
+    user: "10001:10001"
+    # Dev-compose-only accommodation, not a change to the shipped image or to production's
+    # compose file: Chrome's own sandbox needs user-namespace capabilities that a Docker
+    # Desktop VM does not grant a non-root container user by default (confirmed by hand —
+    # without this, BrowserSupervisor's Chrome process never exposes its debugging endpoint
+    # and `full` mode cannot start at all). This restores the capability so Chrome's sandbox
+    # runs AS DESIGNED; it deliberately does not add `--no-sandbox` to the launch args
+    # (`packages/browser-runtime/src/supervisor.ts`, unchanged) — that would actually
+    # disable the sandbox rather than let it run, a materially different, code-level
+    # decision this plan does not make. Whether real (non-Docker-Desktop) production hosts
+    # need the same accommodation is a separate, out-of-scope question — flagged, not
+    # answered, here.
+    cap_add:
+      - SYS_ADMIN
+    restart: unless-stopped
+    volumes:
+      - ./docker/fetch-worker/dev-entrypoint.mjs:/app/dev-entrypoint.mjs:ro
+      - ./dev/fixtures/amc:/app/dev/fixtures/amc:ro
+    environment:
+      # AMC_LIVE_FETCH gates which entrypoint the command block above execs (see it and the
+      # top-of-file header) — default false, fixture-only. Passed through here so the shell
+      # wrapper can read it from the container's own environment.
+      AMC_LIVE_FETCH: ${AMC_LIVE_FETCH:-false}
+      # Fixture-only scenario controls (ADR 0040). They do not affect the real entrypoint
+      # selected when AMC_LIVE_FETCH=true.
+      DEV_FIXTURE_SCENARIO: ${DEV_FIXTURE_SCENARIO:-full}
+      DEV_FIXTURE_SEED: ${DEV_FIXTURE_SEED:-seatfirst-dev-fixture-v1}
+      NODE_ENV: development
+      SEATFIRST_ENV: dev
+      DATABASE_URL: ${DATABASE_URL:?}
+      REDIS_URL: ${REDIS_URL:?}
+      LOG_LEVEL: ${LOG_LEVEL:-}
+      OTEL_EXPORTER_OTLP_ENDPOINT: ${OTEL_EXPORTER_OTLP_ENDPOINT:-}
+      OTEL_RESOURCE_ATTRIBUTES: ${OTEL_RESOURCE_ATTRIBUTES:-}
+      DISPATCH_PG_POOL_MAX: ${DISPATCH_PG_POOL_MAX:?}
+      DISPATCH_PG_IDLE_TIMEOUT_MS: ${DISPATCH_PG_IDLE_TIMEOUT_MS:?}
+      DISPATCH_PG_CONNECT_TIMEOUT_MS: ${DISPATCH_PG_CONNECT_TIMEOUT_MS:?}
+      DISPATCH_LEASE_TTL: ${DISPATCH_LEASE_TTL:?}
+      PG_POOL_MAX: ${PG_POOL_MAX:?}
+      PG_POOL_IDLE_TIMEOUT_MS: ${PG_POOL_IDLE_TIMEOUT_MS:?}
+      PG_POOL_CONNECTION_TIMEOUT_MS: ${PG_POOL_CONNECTION_TIMEOUT_MS:?}
+      AMC_USER_AGENT: ${AMC_USER_AGENT:?}
+      AMC_NAVIGATION_TIMEOUT_MS: ${AMC_NAVIGATION_TIMEOUT_MS:?}
+      AMC_SEMAPHORE_TTL_MS: ${AMC_SEMAPHORE_TTL_MS:?}
+      CHROME_EXECUTABLE_PATH: ${CHROME_EXECUTABLE_PATH:?CHROME_EXECUTABLE_PATH is required — see dev/README.md's one-time discovery step}
+      AMC_CLEANUP_GRACE_PERIOD_MS: ${AMC_CLEANUP_GRACE_PERIOD_MS:?}
+      AMC_READINESS_TIMEOUT_MS: ${AMC_READINESS_TIMEOUT_MS:?}
+      AMC_READINESS_TARGET_URL: ${AMC_READINESS_TARGET_URL:?}
+      AGGREGATE_PG_POOL_MAX: ${AGGREGATE_PG_POOL_MAX:?}
+      AGGREGATE_PG_POOL_IDLE_TIMEOUT_MS: ${AGGREGATE_PG_POOL_IDLE_TIMEOUT_MS:?}
+      AGGREGATE_PG_POOL_CONNECT_TIMEOUT_MS: ${AGGREGATE_PG_POOL_CONNECT_TIMEOUT_MS:?}
+      AGGREGATE_PROVIDER_HOST_ALLOWLISTS_JSON: ${AGGREGATE_PROVIDER_HOST_ALLOWLISTS_JSON:?}
+      AGGREGATE_OFFER_STALENESS_MS: ${AGGREGATE_OFFER_STALENESS_MS:?}
+      RUN_PG_MAX: ${RUN_PG_MAX:?}
+      RUN_PG_IDLE_TIMEOUT_MS: ${RUN_PG_IDLE_TIMEOUT_MS:?}
+      RUN_PG_CONNECTION_TIMEOUT_MS: ${RUN_PG_CONNECTION_TIMEOUT_MS:?}
+      RUN_HEARTBEAT_INTERVAL_MS: ${RUN_HEARTBEAT_INTERVAL_MS:?}
+      RUN_LEASE_TTL: ${RUN_LEASE_TTL:?}
+      RUN_MAX_ATTEMPTS: ${RUN_MAX_ATTEMPTS:?}
+      RATE_LIMIT_CONFIG_JSON: ${RATE_LIMIT_CONFIG_JSON:?}
+      EGRESS_IDENTITY_LABEL: ${EGRESS_IDENTITY_LABEL:?}
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+      postgres:
+        condition: service_healthy
+      valkey:
+        condition: service_healthy
+    # Same no-port-mapping posture as the prod compose (ADR 0004:120-122): Chrome's
+    # debugging port is loopback-only inside the container.
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "fetch('http://127.0.0.1:8787/').then((r) => process.exit(r.ok ? 0 : 1), () => process.exit(1))",
+        ]
+
+  # Real TMDB metadata worker (ADR 0019, S25) — opt-in purely by whether `TMDB_API_KEY` is
+  # set in `.env.dev`, no separate `--profile` flag needed; part of the default service set
+  # so both `up` (mode 1) and `--profile full up` (mode 2) bring it up automatically. Unlike
+  # every other service in this file, this one makes REAL outbound network calls —
+  # api.themoviedb.org only, using your own TMDB v4 Bearer token. It is unrelated to AMC and
+  # enables no AMC traffic of any kind; the worker's ~30 req/s token bucket is hard-coded
+  # in-app (apps/server/src/tmdb/token-bucket.ts), so there is no rate env var here.
+  tmdb:
+    build:
+      context: .
+      dockerfile: Dockerfile.app
+      args:
+        BASE_IMAGE: seatfirst-base:latest
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        if [ -z "$${TMDB_API_KEY:-}" ]; then
+          echo "[tmdb] TMDB_API_KEY not set -- skipping the optional real-TMDB worker (see dev/README.md's 'Optional -- real TMDB metadata' section). Set TMDB_API_KEY in .env.dev.secrets to enable it."
+          exit 0
+        fi
+        exec node dist/index.js tmdb
+    # Only restarts on a real crash (nonzero exit) once a key is present; the graceful
+    # no-key skip above exits 0 and is left stopped, not restart-looped.
+    restart: on-failure
+    environment:
+      NODE_ENV: development
+      SEATFIRST_ENV: dev
+      DATABASE_URL: ${DATABASE_URL:?}
+      REDIS_URL: ${REDIS_URL:?}
+      LOG_LEVEL: ${LOG_LEVEL:-}
+      OTEL_EXPORTER_OTLP_ENDPOINT: ${OTEL_EXPORTER_OTLP_ENDPOINT:-}
+      OTEL_RESOURCE_ATTRIBUTES: ${OTEL_RESOURCE_ATTRIBUTES:-}
+      # Deliberately optional here (unlike every other required var in this file, gate 14):
+      # this is the dev-only opt-in switch itself. An empty value is what triggers the
+      # graceful skip above, not a startup failure.
+      TMDB_API_KEY: ${TMDB_API_KEY:-}
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+      postgres:
+        condition: service_healthy
+      valkey:
+        condition: service_healthy
+    networks:
+      default:
+      tmdb-egress:
+        gw_priority: 1
+
+volumes:
+  pgdata:
+
+# Same shape as the prod stack's default network (docker-compose.yml) but on the dev
+# telemetry network: one operator-created, Docker-internal network whose only
+# observability-side member is the observability project's otel-collector. Create it
+# before the first start (`docker network create seatfirst-dev-telemetry`); Compose
+# neither creates nor removes it, and it is disjoint from prod's network.
+networks:
+  default:
+    name: seatfirst-dev-telemetry
+    external: true
+  published:
+  tmdb-egress: {}

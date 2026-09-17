@@ -1,0 +1,62 @@
+{
+  "name": "@seatfirst/server",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Fastify + tRPC API + Chrome-free workers (api/relay/sweeper/tmdb) — one Node image, four commands; Chrome fetch-worker is a second image (architecture §3, §9)",
+  "main": "./dist/index.js",
+  "types": "./dist/router.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/router.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./router": {
+      "types": "./dist/router.d.ts",
+      "default": "./dist/router.js"
+    },
+    "./dist/fetch-worker/entrypoint.js": "./dist/fetch-worker/entrypoint.js"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "capture-fixtures-browser": "tsx scripts/capture-fixtures-browser.ts",
+    "verify-handoff": "tsx scripts/verify-handoff.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --passWithNoTests",
+    "test:coverage": "vitest run --coverage",
+    "clean": "rm -rf dist .turbo"
+  },
+  "dependencies": {
+    "@fastify/cors": "^11.1.0",
+    "@opentelemetry/api": "1.9.1",
+    "@opentelemetry/api-logs": "0.221.0",
+    "@seatfirst/browser-runtime": "workspace:*",
+    "@seatfirst/config": "workspace:*",
+    "@seatfirst/core": "workspace:*",
+    "@seatfirst/durability": "workspace:*",
+    "@seatfirst/providers": "workspace:*",
+    "@trpc/server": "11.18.0",
+    "bullmq": "5.81.3",
+    "fastify": "5.10.0",
+    "ioredis": "5.11.1",
+    "pg": "8.16.3",
+    "pino": "10.3.1",
+    "zod": "4.4.3"
+  },
+  "devDependencies": {
+    "@opentelemetry/sdk-metrics": "2.10.0",
+    "@testcontainers/postgresql": "11.7.1",
+    "@testcontainers/redis": "11.7.1",
+    "@trpc/client": "11.18.0",
+    "@types/node": "24.13.3",
+    "@types/pg": "8.15.5",
+    "eventsource": "3.0.7",
+    "playwright-core": "1.62.1",
+    "testcontainers": "11.14.0",
+    "tsx": "4.19.1",
+    "typescript": "6.0.3",
+    "@vitest/coverage-v8": "4.1.10",
+    "vitest": "4.1.10",
+    "@opentelemetry/sdk-trace": "2.10.0"
+  }
+}

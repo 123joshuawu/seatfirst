@@ -1,0 +1,142 @@
+# Simplified self-hosted stack for Seatfirst (public open-source shape).
+#
+# Six services only: Postgres, Valkey, a one-shot `migrate` init container, the
+# Fastify API (`app`), a static-file web server (`web`), and the fetch-worker.
+# No Tailscale, no AWS (S3/CloudWatch), no relay/scheduler/observability services
+# — see docker-compose.prod.yml for the full home-hosted hybrid shape, which is
+# not part of this public repo.
+#
+# Quick start:
+#   cp .env.example .env   # then fill in the placeholder values
+#   docker compose up -d
+#
+# The `web` service serves a static build out of ./web-dist (gitignored). Grab
+# the `seatfirst-web-dist-<sha>.zip` artifact from the release matching your
+# image tag, unzip it into ./web-dist, then start the stack.
+
+name: seatfirst-selfhost
+
+services:
+  postgres:
+    image: postgres:16-bookworm
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-seatfirst}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-seatfirst-local-password}
+      POSTGRES_DB: ${POSTGRES_DB:-seatfirst}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER:-seatfirst} -h 127.0.0.1"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # Queue broker, delivery-hints only: Postgres is the source of truth, so
+  # persistence stays off and losing the broker costs nothing but a rediscovery
+  # sweep (same posture as the prod shape).
+  valkey:
+    image: valkey/valkey:8-alpine
+    command: ["valkey-server", "--save", "", "--appendonly", "no"]
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "valkey-cli ping | grep -q PONG"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # One-shot DDL before any app code starts (same posture as the prod shape):
+  # uses the SAME image as `app` so the schema applied is always the schema the
+  # deployed binary expects. Runs to completion on every `up`; `restart: "no"`
+  # prevents a crash loop (`app` gates on `service_completed_successfully`).
+  migrate:
+    image: ghcr.io/123joshuawu/seatfirst/seatfirst-app:latest
+    command: ["node", "/app/packages/durability/dist/src/migrate-cli.js"]
+    restart: "no"
+    environment:
+      DATABASE_URL: ${DATABASE_URL:-postgres://seatfirst:seatfirst-local-password@postgres:5432/seatfirst}
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  # Fastify API (`api` role of the seatfirst-app image).
+  app:
+    image: ghcr.io/123joshuawu/seatfirst/seatfirst-app:latest
+    command: ["node", "dist/index.js", "api"]
+    restart: unless-stopped
+    ports:
+      - "${API_PORT:-4000}:${API_PORT:-4000}"
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: ${DATABASE_URL:-postgres://seatfirst:seatfirst-local-password@postgres:5432/seatfirst}
+      REDIS_URL: ${REDIS_URL:-redis://valkey:6379}
+      API_PORT: ${API_PORT:-4000}
+      COOKIE_SECRET: ${COOKIE_SECRET:-}
+      NONCE_SECRET: ${NONCE_SECRET:-}
+      CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS:-}
+      MAPBOX_ACCESS_TOKEN: ${MAPBOX_ACCESS_TOKEN:-}
+      LOG_LEVEL: ${LOG_LEVEL:-}
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+      postgres:
+        condition: service_healthy
+      valkey:
+        condition: service_healthy
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "fetch('http://127.0.0.1:' + (process.env.API_PORT || '4000') + '/readyz').then((r) => process.exit(r.status === 200 ? 0 : 1), () => process.exit(1))",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  # Static web build (see header comment): place the unzipped release artifact
+  # in ./web-dist before starting the stack.
+  web:
+    image: nginx:alpine
+    restart: unless-stopped
+    ports:
+      - "${WEB_PORT:-8080}:80"
+    volumes:
+      - ./web-dist:/usr/share/nginx/html:ro
+    depends_on:
+      - app
+
+  # Dispatch workers + catalogue crawl (Chrome-bearing image).
+  fetch-worker:
+    image: ghcr.io/123joshuawu/seatfirst/seatfirst-fetch-worker:latest
+    init: true
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: ${DATABASE_URL:-postgres://seatfirst:seatfirst-local-password@postgres:5432/seatfirst}
+      REDIS_URL: ${REDIS_URL:-redis://valkey:6379}
+      LOG_LEVEL: ${LOG_LEVEL:-}
+      EGRESS_MODE: ${EGRESS_MODE:-residential}
+      EGRESS_IDENTITY_LABEL: ${EGRESS_IDENTITY_LABEL:?}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      valkey:
+        condition: service_healthy
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "fetch('http://127.0.0.1:8787/readyz').then((r) => process.exit(r.status === 200 ? 0 : 1), () => process.exit(1))",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 60s
+
+volumes:
+  pgdata:

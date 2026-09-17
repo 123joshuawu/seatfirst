@@ -1,0 +1,4101 @@
+{
+  "ok": true,
+  "value": [
+    {
+      "showtimeId": "amc:showtime:145885184",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:36.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Dolby Cinema at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date="
+      },
+      "theatreId": "amc:theatre:416",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T17:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T13:00:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "dolbycinemaatamcprime",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "dolbycinemaatamcprime",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145885183",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:36.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Dolby Cinema at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date="
+      },
+      "theatreId": "amc:theatre:416",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T20:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T16:30:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "dolbycinemaatamcprime",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "dolbycinemaatamcprime",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145885182",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:36.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Dolby Cinema at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date="
+      },
+      "theatreId": "amc:theatre:416",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T00:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T20:00:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "dolbycinemaatamcprime",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "dolbycinemaatamcprime",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145885181",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:36.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Dolby Cinema at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date="
+      },
+      "theatreId": "amc:theatre:416",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T03:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T23:30:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "dolbycinemaatamcprime",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "dolbycinemaatamcprime",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145885185",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:36.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "4DX at AMC",
+        "rawAttributeNames": [
+          "RealD 3D",
+          "Laser at AMC",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date="
+      },
+      "theatreId": "amc:theatre:416",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T15:45:00.000Z",
+      "showDateTimeLocal": "2026-08-13T11:45:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "4dx",
+        "reald3d",
+        "laseratamc",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "4dx",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:144307674",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:36.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "RealD 3D",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Laser at AMC",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date="
+      },
+      "theatreId": "amc:theatre:416",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T16:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T12:00:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "reald3d",
+        "reclinerseating",
+        "laseratamc",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "reald3d",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:144307675",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:36.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "RealD 3D",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Laser at AMC",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date="
+      },
+      "theatreId": "amc:theatre:416",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T19:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T15:30:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "reald3d",
+        "reclinerseating",
+        "laseratamc",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "reald3d",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:144307676",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:36.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "RealD 3D",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Laser at AMC",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date="
+      },
+      "theatreId": "amc:theatre:416",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T23:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T19:00:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "reald3d",
+        "reclinerseating",
+        "laseratamc",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "reald3d",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:144307677",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:36.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "RealD 3D",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Laser at AMC",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date="
+      },
+      "theatreId": "amc:theatre:416",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T02:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T22:30:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "reald3d",
+        "reclinerseating",
+        "laseratamc",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "reald3d",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:146089789",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:36.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date="
+      },
+      "theatreId": "amc:theatre:416",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T14:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T10:30:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:146089692",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:36.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date="
+      },
+      "theatreId": "amc:theatre:416",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T14:45:00.000Z",
+      "showDateTimeLocal": "2026-08-13T10:45:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:146089655",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:36.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date="
+      },
+      "theatreId": "amc:theatre:416",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T15:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T11:00:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:146089710",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:36.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date="
+      },
+      "theatreId": "amc:theatre:416",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T15:15:00.000Z",
+      "showDateTimeLocal": "2026-08-13T11:15:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:146089582",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:36.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date="
+      },
+      "theatreId": "amc:theatre:416",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T15:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T11:30:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:146089775",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:36.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date="
+      },
+      "theatreId": "amc:theatre:416",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T16:15:00.000Z",
+      "showDateTimeLocal": "2026-08-13T12:15:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:146089570",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:36.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date="
+      },
+      "theatreId": "amc:theatre:416",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T16:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T12:30:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:146089668",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:36.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date="
+      },
+      "theatreId": "amc:theatre:416",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T16:45:00.000Z",
+      "showDateTimeLocal": "2026-08-13T12:45:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:144307752",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:36.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date="
+      },
+      "theatreId": "amc:theatre:416",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T17:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T13:30:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:146089788",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:36.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date="
+      },
+      "theatreId": "amc:theatre:416",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T18:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T14:00:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:146089693",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:36.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date="
+      },
+      "theatreId": "amc:theatre:416",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T18:15:00.000Z",
+      "showDateTimeLocal": "2026-08-13T14:15:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:146089654",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:36.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date="
+      },
+      "theatreId": "amc:theatre:416",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T18:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T14:30:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:146089583",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:36.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date="
+      },
+      "theatreId": "amc:theatre:416",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T19:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T15:00:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:146089569",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:36.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date="
+      },
+      "theatreId": "amc:theatre:416",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T20:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T16:00:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:144307753",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:36.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date="
+      },
+      "theatreId": "amc:theatre:416",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T21:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T17:00:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:146089787",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:36.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date="
+      },
+      "theatreId": "amc:theatre:416",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T21:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T17:30:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:146089652",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:36.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date="
+      },
+      "theatreId": "amc:theatre:416",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T22:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T18:00:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:146089585",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:36.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date="
+      },
+      "theatreId": "amc:theatre:416",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T22:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T18:30:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:146089637",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:36.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date="
+      },
+      "theatreId": "amc:theatre:416",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T23:15:00.000Z",
+      "showDateTimeLocal": "2026-08-13T19:15:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:146089567",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:36.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date="
+      },
+      "theatreId": "amc:theatre:416",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T23:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T19:30:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:146089741",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:36.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date="
+      },
+      "theatreId": "amc:theatre:416",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T00:15:00.000Z",
+      "showDateTimeLocal": "2026-08-13T20:15:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:144307754",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:36.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date="
+      },
+      "theatreId": "amc:theatre:416",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T00:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T20:30:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:146089790",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:36.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date="
+      },
+      "theatreId": "amc:theatre:416",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T01:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T21:00:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:146089669",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:36.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date="
+      },
+      "theatreId": "amc:theatre:416",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T01:15:00.000Z",
+      "showDateTimeLocal": "2026-08-13T21:15:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:146089653",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:36.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date="
+      },
+      "theatreId": "amc:theatre:416",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T01:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T21:30:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:146089804",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:36.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date="
+      },
+      "theatreId": "amc:theatre:416",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T01:45:00.000Z",
+      "showDateTimeLocal": "2026-08-13T21:45:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:146089584",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:36.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date="
+      },
+      "theatreId": "amc:theatre:416",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T02:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T22:00:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:146089709",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:36.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date="
+      },
+      "theatreId": "amc:theatre:416",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T02:15:00.000Z",
+      "showDateTimeLocal": "2026-08-13T22:15:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:146089568",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:36.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date="
+      },
+      "theatreId": "amc:theatre:416",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T03:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T23:00:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:146089551",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:36.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date="
+      },
+      "theatreId": "amc:theatre:416",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T03:15:00.000Z",
+      "showDateTimeLocal": "2026-08-13T23:15:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:146089690",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:36.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "IMAX with Laser at AMC",
+        "rawAttributeNames": [
+          "IMAX at AMC",
+          "AMC Club Rockers",
+          "AMC Artisan Films",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date="
+      },
+      "theatreId": "amc:theatre:416",
+      "movieId": "amc:movie:76238",
+      "movieTitle": "The Odyssey",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T16:45:00.000Z",
+      "showDateTimeLocal": "2026-08-13T12:45:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "imaxlaseratamc",
+        "imax",
+        "amcclubrockers",
+        "amcartisanfilms",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "imaxlaseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145483487",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:36.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "70mm",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "AMC Artisan Films",
+          "Reserved Seating"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date="
+      },
+      "theatreId": "amc:theatre:416",
+      "movieId": "amc:movie:76238",
+      "movieTitle": "The Odyssey",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T16:15:00.000Z",
+      "showDateTimeLocal": "2026-08-13T12:15:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "70mm",
+        "reclinerseating",
+        "amcartisanfilms",
+        "reservedseating"
+      ],
+      "formatCode": "70mm",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145483488",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:36.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "70mm",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "AMC Artisan Films",
+          "Reserved Seating"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date="
+      },
+      "theatreId": "amc:theatre:416",
+      "movieId": "amc:movie:76238",
+      "movieTitle": "The Odyssey",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T20:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T16:30:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "70mm",
+        "reclinerseating",
+        "amcartisanfilms",
+        "reservedseating"
+      ],
+      "formatCode": "70mm",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145483489",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:36.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "70mm",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "AMC Artisan Films",
+          "Reserved Seating"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date="
+      },
+      "theatreId": "amc:theatre:416",
+      "movieId": "amc:movie:76238",
+      "movieTitle": "The Odyssey",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T00:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T20:30:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "70mm",
+        "reclinerseating",
+        "amcartisanfilms",
+        "reservedseating"
+      ],
+      "formatCode": "70mm",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:146089603",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:36.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "AMC Artisan Films",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date="
+      },
+      "theatreId": "amc:theatre:416",
+      "movieId": "amc:movie:76238",
+      "movieTitle": "The Odyssey",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T15:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T11:30:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "amcartisanfilms",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:146089694",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:36.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "AMC Artisan Films",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date="
+      },
+      "theatreId": "amc:theatre:416",
+      "movieId": "amc:movie:76238",
+      "movieTitle": "The Odyssey",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T18:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T14:30:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "amcartisanfilms",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:146089602",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:36.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "AMC Artisan Films",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date="
+      },
+      "theatreId": "amc:theatre:416",
+      "movieId": "amc:movie:76238",
+      "movieTitle": "The Odyssey",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T19:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T15:30:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "amcartisanfilms",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:146089695",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:36.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "AMC Artisan Films",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date="
+      },
+      "theatreId": "amc:theatre:416",
+      "movieId": "amc:movie:76238",
+      "movieTitle": "The Odyssey",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T22:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T18:30:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "amcartisanfilms",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:146089601",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:36.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "AMC Artisan Films",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date="
+      },
+      "theatreId": "amc:theatre:416",
+      "movieId": "amc:movie:76238",
+      "movieTitle": "The Odyssey",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T23:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T19:30:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "amcartisanfilms",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:146089604",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:36.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "AMC Artisan Films",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date="
+      },
+      "theatreId": "amc:theatre:416",
+      "movieId": "amc:movie:76238",
+      "movieTitle": "The Odyssey",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T03:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T23:30:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "amcartisanfilms",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:146089747",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:36.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date="
+      },
+      "theatreId": "amc:theatre:416",
+      "movieId": "amc:movie:80552",
+      "movieTitle": "One Night Only",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T15:15:00.000Z",
+      "showDateTimeLocal": "2026-08-13T11:15:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:146089746",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:36.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date="
+      },
+      "theatreId": "amc:theatre:416",
+      "movieId": "amc:movie:80552",
+      "movieTitle": "One Night Only",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T18:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T14:00:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145470962",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:36.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date="
+      },
+      "theatreId": "amc:theatre:416",
+      "movieId": "amc:movie:80552",
+      "movieTitle": "One Night Only",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T20:45:00.000Z",
+      "showDateTimeLocal": "2026-08-13T16:45:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145470963",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:36.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date="
+      },
+      "theatreId": "amc:theatre:416",
+      "movieId": "amc:movie:80552",
+      "movieTitle": "One Night Only",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T23:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T19:30:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145470964",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:36.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date="
+      },
+      "theatreId": "amc:theatre:416",
+      "movieId": "amc:movie:80552",
+      "movieTitle": "One Night Only",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T02:15:00.000Z",
+      "showDateTimeLocal": "2026-08-13T22:15:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:146089725",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:36.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date="
+      },
+      "theatreId": "amc:theatre:416",
+      "movieId": "amc:movie:82341",
+      "movieTitle": "Super Troopers 3",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T15:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T11:30:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:146089724",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:36.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date="
+      },
+      "theatreId": "amc:theatre:416",
+      "movieId": "amc:movie:82341",
+      "movieTitle": "Super Troopers 3",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T18:15:00.000Z",
+      "showDateTimeLocal": "2026-08-13T14:15:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:146089728",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:36.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date="
+      },
+      "theatreId": "amc:theatre:416",
+      "movieId": "amc:movie:82341",
+      "movieTitle": "Super Troopers 3",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T21:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T17:00:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:146089726",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:36.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date="
+      },
+      "theatreId": "amc:theatre:416",
+      "movieId": "amc:movie:82341",
+      "movieTitle": "Super Troopers 3",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T23:45:00.000Z",
+      "showDateTimeLocal": "2026-08-13T19:45:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:146089727",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:36.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date="
+      },
+      "theatreId": "amc:theatre:416",
+      "movieId": "amc:movie:82341",
+      "movieTitle": "Super Troopers 3",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T02:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T22:30:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:146089538",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:36.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "ID Required",
+          "AMC Signature Recliners",
+          "Thrills & Chills",
+          "Reserved Seating",
+          "Closed Caption"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date="
+      },
+      "theatreId": "amc:theatre:416",
+      "movieId": "amc:movie:83358",
+      "movieTitle": "Ice Cream Man",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T15:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T11:30:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "idrequired",
+        "reclinerseating",
+        "thrlschls",
+        "reservedseating",
+        "closedcaption"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:146089553",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:36.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "ID Required",
+          "AMC Signature Recliners",
+          "Thrills & Chills",
+          "Reserved Seating",
+          "Closed Caption"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date="
+      },
+      "theatreId": "amc:theatre:416",
+      "movieId": "amc:movie:83358",
+      "movieTitle": "Ice Cream Man",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T17:20:00.000Z",
+      "showDateTimeLocal": "2026-08-13T13:20:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "idrequired",
+        "reclinerseating",
+        "thrlschls",
+        "reservedseating",
+        "closedcaption"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:146089552",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:36.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "ID Required",
+          "AMC Signature Recliners",
+          "Thrills & Chills",
+          "Reserved Seating",
+          "Closed Caption"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date="
+      },
+      "theatreId": "amc:theatre:416",
+      "movieId": "amc:movie:83358",
+      "movieTitle": "Ice Cream Man",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T19:45:00.000Z",
+      "showDateTimeLocal": "2026-08-13T15:45:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "idrequired",
+        "reclinerseating",
+        "thrlschls",
+        "reservedseating",
+        "closedcaption"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:146089556",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:36.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "ID Required",
+          "AMC Signature Recliners",
+          "Thrills & Chills",
+          "Reserved Seating",
+          "Closed Caption"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date="
+      },
+      "theatreId": "amc:theatre:416",
+      "movieId": "amc:movie:83358",
+      "movieTitle": "Ice Cream Man",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T22:15:00.000Z",
+      "showDateTimeLocal": "2026-08-13T18:15:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "idrequired",
+        "reclinerseating",
+        "thrlschls",
+        "reservedseating",
+        "closedcaption"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:146089555",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:36.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "ID Required",
+          "AMC Signature Recliners",
+          "Thrills & Chills",
+          "Reserved Seating",
+          "Closed Caption"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date="
+      },
+      "theatreId": "amc:theatre:416",
+      "movieId": "amc:movie:83358",
+      "movieTitle": "Ice Cream Man",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T00:45:00.000Z",
+      "showDateTimeLocal": "2026-08-13T20:45:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "idrequired",
+        "reclinerseating",
+        "thrlschls",
+        "reservedseating",
+        "closedcaption"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:146089621",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:36.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date="
+      },
+      "theatreId": "amc:theatre:416",
+      "movieId": "amc:movie:72482",
+      "movieTitle": "Toy Story 5",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T15:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T11:00:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:146089638",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:36.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date="
+      },
+      "theatreId": "amc:theatre:416",
+      "movieId": "amc:movie:72482",
+      "movieTitle": "Toy Story 5",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T17:45:00.000Z",
+      "showDateTimeLocal": "2026-08-13T13:45:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:146089639",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:36.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date="
+      },
+      "theatreId": "amc:theatre:416",
+      "movieId": "amc:movie:72482",
+      "movieTitle": "Toy Story 5",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T20:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T16:30:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:146089619",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:36.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date="
+      },
+      "theatreId": "amc:theatre:416",
+      "movieId": "amc:movie:77563",
+      "movieTitle": "Minions & Monsters",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T16:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T12:00:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:146089620",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:36.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date="
+      },
+      "theatreId": "amc:theatre:416",
+      "movieId": "amc:movie:77563",
+      "movieTitle": "Minions & Monsters",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T18:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T14:30:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:146089616",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:36.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date="
+      },
+      "theatreId": "amc:theatre:416",
+      "movieId": "amc:movie:77563",
+      "movieTitle": "Minions & Monsters",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T21:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T17:00:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145062160",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:36.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Alternative Content",
+          "Excluded from A-List",
+          "No Passes"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date="
+      },
+      "theatreId": "amc:theatre:416",
+      "movieId": "amc:movie:83778",
+      "movieTitle": "KATSEYE: WILD HEARTS",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T23:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T19:00:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "alternativecontent",
+        "excludedfromalist",
+        "nopasses"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:146089745",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:36.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date="
+      },
+      "theatreId": "amc:theatre:416",
+      "movieId": "amc:movie:72474",
+      "movieTitle": "Moana",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T15:15:00.000Z",
+      "showDateTimeLocal": "2026-08-13T11:15:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:146089744",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:36.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date="
+      },
+      "theatreId": "amc:theatre:416",
+      "movieId": "amc:movie:72474",
+      "movieTitle": "Moana",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T18:15:00.000Z",
+      "showDateTimeLocal": "2026-08-13T14:15:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:146089743",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:36.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date="
+      },
+      "theatreId": "amc:theatre:416",
+      "movieId": "amc:movie:72474",
+      "movieTitle": "Moana",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T21:15:00.000Z",
+      "showDateTimeLocal": "2026-08-13T17:15:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145053259",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:36.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date="
+      },
+      "theatreId": "amc:theatre:416",
+      "movieId": "amc:movie:83746",
+      "movieTitle": "Cookie Queens",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T15:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T11:30:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145053260",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:36.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date="
+      },
+      "theatreId": "amc:theatre:416",
+      "movieId": "amc:movie:83746",
+      "movieTitle": "Cookie Queens",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T18:15:00.000Z",
+      "showDateTimeLocal": "2026-08-13T14:15:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145053261",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:36.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date="
+      },
+      "theatreId": "amc:theatre:416",
+      "movieId": "amc:movie:83746",
+      "movieTitle": "Cookie Queens",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T20:45:00.000Z",
+      "showDateTimeLocal": "2026-08-13T16:45:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145053262",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:36.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date="
+      },
+      "theatreId": "amc:theatre:416",
+      "movieId": "amc:movie:83746",
+      "movieTitle": "Cookie Queens",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T23:15:00.000Z",
+      "showDateTimeLocal": "2026-08-13T19:15:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:146089617",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:36.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "AMC Artisan Films",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date="
+      },
+      "theatreId": "amc:theatre:416",
+      "movieId": "amc:movie:82975",
+      "movieTitle": "The Invite",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T23:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T19:30:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "amcartisanfilms",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:146089618",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:36.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Telugu Spoken with English Subtitles",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Laser at AMC",
+          "Reserved Seating",
+          "International Films"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date="
+      },
+      "theatreId": "amc:theatre:416",
+      "movieId": "amc:movie:84490",
+      "movieTitle": "Korean Kanakaraju",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T02:15:00.000Z",
+      "showDateTimeLocal": "2026-08-13T22:15:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "teluguenglishsubtitle",
+        "reclinerseating",
+        "laseratamc",
+        "reservedseating",
+        "intfilms"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:146089554",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:36.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date="
+      },
+      "theatreId": "amc:theatre:416",
+      "movieId": "amc:movie:83719",
+      "movieTitle": "The Brink of War",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T14:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T10:30:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:146089532",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:36.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date="
+      },
+      "theatreId": "amc:theatre:416",
+      "movieId": "amc:movie:83719",
+      "movieTitle": "The Brink of War",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T17:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T13:00:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:144313313",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:36.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date="
+      },
+      "theatreId": "amc:theatre:416",
+      "movieId": "amc:movie:83719",
+      "movieTitle": "The Brink of War",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T20:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T16:00:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:144313314",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:36.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date="
+      },
+      "theatreId": "amc:theatre:416",
+      "movieId": "amc:movie:83719",
+      "movieTitle": "The Brink of War",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T23:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T19:00:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:146089533",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:36.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date="
+      },
+      "theatreId": "amc:theatre:416",
+      "movieId": "amc:movie:83719",
+      "movieTitle": "The Brink of War",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T02:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T22:00:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145197748",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:36.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date="
+      },
+      "theatreId": "amc:theatre:416",
+      "movieId": "amc:movie:76344",
+      "movieTitle": "PAW Patrol: The Dino Movie",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T18:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T14:00:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145197749",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:36.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date="
+      },
+      "theatreId": "amc:theatre:416",
+      "movieId": "amc:movie:76344",
+      "movieTitle": "PAW Patrol: The Dino Movie",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T20:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T16:30:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145197750",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:36.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date="
+      },
+      "theatreId": "amc:theatre:416",
+      "movieId": "amc:movie:76344",
+      "movieTitle": "PAW Patrol: The Dino Movie",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T23:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T19:00:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:146089534",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:36.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date="
+      },
+      "theatreId": "amc:theatre:416",
+      "movieId": "amc:movie:76344",
+      "movieTitle": "PAW Patrol: The Dino Movie",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T01:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T21:30:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145197797",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:36.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "IMAX with Laser at AMC",
+        "rawAttributeNames": [
+          "IMAX at AMC",
+          "AMC Club Rockers",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date="
+      },
+      "theatreId": "amc:theatre:416",
+      "movieId": "amc:movie:71226",
+      "movieTitle": "The End of Oak Street",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T20:45:00.000Z",
+      "showDateTimeLocal": "2026-08-13T16:45:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "imaxlaseratamc",
+        "imax",
+        "amcclubrockers",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "imaxlaseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145197798",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:36.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "IMAX with Laser at AMC",
+        "rawAttributeNames": [
+          "IMAX at AMC",
+          "AMC Club Rockers",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date="
+      },
+      "theatreId": "amc:theatre:416",
+      "movieId": "amc:movie:71226",
+      "movieTitle": "The End of Oak Street",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T23:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T19:30:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "imaxlaseratamc",
+        "imax",
+        "amcclubrockers",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "imaxlaseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145197799",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:36.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "IMAX with Laser at AMC",
+        "rawAttributeNames": [
+          "IMAX at AMC",
+          "AMC Club Rockers",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date="
+      },
+      "theatreId": "amc:theatre:416",
+      "movieId": "amc:movie:71226",
+      "movieTitle": "The End of Oak Street",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T02:15:00.000Z",
+      "showDateTimeLocal": "2026-08-13T22:15:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "imaxlaseratamc",
+        "imax",
+        "amcclubrockers",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "imaxlaseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145273427",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:36.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "4DX at AMC",
+        "rawAttributeNames": [
+          "Laser at AMC",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date="
+      },
+      "theatreId": "amc:theatre:416",
+      "movieId": "amc:movie:71226",
+      "movieTitle": "The End of Oak Street",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T19:15:00.000Z",
+      "showDateTimeLocal": "2026-08-13T15:15:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "4dx",
+        "laseratamc",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "4dx",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145273425",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:36.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "4DX at AMC",
+        "rawAttributeNames": [
+          "Laser at AMC",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date="
+      },
+      "theatreId": "amc:theatre:416",
+      "movieId": "amc:movie:71226",
+      "movieTitle": "The End of Oak Street",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T22:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T18:00:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "4dx",
+        "laseratamc",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "4dx",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145273426",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:36.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "4DX at AMC",
+        "rawAttributeNames": [
+          "Laser at AMC",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date="
+      },
+      "theatreId": "amc:theatre:416",
+      "movieId": "amc:movie:71226",
+      "movieTitle": "The End of Oak Street",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T00:45:00.000Z",
+      "showDateTimeLocal": "2026-08-13T20:45:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "4dx",
+        "laseratamc",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "4dx",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145470965",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:36.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "4DX at AMC",
+        "rawAttributeNames": [
+          "Laser at AMC",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date="
+      },
+      "theatreId": "amc:theatre:416",
+      "movieId": "amc:movie:71226",
+      "movieTitle": "The End of Oak Street",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T03:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T23:30:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "4dx",
+        "laseratamc",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "4dx",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:146089776",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:36.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date="
+      },
+      "theatreId": "amc:theatre:416",
+      "movieId": "amc:movie:71226",
+      "movieTitle": "The End of Oak Street",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T20:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T16:00:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:146089670",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:36.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date="
+      },
+      "theatreId": "amc:theatre:416",
+      "movieId": "amc:movie:79322",
+      "movieTitle": "Scary Movie",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T20:15:00.000Z",
+      "showDateTimeLocal": "2026-08-13T16:15:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145689181",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:36.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "AMC Artisan Films",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date="
+      },
+      "theatreId": "amc:theatre:416",
+      "movieId": "amc:movie:82596",
+      "movieTitle": "The Rivals of Amziah King",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T22:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T18:00:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "amcartisanfilms",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145689182",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:36.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "AMC Artisan Films",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date="
+      },
+      "theatreId": "amc:theatre:416",
+      "movieId": "amc:movie:82596",
+      "movieTitle": "The Rivals of Amziah King",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T01:15:00.000Z",
+      "showDateTimeLocal": "2026-08-13T21:15:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "amcartisanfilms",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145053244",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:36.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "International Films"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date="
+      },
+      "theatreId": "amc:theatre:416",
+      "movieId": "amc:movie:84070",
+      "movieTitle": "Namaslay",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T23:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T19:00:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "intfilms"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145053245",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:36.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "International Films"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date="
+      },
+      "theatreId": "amc:theatre:416",
+      "movieId": "amc:movie:84070",
+      "movieTitle": "Namaslay",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T02:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T22:00:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "intfilms"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:146089640",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:36.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date="
+      },
+      "theatreId": "amc:theatre:416",
+      "movieId": "amc:movie:84367",
+      "movieTitle": "Splash City",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T02:45:00.000Z",
+      "showDateTimeLocal": "2026-08-13T22:45:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:146089742",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:36.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Vietnamese Spoken with English Subtitles",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Laser at AMC",
+          "Reserved Seating",
+          "International Films"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-southlake-24/showtimes?date="
+      },
+      "theatreId": "amc:theatre:416",
+      "movieId": "amc:movie:84504",
+      "movieTitle": "Mr. Hero",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T03:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T23:30:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "vietnameseenglishsubtitle",
+        "reclinerseating",
+        "laseratamc",
+        "reservedseating",
+        "intfilms"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    }
+  ]
+}

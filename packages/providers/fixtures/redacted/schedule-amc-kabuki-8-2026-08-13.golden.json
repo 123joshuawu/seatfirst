@@ -1,0 +1,1018 @@
+{
+  "ok": true,
+  "value": [
+    {
+      "showtimeId": "amc:showtime:145879938",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-kabuki-8/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:18.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "XL at AMC",
+        "rawAttributeNames": [
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-kabuki-8/showtimes?date="
+      },
+      "theatreId": "amc:theatre:4145",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T19:45:00.000Z",
+      "showDateTimeLocal": "2026-08-13T12:45:00",
+      "utcOffset": "-07:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "xl",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "xl",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145879934",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-kabuki-8/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:18.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "XL at AMC",
+        "rawAttributeNames": [
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-kabuki-8/showtimes?date="
+      },
+      "theatreId": "amc:theatre:4145",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T23:15:00.000Z",
+      "showDateTimeLocal": "2026-08-13T16:15:00",
+      "utcOffset": "-07:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "xl",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "xl",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145879931",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-kabuki-8/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:18.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "XL at AMC",
+        "rawAttributeNames": [
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-kabuki-8/showtimes?date="
+      },
+      "theatreId": "amc:theatre:4145",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T02:45:00.000Z",
+      "showDateTimeLocal": "2026-08-13T19:45:00",
+      "utcOffset": "-07:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "xl",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "xl",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:146024500",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-kabuki-8/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:18.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-kabuki-8/showtimes?date="
+      },
+      "theatreId": "amc:theatre:4145",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T21:15:00.000Z",
+      "showDateTimeLocal": "2026-08-13T14:15:00",
+      "utcOffset": "-07:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:146024499",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-kabuki-8/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:18.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-kabuki-8/showtimes?date="
+      },
+      "theatreId": "amc:theatre:4145",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T00:45:00.000Z",
+      "showDateTimeLocal": "2026-08-13T17:45:00",
+      "utcOffset": "-07:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:146024508",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-kabuki-8/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:18.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-kabuki-8/showtimes?date="
+      },
+      "theatreId": "amc:theatre:4145",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T04:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T21:30:00",
+      "utcOffset": "-07:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145483834",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-kabuki-8/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:18.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "70mm",
+        "rawAttributeNames": [
+          "AMC Artisan Films",
+          "Reserved Seating"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-kabuki-8/showtimes?date="
+      },
+      "theatreId": "amc:theatre:4145",
+      "movieId": "amc:movie:76238",
+      "movieTitle": "The Odyssey",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T19:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T12:30:00",
+      "utcOffset": "-07:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "70mm",
+        "amcartisanfilms",
+        "reservedseating"
+      ],
+      "formatCode": "70mm",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145483835",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-kabuki-8/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:18.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "70mm",
+        "rawAttributeNames": [
+          "AMC Artisan Films",
+          "Reserved Seating"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-kabuki-8/showtimes?date="
+      },
+      "theatreId": "amc:theatre:4145",
+      "movieId": "amc:movie:76238",
+      "movieTitle": "The Odyssey",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T23:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T16:30:00",
+      "utcOffset": "-07:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "70mm",
+        "amcartisanfilms",
+        "reservedseating"
+      ],
+      "formatCode": "70mm",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145483836",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-kabuki-8/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:18.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "70mm",
+        "rawAttributeNames": [
+          "AMC Artisan Films",
+          "Reserved Seating"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-kabuki-8/showtimes?date="
+      },
+      "theatreId": "amc:theatre:4145",
+      "movieId": "amc:movie:76238",
+      "movieTitle": "The Odyssey",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T03:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T20:30:00",
+      "utcOffset": "-07:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "70mm",
+        "amcartisanfilms",
+        "reservedseating"
+      ],
+      "formatCode": "70mm",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:146024503",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-kabuki-8/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:18.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Artisan Films",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-kabuki-8/showtimes?date="
+      },
+      "theatreId": "amc:theatre:4145",
+      "movieId": "amc:movie:76238",
+      "movieTitle": "The Odyssey",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T22:15:00.000Z",
+      "showDateTimeLocal": "2026-08-13T15:15:00",
+      "utcOffset": "-07:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "amcartisanfilms",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:146024507",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-kabuki-8/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:18.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-kabuki-8/showtimes?date="
+      },
+      "theatreId": "amc:theatre:4145",
+      "movieId": "amc:movie:80552",
+      "movieTitle": "One Night Only",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T20:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T13:00:00",
+      "utcOffset": "-07:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:146024506",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-kabuki-8/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:18.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-kabuki-8/showtimes?date="
+      },
+      "theatreId": "amc:theatre:4145",
+      "movieId": "amc:movie:80552",
+      "movieTitle": "One Night Only",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T22:45:00.000Z",
+      "showDateTimeLocal": "2026-08-13T15:45:00",
+      "utcOffset": "-07:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:146024505",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-kabuki-8/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:18.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-kabuki-8/showtimes?date="
+      },
+      "theatreId": "amc:theatre:4145",
+      "movieId": "amc:movie:80552",
+      "movieTitle": "One Night Only",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T01:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T18:30:00",
+      "utcOffset": "-07:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:146024511",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-kabuki-8/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:18.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-kabuki-8/showtimes?date="
+      },
+      "theatreId": "amc:theatre:4145",
+      "movieId": "amc:movie:82341",
+      "movieTitle": "Super Troopers 3",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T20:15:00.000Z",
+      "showDateTimeLocal": "2026-08-13T13:15:00",
+      "utcOffset": "-07:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:146024510",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-kabuki-8/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:18.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-kabuki-8/showtimes?date="
+      },
+      "theatreId": "amc:theatre:4145",
+      "movieId": "amc:movie:82341",
+      "movieTitle": "Super Troopers 3",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T23:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T16:00:00",
+      "utcOffset": "-07:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:146024502",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-kabuki-8/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:18.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Artisan Films",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-kabuki-8/showtimes?date="
+      },
+      "theatreId": "amc:theatre:4145",
+      "movieId": "amc:movie:82975",
+      "movieTitle": "The Invite",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T19:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T12:30:00",
+      "utcOffset": "-07:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "amcartisanfilms",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:146024501",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-kabuki-8/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:18.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Artisan Films",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-kabuki-8/showtimes?date="
+      },
+      "theatreId": "amc:theatre:4145",
+      "movieId": "amc:movie:82975",
+      "movieTitle": "The Invite",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T20:15:00.000Z",
+      "showDateTimeLocal": "2026-08-13T13:15:00",
+      "utcOffset": "-07:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "amcartisanfilms",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:146024509",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-kabuki-8/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:18.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Artisan Films",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-kabuki-8/showtimes?date="
+      },
+      "theatreId": "amc:theatre:4145",
+      "movieId": "amc:movie:82975",
+      "movieTitle": "The Invite",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T01:45:00.000Z",
+      "showDateTimeLocal": "2026-08-13T18:45:00",
+      "utcOffset": "-07:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "amcartisanfilms",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145241499",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-kabuki-8/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:18.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-kabuki-8/showtimes?date="
+      },
+      "theatreId": "amc:theatre:4145",
+      "movieId": "amc:movie:71226",
+      "movieTitle": "The End of Oak Street",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T22:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T15:00:00",
+      "utcOffset": "-07:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145241500",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-kabuki-8/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:18.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-kabuki-8/showtimes?date="
+      },
+      "theatreId": "amc:theatre:4145",
+      "movieId": "amc:movie:71226",
+      "movieTitle": "The End of Oak Street",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T01:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T18:00:00",
+      "utcOffset": "-07:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145241501",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-kabuki-8/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:18.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-kabuki-8/showtimes?date="
+      },
+      "theatreId": "amc:theatre:4145",
+      "movieId": "amc:movie:71226",
+      "movieTitle": "The End of Oak Street",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T04:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T21:00:00",
+      "utcOffset": "-07:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145903855",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-kabuki-8/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:18.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Artisan Films",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-kabuki-8/showtimes?date="
+      },
+      "theatreId": "amc:theatre:4145",
+      "movieId": "amc:movie:83859",
+      "movieTitle": "Tony",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T23:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T16:00:00",
+      "utcOffset": "-07:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "amcartisanfilms",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145903856",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-kabuki-8/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:18.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Artisan Films",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-kabuki-8/showtimes?date="
+      },
+      "theatreId": "amc:theatre:4145",
+      "movieId": "amc:movie:83859",
+      "movieTitle": "Tony",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T01:45:00.000Z",
+      "showDateTimeLocal": "2026-08-13T18:45:00",
+      "utcOffset": "-07:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "amcartisanfilms",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:146024498",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-kabuki-8/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:18.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Artisan Films",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-kabuki-8/showtimes?date="
+      },
+      "theatreId": "amc:theatre:4145",
+      "movieId": "amc:movie:83859",
+      "movieTitle": "Tony",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T04:15:00.000Z",
+      "showDateTimeLocal": "2026-08-13T21:15:00",
+      "utcOffset": "-07:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "amcartisanfilms",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145672035",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-kabuki-8/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:18.000Z",
+        "rawStatus": "AlmostFull",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "Thrills & Chills",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-kabuki-8/showtimes?date="
+      },
+      "theatreId": "amc:theatre:4145",
+      "movieId": "amc:movie:82941",
+      "movieTitle": "Teenage Sex and Death at Camp Miasma",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T02:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T19:00:00",
+      "utcOffset": "-07:00",
+      "runtimeMinutes": null,
+      "status": "LOW_AVAILABILITY",
+      "attributes": [
+        "laseratamc",
+        "thrlschls",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:146155880",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-kabuki-8/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:18.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "Thrills & Chills",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-kabuki-8/showtimes?date="
+      },
+      "theatreId": "amc:theatre:4145",
+      "movieId": "amc:movie:82941",
+      "movieTitle": "Teenage Sex and Death at Camp Miasma",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T04:15:00.000Z",
+      "showDateTimeLocal": "2026-08-13T21:15:00",
+      "utcOffset": "-07:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "thrlschls",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145893113",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-kabuki-8/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:18.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "Thrills & Chills",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-kabuki-8/showtimes?date="
+      },
+      "theatreId": "amc:theatre:4145",
+      "movieId": "amc:movie:82941",
+      "movieTitle": "Teenage Sex and Death at Camp Miasma",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T04:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T21:30:00",
+      "utcOffset": "-07:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "thrlschls",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    }
+  ]
+}
