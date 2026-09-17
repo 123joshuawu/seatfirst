@@ -1,0 +1,13 @@
+{
+  "grid": {
+    "rows": 1,
+    "columns": 1,
+    "cells": []
+  },
+  "minPrice": null,
+  "priceBasis": "UNKNOWN",
+  "providerMeta": {
+    "synthetic": true,
+    "note": "Self-test golden with no paired fixture, used only to prove GOLDEN_WITHOUT_FIXTURE fails loudly (P2.3). Never a captured upstream response."
+  }
+}

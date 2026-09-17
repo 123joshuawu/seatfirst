@@ -1,0 +1,866 @@
+{
+  "ok": true,
+  "value": {
+    "grid": {
+      "rows": 8,
+      "columns": 11,
+      "cells": [
+        {
+          "row": 1,
+          "column": 1,
+          "kind": "WHEELCHAIR",
+          "rawType": "Wheelchair",
+          "tier": "Regular",
+          "available": true,
+          "name": "A11",
+          "visible": true
+        },
+        {
+          "row": 1,
+          "column": 2,
+          "kind": "COMPANION",
+          "rawType": "Companion",
+          "tier": "Regular",
+          "available": true,
+          "name": "A10",
+          "visible": true
+        },
+        {
+          "row": 1,
+          "column": 3,
+          "kind": "COMPANION",
+          "rawType": "Companion",
+          "tier": "Regular",
+          "available": true,
+          "name": "A9",
+          "visible": true
+        },
+        {
+          "row": 1,
+          "column": 4,
+          "kind": "COMPANION",
+          "rawType": "Companion",
+          "tier": "Regular",
+          "available": true,
+          "name": "A8",
+          "visible": true
+        },
+        {
+          "row": 1,
+          "column": 5,
+          "kind": "COMPANION",
+          "rawType": "Companion",
+          "tier": "Regular",
+          "available": true,
+          "name": "A7",
+          "visible": true
+        },
+        {
+          "row": 1,
+          "column": 6,
+          "kind": "COMPANION",
+          "rawType": "Companion",
+          "tier": "Regular",
+          "available": true,
+          "name": "A6",
+          "visible": true
+        },
+        {
+          "row": 1,
+          "column": 7,
+          "kind": "COMPANION",
+          "rawType": "Companion",
+          "tier": "Regular",
+          "available": true,
+          "name": "A5",
+          "visible": true
+        },
+        {
+          "row": 1,
+          "column": 8,
+          "kind": "COMPANION",
+          "rawType": "Companion",
+          "tier": "Regular",
+          "available": true,
+          "name": "A4",
+          "visible": true
+        },
+        {
+          "row": 1,
+          "column": 9,
+          "kind": "COMPANION",
+          "rawType": "Companion",
+          "tier": "Regular",
+          "available": true,
+          "name": "A3",
+          "visible": true
+        },
+        {
+          "row": 1,
+          "column": 10,
+          "kind": "COMPANION",
+          "rawType": "Companion",
+          "tier": "Regular",
+          "available": true,
+          "name": "A2",
+          "visible": true
+        },
+        {
+          "row": 1,
+          "column": 11,
+          "kind": "COMPANION",
+          "rawType": "Companion",
+          "tier": "Regular",
+          "available": true,
+          "name": "A1",
+          "visible": true
+        },
+        {
+          "row": 2,
+          "column": 1,
+          "kind": "NOT_A_SEAT",
+          "rawType": "NotASeat",
+          "tier": "Regular",
+          "available": false,
+          "visible": false
+        },
+        {
+          "row": 2,
+          "column": 2,
+          "kind": "NOT_A_SEAT",
+          "rawType": "NotASeat",
+          "tier": "Regular",
+          "available": false,
+          "visible": false
+        },
+        {
+          "row": 2,
+          "column": 3,
+          "kind": "NOT_A_SEAT",
+          "rawType": "NotASeat",
+          "tier": "Regular",
+          "available": false,
+          "visible": false
+        },
+        {
+          "row": 2,
+          "column": 4,
+          "kind": "NOT_A_SEAT",
+          "rawType": "NotASeat",
+          "tier": "Regular",
+          "available": false,
+          "visible": false
+        },
+        {
+          "row": 2,
+          "column": 5,
+          "kind": "NOT_A_SEAT",
+          "rawType": "NotASeat",
+          "tier": "Regular",
+          "available": false,
+          "visible": false
+        },
+        {
+          "row": 2,
+          "column": 6,
+          "kind": "NOT_A_SEAT",
+          "rawType": "NotASeat",
+          "tier": "Regular",
+          "available": false,
+          "visible": false
+        },
+        {
+          "row": 2,
+          "column": 7,
+          "kind": "NOT_A_SEAT",
+          "rawType": "NotASeat",
+          "tier": "Regular",
+          "available": false,
+          "visible": false
+        },
+        {
+          "row": 2,
+          "column": 8,
+          "kind": "NOT_A_SEAT",
+          "rawType": "NotASeat",
+          "tier": "Regular",
+          "available": false,
+          "visible": false
+        },
+        {
+          "row": 2,
+          "column": 9,
+          "kind": "NOT_A_SEAT",
+          "rawType": "NotASeat",
+          "tier": "Regular",
+          "available": false,
+          "visible": false
+        },
+        {
+          "row": 2,
+          "column": 10,
+          "kind": "NOT_A_SEAT",
+          "rawType": "NotASeat",
+          "tier": "Regular",
+          "available": false,
+          "visible": false
+        },
+        {
+          "row": 2,
+          "column": 11,
+          "kind": "NOT_A_SEAT",
+          "rawType": "NotASeat",
+          "tier": "Regular",
+          "available": false,
+          "visible": false
+        },
+        {
+          "row": 3,
+          "column": 1,
+          "kind": "NOT_A_SEAT",
+          "rawType": "NotASeat",
+          "tier": "Regular",
+          "available": false,
+          "visible": false
+        },
+        {
+          "row": 3,
+          "column": 2,
+          "kind": "NOT_A_SEAT",
+          "rawType": "NotASeat",
+          "tier": "Regular",
+          "available": false,
+          "visible": false
+        },
+        {
+          "row": 3,
+          "column": 3,
+          "kind": "COMPANION",
+          "rawType": "Companion",
+          "tier": "Regular",
+          "available": true,
+          "name": "B7",
+          "visible": true
+        },
+        {
+          "row": 3,
+          "column": 4,
+          "kind": "COMPANION",
+          "rawType": "Companion",
+          "tier": "Regular",
+          "available": true,
+          "name": "B6",
+          "visible": true
+        },
+        {
+          "row": 3,
+          "column": 5,
+          "kind": "WHEELCHAIR",
+          "rawType": "Wheelchair",
+          "tier": "Regular",
+          "available": true,
+          "name": "B5",
+          "visible": true
+        },
+        {
+          "row": 3,
+          "column": 6,
+          "kind": "WHEELCHAIR",
+          "rawType": "Wheelchair",
+          "tier": "Regular",
+          "available": true,
+          "name": "B4",
+          "visible": true
+        },
+        {
+          "row": 3,
+          "column": 7,
+          "kind": "COMPANION",
+          "rawType": "Companion",
+          "tier": "Regular",
+          "available": true,
+          "name": "B3",
+          "visible": true
+        },
+        {
+          "row": 3,
+          "column": 8,
+          "kind": "COMPANION",
+          "rawType": "Companion",
+          "tier": "Regular",
+          "available": true,
+          "name": "B2",
+          "visible": true
+        },
+        {
+          "row": 3,
+          "column": 9,
+          "kind": "WHEELCHAIR",
+          "rawType": "Wheelchair",
+          "tier": "Regular",
+          "available": true,
+          "name": "B1",
+          "visible": true
+        },
+        {
+          "row": 3,
+          "column": 10,
+          "kind": "NOT_A_SEAT",
+          "rawType": "NotASeat",
+          "tier": "Regular",
+          "available": false,
+          "visible": false
+        },
+        {
+          "row": 3,
+          "column": 11,
+          "kind": "NOT_A_SEAT",
+          "rawType": "NotASeat",
+          "tier": "Regular",
+          "available": false,
+          "visible": false
+        },
+        {
+          "row": 4,
+          "column": 1,
+          "kind": "NOT_A_SEAT",
+          "rawType": "NotASeat",
+          "tier": "Regular",
+          "available": false,
+          "visible": false
+        },
+        {
+          "row": 4,
+          "column": 2,
+          "kind": "NOT_A_SEAT",
+          "rawType": "NotASeat",
+          "tier": "Regular",
+          "available": false,
+          "visible": false
+        },
+        {
+          "row": 4,
+          "column": 3,
+          "kind": "UNKNOWN",
+          "rawType": "LoveSeatLeft",
+          "tier": "Regular",
+          "available": true,
+          "name": "C8",
+          "visible": true
+        },
+        {
+          "row": 4,
+          "column": 4,
+          "kind": "UNKNOWN",
+          "rawType": "LoveSeatRight",
+          "tier": "Regular",
+          "available": true,
+          "name": "C7",
+          "visible": true
+        },
+        {
+          "row": 4,
+          "column": 5,
+          "kind": "UNKNOWN",
+          "rawType": "LoveSeatLeft",
+          "tier": "Regular",
+          "available": true,
+          "name": "C6",
+          "visible": true
+        },
+        {
+          "row": 4,
+          "column": 6,
+          "kind": "UNKNOWN",
+          "rawType": "LoveSeatRight",
+          "tier": "Regular",
+          "available": true,
+          "name": "C5",
+          "visible": true
+        },
+        {
+          "row": 4,
+          "column": 7,
+          "kind": "UNKNOWN",
+          "rawType": "LoveSeatLeft",
+          "tier": "Regular",
+          "available": true,
+          "name": "C4",
+          "visible": true
+        },
+        {
+          "row": 4,
+          "column": 8,
+          "kind": "UNKNOWN",
+          "rawType": "LoveSeatRight",
+          "tier": "Regular",
+          "available": true,
+          "name": "C3",
+          "visible": true
+        },
+        {
+          "row": 4,
+          "column": 9,
+          "kind": "UNKNOWN",
+          "rawType": "LoveSeatLeft",
+          "tier": "Regular",
+          "available": true,
+          "name": "C2",
+          "visible": true
+        },
+        {
+          "row": 4,
+          "column": 10,
+          "kind": "UNKNOWN",
+          "rawType": "LoveSeatRight",
+          "tier": "Regular",
+          "available": true,
+          "name": "C1",
+          "visible": true
+        },
+        {
+          "row": 4,
+          "column": 11,
+          "kind": "NOT_A_SEAT",
+          "rawType": "NotASeat",
+          "tier": "Regular",
+          "available": false,
+          "visible": false
+        },
+        {
+          "row": 5,
+          "column": 1,
+          "kind": "NOT_A_SEAT",
+          "rawType": "NotASeat",
+          "tier": "Regular",
+          "available": false,
+          "visible": false
+        },
+        {
+          "row": 5,
+          "column": 2,
+          "kind": "NOT_A_SEAT",
+          "rawType": "NotASeat",
+          "tier": "Regular",
+          "available": false,
+          "visible": false
+        },
+        {
+          "row": 5,
+          "column": 3,
+          "kind": "UNKNOWN",
+          "rawType": "LoveSeatLeft",
+          "tier": "Regular",
+          "available": true,
+          "name": "D8",
+          "visible": true
+        },
+        {
+          "row": 5,
+          "column": 4,
+          "kind": "UNKNOWN",
+          "rawType": "LoveSeatRight",
+          "tier": "Regular",
+          "available": true,
+          "name": "D7",
+          "visible": true
+        },
+        {
+          "row": 5,
+          "column": 5,
+          "kind": "UNKNOWN",
+          "rawType": "LoveSeatLeft",
+          "tier": "Regular",
+          "available": true,
+          "name": "D6",
+          "visible": true
+        },
+        {
+          "row": 5,
+          "column": 6,
+          "kind": "UNKNOWN",
+          "rawType": "LoveSeatRight",
+          "tier": "Regular",
+          "available": true,
+          "name": "D5",
+          "visible": true
+        },
+        {
+          "row": 5,
+          "column": 7,
+          "kind": "UNKNOWN",
+          "rawType": "LoveSeatLeft",
+          "tier": "Regular",
+          "available": false,
+          "name": "D4",
+          "visible": true
+        },
+        {
+          "row": 5,
+          "column": 8,
+          "kind": "UNKNOWN",
+          "rawType": "LoveSeatRight",
+          "tier": "Regular",
+          "available": false,
+          "name": "D3",
+          "visible": true
+        },
+        {
+          "row": 5,
+          "column": 9,
+          "kind": "UNKNOWN",
+          "rawType": "LoveSeatLeft",
+          "tier": "Regular",
+          "available": false,
+          "name": "D2",
+          "visible": true
+        },
+        {
+          "row": 5,
+          "column": 10,
+          "kind": "UNKNOWN",
+          "rawType": "LoveSeatRight",
+          "tier": "Regular",
+          "available": false,
+          "name": "D1",
+          "visible": true
+        },
+        {
+          "row": 5,
+          "column": 11,
+          "kind": "NOT_A_SEAT",
+          "rawType": "NotASeat",
+          "tier": "Regular",
+          "available": false,
+          "visible": false
+        },
+        {
+          "row": 6,
+          "column": 1,
+          "kind": "NOT_A_SEAT",
+          "rawType": "NotASeat",
+          "tier": "Regular",
+          "available": false,
+          "visible": false
+        },
+        {
+          "row": 6,
+          "column": 2,
+          "kind": "NOT_A_SEAT",
+          "rawType": "NotASeat",
+          "tier": "Regular",
+          "available": false,
+          "visible": false
+        },
+        {
+          "row": 6,
+          "column": 3,
+          "kind": "UNKNOWN",
+          "rawType": "LoveSeatLeft",
+          "tier": "Regular",
+          "available": true,
+          "name": "E8",
+          "visible": true
+        },
+        {
+          "row": 6,
+          "column": 4,
+          "kind": "UNKNOWN",
+          "rawType": "LoveSeatRight",
+          "tier": "Regular",
+          "available": true,
+          "name": "E7",
+          "visible": true
+        },
+        {
+          "row": 6,
+          "column": 5,
+          "kind": "UNKNOWN",
+          "rawType": "LoveSeatLeft",
+          "tier": "Regular",
+          "available": false,
+          "name": "E6",
+          "visible": true
+        },
+        {
+          "row": 6,
+          "column": 6,
+          "kind": "UNKNOWN",
+          "rawType": "LoveSeatRight",
+          "tier": "Regular",
+          "available": false,
+          "name": "E5",
+          "visible": true
+        },
+        {
+          "row": 6,
+          "column": 7,
+          "kind": "UNKNOWN",
+          "rawType": "LoveSeatLeft",
+          "tier": "Regular",
+          "available": false,
+          "name": "E4",
+          "visible": true
+        },
+        {
+          "row": 6,
+          "column": 8,
+          "kind": "UNKNOWN",
+          "rawType": "LoveSeatRight",
+          "tier": "Regular",
+          "available": false,
+          "name": "E3",
+          "visible": true
+        },
+        {
+          "row": 6,
+          "column": 9,
+          "kind": "UNKNOWN",
+          "rawType": "LoveSeatLeft",
+          "tier": "Regular",
+          "available": false,
+          "name": "E2",
+          "visible": true
+        },
+        {
+          "row": 6,
+          "column": 10,
+          "kind": "UNKNOWN",
+          "rawType": "LoveSeatRight",
+          "tier": "Regular",
+          "available": true,
+          "name": "E1",
+          "visible": true
+        },
+        {
+          "row": 6,
+          "column": 11,
+          "kind": "NOT_A_SEAT",
+          "rawType": "NotASeat",
+          "tier": "Regular",
+          "available": false,
+          "visible": false
+        },
+        {
+          "row": 7,
+          "column": 1,
+          "kind": "NOT_A_SEAT",
+          "rawType": "NotASeat",
+          "tier": "Regular",
+          "available": false,
+          "visible": false
+        },
+        {
+          "row": 7,
+          "column": 2,
+          "kind": "NOT_A_SEAT",
+          "rawType": "NotASeat",
+          "tier": "Regular",
+          "available": false,
+          "visible": false
+        },
+        {
+          "row": 7,
+          "column": 3,
+          "kind": "UNKNOWN",
+          "rawType": "LoveSeatLeft",
+          "tier": "Regular",
+          "available": true,
+          "name": "F8",
+          "visible": true
+        },
+        {
+          "row": 7,
+          "column": 4,
+          "kind": "UNKNOWN",
+          "rawType": "LoveSeatRight",
+          "tier": "Regular",
+          "available": true,
+          "name": "F7",
+          "visible": true
+        },
+        {
+          "row": 7,
+          "column": 5,
+          "kind": "UNKNOWN",
+          "rawType": "LoveSeatLeft",
+          "tier": "Regular",
+          "available": false,
+          "name": "F6",
+          "visible": true
+        },
+        {
+          "row": 7,
+          "column": 6,
+          "kind": "UNKNOWN",
+          "rawType": "LoveSeatRight",
+          "tier": "Regular",
+          "available": false,
+          "name": "F5",
+          "visible": true
+        },
+        {
+          "row": 7,
+          "column": 7,
+          "kind": "UNKNOWN",
+          "rawType": "LoveSeatLeft",
+          "tier": "Regular",
+          "available": true,
+          "name": "F4",
+          "visible": true
+        },
+        {
+          "row": 7,
+          "column": 8,
+          "kind": "UNKNOWN",
+          "rawType": "LoveSeatRight",
+          "tier": "Regular",
+          "available": false,
+          "name": "F3",
+          "visible": true
+        },
+        {
+          "row": 7,
+          "column": 9,
+          "kind": "UNKNOWN",
+          "rawType": "LoveSeatLeft",
+          "tier": "Regular",
+          "available": true,
+          "name": "F2",
+          "visible": true
+        },
+        {
+          "row": 7,
+          "column": 10,
+          "kind": "UNKNOWN",
+          "rawType": "LoveSeatRight",
+          "tier": "Regular",
+          "available": true,
+          "name": "F1",
+          "visible": true
+        },
+        {
+          "row": 7,
+          "column": 11,
+          "kind": "NOT_A_SEAT",
+          "rawType": "NotASeat",
+          "tier": "Regular",
+          "available": false,
+          "visible": false
+        },
+        {
+          "row": 8,
+          "column": 1,
+          "kind": "NOT_A_SEAT",
+          "rawType": "NotASeat",
+          "tier": "Regular",
+          "available": false,
+          "visible": false
+        },
+        {
+          "row": 8,
+          "column": 2,
+          "kind": "NOT_A_SEAT",
+          "rawType": "NotASeat",
+          "tier": "Regular",
+          "available": false,
+          "visible": false
+        },
+        {
+          "row": 8,
+          "column": 3,
+          "kind": "UNKNOWN",
+          "rawType": "LoveSeatLeft",
+          "tier": "Regular",
+          "available": true,
+          "name": "G6",
+          "visible": true
+        },
+        {
+          "row": 8,
+          "column": 4,
+          "kind": "UNKNOWN",
+          "rawType": "LoveSeatRight",
+          "tier": "Regular",
+          "available": false,
+          "name": "G5",
+          "visible": true
+        },
+        {
+          "row": 8,
+          "column": 5,
+          "kind": "NOT_A_SEAT",
+          "rawType": "NotASeat",
+          "tier": "Regular",
+          "available": false,
+          "visible": false
+        },
+        {
+          "row": 8,
+          "column": 6,
+          "kind": "NOT_A_SEAT",
+          "rawType": "NotASeat",
+          "tier": "Regular",
+          "available": false,
+          "visible": false
+        },
+        {
+          "row": 8,
+          "column": 7,
+          "kind": "UNKNOWN",
+          "rawType": "LoveSeatLeft",
+          "tier": "Regular",
+          "available": false,
+          "name": "G4",
+          "visible": true
+        },
+        {
+          "row": 8,
+          "column": 8,
+          "kind": "UNKNOWN",
+          "rawType": "LoveSeatRight",
+          "tier": "Regular",
+          "available": false,
+          "name": "G3",
+          "visible": true
+        },
+        {
+          "row": 8,
+          "column": 9,
+          "kind": "UNKNOWN",
+          "rawType": "LoveSeatLeft",
+          "tier": "Regular",
+          "available": false,
+          "name": "G2",
+          "visible": true
+        },
+        {
+          "row": 8,
+          "column": 10,
+          "kind": "UNKNOWN",
+          "rawType": "LoveSeatRight",
+          "tier": "Regular",
+          "available": true,
+          "name": "G1",
+          "visible": true
+        },
+        {
+          "row": 8,
+          "column": 11,
+          "kind": "NOT_A_SEAT",
+          "rawType": "NotASeat",
+          "tier": "Regular",
+          "available": false,
+          "visible": false
+        }
+      ]
+    },
+    "minPrice": null,
+    "priceBasis": "UNKNOWN",
+    "providerMeta": {
+      "requestUrl": "https://www.amctheatres.com/showtimes/145738053/seats",
+      "observationTime": "2026-08-13T05:04:44.000Z",
+      "performanceNumber": 55994
+    }
+  }
+}

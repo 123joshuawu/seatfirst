@@ -1,0 +1,92 @@
+# Fetch-worker / browser-runtime container image — I1's container/deployment-level half
+# of ADR 0004's runtime-ownership table (docs/adr/0004-deployment-shape-egress-identity.md:
+# 112-125):
+#
+#   - Pinned Chrome build: playwright-core 1.62.1's exact bundled Chromium revision
+#     (packages/browser-runtime/package.json), downloaded at BUILD time with its OS
+#     dependencies — CI never downloads a browser at test time (architecture §9,
+#     docs/seatfirst-architecture.md:620).
+#   - Non-root execution: USER fetchworker (uid 10001), mirrored by the Compose
+#     service's `user: "10001:10001"`.
+#   - No debugging-port exposure: the browser supervisor (P6) binds Chrome's remote
+#     debugging to loopback only; this image publishes nothing and the Compose service
+#     maps no ports (ADR 0004:120-122).
+#   - Profile storage stays an ephemeral scratch dir inside the container — P6's
+#     supervisor creates/destroys it per Chrome process lifetime; no volumes here.
+#
+# The application-level Chrome supervision is P6's shipped @seatfirst/browser-runtime
+# package; this Dockerfile builds the image AROUND that package and does not duplicate
+# its Chrome-launch code. The CMD hosts P6's local synthetic-page readiness endpoint —
+# the only runtime surface the shipped package exposes before the S8 worker application
+# composes it — which is what the Compose healthcheck exercises (P6.16, ADR 0004:123).
+#
+# Layer caching: `pruner` runs `turbo prune --docker` so `deps` installs deps from
+# manifest-only files before the full pruned source lands. The final stage installs the
+# pinned Playwright browser and its OS dependencies immediately after copying dependencies
+# from `deps`, keeping the heavy browser/apt layer cached across source-only changes.
+
+ARG BASE_IMAGE=seatfirst-base:latest
+FROM ${BASE_IMAGE} AS base
+
+FROM base AS pruner
+WORKDIR /repo
+COPY . .
+# Pin to the repo's turbo devDependency version (package.json) so the pruned output
+# matches what `turbo run build` below expects.
+RUN pnpm dlx turbo@2.10.7 prune @seatfirst/server @seatfirst/browser-runtime --docker
+
+FROM base AS deps
+WORKDIR /repo
+COPY --from=pruner /repo/out/json/ .
+# pnpm 11 requires install-script approval via `allowBuilds` (the repo's
+# onlyBuiltDependencies entry is no longer honored); approve esbuild image-locally so
+# the fresh install has no "ignored builds" state and turbo's nested `pnpm run` calls
+# never auto-trigger a failing deps re-install. This edits the copy inside the image —
+# the repo file is untouched. (See Dockerfile.app.) Re-run after the out/full/ copy
+# in the build stage below: that copy overwrites pnpm-workspace.yaml with the unpatched original.
+COPY docker/patch-workspace.mjs /tmp/patch-workspace.mjs
+RUN node /tmp/patch-workspace.mjs
+RUN pnpm install --frozen-lockfile --config.strict-dep-builds=false
+
+FROM deps AS build
+COPY --from=pruner /repo/out/full/ .
+RUN node /tmp/patch-workspace.mjs
+RUN node_modules/.bin/turbo run build --filter=@seatfirst/server... --filter=@seatfirst/browser-runtime...
+# NOTE: no `pnpm prune --prod` — prune removes the @seatfirst/* workspace symlinks the
+# runtime imports resolve through; the images carry devDeps instead (see Dockerfile.app).
+
+# Create the non-root user in a lightweight intermediate so the final COPY layers can
+# use --chown without a post-copy `chown -R` (which would duplicate every file into a
+# new layer at the new ownership).
+FROM node:24-bookworm-slim AS runtime-prep
+RUN useradd --uid 10001 --create-home --shell /usr/sbin/nologin fetchworker
+
+FROM runtime-prep
+ENV PLAYWRIGHT_BROWSERS_PATH=/ms-playwright
+WORKDIR /app
+# Selective copies — only ship what the runtime needs (node_modules, apps, packages),
+# not the full /repo (which would include turbo caches, pruner output, and build
+# artifacts). Owned by fetchworker from the start, avoiding a redundant chown -R layer.
+#
+# Install the pinned Playwright browser binary and OS dependencies before copying source
+# files so this layer stays cached across application source-only edits.
+COPY --from=deps --chown=fetchworker:fetchworker /repo/node_modules /app/node_modules
+COPY --from=deps --chown=fetchworker:fetchworker /repo/packages/browser-runtime /app/packages/browser-runtime
+RUN apt-get update && apt-get install -y --no-install-recommends iproute2 \
+    && /app/packages/browser-runtime/node_modules/.bin/playwright-core install --with-deps chromium \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/* \
+    && chown -R fetchworker:fetchworker /ms-playwright
+
+COPY --from=build --chown=fetchworker:fetchworker /repo/apps /app/apps
+COPY --from=build --chown=fetchworker:fetchworker /repo/packages /app/packages
+COPY --from=build --chown=fetchworker:fetchworker /repo/pnpm-workspace.yaml /app/pnpm-workspace.yaml
+COPY --from=build --chown=fetchworker:fetchworker /repo/package.json /app/package.json
+# pnpm only creates workspace symlinks under the importers that declare them as deps;
+# the root importer declares none, so re-link every workspace package at /app root so
+# the entrypoint's `import "@seatfirst/browser-runtime"` (and its transitive
+# `@seatfirst/*` imports) resolve the same way they do on a checked-out workspace.
+RUN node -e "const fs=require('fs'),path=require('path');const nm=path.join('/app','node_modules','@seatfirst');fs.mkdirSync(nm,{recursive:true});for(const scope of ['apps','packages']){for(const name of fs.readdirSync(path.join('/app',scope))){const p=path.join('/app',scope,name);const pj=path.join(p,'package.json');if(!fs.existsSync(pj))continue;const rel=path.relative(nm,p);try{fs.symlinkSync(rel,path.join(nm,name))}catch(e){if(e.code!=='EEXIST')throw e;}}}"
+COPY --chown=fetchworker:fetchworker docker/fetch-worker/entrypoint.mjs /app/entrypoint.mjs
+USER fetchworker
+CMD ["node", "/app/entrypoint.mjs"]

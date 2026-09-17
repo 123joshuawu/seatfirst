@@ -1,0 +1,2307 @@
+{
+  "ok": true,
+  "value": [
+    {
+      "showtimeId": "amc:showtime:145962046",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:34.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Dolby Cinema at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date="
+      },
+      "theatreId": "amc:theatre:410",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T15:15:00.000Z",
+      "showDateTimeLocal": "2026-08-13T11:15:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "dolbycinemaatamcprime",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "dolbycinemaatamcprime",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145962047",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:34.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Dolby Cinema at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date="
+      },
+      "theatreId": "amc:theatre:410",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T18:45:00.000Z",
+      "showDateTimeLocal": "2026-08-13T14:45:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "dolbycinemaatamcprime",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "dolbycinemaatamcprime",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145962048",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:34.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Dolby Cinema at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date="
+      },
+      "theatreId": "amc:theatre:410",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T22:15:00.000Z",
+      "showDateTimeLocal": "2026-08-13T18:15:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "dolbycinemaatamcprime",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "dolbycinemaatamcprime",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145962049",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:34.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Dolby Cinema at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date="
+      },
+      "theatreId": "amc:theatre:410",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T01:45:00.000Z",
+      "showDateTimeLocal": "2026-08-13T21:45:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "dolbycinemaatamcprime",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "dolbycinemaatamcprime",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145962095",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:34.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Open Caption (On-screen Subtitles)",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Laser at AMC",
+          "Reserved Seating"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date="
+      },
+      "theatreId": "amc:theatre:410",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T15:45:00.000Z",
+      "showDateTimeLocal": "2026-08-13T11:45:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "opencaption",
+        "reclinerseating",
+        "laseratamc",
+        "reservedseating"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145962002",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:34.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "RealD 3D",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Laser at AMC",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date="
+      },
+      "theatreId": "amc:theatre:410",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T17:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T13:30:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "reald3d",
+        "reclinerseating",
+        "laseratamc",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "reald3d",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145961987",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:34.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "RealD 3D",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Laser at AMC",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date="
+      },
+      "theatreId": "amc:theatre:410",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T21:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T17:00:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "reald3d",
+        "reclinerseating",
+        "laseratamc",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "reald3d",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145961988",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:34.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "RealD 3D",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Laser at AMC",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date="
+      },
+      "theatreId": "amc:theatre:410",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T00:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T20:30:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "reald3d",
+        "reclinerseating",
+        "laseratamc",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "reald3d",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:144209176",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:34.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date="
+      },
+      "theatreId": "amc:theatre:410",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T16:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T12:00:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:144209177",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:34.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date="
+      },
+      "theatreId": "amc:theatre:410",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T19:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T15:30:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145962014",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:34.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date="
+      },
+      "theatreId": "amc:theatre:410",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T20:15:00.000Z",
+      "showDateTimeLocal": "2026-08-13T16:15:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:144209178",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:34.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date="
+      },
+      "theatreId": "amc:theatre:410",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T23:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T19:00:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:144209175",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:34.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date="
+      },
+      "theatreId": "amc:theatre:410",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T02:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T22:30:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145962013",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:34.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "AMC Artisan Films",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date="
+      },
+      "theatreId": "amc:theatre:410",
+      "movieId": "amc:movie:76238",
+      "movieTitle": "The Odyssey",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T16:15:00.000Z",
+      "showDateTimeLocal": "2026-08-13T12:15:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "amcartisanfilms",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145962204",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:34.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "AMC Artisan Films",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date="
+      },
+      "theatreId": "amc:theatre:410",
+      "movieId": "amc:movie:76238",
+      "movieTitle": "The Odyssey",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T19:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T15:30:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "amcartisanfilms",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145962012",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:34.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "AMC Artisan Films",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date="
+      },
+      "theatreId": "amc:theatre:410",
+      "movieId": "amc:movie:76238",
+      "movieTitle": "The Odyssey",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T23:45:00.000Z",
+      "showDateTimeLocal": "2026-08-13T19:45:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "amcartisanfilms",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145962203",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:34.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "AMC Artisan Films",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date="
+      },
+      "theatreId": "amc:theatre:410",
+      "movieId": "amc:movie:76238",
+      "movieTitle": "The Odyssey",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T02:15:00.000Z",
+      "showDateTimeLocal": "2026-08-13T22:15:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "amcartisanfilms",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145962036",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:34.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date="
+      },
+      "theatreId": "amc:theatre:410",
+      "movieId": "amc:movie:80552",
+      "movieTitle": "One Night Only",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T16:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T12:00:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145962035",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:34.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date="
+      },
+      "theatreId": "amc:theatre:410",
+      "movieId": "amc:movie:80552",
+      "movieTitle": "One Night Only",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T18:45:00.000Z",
+      "showDateTimeLocal": "2026-08-13T14:45:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145962034",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:34.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date="
+      },
+      "theatreId": "amc:theatre:410",
+      "movieId": "amc:movie:80552",
+      "movieTitle": "One Night Only",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T21:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T17:30:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145962161",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:34.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date="
+      },
+      "theatreId": "amc:theatre:410",
+      "movieId": "amc:movie:80552",
+      "movieTitle": "One Night Only",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T00:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T20:30:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145962162",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:34.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date="
+      },
+      "theatreId": "amc:theatre:410",
+      "movieId": "amc:movie:80552",
+      "movieTitle": "One Night Only",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T03:15:00.000Z",
+      "showDateTimeLocal": "2026-08-13T23:15:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145962221",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:34.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date="
+      },
+      "theatreId": "amc:theatre:410",
+      "movieId": "amc:movie:82341",
+      "movieTitle": "Super Troopers 3",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T01:15:00.000Z",
+      "showDateTimeLocal": "2026-08-13T21:15:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145962222",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:34.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "ID Required",
+          "AMC Signature Recliners",
+          "Thrills & Chills",
+          "Reserved Seating",
+          "Closed Caption"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date="
+      },
+      "theatreId": "amc:theatre:410",
+      "movieId": "amc:movie:83358",
+      "movieTitle": "Ice Cream Man",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T20:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T16:00:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "idrequired",
+        "reclinerseating",
+        "thrlschls",
+        "reservedseating",
+        "closedcaption"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145962160",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:34.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date="
+      },
+      "theatreId": "amc:theatre:410",
+      "movieId": "amc:movie:72482",
+      "movieTitle": "Toy Story 5",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T16:15:00.000Z",
+      "showDateTimeLocal": "2026-08-13T12:15:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145962094",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:34.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date="
+      },
+      "theatreId": "amc:theatre:410",
+      "movieId": "amc:movie:72482",
+      "movieTitle": "Toy Story 5",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T19:15:00.000Z",
+      "showDateTimeLocal": "2026-08-13T15:15:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145962220",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:34.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date="
+      },
+      "theatreId": "amc:theatre:410",
+      "movieId": "amc:movie:72482",
+      "movieTitle": "Toy Story 5",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T22:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T18:30:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145962073",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:34.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date="
+      },
+      "theatreId": "amc:theatre:410",
+      "movieId": "amc:movie:72482",
+      "movieTitle": "Toy Story 5",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T01:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T21:30:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145962116",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:34.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "RealD 3D",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Laser at AMC",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date="
+      },
+      "theatreId": "amc:theatre:410",
+      "movieId": "amc:movie:77563",
+      "movieTitle": "Minions & Monsters",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T18:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T14:30:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "reald3d",
+        "reclinerseating",
+        "laseratamc",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "reald3d",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145962143",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:34.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date="
+      },
+      "theatreId": "amc:theatre:410",
+      "movieId": "amc:movie:77563",
+      "movieTitle": "Minions & Monsters",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T16:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T12:00:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145062150",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:34.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Alternative Content",
+          "Excluded from A-List",
+          "No Passes"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date="
+      },
+      "theatreId": "amc:theatre:410",
+      "movieId": "amc:movie:83778",
+      "movieTitle": "KATSEYE: WILD HEARTS",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T23:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T19:00:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "alternativecontent",
+        "excludedfromalist",
+        "nopasses"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145962117",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:34.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date="
+      },
+      "theatreId": "amc:theatre:410",
+      "movieId": "amc:movie:83746",
+      "movieTitle": "Cookie Queens",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T16:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T12:00:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145962074",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:34.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "AMC Artisan Films",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date="
+      },
+      "theatreId": "amc:theatre:410",
+      "movieId": "amc:movie:82975",
+      "movieTitle": "The Invite",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T15:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T11:00:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "amcartisanfilms",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145962187",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:34.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "AMC Artisan Films",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date="
+      },
+      "theatreId": "amc:theatre:410",
+      "movieId": "amc:movie:82975",
+      "movieTitle": "The Invite",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T17:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T13:30:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "amcartisanfilms",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145962186",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:34.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "AMC Artisan Films",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date="
+      },
+      "theatreId": "amc:theatre:410",
+      "movieId": "amc:movie:82975",
+      "movieTitle": "The Invite",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T20:15:00.000Z",
+      "showDateTimeLocal": "2026-08-13T16:15:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "amcartisanfilms",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145962144",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:34.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "AMC Artisan Films",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date="
+      },
+      "theatreId": "amc:theatre:410",
+      "movieId": "amc:movie:82975",
+      "movieTitle": "The Invite",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T00:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T20:00:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "amcartisanfilms",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145962142",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:34.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "AMC Artisan Films",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date="
+      },
+      "theatreId": "amc:theatre:410",
+      "movieId": "amc:movie:82975",
+      "movieTitle": "The Invite",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T02:45:00.000Z",
+      "showDateTimeLocal": "2026-08-13T22:45:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "amcartisanfilms",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145290057",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:34.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date="
+      },
+      "theatreId": "amc:theatre:410",
+      "movieId": "amc:movie:83719",
+      "movieTitle": "The Brink of War",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T16:15:00.000Z",
+      "showDateTimeLocal": "2026-08-13T12:15:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145290058",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:34.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date="
+      },
+      "theatreId": "amc:theatre:410",
+      "movieId": "amc:movie:83719",
+      "movieTitle": "The Brink of War",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T19:15:00.000Z",
+      "showDateTimeLocal": "2026-08-13T15:15:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145290059",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:34.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date="
+      },
+      "theatreId": "amc:theatre:410",
+      "movieId": "amc:movie:83719",
+      "movieTitle": "The Brink of War",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T22:15:00.000Z",
+      "showDateTimeLocal": "2026-08-13T18:15:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145962202",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:34.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Japanese Spoken with English Subtitles",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Laser at AMC",
+          "AMC Artisan Films",
+          "Reserved Seating",
+          "International Films"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date="
+      },
+      "theatreId": "amc:theatre:410",
+      "movieId": "amc:movie:84197",
+      "movieTitle": "Sheep in the Box",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T16:15:00.000Z",
+      "showDateTimeLocal": "2026-08-13T12:15:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "japaneseenglishsubtitle",
+        "reclinerseating",
+        "laseratamc",
+        "amcartisanfilms",
+        "reservedseating",
+        "intfilms"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145076031",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:34.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date="
+      },
+      "theatreId": "amc:theatre:410",
+      "movieId": "amc:movie:76344",
+      "movieTitle": "PAW Patrol: The Dino Movie",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T18:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T14:00:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145076032",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:34.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date="
+      },
+      "theatreId": "amc:theatre:410",
+      "movieId": "amc:movie:76344",
+      "movieTitle": "PAW Patrol: The Dino Movie",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T20:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T16:30:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145076033",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:34.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date="
+      },
+      "theatreId": "amc:theatre:410",
+      "movieId": "amc:movie:76344",
+      "movieTitle": "PAW Patrol: The Dino Movie",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T23:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T19:00:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145962185",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:34.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date="
+      },
+      "theatreId": "amc:theatre:410",
+      "movieId": "amc:movie:76344",
+      "movieTitle": "PAW Patrol: The Dino Movie",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T01:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T21:30:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145962141",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:34.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date="
+      },
+      "theatreId": "amc:theatre:410",
+      "movieId": "amc:movie:83394",
+      "movieTitle": "Six: The Musical Live!",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T18:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T14:30:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145076054",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:34.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date="
+      },
+      "theatreId": "amc:theatre:410",
+      "movieId": "amc:movie:71226",
+      "movieTitle": "The End of Oak Street",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T19:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T15:00:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145076055",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:34.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date="
+      },
+      "theatreId": "amc:theatre:410",
+      "movieId": "amc:movie:71226",
+      "movieTitle": "The End of Oak Street",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T21:45:00.000Z",
+      "showDateTimeLocal": "2026-08-13T17:45:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145076029",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:34.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date="
+      },
+      "theatreId": "amc:theatre:410",
+      "movieId": "amc:movie:71226",
+      "movieTitle": "The End of Oak Street",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T00:15:00.000Z",
+      "showDateTimeLocal": "2026-08-13T20:15:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145076030",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:34.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date="
+      },
+      "theatreId": "amc:theatre:410",
+      "movieId": "amc:movie:71226",
+      "movieTitle": "The End of Oak Street",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T03:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T23:00:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145685314",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:34.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date="
+      },
+      "theatreId": "amc:theatre:410",
+      "movieId": "amc:movie:83495",
+      "movieTitle": "Nimrods",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T21:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T17:00:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145685328",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:34.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date="
+      },
+      "theatreId": "amc:theatre:410",
+      "movieId": "amc:movie:83495",
+      "movieTitle": "Nimrods",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T23:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T19:30:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145880906",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:34.000Z",
+        "rawStatus": "AlmostFull",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Thrills & Chills",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date="
+      },
+      "theatreId": "amc:theatre:410",
+      "movieId": "amc:movie:82941",
+      "movieTitle": "Teenage Sex and Death at Camp Miasma",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T21:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T17:00:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "LOW_AVAILABILITY",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "thrlschls",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145880904",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:34.000Z",
+        "rawStatus": "AlmostFull",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Thrills & Chills",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date="
+      },
+      "theatreId": "amc:theatre:410",
+      "movieId": "amc:movie:82941",
+      "movieTitle": "Teenage Sex and Death at Camp Miasma",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T23:45:00.000Z",
+      "showDateTimeLocal": "2026-08-13T19:45:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "LOW_AVAILABILITY",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "thrlschls",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145880905",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:34.000Z",
+        "rawStatus": "AlmostFull",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Thrills & Chills",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date="
+      },
+      "theatreId": "amc:theatre:410",
+      "movieId": "amc:movie:82941",
+      "movieTitle": "Teenage Sex and Death at Camp Miasma",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T02:45:00.000Z",
+      "showDateTimeLocal": "2026-08-13T22:45:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "LOW_AVAILABILITY",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "thrlschls",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145684914",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:34.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "AMC Artisan Films",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date="
+      },
+      "theatreId": "amc:theatre:410",
+      "movieId": "amc:movie:82596",
+      "movieTitle": "The Rivals of Amziah King",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T22:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T18:00:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "amcartisanfilms",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145684915",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:34.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "AMC Artisan Films",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date="
+      },
+      "theatreId": "amc:theatre:410",
+      "movieId": "amc:movie:82596",
+      "movieTitle": "The Rivals of Amziah King",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T01:15:00.000Z",
+      "showDateTimeLocal": "2026-08-13T21:15:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "amcartisanfilms",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145962226",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:34.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/atlanta/amc-phipps-plaza-14/showtimes?date="
+      },
+      "theatreId": "amc:theatre:410",
+      "movieId": "amc:movie:83781",
+      "movieTitle": "The Wrong Girls",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T01:15:00.000Z",
+      "showDateTimeLocal": "2026-08-13T21:15:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    }
+  ]
+}

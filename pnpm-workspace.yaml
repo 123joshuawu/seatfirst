@@ -1,0 +1,21 @@
+packages:
+  - "apps/*"
+  - "packages/*"
+
+# Pulled in by testcontainers (@seatfirst/durability tests), bullmq (@seatfirst/server's
+# broker, via msgpackr), and build tools. esbuild is allowed as it compiles our code. The
+# other four are declined: cpu-features is an optional native accelerator ssh2 falls back
+# from, msgpackr-extract is msgpackr's optional native accelerator (BullMQ works on the
+# pure-JS fallback), protobufjs's postinstall only regenerates bundled code, and neither
+# the SSH tunnel nor gRPC path is used when talking to a local Docker socket.
+allowBuilds:
+  cpu-features: false
+  esbuild: true
+  msgpackr-extract: false
+  protobufjs: false
+  ssh2: false
+
+# Known benign warning: expo-modules-core@57 peer-wants react-native-worklets ^0.7–^0.10 while
+# react-native-reanimated@4.5 pulls 0.11. Transitive, unused until the app has code; not
+# overridden here because rewriting a third-party peer range to silence a warning hides the
+# real mismatch. Revisit when Expo widens the range.
