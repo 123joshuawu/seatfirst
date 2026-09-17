@@ -1,0 +1,393 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`CustomDateCalendar facet badges (UI23.4) > renders the pre-existing cell shape when facetCounts is absent (no-regression guard) 1`] = `
+<View>
+  <View
+    style={
+      {
+        "flexDirection": "row",
+      }
+    }
+  >
+    <View
+      style={
+        {
+          "alignItems": "center",
+          "justifyContent": "center",
+          "paddingVertical": 4,
+          "width": "14.285714285714286%",
+        }
+      }
+    >
+      <Text
+        style={
+          [
+            {
+              "fontFamily": "IBMPlexSans_500Medium",
+              "fontWeight": "500",
+            },
+            {
+              "color": "#6B7280",
+              "fontSize": 11,
+            },
+          ]
+        }
+      >
+        S
+      </Text>
+    </View>
+    <View
+      style={
+        {
+          "alignItems": "center",
+          "justifyContent": "center",
+          "paddingVertical": 4,
+          "width": "14.285714285714286%",
+        }
+      }
+    >
+      <Text
+        style={
+          [
+            {
+              "fontFamily": "IBMPlexSans_500Medium",
+              "fontWeight": "500",
+            },
+            {
+              "color": "#6B7280",
+              "fontSize": 11,
+            },
+          ]
+        }
+      >
+        M
+      </Text>
+    </View>
+    <View
+      style={
+        {
+          "alignItems": "center",
+          "justifyContent": "center",
+          "paddingVertical": 4,
+          "width": "14.285714285714286%",
+        }
+      }
+    >
+      <Text
+        style={
+          [
+            {
+              "fontFamily": "IBMPlexSans_500Medium",
+              "fontWeight": "500",
+            },
+            {
+              "color": "#6B7280",
+              "fontSize": 11,
+            },
+          ]
+        }
+      >
+        T
+      </Text>
+    </View>
+    <View
+      style={
+        {
+          "alignItems": "center",
+          "justifyContent": "center",
+          "paddingVertical": 4,
+          "width": "14.285714285714286%",
+        }
+      }
+    >
+      <Text
+        style={
+          [
+            {
+              "fontFamily": "IBMPlexSans_500Medium",
+              "fontWeight": "500",
+            },
+            {
+              "color": "#6B7280",
+              "fontSize": 11,
+            },
+          ]
+        }
+      >
+        W
+      </Text>
+    </View>
+    <View
+      style={
+        {
+          "alignItems": "center",
+          "justifyContent": "center",
+          "paddingVertical": 4,
+          "width": "14.285714285714286%",
+        }
+      }
+    >
+      <Text
+        style={
+          [
+            {
+              "fontFamily": "IBMPlexSans_500Medium",
+              "fontWeight": "500",
+            },
+            {
+              "color": "#6B7280",
+              "fontSize": 11,
+            },
+          ]
+        }
+      >
+        T
+      </Text>
+    </View>
+    <View
+      style={
+        {
+          "alignItems": "center",
+          "justifyContent": "center",
+          "paddingVertical": 4,
+          "width": "14.285714285714286%",
+        }
+      }
+    >
+      <Text
+        style={
+          [
+            {
+              "fontFamily": "IBMPlexSans_500Medium",
+              "fontWeight": "500",
+            },
+            {
+              "color": "#6B7280",
+              "fontSize": 11,
+            },
+          ]
+        }
+      >
+        F
+      </Text>
+    </View>
+    <View
+      style={
+        {
+          "alignItems": "center",
+          "justifyContent": "center",
+          "paddingVertical": 4,
+          "width": "14.285714285714286%",
+        }
+      }
+    >
+      <Text
+        style={
+          [
+            {
+              "fontFamily": "IBMPlexSans_500Medium",
+              "fontWeight": "500",
+            },
+            {
+              "color": "#6B7280",
+              "fontSize": 11,
+            },
+          ]
+        }
+      >
+        S
+      </Text>
+    </View>
+  </View>
+  <View>
+    <Text
+      accessibilityRole="header"
+      style={
+        [
+          {
+            "fontFamily": "IBMPlexSans_600SemiBold",
+            "fontWeight": "600",
+          },
+          {
+            "color": "#111827",
+            "fontSize": 13,
+            "paddingBottom": 4,
+            "paddingTop": 4,
+          },
+        ]
+      }
+    >
+      August 2026
+    </Text>
+    <View
+      style={
+        {
+          "flexDirection": "row",
+          "flexWrap": "wrap",
+        }
+      }
+    >
+      <View
+        style={
+          {
+            "padding": 2,
+            "width": "14.285714285714286%",
+          }
+        }
+      >
+        <View
+          style={
+            {
+              "aspectRatio": 1,
+            }
+          }
+        />
+      </View>
+      <View
+        style={
+          {
+            "padding": 2,
+            "width": "14.285714285714286%",
+          }
+        }
+      >
+        <Pressable
+          accessibilityLabel="Monday, August 3"
+          accessibilityRole="button"
+          accessibilityState={
+            {
+              "selected": false,
+            }
+          }
+          onPress={[Function]}
+          style={
+            {
+              "alignItems": "center",
+              "aspectRatio": 1,
+              "backgroundColor": "#fff",
+              "borderColor": "#D1D5DB",
+              "borderRadius": 8,
+              "borderWidth": 1,
+              "justifyContent": "center",
+              "width": "100%",
+            }
+          }
+        >
+          <Text
+            style={
+              [
+                {
+                  "fontFamily": "IBMPlexSans_500Medium",
+                  "fontWeight": "500",
+                },
+                {
+                  "color": "#111827",
+                  "fontSize": 14,
+                },
+              ]
+            }
+          >
+            3
+          </Text>
+        </Pressable>
+      </View>
+      <View
+        style={
+          {
+            "padding": 2,
+            "width": "14.285714285714286%",
+          }
+        }
+      >
+        <Pressable
+          accessibilityLabel="Tuesday, August 4"
+          accessibilityRole="button"
+          accessibilityState={
+            {
+              "selected": true,
+            }
+          }
+          onPress={[Function]}
+          style={
+            {
+              "alignItems": "center",
+              "aspectRatio": 1,
+              "backgroundColor": "#111827",
+              "borderColor": "#111827",
+              "borderRadius": 8,
+              "borderWidth": 1,
+              "justifyContent": "center",
+              "width": "100%",
+            }
+          }
+        >
+          <Text
+            style={
+              [
+                {
+                  "fontFamily": "IBMPlexSans_700Bold",
+                  "fontWeight": "700",
+                },
+                {
+                  "color": "#fff",
+                  "fontSize": 14,
+                },
+              ]
+            }
+          >
+            4
+          </Text>
+        </Pressable>
+      </View>
+      <View
+        style={
+          {
+            "padding": 2,
+            "width": "14.285714285714286%",
+          }
+        }
+      >
+        <Pressable
+          accessibilityLabel="Wednesday, August 5"
+          accessibilityRole="button"
+          accessibilityState={
+            {
+              "selected": false,
+            }
+          }
+          onPress={[Function]}
+          style={
+            {
+              "alignItems": "center",
+              "aspectRatio": 1,
+              "backgroundColor": "#fff",
+              "borderColor": "#D1D5DB",
+              "borderRadius": 8,
+              "borderWidth": 1,
+              "justifyContent": "center",
+              "width": "100%",
+            }
+          }
+        >
+          <Text
+            style={
+              [
+                {
+                  "fontFamily": "IBMPlexSans_500Medium",
+                  "fontWeight": "500",
+                },
+                {
+                  "color": "#111827",
+                  "fontSize": 14,
+                },
+              ]
+            }
+          >
+            5
+          </Text>
+        </Pressable>
+      </View>
+    </View>
+  </View>
+</View>
+`;

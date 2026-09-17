@@ -1,0 +1,38 @@
+# Docker build contexts (Dockerfile.app, Dockerfile.fetch-worker, docker-compose.dev.yml)
+# are the repo root — exclude everything a clean image build must not carry.
+node_modules
+**/node_modules
+dist
+**/dist
+build
+**/build
+.turbo
+**/.turbo
+.git
+.expo
+**/.expo
+cdk.out
+**/cdk.out
+coverage
+**/coverage
+.pnpm-store
+
+# Dev fixtures, docs, and tooling config — not needed in any image build.
+.github
+docs
+.claude
+*.log
+*.md
+!pnpm-workspace.yaml
+.editorconfig
+.prettierrc.json
+.prettierignore
+.markdownlint-cli2.jsonc
+vitest.config.scripts.mjs
+eslint.config.js
+
+# Env & secrets — never bake into an image.
+.env
+.env.*
+!.env.dev.example
+.DS_Store

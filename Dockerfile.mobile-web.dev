@@ -1,0 +1,58 @@
+# Dev-only Expo web dev server image for docker-compose.dev.yml's `web` service. Unlike
+# Dockerfile.app/Dockerfile.fetch-worker (static build, no source mount — a code change
+# needs a rebuild before it's live), this image is a long-running `expo start` process:
+# docker-compose.dev.yml bind-mounts apps/mobile-web's editable source (src/, app/,
+# app.json, tsconfig.json) over the copies baked in here, so Metro's file watcher picks up
+# edits live, matching the iteration speed of running `expo start` directly on the host.
+# Only apps/mobile-web's own source gets that treatment — editing a workspace dependency
+# (e.g. packages/core) still needs `docker compose -f docker-compose.dev.yml build web`,
+# same as every other dev-compose service, because @seatfirst/core resolves through its
+# built `dist/` (package.json `exports`), not raw TS source.
+#
+# Build context: repo root, same as Dockerfile.app — pnpm workspace install needs the full
+# lockfile and every package present.
+#
+# Layer caching: see Dockerfile.app's header — `pruner` runs `turbo prune --docker` so
+# deps install from manifest-only files before the full pruned source lands, keeping the
+# `pnpm install` layer cached across source-only changes.
+
+ARG BASE_IMAGE=seatfirst-base:latest
+FROM ${BASE_IMAGE} AS base
+
+FROM base AS pruner
+WORKDIR /repo
+COPY . .
+# Pin to the repo's turbo devDependency version (package.json) so the pruned output
+# matches what `turbo run build` below expects.
+RUN pnpm dlx turbo@2.10.7 prune @seatfirst/mobile-web --docker
+
+FROM base
+# See Dockerfile.app for why these two are needed for a clean `pnpm install` in-image.
+ENV npm_config_strict_dep_builds=false
+ENV npm_config_verify_deps_before_run=false
+# Non-interactive Expo CLI: skip the first-run anonymous-usage-reporting prompt (would
+# otherwise hang waiting on a TTY that a detached container never provides). Deliberately
+# NOT setting CI=1 — Expo/Metro treats that as "running in CI", which disables the file
+# watcher entirely (no hot reload, defeating the bind mounts above).
+ENV EXPO_NO_TELEMETRY=1
+WORKDIR /repo
+COPY --from=pruner /repo/out/json/ .
+# pnpm 11 requires install-script approval via `allowBuilds` (the repo's
+# onlyBuiltDependencies entry is no longer honored); approve esbuild image-locally so
+# the fresh install has no "ignored builds" state and turbo's nested `pnpm run` calls
+# never auto-trigger a failing deps re-install. This edits the copy inside the image —
+# the repo file is untouched. Re-run after the out/full/ copy below: that copy
+# overwrites pnpm-workspace.yaml with the unpatched original.
+COPY docker/patch-workspace.mjs /tmp/patch-workspace.mjs
+RUN node /tmp/patch-workspace.mjs
+RUN pnpm install --frozen-lockfile --config.strict-dep-builds=false
+COPY --from=pruner /repo/out/full/ .
+RUN node /tmp/patch-workspace.mjs
+# Build only @seatfirst/mobile-web's workspace dependencies (e.g. @seatfirst/core), not
+# mobile-web itself — the dev server runs Metro straight off apps/mobile-web/src, never a
+# `dist/` build of the app.
+RUN node_modules/.bin/turbo run build --filter=@seatfirst/mobile-web^...
+
+WORKDIR /repo/apps/mobile-web
+EXPOSE 8081
+CMD ["pnpm", "dev"]

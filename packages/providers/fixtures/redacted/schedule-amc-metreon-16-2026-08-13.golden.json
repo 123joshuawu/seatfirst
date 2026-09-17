@@ -1,0 +1,2605 @@
+{
+  "ok": true,
+  "value": [
+    {
+      "showtimeId": "amc:showtime:145927008",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:12.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Dolby Cinema at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date="
+      },
+      "theatreId": "amc:theatre:2325",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T18:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T11:30:00",
+      "utcOffset": "-07:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "dolbycinemaatamcprime",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "dolbycinemaatamcprime",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145927007",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:12.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Dolby Cinema at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date="
+      },
+      "theatreId": "amc:theatre:2325",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T22:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T15:00:00",
+      "utcOffset": "-07:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "dolbycinemaatamcprime",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "dolbycinemaatamcprime",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145927006",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:12.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Dolby Cinema at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date="
+      },
+      "theatreId": "amc:theatre:2325",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T01:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T18:30:00",
+      "utcOffset": "-07:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "dolbycinemaatamcprime",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "dolbycinemaatamcprime",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145927009",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:12.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Dolby Cinema at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date="
+      },
+      "theatreId": "amc:theatre:2325",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T05:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T22:00:00",
+      "utcOffset": "-07:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "dolbycinemaatamcprime",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "dolbycinemaatamcprime",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145205892",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:12.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "SCREENX at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Laser at AMC",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date="
+      },
+      "theatreId": "amc:theatre:2325",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T19:45:00.000Z",
+      "showDateTimeLocal": "2026-08-13T12:45:00",
+      "utcOffset": "-07:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "screenx",
+        "reclinerseating",
+        "laseratamc",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "screenx",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145205890",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:12.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "SCREENX at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Laser at AMC",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date="
+      },
+      "theatreId": "amc:theatre:2325",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T02:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T19:00:00",
+      "utcOffset": "-07:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "screenx",
+        "reclinerseating",
+        "laseratamc",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "screenx",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145927003",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:12.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "RealD 3D",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Laser at AMC",
+          "Reserved Seating",
+          "Closed Caption"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date="
+      },
+      "theatreId": "amc:theatre:2325",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T20:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T13:00:00",
+      "utcOffset": "-07:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "reald3d",
+        "reclinerseating",
+        "laseratamc",
+        "reservedseating",
+        "closedcaption"
+      ],
+      "formatCode": "reald3d",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145927004",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:12.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "RealD 3D",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Laser at AMC",
+          "Reserved Seating",
+          "Closed Caption"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date="
+      },
+      "theatreId": "amc:theatre:2325",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T23:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T16:30:00",
+      "utcOffset": "-07:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "reald3d",
+        "reclinerseating",
+        "laseratamc",
+        "reservedseating",
+        "closedcaption"
+      ],
+      "formatCode": "reald3d",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145927005",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:12.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "RealD 3D",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Laser at AMC",
+          "Reserved Seating",
+          "Closed Caption"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date="
+      },
+      "theatreId": "amc:theatre:2325",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T03:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T20:00:00",
+      "utcOffset": "-07:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "reald3d",
+        "reclinerseating",
+        "laseratamc",
+        "reservedseating",
+        "closedcaption"
+      ],
+      "formatCode": "reald3d",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145966257",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:12.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "RealD 3D",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Laser at AMC",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date="
+      },
+      "theatreId": "amc:theatre:2325",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T04:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T21:00:00",
+      "utcOffset": "-07:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "reald3d",
+        "reclinerseating",
+        "laseratamc",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "reald3d",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145966317",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:12.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date="
+      },
+      "theatreId": "amc:theatre:2325",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T17:15:00.000Z",
+      "showDateTimeLocal": "2026-08-13T10:15:00",
+      "utcOffset": "-07:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145927016",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:12.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date="
+      },
+      "theatreId": "amc:theatre:2325",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T18:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T11:00:00",
+      "utcOffset": "-07:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145926999",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:12.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date="
+      },
+      "theatreId": "amc:theatre:2325",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T19:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T12:00:00",
+      "utcOffset": "-07:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145927015",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:12.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date="
+      },
+      "theatreId": "amc:theatre:2325",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T21:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T14:30:00",
+      "utcOffset": "-07:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145927013",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:12.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date="
+      },
+      "theatreId": "amc:theatre:2325",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T23:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T16:00:00",
+      "utcOffset": "-07:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145966235",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:12.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date="
+      },
+      "theatreId": "amc:theatre:2325",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T00:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T17:00:00",
+      "utcOffset": "-07:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145927014",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:12.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date="
+      },
+      "theatreId": "amc:theatre:2325",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T01:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T18:00:00",
+      "utcOffset": "-07:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145927010",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:12.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date="
+      },
+      "theatreId": "amc:theatre:2325",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T02:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T19:30:00",
+      "utcOffset": "-07:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145966237",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:12.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date="
+      },
+      "theatreId": "amc:theatre:2325",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T03:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T20:30:00",
+      "utcOffset": "-07:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145927017",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:12.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date="
+      },
+      "theatreId": "amc:theatre:2325",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T04:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T21:30:00",
+      "utcOffset": "-07:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145927011",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:12.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date="
+      },
+      "theatreId": "amc:theatre:2325",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T06:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T23:00:00",
+      "utcOffset": "-07:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145377414",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:12.000Z",
+        "rawStatus": "AlmostFull",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "IMAX 70MM",
+        "rawAttributeNames": [
+          "IMAX at AMC",
+          "70mm",
+          "AMC Club Rockers",
+          "AMC Artisan Films",
+          "Reserved Seating"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date="
+      },
+      "theatreId": "amc:theatre:2325",
+      "movieId": "amc:movie:76238",
+      "movieTitle": "The Odyssey",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T17:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T10:00:00",
+      "utcOffset": "-07:00",
+      "runtimeMinutes": null,
+      "status": "LOW_AVAILABILITY",
+      "attributes": [
+        "imax70mm",
+        "imax",
+        "70mm",
+        "amcclubrockers",
+        "amcartisanfilms",
+        "reservedseating"
+      ],
+      "formatCode": "imax70mm",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145377415",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:12.000Z",
+        "rawStatus": "AlmostFull",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "IMAX 70MM",
+        "rawAttributeNames": [
+          "IMAX at AMC",
+          "70mm",
+          "AMC Club Rockers",
+          "AMC Artisan Films",
+          "Reserved Seating"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date="
+      },
+      "theatreId": "amc:theatre:2325",
+      "movieId": "amc:movie:76238",
+      "movieTitle": "The Odyssey",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T21:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T14:00:00",
+      "utcOffset": "-07:00",
+      "runtimeMinutes": null,
+      "status": "LOW_AVAILABILITY",
+      "attributes": [
+        "imax70mm",
+        "imax",
+        "70mm",
+        "amcclubrockers",
+        "amcartisanfilms",
+        "reservedseating"
+      ],
+      "formatCode": "imax70mm",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145377416",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:12.000Z",
+        "rawStatus": "AlmostFull",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "IMAX 70MM",
+        "rawAttributeNames": [
+          "IMAX at AMC",
+          "70mm",
+          "AMC Club Rockers",
+          "AMC Artisan Films",
+          "Reserved Seating"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date="
+      },
+      "theatreId": "amc:theatre:2325",
+      "movieId": "amc:movie:76238",
+      "movieTitle": "The Odyssey",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T06:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T23:00:00",
+      "utcOffset": "-07:00",
+      "runtimeMinutes": null,
+      "status": "LOW_AVAILABILITY",
+      "attributes": [
+        "imax70mm",
+        "imax",
+        "70mm",
+        "amcclubrockers",
+        "amcartisanfilms",
+        "reservedseating"
+      ],
+      "formatCode": "imax70mm",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145966333",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:12.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "AMC Artisan Films",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date="
+      },
+      "theatreId": "amc:theatre:2325",
+      "movieId": "amc:movie:76238",
+      "movieTitle": "The Odyssey",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T18:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T11:00:00",
+      "utcOffset": "-07:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "amcartisanfilms",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145927012",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:12.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "AMC Artisan Films",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date="
+      },
+      "theatreId": "amc:theatre:2325",
+      "movieId": "amc:movie:76238",
+      "movieTitle": "The Odyssey",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T19:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T12:00:00",
+      "utcOffset": "-07:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "amcartisanfilms",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145927001",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:12.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "AMC Artisan Films",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date="
+      },
+      "theatreId": "amc:theatre:2325",
+      "movieId": "amc:movie:76238",
+      "movieTitle": "The Odyssey",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T22:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T15:30:00",
+      "utcOffset": "-07:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "amcartisanfilms",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145966294",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:12.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "AMC Artisan Films",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date="
+      },
+      "theatreId": "amc:theatre:2325",
+      "movieId": "amc:movie:76238",
+      "movieTitle": "The Odyssey",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T23:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T16:00:00",
+      "utcOffset": "-07:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "amcartisanfilms",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145927000",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:12.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "AMC Artisan Films",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date="
+      },
+      "theatreId": "amc:theatre:2325",
+      "movieId": "amc:movie:76238",
+      "movieTitle": "The Odyssey",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T02:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T19:30:00",
+      "utcOffset": "-07:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "amcartisanfilms",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145926998",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:12.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "AMC Artisan Films",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date="
+      },
+      "theatreId": "amc:theatre:2325",
+      "movieId": "amc:movie:76238",
+      "movieTitle": "The Odyssey",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T05:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T22:30:00",
+      "utcOffset": "-07:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "amcartisanfilms",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145926967",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:12.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date="
+      },
+      "theatreId": "amc:theatre:2325",
+      "movieId": "amc:movie:80552",
+      "movieTitle": "One Night Only",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T20:45:00.000Z",
+      "showDateTimeLocal": "2026-08-13T13:45:00",
+      "utcOffset": "-07:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145926966",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:12.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date="
+      },
+      "theatreId": "amc:theatre:2325",
+      "movieId": "amc:movie:80552",
+      "movieTitle": "One Night Only",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T23:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T16:30:00",
+      "utcOffset": "-07:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145926964",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:12.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date="
+      },
+      "theatreId": "amc:theatre:2325",
+      "movieId": "amc:movie:80552",
+      "movieTitle": "One Night Only",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T03:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T20:00:00",
+      "utcOffset": "-07:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145926965",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:12.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date="
+      },
+      "theatreId": "amc:theatre:2325",
+      "movieId": "amc:movie:80552",
+      "movieTitle": "One Night Only",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T05:45:00.000Z",
+      "showDateTimeLocal": "2026-08-13T22:45:00",
+      "utcOffset": "-07:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145966222",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:12.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date="
+      },
+      "theatreId": "amc:theatre:2325",
+      "movieId": "amc:movie:82341",
+      "movieTitle": "Super Troopers 3",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T19:15:00.000Z",
+      "showDateTimeLocal": "2026-08-13T12:15:00",
+      "utcOffset": "-07:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145966210",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:12.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "ID Required",
+          "AMC Signature Recliners",
+          "Thrills & Chills",
+          "Reserved Seating",
+          "Closed Caption"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date="
+      },
+      "theatreId": "amc:theatre:2325",
+      "movieId": "amc:movie:83358",
+      "movieTitle": "Ice Cream Man",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T04:20:00.000Z",
+      "showDateTimeLocal": "2026-08-13T21:20:00",
+      "utcOffset": "-07:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "idrequired",
+        "reclinerseating",
+        "thrlschls",
+        "reservedseating",
+        "closedcaption"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145966295",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:12.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date="
+      },
+      "theatreId": "amc:theatre:2325",
+      "movieId": "amc:movie:72482",
+      "movieTitle": "Toy Story 5",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T20:15:00.000Z",
+      "showDateTimeLocal": "2026-08-13T13:15:00",
+      "utcOffset": "-07:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145966236",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:12.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date="
+      },
+      "theatreId": "amc:theatre:2325",
+      "movieId": "amc:movie:77563",
+      "movieTitle": "Minions & Monsters",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T21:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T14:30:00",
+      "utcOffset": "-07:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145966191",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:12.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date="
+      },
+      "theatreId": "amc:theatre:2325",
+      "movieId": "amc:movie:77563",
+      "movieTitle": "Minions & Monsters",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T23:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T16:30:00",
+      "utcOffset": "-07:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145062467",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:12.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Alternative Content",
+          "Excluded from A-List",
+          "No Passes"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date="
+      },
+      "theatreId": "amc:theatre:2325",
+      "movieId": "amc:movie:83778",
+      "movieTitle": "KATSEYE: WILD HEARTS",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T02:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T19:00:00",
+      "utcOffset": "-07:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "alternativecontent",
+        "excludedfromalist",
+        "nopasses"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145966260",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:12.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date="
+      },
+      "theatreId": "amc:theatre:2325",
+      "movieId": "amc:movie:83746",
+      "movieTitle": "Cookie Queens",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T18:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T11:30:00",
+      "utcOffset": "-07:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145966209",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:12.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date="
+      },
+      "theatreId": "amc:theatre:2325",
+      "movieId": "amc:movie:83319",
+      "movieTitle": "Hadestown: The Musical",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T17:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T10:30:00",
+      "utcOffset": "-07:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145966362",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:12.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "AMC Artisan Films",
+          "Reserved Seating",
+          "Closed Caption"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date="
+      },
+      "theatreId": "amc:theatre:2325",
+      "movieId": "amc:movie:82975",
+      "movieTitle": "The Invite",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T17:15:00.000Z",
+      "showDateTimeLocal": "2026-08-13T10:15:00",
+      "utcOffset": "-07:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "amcartisanfilms",
+        "reservedseating",
+        "closedcaption"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145966271",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:12.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date="
+      },
+      "theatreId": "amc:theatre:2325",
+      "movieId": "amc:movie:83178",
+      "movieTitle": "I Want Your Sex",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T17:45:00.000Z",
+      "showDateTimeLocal": "2026-08-13T10:45:00",
+      "utcOffset": "-07:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145966172",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:12.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "AMC Artisan Films",
+          "Reserved Seating",
+          "Closed Caption"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date="
+      },
+      "theatreId": "amc:theatre:2325",
+      "movieId": "amc:movie:82596",
+      "movieTitle": "The Rivals of Amziah King",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T17:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T10:00:00",
+      "utcOffset": "-07:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "amcartisanfilms",
+        "reservedseating",
+        "closedcaption"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145966171",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:12.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "AMC Artisan Films",
+          "Reserved Seating",
+          "Closed Caption"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date="
+      },
+      "theatreId": "amc:theatre:2325",
+      "movieId": "amc:movie:82596",
+      "movieTitle": "The Rivals of Amziah King",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T20:10:00.000Z",
+      "showDateTimeLocal": "2026-08-13T13:10:00",
+      "utcOffset": "-07:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "amcartisanfilms",
+        "reservedseating",
+        "closedcaption"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145966211",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:12.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "AMC Artisan Films",
+          "Reserved Seating",
+          "Closed Caption"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date="
+      },
+      "theatreId": "amc:theatre:2325",
+      "movieId": "amc:movie:82596",
+      "movieTitle": "The Rivals of Amziah King",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T22:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T15:00:00",
+      "utcOffset": "-07:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "amcartisanfilms",
+        "reservedseating",
+        "closedcaption"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145851377",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:12.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "AMC Artisan Films",
+          "Reserved Seating",
+          "Closed Caption"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date="
+      },
+      "theatreId": "amc:theatre:2325",
+      "movieId": "amc:movie:82596",
+      "movieTitle": "The Rivals of Amziah King",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T01:15:00.000Z",
+      "showDateTimeLocal": "2026-08-13T18:15:00",
+      "utcOffset": "-07:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "amcartisanfilms",
+        "reservedseating",
+        "closedcaption"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145851378",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:12.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "AMC Artisan Films",
+          "Reserved Seating",
+          "Closed Caption"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date="
+      },
+      "theatreId": "amc:theatre:2325",
+      "movieId": "amc:movie:82596",
+      "movieTitle": "The Rivals of Amziah King",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T04:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T21:30:00",
+      "utcOffset": "-07:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "amcartisanfilms",
+        "reservedseating",
+        "closedcaption"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:144251252",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:12.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date="
+      },
+      "theatreId": "amc:theatre:2325",
+      "movieId": "amc:movie:83719",
+      "movieTitle": "The Brink of War",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T19:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T12:00:00",
+      "utcOffset": "-07:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:144251251",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:12.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date="
+      },
+      "theatreId": "amc:theatre:2325",
+      "movieId": "amc:movie:83719",
+      "movieTitle": "The Brink of War",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T22:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T15:00:00",
+      "utcOffset": "-07:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:144251250",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:12.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date="
+      },
+      "theatreId": "amc:theatre:2325",
+      "movieId": "amc:movie:83719",
+      "movieTitle": "The Brink of War",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T01:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T18:00:00",
+      "utcOffset": "-07:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145205845",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:12.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date="
+      },
+      "theatreId": "amc:theatre:2325",
+      "movieId": "amc:movie:76344",
+      "movieTitle": "PAW Patrol: The Dino Movie",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T21:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T14:00:00",
+      "utcOffset": "-07:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145205846",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:12.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date="
+      },
+      "theatreId": "amc:theatre:2325",
+      "movieId": "amc:movie:76344",
+      "movieTitle": "PAW Patrol: The Dino Movie",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T23:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T16:30:00",
+      "utcOffset": "-07:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145205847",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:12.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date="
+      },
+      "theatreId": "amc:theatre:2325",
+      "movieId": "amc:movie:76344",
+      "movieTitle": "PAW Patrol: The Dino Movie",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T02:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T19:00:00",
+      "utcOffset": "-07:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145926963",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:12.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date="
+      },
+      "theatreId": "amc:theatre:2325",
+      "movieId": "amc:movie:76344",
+      "movieTitle": "PAW Patrol: The Dino Movie",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T04:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T21:30:00",
+      "utcOffset": "-07:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145966190",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:12.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date="
+      },
+      "theatreId": "amc:theatre:2325",
+      "movieId": "amc:movie:83394",
+      "movieTitle": "Six: The Musical Live!",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T21:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T14:00:00",
+      "utcOffset": "-07:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145205889",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:12.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "SCREENX at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Laser at AMC",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date="
+      },
+      "theatreId": "amc:theatre:2325",
+      "movieId": "amc:movie:71226",
+      "movieTitle": "The End of Oak Street",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T23:15:00.000Z",
+      "showDateTimeLocal": "2026-08-13T16:15:00",
+      "utcOffset": "-07:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "screenx",
+        "reclinerseating",
+        "laseratamc",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "screenx",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145205891",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:12.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "SCREENX at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Laser at AMC",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date="
+      },
+      "theatreId": "amc:theatre:2325",
+      "movieId": "amc:movie:71226",
+      "movieTitle": "The End of Oak Street",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T05:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T22:30:00",
+      "utcOffset": "-07:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "screenx",
+        "reclinerseating",
+        "laseratamc",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "screenx",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145205886",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:12.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date="
+      },
+      "theatreId": "amc:theatre:2325",
+      "movieId": "amc:movie:71226",
+      "movieTitle": "The End of Oak Street",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T22:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T15:00:00",
+      "utcOffset": "-07:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145205887",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:12.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date="
+      },
+      "theatreId": "amc:theatre:2325",
+      "movieId": "amc:movie:71226",
+      "movieTitle": "The End of Oak Street",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T00:45:00.000Z",
+      "showDateTimeLocal": "2026-08-13T17:45:00",
+      "utcOffset": "-07:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145205888",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:12.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date="
+      },
+      "theatreId": "amc:theatre:2325",
+      "movieId": "amc:movie:71226",
+      "movieTitle": "The End of Oak Street",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T03:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T20:30:00",
+      "utcOffset": "-07:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145660346",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:12.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date="
+      },
+      "theatreId": "amc:theatre:2325",
+      "movieId": "amc:movie:83781",
+      "movieTitle": "The Wrong Girls",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T23:20:00.000Z",
+      "showDateTimeLocal": "2026-08-13T16:20:00",
+      "utcOffset": "-07:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145660347",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:12.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date="
+      },
+      "theatreId": "amc:theatre:2325",
+      "movieId": "amc:movie:83781",
+      "movieTitle": "The Wrong Girls",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T02:10:00.000Z",
+      "showDateTimeLocal": "2026-08-13T19:10:00",
+      "utcOffset": "-07:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145660348",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:12.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date="
+      },
+      "theatreId": "amc:theatre:2325",
+      "movieId": "amc:movie:83781",
+      "movieTitle": "The Wrong Girls",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T05:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T22:00:00",
+      "utcOffset": "-07:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145499217",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date=",
+        "observationTime": "2026-08-13T05:04:12.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Korean Spoken with No Subtitles",
+        "rawAttributeNames": [
+          "No Trailers",
+          "AMC Signature Recliners",
+          "Laser at AMC",
+          "Reserved Seating",
+          "Alternative Content",
+          "Excluded from A-List",
+          "No Passes"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date="
+      },
+      "theatreId": "amc:theatre:2325",
+      "movieId": "amc:movie:84444",
+      "movieTitle": "2026 CORTIS TOUR <PUT YOUR PHONE DOWN> IN LA: LIVE VIEWING",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T02:15:00.000Z",
+      "showDateTimeLocal": "2026-08-13T19:15:00",
+      "utcOffset": "-07:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "koreanspoken",
+        "notrailers",
+        "reclinerseating",
+        "laseratamc",
+        "reservedseating",
+        "alternativecontent",
+        "excludedfromalist",
+        "nopasses"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    }
+  ]
+}

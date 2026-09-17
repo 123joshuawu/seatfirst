@@ -1,0 +1,33 @@
+{
+  "extends": "@seatfirst/config/tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": ".",
+    "outDir": "dist",
+    "types": [],
+
+    // Type-checking covers the tests too: they are the deliverable here, and eslint's
+    // project service resolves this file for them (mirrors packages/durability).
+    "noEmit": true,
+
+    // Deliberately BELOW the ES2024 base. This package is the one shared between the
+    // server (Node 24) and the RN client (Hermes) — architecture appendix A — and what
+    // `tsc` emits here runs verbatim on both. `apps/mobile-web` pinning its own `lib`
+    // constrains only the app's source, not this package's output, so the Hermes ceiling
+    // has to be enforced here or nowhere.
+    //
+    // Hermes trails the spec on built-ins (no `Object.groupBy`, `Array.fromAsync`,
+    // iterator helpers, or Set methods; the ES2023 `toSorted`/`with` family is
+    // version-dependent). Metro/Babel downlevel *syntax*, not built-ins, and no polyfill
+    // is configured — so an unsupported built-in fails on device, not in CI. ES2022 is a
+    // conservative floor that Hermes covers comfortably and that a bitmap engine over
+    // `Uint8Array` does not strain.
+    //
+    // To raise it: verify the specific built-ins against the Hermes build in the pinned
+    // React Native release (currently 0.86.2) on a real device or emulator, then move
+    // this and record the evidence. Do not raise it just because Node supports it.
+    "target": "ES2022",
+    "lib": ["ES2022"]
+  },
+  "include": ["src/**/*.ts", "test/**/*.ts", "vitest.config.ts"],
+  "exclude": ["dist", "node_modules"]
+}

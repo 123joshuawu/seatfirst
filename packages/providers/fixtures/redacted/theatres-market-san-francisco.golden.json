@@ -1,0 +1,90 @@
+{
+  "ok": true,
+  "value": [
+    {
+      "id": "amc:theatre:420",
+      "providerId": "amc",
+      "name": "AMC Sunnyvale 12",
+      "location": {
+        "lat": 37.373807,
+        "lng": -122.0329617
+      },
+      "timezone": "America/Los_Angeles",
+      "city": "Sunnyvale",
+      "address": "150 E. McKinley Ave, Sunnyvale, CA, 94086",
+      "slugs": {
+        "san-francisco": "amc-sunnyvale-12"
+      },
+      "firstSeenAt": "2026-08-15T23:35:08.000Z",
+      "lastSeenAt": "2026-08-15T23:35:08.000Z"
+    },
+    {
+      "id": "amc:theatre:456",
+      "providerId": "amc",
+      "name": "AMC NewPark 12",
+      "location": {
+        "lat": 37.527744,
+        "lng": -122.001159
+      },
+      "timezone": "America/Los_Angeles",
+      "city": "Newark",
+      "address": "400 Newpark Mall, Newark, CA, 94560",
+      "slugs": {
+        "san-francisco": "amc-newpark-12"
+      },
+      "firstSeenAt": "2026-08-15T23:35:08.000Z",
+      "lastSeenAt": "2026-08-15T23:35:08.000Z"
+    },
+    {
+      "id": "amc:theatre:2325",
+      "providerId": "amc",
+      "name": "AMC Metreon 16",
+      "location": {
+        "lat": 37.78409516,
+        "lng": -122.4036164
+      },
+      "timezone": "America/Los_Angeles",
+      "city": "San Francisco",
+      "address": "135 Fourth St, San Francisco, CA, 94103",
+      "slugs": {
+        "san-francisco": "amc-metreon-16"
+      },
+      "firstSeenAt": "2026-08-15T23:35:08.000Z",
+      "lastSeenAt": "2026-08-15T23:35:08.000Z"
+    },
+    {
+      "id": "amc:theatre:4145",
+      "providerId": "amc",
+      "name": "AMC Kabuki 8",
+      "location": {
+        "lat": 37.7852,
+        "lng": -122.432688
+      },
+      "timezone": "America/Los_Angeles",
+      "city": "San Francisco",
+      "address": "1881 Post St, San Francisco, CA, 94115-3607",
+      "slugs": {
+        "san-francisco": "amc-kabuki-8"
+      },
+      "firstSeenAt": "2026-08-15T23:35:08.000Z",
+      "lastSeenAt": "2026-08-15T23:35:08.000Z"
+    },
+    {
+      "id": "amc:theatre:6555",
+      "providerId": "amc",
+      "name": "AMC Manteca 16",
+      "location": {
+        "lat": 37.781226,
+        "lng": -121.227506
+      },
+      "timezone": "America/Los_Angeles",
+      "city": "Manteca",
+      "address": "848 Lifestyle St, Manteca, CA, 95337",
+      "slugs": {
+        "san-francisco": "amc-manteca-16"
+      },
+      "firstSeenAt": "2026-08-15T23:35:08.000Z",
+      "lastSeenAt": "2026-08-15T23:35:08.000Z"
+    }
+  ]
+}

@@ -1,0 +1,193 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  schedule:
+    - cron: "17 11 * * *"
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  # Staging/CI workers run in fixture replay mode. CI must never generate upstream
+  # traffic (architecture §8.6).
+  SEATFIRST_ENV: ci
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      # Add Socket Firewall to the runner environment
+      - uses: socketdev/action@v1
+        with:
+          mode: firewall
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - run: sfw pnpm install --frozen-lockfile
+
+      - name: Build
+        run: pnpm build
+
+      - name: Format
+        run: pnpm format:check
+
+      - name: Lint
+        run: pnpm lint
+        env:
+          NODE_OPTIONS: --max-old-space-size=8192
+
+      - name: Unit tests (scripts/)
+        run: pnpm test:scripts
+
+      - name: Lint docs (markdown style + link/citation check)
+        run: pnpm lint:docs
+
+      - name: Typecheck (strict, whole workspace)
+        run: pnpm typecheck
+
+      - name: Unit tests
+        run: pnpm test
+
+  # Durability harness, tiers 0–3 (docs/durability-harness-plan.md). Its own job: it
+  # starts a Postgres 16 container via testcontainers, so it is the one check that needs
+  # a Docker daemon, and keeping it separate means a schema failure is legible at a glance
+  # rather than buried in the workspace test output.
+  #
+  # Tiers 0–3 run on every PR by design — schema, statements, effects, then the table-driven
+  # lifecycle matrix. Tiers 4–6 are isolated below: tiers 4–5 also start Redis and hold
+  # multi-connection crash/race scripts; tier 6 runs randomized conservation and load worlds.
+  durability:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      # Add Socket Firewall to the runner environment
+      - uses: socketdev/action@v1
+        with:
+          mode: firewall
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - run: sfw pnpm install --frozen-lockfile
+
+      - name: Tiers 0–3 (schema · statements · effects · lifecycle)
+        run: pnpm test:durability
+
+  durability-extended:
+    if: github.event_name == 'schedule' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      # Add Socket Firewall to the runner environment
+      - uses: socketdev/action@v1
+        with:
+          mode: firewall
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - run: sfw pnpm install --frozen-lockfile
+
+      - name: Tiers 4–6 (crash injection · deterministic races · invariants/load)
+        run: pnpm test:durability:extended
+
+  # Adapter fixture regression suite (architecture §9, §15 gates 1 + 7; P2,
+  # docs/backend-work-plan.md:671-705). Runs the replay harness against the fixture corpus
+  # (packages/providers/fixtures/redacted/ — empty today, gate 1/7 still blocked) plus its
+  # own self-test suite (which is what proves "empty corpus" is not "untested" — P2.3), and a
+  # fixture-hygiene guard (P2.6: fails if anything lands under fixtures/raw/, or a redacted/
+  # file looks like an unredacted capture). This is the required check named by the TODO this
+  # job replaces: it must be green before any adapter code merges.
+  #
+  # No network call of any kind — the harness only reads fixtures already on disk, and
+  # SEATFIRST_ENV: ci (workflow-level env, above) still applies to this job.
+  fixture-regression:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      # Add Socket Firewall to the runner environment
+      - uses: socketdev/action@v1
+        with:
+          mode: firewall
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - run: sfw pnpm install --frozen-lockfile
+
+      - name: Build
+        run: pnpm build
+
+      - name: Fixture hygiene guard (raw/ must be empty; redacted/ heuristic)
+        run: pnpm --filter @seatfirst/providers guard:fixtures
+
+      - name: Replay harness (fixtures/redacted/ + self-test)
+        run: pnpm --filter @seatfirst/providers test:fixtures
+
+  # Browser-runtime integration tests against a local synthetic server with AMC
+  # hostnames network-denied (architecture §9 PR list,
+  # docs/seatfirst-architecture.md:620; P6.17, P6.19). The PINNED browser test image
+  # supplies Chrome before tests start — CI never downloads a browser at test time
+  # (I1 pins the image; P6's test/support/chrome.ts resolves
+  # SEATFIRST_CHROME_EXECUTABLE). Without this job the suite skips silently
+  # (no Chrome on the default runner); the synthetic harness itself is seam-based
+  # offline — every hop is served by an injected fetchHop, no request ever resolves
+  # DNS or touches a socket (P6.19).
+  browser-runtime-offline:
+    runs-on: ubuntu-latest
+    container: mcr.microsoft.com/playwright:v1.62.1-noble
+    steps:
+      - uses: actions/checkout@v5
+
+      # Add Socket Firewall to the runner environment
+      - uses: socketdev/action@v1
+        with:
+          mode: firewall
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+
+      - run: sfw pnpm install --frozen-lockfile
+
+      - name: Build workspace dependencies (@seatfirst/providers, @seatfirst/core, @seatfirst/config)
+        run: pnpm exec turbo run build --filter=@seatfirst/browser-runtime^...
+
+      - name: Pin Chrome from the pinned browser test image
+        run: |
+          echo "SEATFIRST_CHROME_EXECUTABLE=$(node --input-type=commonjs -e "console.log(require('playwright-core').chromium.executablePath())")" >> "$GITHUB_ENV"
+
+      - name: Network-deny AMC hostnames
+        run: |
+          printf '127.0.0.1 amctheatres.com\n127.0.0.1 www.amctheatres.com\n127.0.0.1 queue.amctheatres.com\n127.0.0.1 api.amctheatres.com\n127.0.0.1 cdn.amctheatres.com\n' >> /etc/hosts
+
+      - name: Browser-runtime offline synthetic suite
+        run: pnpm --filter @seatfirst/browser-runtime test

@@ -1,0 +1,32 @@
+// Markdown style lint config. Scope: this repo's own docs only (see `ignores`).
+//
+// Rule tuning rationale, not defaults-for-defaults'-sake:
+// - MD013 (line-length) off: many docs here use single-line table cells that carry a full
+//   requirement or citation (`docs/tasks/S3-outbox-published-boundary/spec.md` has table
+//   lines over 1700 characters by design — see the "structured requirement table" convention
+//   in `CONTRIBUTING.md`). Wrapping them would break the one-row-one-requirement contract.
+// - MD033 (no-inline-html) off: `docs/tasks/*/spec.md` requirement tables and a few specs use
+//   `<br>`/`<sub>` sparingly inside table cells, where Markdown has no other way to force a
+//   line break.
+// - MD024 (no-duplicate-heading) siblings_only: task specs and ADRs reuse section names
+//   ("Requirements", "Verification") across *different* files, which is fine and expected;
+//   only a real duplicate *within* one file's sibling level should fire.
+// - MD028 (no blank line inside blockquote) off: several ADRs stack consecutive `>` blockquote
+//   notes (e.g. a draft note directly followed by a dated resolution update) separated only by
+//   a blank line, which markdownlint reads as one blockquote with an internal gap. Splitting
+//   them with an HTML-comment separator would satisfy the rule, but every ADR line is a live
+//   citation target from task specs and source comments (`docs/tasks/README.md`,
+//   `packages/providers/src/contract.ts`, etc.) — inserting lines shifts every citation below
+//   the insertion point. Preserving citation line numbers outweighs this cosmetic rule here.
+// - Everything else stays at markdownlint's default (recommended) severity — real formatting
+//   mistakes (bad heading increments, unclosed lists, trailing spaces, etc.) still fail lint.
+{
+  "config": {
+    "default": true,
+    "MD013": false,
+    "MD033": false,
+    "MD024": { "siblings_only": true },
+    "MD028": false,
+  },
+  "ignores": ["**/node_modules/**", "**/dist/**", "**/coverage/**", "pnpm-lock.yaml"],
+}

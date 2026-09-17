@@ -1,0 +1,13 @@
+{
+  "grid": {
+    "rows": 1,
+    "columns": 1,
+    "cells": []
+  },
+  "minPrice": null,
+  "priceBasis": "UNKNOWN",
+  "providerMeta": {
+    "synthetic": true,
+    "note": "Never actually compared — normalize() throws first for this pair. Present only so this directory tests exactly one failure mode (NORMALIZE_FAILED, not FIXTURE_WITHOUT_GOLDEN)."
+  }
+}

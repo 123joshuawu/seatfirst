@@ -1,0 +1,1667 @@
+{
+  "ok": true,
+  "value": [
+    {
+      "showtimeId": "amc:showtime:145939057",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-lincoln-square-13/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:08.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Dolby Cinema at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-lincoln-square-13/showtimes?date="
+      },
+      "theatreId": "amc:theatre:2116",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T20:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T16:00:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "dolbycinemaatamcprime",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "dolbycinemaatamcprime",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145939058",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-lincoln-square-13/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:08.000Z",
+        "rawStatus": "AlmostFull",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Dolby Cinema at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-lincoln-square-13/showtimes?date="
+      },
+      "theatreId": "amc:theatre:2116",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T23:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T19:30:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "LOW_AVAILABILITY",
+      "attributes": [
+        "dolbycinemaatamcprime",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "dolbycinemaatamcprime",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145939059",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-lincoln-square-13/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:08.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Dolby Cinema at AMC",
+        "rawAttributeNames": [
+          "AMC Signature Recliners",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-lincoln-square-13/showtimes?date="
+      },
+      "theatreId": "amc:theatre:2116",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T03:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T23:00:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "dolbycinemaatamcprime",
+        "reclinerseating",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "dolbycinemaatamcprime",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145939113",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-lincoln-square-13/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:08.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Club Rockers",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-lincoln-square-13/showtimes?date="
+      },
+      "theatreId": "amc:theatre:2116",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T19:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T15:00:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "amcclubrockers",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145939194",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-lincoln-square-13/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:08.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Club Rockers",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-lincoln-square-13/showtimes?date="
+      },
+      "theatreId": "amc:theatre:2116",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T21:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T17:00:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "amcclubrockers",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145939117",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-lincoln-square-13/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:08.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Club Rockers",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-lincoln-square-13/showtimes?date="
+      },
+      "theatreId": "amc:theatre:2116",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T22:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T18:00:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "amcclubrockers",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145939181",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-lincoln-square-13/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:08.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Club Rockers",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-lincoln-square-13/showtimes?date="
+      },
+      "theatreId": "amc:theatre:2116",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T00:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T20:30:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "amcclubrockers",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145939164",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-lincoln-square-13/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:08.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Club Rockers",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-lincoln-square-13/showtimes?date="
+      },
+      "theatreId": "amc:theatre:2116",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T02:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T22:00:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "amcclubrockers",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145939134",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-lincoln-square-13/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:08.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Club Rockers",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-lincoln-square-13/showtimes?date="
+      },
+      "theatreId": "amc:theatre:2116",
+      "movieId": "amc:movie:78598",
+      "movieTitle": "Spider-Man: Brand New Day",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T04:00:00.000Z",
+      "showDateTimeLocal": "2026-08-14T00:00:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "amcclubrockers",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145377443",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-lincoln-square-13/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:08.000Z",
+        "rawStatus": "AlmostFull",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "IMAX 70MM",
+        "rawAttributeNames": [
+          "IMAX at AMC",
+          "70mm",
+          "AMC Club Rockers",
+          "AMC Artisan Films",
+          "Reserved Seating"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-lincoln-square-13/showtimes?date="
+      },
+      "theatreId": "amc:theatre:2116",
+      "movieId": "amc:movie:76238",
+      "movieTitle": "The Odyssey",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T22:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T18:00:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "LOW_AVAILABILITY",
+      "attributes": [
+        "imax70mm",
+        "imax",
+        "70mm",
+        "amcclubrockers",
+        "amcartisanfilms",
+        "reservedseating"
+      ],
+      "formatCode": "imax70mm",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145377444",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-lincoln-square-13/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:08.000Z",
+        "rawStatus": "AlmostFull",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "IMAX 70MM",
+        "rawAttributeNames": [
+          "IMAX at AMC",
+          "70mm",
+          "AMC Club Rockers",
+          "AMC Artisan Films",
+          "Reserved Seating"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-lincoln-square-13/showtimes?date="
+      },
+      "theatreId": "amc:theatre:2116",
+      "movieId": "amc:movie:76238",
+      "movieTitle": "The Odyssey",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T02:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T22:00:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "LOW_AVAILABILITY",
+      "attributes": [
+        "imax70mm",
+        "imax",
+        "70mm",
+        "amcclubrockers",
+        "amcartisanfilms",
+        "reservedseating"
+      ],
+      "formatCode": "imax70mm",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145499914",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-lincoln-square-13/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:08.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "IMAX 70MM",
+        "rawAttributeNames": [
+          "IMAX at AMC",
+          "70mm",
+          "AMC Club Rockers",
+          "AMC Artisan Films",
+          "Reserved Seating"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-lincoln-square-13/showtimes?date="
+      },
+      "theatreId": "amc:theatre:2116",
+      "movieId": "amc:movie:76238",
+      "movieTitle": "The Odyssey",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T06:00:00.000Z",
+      "showDateTimeLocal": "2026-08-14T02:00:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "imax70mm",
+        "imax",
+        "70mm",
+        "amcclubrockers",
+        "amcartisanfilms",
+        "reservedseating"
+      ],
+      "formatCode": "imax70mm",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145892391",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-lincoln-square-13/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:08.000Z",
+        "rawStatus": "AlmostFull",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "70mm",
+        "rawAttributeNames": [
+          "AMC Club Rockers",
+          "AMC Artisan Films",
+          "Reserved Seating"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-lincoln-square-13/showtimes?date="
+      },
+      "theatreId": "amc:theatre:2116",
+      "movieId": "amc:movie:76238",
+      "movieTitle": "The Odyssey",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T20:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T16:30:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "LOW_AVAILABILITY",
+      "attributes": [
+        "70mm",
+        "amcclubrockers",
+        "amcartisanfilms",
+        "reservedseating"
+      ],
+      "formatCode": "70mm",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145892392",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-lincoln-square-13/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:08.000Z",
+        "rawStatus": "AlmostFull",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "70mm",
+        "rawAttributeNames": [
+          "AMC Club Rockers",
+          "AMC Artisan Films",
+          "Reserved Seating"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-lincoln-square-13/showtimes?date="
+      },
+      "theatreId": "amc:theatre:2116",
+      "movieId": "amc:movie:76238",
+      "movieTitle": "The Odyssey",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T00:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T20:30:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "LOW_AVAILABILITY",
+      "attributes": [
+        "70mm",
+        "amcclubrockers",
+        "amcartisanfilms",
+        "reservedseating"
+      ],
+      "formatCode": "70mm",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145939080",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-lincoln-square-13/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:08.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "70mm",
+        "rawAttributeNames": [
+          "AMC Club Rockers",
+          "AMC Artisan Films",
+          "Reserved Seating"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-lincoln-square-13/showtimes?date="
+      },
+      "theatreId": "amc:theatre:2116",
+      "movieId": "amc:movie:76238",
+      "movieTitle": "The Odyssey",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T04:30:00.000Z",
+      "showDateTimeLocal": "2026-08-14T00:30:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "70mm",
+        "amcclubrockers",
+        "amcartisanfilms",
+        "reservedseating"
+      ],
+      "formatCode": "70mm",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145939179",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-lincoln-square-13/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:08.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Club Rockers",
+          "AMC Artisan Films",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-lincoln-square-13/showtimes?date="
+      },
+      "theatreId": "amc:theatre:2116",
+      "movieId": "amc:movie:76238",
+      "movieTitle": "The Odyssey",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T19:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T15:00:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "amcclubrockers",
+        "amcartisanfilms",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145157241",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-lincoln-square-13/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:08.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Club Rockers",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-lincoln-square-13/showtimes?date="
+      },
+      "theatreId": "amc:theatre:2116",
+      "movieId": "amc:movie:71226",
+      "movieTitle": "The End of Oak Street",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T19:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T15:00:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "amcclubrockers",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145157186",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-lincoln-square-13/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:08.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Club Rockers",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-lincoln-square-13/showtimes?date="
+      },
+      "theatreId": "amc:theatre:2116",
+      "movieId": "amc:movie:71226",
+      "movieTitle": "The End of Oak Street",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T20:45:00.000Z",
+      "showDateTimeLocal": "2026-08-13T16:45:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "amcclubrockers",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145939151",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-lincoln-square-13/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:08.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Club Rockers",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-lincoln-square-13/showtimes?date="
+      },
+      "theatreId": "amc:theatre:2116",
+      "movieId": "amc:movie:71226",
+      "movieTitle": "The End of Oak Street",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T21:40:00.000Z",
+      "showDateTimeLocal": "2026-08-13T17:40:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "amcclubrockers",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145157187",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-lincoln-square-13/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:08.000Z",
+        "rawStatus": "AlmostFull",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Club Rockers",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-lincoln-square-13/showtimes?date="
+      },
+      "theatreId": "amc:theatre:2116",
+      "movieId": "amc:movie:71226",
+      "movieTitle": "The End of Oak Street",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T23:45:00.000Z",
+      "showDateTimeLocal": "2026-08-13T19:45:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "LOW_AVAILABILITY",
+      "attributes": [
+        "laseratamc",
+        "amcclubrockers",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145939213",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-lincoln-square-13/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:08.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Club Rockers",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-lincoln-square-13/showtimes?date="
+      },
+      "theatreId": "amc:theatre:2116",
+      "movieId": "amc:movie:71226",
+      "movieTitle": "The End of Oak Street",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T00:45:00.000Z",
+      "showDateTimeLocal": "2026-08-13T20:45:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "amcclubrockers",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145939108",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-lincoln-square-13/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:08.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Club Rockers",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-lincoln-square-13/showtimes?date="
+      },
+      "theatreId": "amc:theatre:2116",
+      "movieId": "amc:movie:71226",
+      "movieTitle": "The End of Oak Street",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T01:45:00.000Z",
+      "showDateTimeLocal": "2026-08-13T21:45:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "amcclubrockers",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145157188",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-lincoln-square-13/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:08.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Club Rockers",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-lincoln-square-13/showtimes?date="
+      },
+      "theatreId": "amc:theatre:2116",
+      "movieId": "amc:movie:71226",
+      "movieTitle": "The End of Oak Street",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T02:45:00.000Z",
+      "showDateTimeLocal": "2026-08-13T22:45:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "amcclubrockers",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145939159",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-lincoln-square-13/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:08.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Club Rockers",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-lincoln-square-13/showtimes?date="
+      },
+      "theatreId": "amc:theatre:2116",
+      "movieId": "amc:movie:71226",
+      "movieTitle": "The End of Oak Street",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T04:30:00.000Z",
+      "showDateTimeLocal": "2026-08-14T00:30:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "amcclubrockers",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145939131",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-lincoln-square-13/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:08.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Club Rockers",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-lincoln-square-13/showtimes?date="
+      },
+      "theatreId": "amc:theatre:2116",
+      "movieId": "amc:movie:83394",
+      "movieTitle": "Six: The Musical Live!",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T19:30:00.000Z",
+      "showDateTimeLocal": "2026-08-13T15:30:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "amcclubrockers",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145939212",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-lincoln-square-13/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:08.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Club Rockers",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-lincoln-square-13/showtimes?date="
+      },
+      "theatreId": "amc:theatre:2116",
+      "movieId": "amc:movie:80552",
+      "movieTitle": "One Night Only",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T19:15:00.000Z",
+      "showDateTimeLocal": "2026-08-13T15:15:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "amcclubrockers",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145939178",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-lincoln-square-13/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:08.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Club Rockers",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-lincoln-square-13/showtimes?date="
+      },
+      "theatreId": "amc:theatre:2116",
+      "movieId": "amc:movie:80552",
+      "movieTitle": "One Night Only",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T23:15:00.000Z",
+      "showDateTimeLocal": "2026-08-13T19:15:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "amcclubrockers",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145939149",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-lincoln-square-13/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:08.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Club Rockers",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-lincoln-square-13/showtimes?date="
+      },
+      "theatreId": "amc:theatre:2116",
+      "movieId": "amc:movie:80552",
+      "movieTitle": "One Night Only",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T03:15:00.000Z",
+      "showDateTimeLocal": "2026-08-13T23:15:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "amcclubrockers",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145695305",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-lincoln-square-13/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:08.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Club Rockers",
+          "AMC Artisan Films",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-lincoln-square-13/showtimes?date="
+      },
+      "theatreId": "amc:theatre:2116",
+      "movieId": "amc:movie:82596",
+      "movieTitle": "The Rivals of Amziah King",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T22:45:00.000Z",
+      "showDateTimeLocal": "2026-08-13T18:45:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "amcclubrockers",
+        "amcartisanfilms",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145695306",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-lincoln-square-13/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:08.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Club Rockers",
+          "AMC Artisan Films",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-lincoln-square-13/showtimes?date="
+      },
+      "theatreId": "amc:theatre:2116",
+      "movieId": "amc:movie:82596",
+      "movieTitle": "The Rivals of Amziah King",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T02:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T22:00:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "amcclubrockers",
+        "amcartisanfilms",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145939152",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-lincoln-square-13/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:08.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Club Rockers",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-lincoln-square-13/showtimes?date="
+      },
+      "theatreId": "amc:theatre:2116",
+      "movieId": "amc:movie:83781",
+      "movieTitle": "The Wrong Girls",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T20:20:00.000Z",
+      "showDateTimeLocal": "2026-08-13T16:20:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "amcclubrockers",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145939153",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-lincoln-square-13/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:08.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Club Rockers",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-lincoln-square-13/showtimes?date="
+      },
+      "theatreId": "amc:theatre:2116",
+      "movieId": "amc:movie:83781",
+      "movieTitle": "The Wrong Girls",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T23:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T19:00:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "amcclubrockers",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145939137",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-lincoln-square-13/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:08.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Club Rockers",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-lincoln-square-13/showtimes?date="
+      },
+      "theatreId": "amc:theatre:2116",
+      "movieId": "amc:movie:83781",
+      "movieTitle": "The Wrong Girls",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T01:20:00.000Z",
+      "showDateTimeLocal": "2026-08-13T21:20:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "amcclubrockers",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145898446",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-lincoln-square-13/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:08.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Club Rockers",
+          "AMC Artisan Films",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-lincoln-square-13/showtimes?date="
+      },
+      "theatreId": "amc:theatre:2116",
+      "movieId": "amc:movie:83859",
+      "movieTitle": "Tony",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T20:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T16:00:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "amcclubrockers",
+        "amcartisanfilms",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145939197",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-lincoln-square-13/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:08.000Z",
+        "rawStatus": "AlmostFull",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Club Rockers",
+          "AMC Artisan Films",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-lincoln-square-13/showtimes?date="
+      },
+      "theatreId": "amc:theatre:2116",
+      "movieId": "amc:movie:83859",
+      "movieTitle": "Tony",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T22:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T18:00:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "LOW_AVAILABILITY",
+      "attributes": [
+        "laseratamc",
+        "amcclubrockers",
+        "amcartisanfilms",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145898447",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-lincoln-square-13/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:08.000Z",
+        "rawStatus": "AlmostFull",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Club Rockers",
+          "AMC Artisan Films",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-lincoln-square-13/showtimes?date="
+      },
+      "theatreId": "amc:theatre:2116",
+      "movieId": "amc:movie:83859",
+      "movieTitle": "Tony",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T23:00:00.000Z",
+      "showDateTimeLocal": "2026-08-13T19:00:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "LOW_AVAILABILITY",
+      "attributes": [
+        "laseratamc",
+        "amcclubrockers",
+        "amcartisanfilms",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145898448",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-lincoln-square-13/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:08.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Club Rockers",
+          "AMC Artisan Films",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-lincoln-square-13/showtimes?date="
+      },
+      "theatreId": "amc:theatre:2116",
+      "movieId": "amc:movie:83859",
+      "movieTitle": "Tony",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T01:40:00.000Z",
+      "showDateTimeLocal": "2026-08-13T21:40:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "amcclubrockers",
+        "amcartisanfilms",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145898494",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-lincoln-square-13/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:08.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Club Rockers",
+          "Thrills & Chills",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-lincoln-square-13/showtimes?date="
+      },
+      "theatreId": "amc:theatre:2116",
+      "movieId": "amc:movie:82941",
+      "movieTitle": "Teenage Sex and Death at Camp Miasma",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T20:15:00.000Z",
+      "showDateTimeLocal": "2026-08-13T16:15:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "amcclubrockers",
+        "thrlschls",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145898493",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-lincoln-square-13/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:08.000Z",
+        "rawStatus": "AlmostFull",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Club Rockers",
+          "Thrills & Chills",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-lincoln-square-13/showtimes?date="
+      },
+      "theatreId": "amc:theatre:2116",
+      "movieId": "amc:movie:82941",
+      "movieTitle": "Teenage Sex and Death at Camp Miasma",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-13T23:15:00.000Z",
+      "showDateTimeLocal": "2026-08-13T19:15:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "LOW_AVAILABILITY",
+      "attributes": [
+        "laseratamc",
+        "amcclubrockers",
+        "thrlschls",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145939138",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-lincoln-square-13/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:08.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Club Rockers",
+          "Thrills & Chills",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-lincoln-square-13/showtimes?date="
+      },
+      "theatreId": "amc:theatre:2116",
+      "movieId": "amc:movie:82941",
+      "movieTitle": "Teenage Sex and Death at Camp Miasma",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T00:15:00.000Z",
+      "showDateTimeLocal": "2026-08-13T20:15:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "amcclubrockers",
+        "thrlschls",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145898497",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-lincoln-square-13/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:08.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Club Rockers",
+          "Thrills & Chills",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-lincoln-square-13/showtimes?date="
+      },
+      "theatreId": "amc:theatre:2116",
+      "movieId": "amc:movie:82941",
+      "movieTitle": "Teenage Sex and Death at Camp Miasma",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T02:15:00.000Z",
+      "showDateTimeLocal": "2026-08-13T22:15:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "amcclubrockers",
+        "thrlschls",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    },
+    {
+      "showtimeId": "amc:showtime:145939107",
+      "providerId": "amc",
+      "providerMeta": {
+        "requestUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-lincoln-square-13/showtimes?date=",
+        "observationTime": "2026-08-13T18:56:08.000Z",
+        "rawStatus": "Sellable",
+        "rawFormatCode": null,
+        "rawAttributes": [],
+        "rawFormatName": "Laser at AMC",
+        "rawAttributeNames": [
+          "AMC Club Rockers",
+          "Thrills & Chills",
+          "Reserved Seating",
+          "Closed Caption",
+          "Audio Description"
+        ],
+        "showtimesUrl": "https://www.amctheatres.com/movie-theatres/new-york-city/amc-lincoln-square-13/showtimes?date="
+      },
+      "theatreId": "amc:theatre:2116",
+      "movieId": "amc:movie:82941",
+      "movieTitle": "Teenage Sex and Death at Camp Miasma",
+      "auditorium": null,
+      "showDateTimeUtc": "2026-08-14T04:30:00.000Z",
+      "showDateTimeLocal": "2026-08-14T00:30:00",
+      "utcOffset": "-04:00",
+      "runtimeMinutes": null,
+      "status": "OPEN",
+      "attributes": [
+        "laseratamc",
+        "amcclubrockers",
+        "thrlschls",
+        "reservedseating",
+        "closedcaption",
+        "descriptivevideo"
+      ],
+      "formatCode": "laseratamc",
+      "minPrice": null,
+      "deepLinkUrl": "https://www.amctheatres.com/",
+      "layoutId": null
+    }
+  ]
+}

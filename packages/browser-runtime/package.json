@@ -1,0 +1,44 @@
+{
+  "name": "@seatfirst/browser-runtime",
+  "version": "0.1.0",
+  "license": "MIT",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com",
+    "access": "public"
+  },
+  "type": "module",
+  "description": "Server-only Playwright/Chrome transport, redirect corridor guard, Chrome process supervisor (architecture §4.2/§8, ADR 0004/0005, task P6)",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "prebuild": "rm -rf dist",
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --passWithNoTests",
+    "test:coverage": "vitest run --coverage",
+    "clean": "rm -rf dist .turbo"
+  },
+  "dependencies": {
+    "@opentelemetry/api": "1.9.1",
+    "@seatfirst/providers": "workspace:*",
+    "cheerio": "^1.2.0",
+    "playwright-core": "1.62.1",
+    "zod": "4.4.3"
+  },
+  "devDependencies": {
+    "@seatfirst/config": "workspace:*",
+    "@types/node": "24.13.3",
+    "@vitest/coverage-v8": "4.1.10",
+    "typescript": "6.0.3",
+    "vitest": "4.1.10"
+  }
+}

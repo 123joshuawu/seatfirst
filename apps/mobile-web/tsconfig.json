@@ -1,0 +1,31 @@
+{
+  "extends": "@seatfirst/config/tsconfig.base.json",
+  "compilerOptions": {
+    // The RN/Metro bundler owns emit; tsc is a typechecker only here.
+    "noEmit": true,
+    "declaration": false,
+    "declarationMap": false,
+    "jsx": "react-jsx",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "lib": ["ES2023", "DOM", "DOM.Iterable"],
+    "allowJs": true,
+    "resolveJsonModule": true,
+    "types": ["react", "expo/types"],
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  },
+  "include": [
+    "app/**/*.ts",
+    "app/**/*.tsx",
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "test/**/*.ts",
+    "test/**/*.tsx",
+    "*.config.ts",
+    ".expo/types/**/*.ts",
+    "expo-env.d.ts"
+  ],
+  "exclude": ["node_modules", ".expo", "dist"]
+}

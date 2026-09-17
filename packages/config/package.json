@@ -1,0 +1,73 @@
+{
+  "name": "@seatfirst/config",
+  "version": "0.1.0",
+  "license": "MIT",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com",
+    "access": "public"
+  },
+  "type": "module",
+  "description": "Shared eslint / tsconfig / OTel configuration (architecture §9)",
+  "exports": {
+    "./tsconfig.base.json": "./tsconfig.base.json",
+    "./eslint": "./eslint.base.js",
+    "./otel": {
+      "types": "./dist/otel.d.ts",
+      "default": "./dist/otel.js"
+    },
+    "./redaction": {
+      "types": "./dist/redaction.d.ts",
+      "default": "./dist/redaction.js"
+    },
+    "./logger": {
+      "types": "./dist/logger.d.ts",
+      "default": "./dist/logger.js"
+    },
+    "./context": {
+      "types": "./dist/context.d.ts",
+      "default": "./dist/context.js"
+    },
+    "./otel-bootstrap": {
+      "types": "./dist/otel-bootstrap.d.ts",
+      "default": "./dist/otel-bootstrap.js"
+    }
+  },
+  "files": [
+    "tsconfig.base.json",
+    "eslint.base.js",
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --passWithNoTests",
+    "test:coverage": "vitest run --coverage",
+    "clean": "rm -rf dist .turbo"
+  },
+  "dependencies": {
+    "@opentelemetry/api": "1.9.1",
+    "@opentelemetry/api-logs": "0.221.0",
+    "@opentelemetry/core": "2.10.0",
+    "@opentelemetry/exporter-logs-otlp-http": "0.221.0",
+    "@opentelemetry/exporter-metrics-otlp-http": "0.221.0",
+    "@opentelemetry/exporter-trace-otlp-http": "0.221.0",
+    "@opentelemetry/instrumentation": "^0.221.0",
+    "@opentelemetry/instrumentation-pg": "^0.73.0",
+    "@opentelemetry/resources": "2.10.0",
+    "@opentelemetry/sdk-logs": "0.221.0",
+    "@opentelemetry/sdk-metrics": "2.10.0",
+    "@opentelemetry/sdk-trace": "2.10.0",
+    "@opentelemetry/semantic-conventions": "1.43.0",
+    "pino": "10.3.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "10.0.1",
+    "@types/node": "24.13.3",
+    "@vitest/coverage-v8": "4.1.10",
+    "eslint": "10.8.0",
+    "globals": "17.9.0",
+    "typescript": "6.0.3",
+    "typescript-eslint": "8.65.0",
+    "vitest": "4.1.10"
+  }
+}

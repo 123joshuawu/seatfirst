@@ -1,0 +1,205 @@
+# Release pipeline for the public seatfirst repo.
+#
+# Replaces the image/artifact-publishing role of the old private-monorepo
+# `.github/workflows/deploy.yml` (which is removed separately — do not carry
+# its private stages forward here):
+#
+# - Multi-arch image builds: deploy.yml built arm64-only (native
+#   `ubuntu-24.04-arm` runners, buildx but no QEMU). Public consumers run on
+#   both amd64 and arm64 hosts, so this workflow adds
+#   `docker/setup-qemu-action@v3` and builds `linux/amd64,linux/arm64`.
+# - Image namespace stays nested (`ghcr.io/123joshuawu/seatfirst/<name>`,
+#   ADR 0096): identical to what the live system pulls, so no
+#   Dockerfile/Compose changes are needed anywhere else.
+# - Web artifact naming is `seatfirst-web-dist-<sha>.zip` — the `.zip` suffix
+#   is real. Deploy.yml uploaded a no-suffix `seatfirst-web-dist-<sha>`
+#   artifact; the suffix here is a deliberate change, not a typo.
+# - `ci-smoke` from deploy.yml is INTENTIONALLY OMITTED, not forgotten: it
+#   invoked `./scripts/ops/smoke-e2e-queue.sh` and
+#   `docker-compose.observability.yml`, neither of which exists in the public
+#   repo. Rebuilding an equivalent smoke test against public-only assets was
+#   judged non-trivial, so this workflow ships without a smoke stage rather
+#   than with a broken one.
+#
+# Trigger: push to main only.
+name: Release — publish images, packages, web bundle (main)
+
+on:
+  push:
+    branches: [main]
+
+# Deploy.yml used `contents: read`. This workflow needs `contents: write` on
+# top of `packages: write` so the web-dist job can create a GitHub Release
+# and attach the web-bundle zip as a release asset.
+permissions:
+  contents: write
+  packages: write
+
+concurrency:
+  group: release-main
+  cancel-in-progress: false
+
+env:
+  IMAGE_TAG: sha-${{ github.sha }}
+  BASE_IMAGE: ghcr.io/123joshuawu/seatfirst/seatfirst-base
+  APP_IMAGE: ghcr.io/123joshuawu/seatfirst/seatfirst-app
+  WORKER_IMAGE: ghcr.io/123joshuawu/seatfirst/seatfirst-fetch-worker
+
+jobs:
+  # ---- Build and push multi-arch images to GHCR ----
+  # Mirrors the image-build step structure from deploy.yml (checkout, buildx,
+  # GHCR login, build-push with GHA cache), plus QEMU for multi-arch and
+  # `latest` alongside the pinned `sha-<sha>` tag. Steps run sequentially in
+  # one job so the base image is available as the app/worker BASE_IMAGE
+  # build-arg, matching deploy.yml's needs-ordering. Package visibility is
+  # managed in GHCR settings (public); pushes here inherit it.
+  build-images:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: docker/setup-qemu-action@v3
+
+      - uses: docker/setup-buildx-action@v3
+
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: Dockerfile.base
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: |
+            ${{ env.BASE_IMAGE }}:${{ env.IMAGE_TAG }}
+            ${{ env.BASE_IMAGE }}:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: Dockerfile.app
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: |
+            ${{ env.APP_IMAGE }}:${{ env.IMAGE_TAG }}
+            ${{ env.APP_IMAGE }}:latest
+          build-args: BASE_IMAGE=${{ env.BASE_IMAGE }}:${{ env.IMAGE_TAG }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: Dockerfile.fetch-worker
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: |
+            ${{ env.WORKER_IMAGE }}:${{ env.IMAGE_TAG }}
+            ${{ env.WORKER_IMAGE }}:latest
+          build-args: BASE_IMAGE=${{ env.BASE_IMAGE }}:${{ env.IMAGE_TAG }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  # ---- Publish the public @seatfirst/* packages to GitHub Packages npm ----
+  # Entirely new: nothing in the private workflow published npm packages.
+  # Covers the five packages made public (version 0.1.0) by the repo-split
+  # prep; private workspace packages are never matched by these filters, and
+  # `pnpm publish` additionally refuses `private: true` packages, so there is
+  # no path by which an internal package leaks to the registry from here.
+  publish-packages:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+          registry-url: https://npm.pkg.github.com
+          scope: "@seatfirst"
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Build publishable packages
+        run: >
+          pnpm exec turbo run build
+          --filter=@seatfirst/config
+          --filter=@seatfirst/core
+          --filter=@seatfirst/durability
+          --filter=@seatfirst/providers
+          --filter=@seatfirst/browser-runtime
+
+      # Idempotent publish: GitHub Packages treats name@version as immutable,
+      # so republishing an unchanged version fails. Probe the registry first
+      # and skip packages whose exact version already exists, keeping repeat
+      # pushes to main green without manual version bumps. A failed probe
+      # falls through to publish, so genuine failures (bad auth, network)
+      # still fail the job on the publish command's own exit code — only the
+      # "version already exists" case is a no-op, never `|| true`.
+      - name: Publish @seatfirst/* to npm.pkg.github.com
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          for pkg in @seatfirst/config @seatfirst/core @seatfirst/durability @seatfirst/providers @seatfirst/browser-runtime; do
+            short="${pkg#@seatfirst/}"
+            version="$(node -p "require('./packages/${short}/package.json').version")"
+            if npm view "${pkg}@${version}" --registry=https://npm.pkg.github.com version 2>/dev/null | grep -q .; then
+              echo "Skipping ${pkg}@${version}: already published."
+            else
+              echo "Publishing ${pkg}@${version}..."
+              pnpm --filter "${pkg}" publish --no-git-checks --access public
+            fi
+          done
+
+  # ---- Build the web bundle, publish as artifact AND GitHub Release asset ----
+  # Same build as deploy.yml's build-web-bundle (expo static export with an
+  # empty EXPO_PUBLIC_API_URL so tRPC/SSE links resolve relatively against
+  # the serving origin), then zipped — the `.zip` suffix is the decided
+  # public naming convention. Both publication paths serve the identical file:
+  # the workflow artifact (for automation) and the Release asset (for humans).
+  web-dist:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Build workspace dependencies (@seatfirst/core and the rest of the monorepo graph)
+        run: pnpm exec turbo run build --filter=@seatfirst/mobile-web^...
+
+      - name: Build the React Native web bundle (expo static export)
+        run: pnpm --filter @seatfirst/mobile-web build
+        env:
+          EXPO_PUBLIC_API_URL: ""
+
+      - name: Zip the bundle
+        run: zip -r seatfirst-web-dist-${{ github.sha }}.zip apps/mobile-web/dist
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: seatfirst-web-dist-${{ github.sha }}.zip
+          path: seatfirst-web-dist-${{ github.sha }}.zip
+
+      - name: Attach the zip as a GitHub Release asset
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create "web-dist-${{ github.sha }}" \
+            "seatfirst-web-dist-${{ github.sha }}.zip" \
+            --title "seatfirst-web-dist-${{ github.sha }}" \
+            --notes "Web bundle for ${{ github.sha }}. Images: ${{ env.APP_IMAGE }}:${{ env.IMAGE_TAG }}."
