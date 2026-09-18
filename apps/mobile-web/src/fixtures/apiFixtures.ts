@@ -237,6 +237,7 @@ export function makeTheatreMoviesResponse(
     from?: string;
     to?: string;
     movies?: readonly TheatreMovieGroup[];
+    isWarm?: boolean;
   } = {},
 ): TheatreMoviesResponse {
   return {
@@ -245,6 +246,7 @@ export function makeTheatreMoviesResponse(
     from: options.from ?? DEV_BROWSE_FROM,
     to: options.to ?? DEV_BROWSE_TO,
     movies: [...(options.movies ?? DEV_MOVIE_GROUPS)],
+    isWarm: options.isWarm ?? true,
   };
 }
 

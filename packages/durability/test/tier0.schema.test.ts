@@ -133,7 +133,7 @@ describe("tier 0 — structural claims", () => {
     expect(ddl).not.toMatch(imageish);
   });
 
-  it("creates the tmdb_movie table with exactly the six S25+S55 columns (ADR 0019 §1, amendment 2026-09-02)", async () => {
+  it("creates the tmdb_movie table with exactly the ten S25+S55+S63 columns (ADR 0019 §1, amendment 2026-09-02, migration 025)", async () => {
     const columns = await db().rows<{ column_name: string }>(
       `SELECT column_name
        FROM information_schema.columns
@@ -141,9 +141,13 @@ describe("tier 0 — structural claims", () => {
     );
     expect(columns.map((column) => column.column_name).sort()).toEqual([
       "genres",
+      "is_now_playing",
+      "is_upcoming",
       "normalized_title",
       "poster_path",
+      "release_date",
       "runtime_minutes",
+      "title",
       "tmdb_id",
       "updated_at",
     ]);

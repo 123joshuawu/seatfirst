@@ -2180,3 +2180,97 @@ export async function previewScheduleRuns(
     throw err;
   }
 }
+
+/* ------------------------- S63 — on-demand D+0 schedule refresh (ADR 0100) */
+
+export interface StageOnDemandScheduleRefreshInput {
+  readonly providerId: string;
+  readonly theatreId: string;
+  /** D+0 in the theatre's own timezone (`YYYY-MM-DD`), computed by the caller. */
+  readonly localDate: string;
+}
+
+export interface StageOnDemandScheduleRefreshResult {
+  /**
+   * The run to poll: this call's run when created, else the live winner's run_id that
+   * `RUN_CREATE`'s `RETURNING` yields on coalescence. Null when nothing was staged and
+   * nothing exists to poll (missing provider fence — see below).
+   */
+  readonly runId: string | null;
+  readonly runKeyId: string;
+  /** True iff this call created the run (and staged its outbox row). */
+  readonly created: boolean;
+}
+
+/**
+ * S63.5 (ADR 0100, "Explicit On-Demand Refresh") — run-only SCHEDULE_RESOLUTION
+ * staging for one theatre date, without BEGIN/COMMIT. The run-only path mirrors
+ * `stagePreviewScheduleRuns` (the same deterministic
+ * `k_sched_<provider>_<theatre>_<date>` key, so a refresh coalesces with searches and
+ * previews onto one run per date by construction), but unlike the preview it returns
+ * the EFFECTIVE run id in every case: `RUN_CREATE`'s
+ * `ON CONFLICT ... DO UPDATE ... RETURNING run_id` yields the live winner's id when a
+ * concurrent stager got there first (S44), and only the insert winner stages an outbox
+ * row (with a NULL traceparent, mirroring `stageFindOrCreateRun` — this context
+ * carries no request span) — creating one for a lost id would violate the outbox FK.
+ * No `JOB_CREATE`/`SUBSCRIPTION_CREATE`: both require a `search_id`, and a refresh
+ * mints no search state (the same reason the preview path skips them).
+ *
+ * Zero rows from `RUN_CREATE` means no live run exists AND none could be created — the
+ * `RUN_KEY_UPSERT` above guarantees the key, so only a missing `provider_fence` row
+ * explains it. `{ runId: null }` (not a throw): there is nothing to poll, and the route
+ * maps it to an honest retryable `FAILED`.
+ */
+export async function stageOnDemandScheduleRefresh(
+  db: SqlClient,
+  input: StageOnDemandScheduleRefreshInput,
+): Promise<StageOnDemandScheduleRefreshResult> {
+  const runKeyId = `k_sched_${input.providerId}_${input.theatreId}_${input.localDate}`;
+  await mustWin(db, B.RUN_KEY_UPSERT, [
+    runKeyId,
+    "SCHEDULE_RESOLUTION",
+    input.providerId,
+    "schedule",
+    null,
+    input.theatreId,
+    input.localDate,
+  ]);
+  const runId = randomUUID();
+  const created = await runRows<{ run_id: string }>(db, B.RUN_CREATE, [
+    runId,
+    runKeyId,
+    randomUUID(),
+    null,
+  ]);
+  const winner = created[0]?.run_id;
+  if (winner === undefined) {
+    return { runId: null, runKeyId, created: false };
+  }
+  if (winner !== runId) {
+    // Converged onto the live run a concurrent stager created (S44): its outbox row
+    // already exists — stage no second. Poll the winner.
+    return { runId: winner, runKeyId, created: false };
+  }
+  await mustWin(db, B.OUTBOX_CREATE_RUN, [runId, null]);
+  return { runId, runKeyId, created: true };
+}
+
+/**
+ * S63.5 — the typed transaction-owning wrapper (the `acceptSearchCreation` pattern).
+ * The production route composes the same body via `withTransaction` (`pool.ts`); this
+ * wrapper serves callers that already hold a single-connection client.
+ */
+export async function acceptOnDemandScheduleRefresh(
+  db: TransactionClient,
+  input: StageOnDemandScheduleRefreshInput,
+): Promise<StageOnDemandScheduleRefreshResult> {
+  await db.query("BEGIN");
+  try {
+    const result = await stageOnDemandScheduleRefresh(db, input);
+    await db.query("COMMIT");
+    return result;
+  } catch (err) {
+    await db.query("ROLLBACK");
+    throw err;
+  }
+}

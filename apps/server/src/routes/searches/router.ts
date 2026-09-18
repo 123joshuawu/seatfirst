@@ -8,6 +8,7 @@ import { status } from "./status.js";
 import { get } from "./get.js";
 import { onProgress } from "./onProgress.js";
 import { sessionRouter } from "../session/bootstrap.js";
+import { moviesRouter } from "../movies/router.js";
 import { theatresRouter } from "../theatres/router.js";
 import { showtimesRouter } from "../showtimes/router.js";
 /**
@@ -42,6 +43,7 @@ export const appRouter = t.router({
   session: sessionRouter,
   showtimes: showtimesRouter,
   theatres: theatresRouter,
+  movies: moviesRouter,
 });
 
 export type AppRouter = typeof appRouter;

@@ -58,7 +58,7 @@ import {
 import type { ScheduleRangePerformance, SearchCreationResult } from "@seatfirst/durability";
 
 import type { RateLimitCheck } from "../../session/limiter.js";
-
+import { evaluateScheduleDayFreshness } from "../theatres/movies.js";
 import type { SearchCreateContext } from "./createContext.js";
 
 /**
@@ -802,9 +802,11 @@ export const create = t.procedure
     }
 
     // S36.4 + ADR 0029: per-theatre `readScheduleRange` loops, each producing its own
-    // cold-dates list and fresh-performances list with the SAME freshness/policy/
+    // cold-dates list and fresh-performances list with the SAME policy/
     // matchesScheduleWindow logic as the former single-theatre loop, using EACH theatre's
     // own IANA timezone for `matchesScheduleWindow` (not the representative one above).
+    // S63.3: freshness is the tiered `evaluateScheduleDayFreshness` (ADR 0100), evaluated
+    // with the same per-theatre timezone — SWR days are BOTH served and staged.
     // Tag every `scheduleKey` with its theatreId, and every fresh performance with
     // { theatreId, distanceKm } for skeleton-group building — ScheduleRangePerformance
     // itself carries no theatreId field, so track externally.
@@ -838,13 +840,24 @@ export const create = t.procedure
             coldDates.push(date);
             continue;
           }
-          const capturedAt = day.capturedAt;
-          const isStale =
-            capturedAt === null ||
-            nowForFreshness.getTime() - capturedAt.getTime() > ctx.freshnessMs;
-          if (isStale) {
+          // S63.3 — tiered freshness (ADR 0100): hard-cold days (past the hard TTL or
+          // NULL-capture) are excluded from being served and join the cold fan-out below;
+          // soft-stale-while-revalidate days ARE served from cache (fall through to the
+          // performance loop) but ALSO join `coldDates` so `stageSearchCreation` stages a
+          // background SCHEDULE_RESOLUTION for them via its existing scheduleKeys path.
+          // Fresh days need no staging. `ctx.freshnessMs` stays in the context type
+          // (facetCounts/capacityPreview still read it) but no longer gates this check.
+          const freshness = evaluateScheduleDayFreshness(
+            day,
+            nowForFreshness,
+            theatreTimezoneForMatches,
+          );
+          if (!freshness.isFresh && !freshness.isStaleWhileRevalidate) {
             coldDates.push(date);
             continue;
+          }
+          if (freshness.isStaleWhileRevalidate) {
+            coldDates.push(date);
           }
           for (const perf of day.performances) {
             const status = cachedStatus(perf.status);
@@ -863,7 +876,6 @@ export const create = t.procedure
             freshForTheatre.push(perf);
           }
         }
-
         for (const localDate of coldDates) {
           allScheduleKeys.push({ theatreId: entry.theatreId, localDate });
         }

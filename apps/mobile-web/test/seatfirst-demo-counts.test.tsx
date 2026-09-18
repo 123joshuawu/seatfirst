@@ -33,6 +33,7 @@ const FIXTURE: TheatreMoviesResponse = {
   timezone: "America/Los_Angeles",
   from: "2026-02-06",
   to: "2026-03-07",
+  isWarm: true,
   movies: [
     {
       movieId: MOVIE_ID,

@@ -7,6 +7,7 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from "vites
 
 import {
   TheatreMoviesResponseSchema,
+  toTheatreLocal,
   type TheatreMovieGroup,
   type ShowtimeStatus,
 } from "@seatfirst/core";
@@ -26,8 +27,12 @@ import {
   type ScheduleRangeDay,
 } from "@seatfirst/durability";
 import { buildApp } from "../src/app.js";
+import {
+  buildMovieGroups,
+  dispatchPosterBackfills,
+  evaluateScheduleDayFreshness,
+} from "../src/routes/theatres/movies.js";
 import type { AppRouter } from "../src/routes/searches/router.js";
-import { buildMovieGroups, dispatchPosterBackfills } from "../src/routes/theatres/movies.js";
 import {
   createSessionRateLimiter,
   redisScriptExecutorFromIoredis,
@@ -316,9 +321,9 @@ describe("theatres.movies (S21)", () => {
       client.theatres.movies.query({ theatreId: "amc:theatre:missing", from: DAY1, to: DAY1 }),
     ).rejects.toMatchObject({ data: { code: "NOT_FOUND", httpStatus: 404 } });
 
-    // Positive control: the seeded theatre proceeds (cold span → movies: []).
+    // Positive control: the seeded theatre proceeds (cold span → movies: [], isWarm false).
     const body = await client.theatres.movies.query({ theatreId: THEATRE, from: DAY1, to: DAY1 });
-    expect(body).toMatchObject({ theatreId: THEATRE, movies: [] });
+    expect(body).toMatchObject({ theatreId: THEATRE, movies: [], isWarm: false });
   });
 
   it("rejects unnamespaced and foreign-kind ids by the input schema before any DB read (item 1)", async () => {
@@ -382,6 +387,8 @@ describe("theatres.movies (S21)", () => {
     expect(body.timezone).toBe("America/Chicago");
     expect(body.from).toBe(DAY1);
     expect(body.to).toBe(DAY3);
+    // Every seeded day is freshly captured → the whole span is warm (S63.2).
+    expect(body.isWarm).toBe(true);
     // Exactly two movie groups, ordered by movieId.
     expect(body.movies.map((movie) => movie.movieId)).toEqual(["amc:movie:one", "amc:movie:two"]);
     // Each group carries its title and its showtimes ordered by showDateTimeUtc.
@@ -469,11 +476,12 @@ describe("theatres.movies (S21)", () => {
       "amc:showtime:edge2",
     ]);
   });
-
-  it("freshness: a fresh day serves, a stale day disappears, a NULL-capture day drops, a fully cold span is [] (item 4)", async () => {
+  it("freshness (S63 tiers): a fresh day serves, a hard-cold day disappears, a NULL-capture day drops, a fully cold span is []", async () => {
     await seedTheatre(pool, THEATRE);
     const now = Date.now();
-    // Fresh day (captured just now) and a stale day (well past the 10-minute ceiling).
+    // DAY1/DAY2 are fixed past dates, so both fall in the populated-future tier
+    // (soft 12h / hard 36h, ADR 0100). Fresh day (captured just now) serves; a day
+    // past the 36h hard TTL disappears (the old 10-minute ceiling is gone).
     await seedDay(pool, THEATRE, DAY1, new Date(now), [
       {
         showtimeId: "amc:showtime:fresh",
@@ -486,7 +494,7 @@ describe("theatres.movies (S21)", () => {
         runtimeMinutes: null,
       },
     ]);
-    await seedDay(pool, THEATRE, DAY2, new Date(now - FRESHNESS_MS - 60_000), [
+    await seedDay(pool, THEATRE, DAY2, new Date(now - 37 * 3600_000), [
       {
         showtimeId: "amc:showtime:stale",
         movieId: "amc:movie:stale",
@@ -520,14 +528,119 @@ describe("theatres.movies (S21)", () => {
     expect(body.movies[0]?.showtimes.map((showtime) => showtime.showtimeId)).toEqual([
       "amc:showtime:fresh",
     ]);
+    // The span mixes fresh + hard-cold + absent days → not warm (S63.2).
+    expect(body.isWarm).toBe(false);
 
-    // A fully cold span (no keys at all) → honest `movies: []`.
+    // A fully cold span (no keys at all) → honest `movies: []`, isWarm false.
     const cold = await client.theatres.movies.query({
       theatreId: THEATRE,
       from: "2026-09-01",
       to: "2026-09-03",
     });
     expect(cold.movies).toEqual([]);
+    expect(cold.isWarm).toBe(false);
+  });
+
+  it("freshness (S63 tiers): a soft-stale day still serves from cache but the span is not warm", async () => {
+    await seedTheatre(pool, THEATRE);
+    const now = Date.now();
+    // 13h old in the populated-future tier (soft 12h / hard 36h): past soft, inside
+    // hard → stale-while-revalidate. Cached performances still serve (S21.8 pure-read:
+    // browse never revalidates), but isWarm is false.
+    await seedDay(pool, THEATRE, DAY1, new Date(now - 13 * 3600_000), [
+      {
+        showtimeId: "amc:showtime:swr",
+        movieId: "amc:movie:swr",
+        movieTitle: "Swr",
+        startsAt: new Date(`${DAY1}T19:00:00.000Z`),
+        status: "OPEN",
+        formatCode: null,
+        auditorium: null,
+        runtimeMinutes: null,
+      },
+    ]);
+
+    const client = makeClient(server.baseUrl);
+    const body = await client.theatres.movies.query({
+      theatreId: THEATRE,
+      from: DAY1,
+      to: DAY1,
+    });
+    expect(body.movies).toHaveLength(1);
+    expect(body.movies[0]?.movieId).toBe("amc:movie:swr");
+    expect(body.isWarm).toBe(false);
+  });
+
+  it("freshness (S63 tiers): populated D+0 uses the 2h/6h tier in the theatre timezone", async () => {
+    await seedTheatre(pool, THEATRE, "America/Chicago");
+    const now = new Date();
+    const today = toTheatreLocal(now.toISOString(), "America/Chicago").localDate;
+    // 3h old today: past the 2h soft TTL, inside the 6h hard TTL → SWR: served,
+    // not warm. Under the old flat 10-minute gate this day would have vanished.
+    await seedDay(pool, THEATRE, today, new Date(now.getTime() - 3 * 3600_000), [
+      {
+        showtimeId: "amc:showtime:d0swr",
+        movieId: "amc:movie:d0swr",
+        movieTitle: "D0Swr",
+        startsAt: new Date(now.getTime() + 3600_000),
+        status: "OPEN",
+        formatCode: null,
+        auditorium: null,
+        runtimeMinutes: null,
+      },
+    ]);
+
+    const client = makeClient(server.baseUrl);
+    const body = await client.theatres.movies.query({
+      theatreId: THEATRE,
+      from: today,
+      to: today,
+    });
+    expect(body.movies).toHaveLength(1);
+    expect(body.movies[0]?.movieId).toBe("amc:movie:d0swr");
+    expect(body.isWarm).toBe(false);
+  });
+
+  it("freshness (S63 tiers): an empty (negative-cache) day uses the 2h/4h tier and wins over D+0", async () => {
+    const secondTheatre = `${PROVIDER}:theatre:movie2`;
+    await seedTheatre(pool, THEATRE, "America/Chicago");
+    await seedTheatre(pool, secondTheatre, "America/Chicago");
+    const now = new Date();
+    const today = toTheatreLocal(now.toISOString(), "America/Chicago").localDate;
+    const fiveHoursAgo = new Date(now.getTime() - 5 * 3600_000);
+    const show = (id: string) => ({
+      showtimeId: `amc:showtime:${id}`,
+      movieId: `amc:movie:${id}`,
+      movieTitle: id,
+      startsAt: new Date(now.getTime() + 3600_000),
+      status: "OPEN" as const,
+      formatCode: null,
+      auditorium: null,
+      runtimeMinutes: null,
+    });
+    // 5h old today: inside D+0's 6h hard TTL (populated day serves) but past the
+    // empty tier's 4h hard TTL — proving the negative cache does not linger 6h.
+    await seedDay(pool, THEATRE, today, fiveHoursAgo, [show("d0pop")]);
+    await seedDay(pool, secondTheatre, today, fiveHoursAgo, []);
+
+    const client = makeClient(server.baseUrl);
+    const populated = await client.theatres.movies.query({
+      theatreId: THEATRE,
+      from: today,
+      to: today,
+    });
+    expect(populated.movies).toHaveLength(1);
+    expect(populated.isWarm).toBe(false);
+    // The empty day contributes no groups either way; what matters is that the tier
+    // evaluator classifies it hard-cold (asserted directly in the unit block below) —
+    // here the span is honestly empty and not warm.
+    const empty = await client.theatres.movies.query({
+      theatreId: secondTheatre,
+      from: today,
+      to: today,
+    });
+    expect(empty.movies).toEqual([]);
+    expect(empty.isWarm).toBe(false);
   });
 
   it("drops pre-S14 (NULL movie_id) and pre-S24 (no movie row) performances without error (item 7)", async () => {
@@ -578,6 +691,9 @@ describe("theatres.movies (S21)", () => {
     const body = await client.theatres.movies.query({ theatreId: THEATRE, from: DAY1, to: DAY2 });
     // Neither dropped-worthy row contributes; no title is fabricated.
     expect(body.movies).toEqual([]);
+    // Both days are freshly captured, so the span is warm even though grouping drops
+    // every row: `isWarm` tracks day freshness, not group count (S63.2).
+    expect(body.isWarm).toBe(true);
   });
 
   it("rejects from > to as BAD_REQUEST (item 5)", async () => {
@@ -597,6 +713,8 @@ describe("theatres.movies (S21)", () => {
       to: "2026-08-31",
     });
     expect(accepted.movies).toEqual([]);
+    // No cached days at all → every requested day is absent → not warm (S63.2).
+    expect(accepted.isWarm).toBe(false);
     // 31 days → rejected by the span refine.
     await expect(
       client.theatres.movies.query({
@@ -716,7 +834,130 @@ describe("theatres.movies poster resolution and cache-miss dispatch (S25.4)", ()
   });
 });
 
-describe("buildMovieGroups freshness ≤-edge and grouping (S21.5/S21.7)", () => {
+describe("evaluateScheduleDayFreshness tier matrix (S63.1, ADR 0100)", () => {
+  const TZ = "America/Chicago";
+  // 2026-08-20T12:00:00Z is 07:00 CDT → the theatre-local today is 2026-08-20.
+  const NOW = new Date("2026-08-20T12:00:00.000Z");
+  const TODAY = "2026-08-20";
+  const FUTURE = "2026-08-21";
+  const HOUR = 3600_000;
+
+  const populated = (localDate: string, ageMs: number): ScheduleRangeDay => ({
+    localDate,
+    capturedAt: new Date(NOW.getTime() - ageMs),
+    performances: [
+      {
+        showtimeId: "amc:showtime:x",
+        localDate,
+        movieId: "amc:movie:x",
+        title: "X",
+        startsAt: new Date("2026-08-21T19:00:00.000Z"),
+        status: "OPEN",
+        formatCode: null,
+        auditorium: null,
+        runtimeMinutes: null,
+        deepLinkUrl: "https://example.invalid/showtime",
+        layoutId: null,
+        attributes: [],
+      },
+    ],
+  });
+  const empty = (localDate: string, ageMs: number): ScheduleRangeDay => ({
+    localDate,
+    capturedAt: new Date(NOW.getTime() - ageMs),
+    performances: [],
+  });
+
+  it("populated future (D+1..): fresh at/below 12h soft, SWR up to 36h hard, cold past it", () => {
+    expect(evaluateScheduleDayFreshness(populated(FUTURE, 12 * HOUR), NOW, TZ)).toEqual({
+      isFresh: true,
+      isStaleWhileRevalidate: false,
+    });
+    expect(evaluateScheduleDayFreshness(populated(FUTURE, 12 * HOUR + 1_000), NOW, TZ)).toEqual({
+      isFresh: false,
+      isStaleWhileRevalidate: true,
+    });
+    expect(evaluateScheduleDayFreshness(populated(FUTURE, 36 * HOUR), NOW, TZ)).toEqual({
+      isFresh: false,
+      isStaleWhileRevalidate: true,
+    });
+    expect(evaluateScheduleDayFreshness(populated(FUTURE, 36 * HOUR + 1_000), NOW, TZ)).toEqual({
+      isFresh: false,
+      isStaleWhileRevalidate: false,
+    });
+  });
+
+  it("populated today (D+0): fresh at/below 2h soft, SWR up to 6h hard, cold past it", () => {
+    expect(evaluateScheduleDayFreshness(populated(TODAY, 2 * HOUR), NOW, TZ)).toEqual({
+      isFresh: true,
+      isStaleWhileRevalidate: false,
+    });
+    expect(evaluateScheduleDayFreshness(populated(TODAY, 2 * HOUR + 1_000), NOW, TZ)).toEqual({
+      isFresh: false,
+      isStaleWhileRevalidate: true,
+    });
+    expect(evaluateScheduleDayFreshness(populated(TODAY, 6 * HOUR), NOW, TZ)).toEqual({
+      isFresh: false,
+      isStaleWhileRevalidate: true,
+    });
+    expect(evaluateScheduleDayFreshness(populated(TODAY, 6 * HOUR + 1_000), NOW, TZ)).toEqual({
+      isFresh: false,
+      isStaleWhileRevalidate: false,
+    });
+  });
+
+  it("empty schedule (negative cache): 2h soft / 4h hard on any date, including D+0", () => {
+    expect(evaluateScheduleDayFreshness(empty(FUTURE, 2 * HOUR), NOW, TZ)).toEqual({
+      isFresh: true,
+      isStaleWhileRevalidate: false,
+    });
+    expect(evaluateScheduleDayFreshness(empty(FUTURE, 4 * HOUR), NOW, TZ)).toEqual({
+      isFresh: false,
+      isStaleWhileRevalidate: true,
+    });
+    expect(evaluateScheduleDayFreshness(empty(FUTURE, 4 * HOUR + 1_000), NOW, TZ)).toEqual({
+      isFresh: false,
+      isStaleWhileRevalidate: false,
+    });
+    expect(evaluateScheduleDayFreshness(empty(TODAY, 4 * HOUR + 1_000), NOW, TZ)).toEqual({
+      isFresh: false,
+      isStaleWhileRevalidate: false,
+    });
+  });
+
+  it("empty takes precedence over D+0: a 5h-old empty today is hard-cold while a 5h-old populated today is SWR", () => {
+    expect(evaluateScheduleDayFreshness(empty(TODAY, 5 * HOUR), NOW, TZ)).toEqual({
+      isFresh: false,
+      isStaleWhileRevalidate: false,
+    });
+    expect(evaluateScheduleDayFreshness(populated(TODAY, 5 * HOUR), NOW, TZ)).toEqual({
+      isFresh: false,
+      isStaleWhileRevalidate: true,
+    });
+  });
+
+  it("a NULL-capture day is hard-cold, never served", () => {
+    const nullDay: ScheduleRangeDay = { ...populated(FUTURE, 0), capturedAt: null };
+    expect(evaluateScheduleDayFreshness(nullDay, NOW, TZ)).toEqual({
+      isFresh: false,
+      isStaleWhileRevalidate: false,
+    });
+  });
+
+  it("a malformed timezone falls back to the UTC calendar date instead of throwing", () => {
+    const utcToday = NOW.toISOString().slice(0, 10);
+    expect(evaluateScheduleDayFreshness(populated(utcToday, 0), NOW, "Not/AZone")).toEqual({
+      isFresh: true,
+      isStaleWhileRevalidate: false,
+    });
+  });
+});
+
+describe("buildMovieGroups tiered serving (S63.2)", () => {
+  const TZ = "America/Chicago";
+  const NOW = new Date("2026-08-20T12:00:00.000Z");
+  const FUTURE = "2026-08-21";
+  const HOUR = 3600_000;
   const day = (
     localDate: string,
     capturedAt: Date | null,
@@ -745,31 +986,54 @@ describe("buildMovieGroups freshness ≤-edge and grouping (S21.5/S21.7)", () =>
     ],
   });
 
-  it("a capture exactly at the injected ceiling is served; one second past disappears (item 4)", () => {
-    const capturedAt = new Date("2026-08-14T12:00:00.000Z");
-    const days = [day(DAY1, capturedAt, "amc:movie:edge", "Edge", "amc:showtime:edge", new Date())];
+  it("a capture exactly at the hard TTL is served; one second past disappears (item 4)", () => {
+    const capturedAt = new Date(NOW.getTime() - 36 * HOUR);
+    const days = [
+      day(FUTURE, capturedAt, "amc:movie:edge", "Edge", "amc:showtime:edge", new Date()),
+    ];
 
-    // exactly AT the ceiling → served.
-    const atCeiling = buildMovieGroups(
-      days,
-      FRESHNESS_MS,
-      new Date(capturedAt.getTime() + FRESHNESS_MS),
-    );
+    // exactly AT the 36h hard TTL → served.
+    const atCeiling = buildMovieGroups(days, NOW, TZ);
     expect(atCeiling).toHaveLength(1);
     expect(atCeiling[0]?.movieId).toBe("amc:movie:edge");
 
     // one second past → dropped.
     const oneSecondPast = buildMovieGroups(
-      days,
-      FRESHNESS_MS,
-      new Date(capturedAt.getTime() + FRESHNESS_MS + 1_000),
+      [
+        day(
+          FUTURE,
+          new Date(capturedAt.getTime() - 1_000),
+          "amc:movie:edge",
+          "Edge",
+          "amc:showtime:edge",
+          new Date(),
+        ),
+      ],
+      NOW,
+      TZ,
     );
     expect(oneSecondPast).toEqual([]);
   });
 
+  it("a soft-stale (SWR) day still serves from cache — browse never revalidates (S21.8)", () => {
+    const days = [
+      day(
+        FUTURE,
+        new Date(NOW.getTime() - 13 * HOUR),
+        "amc:movie:swr",
+        "Swr",
+        "amc:showtime:swr",
+        new Date(),
+      ),
+    ];
+    const groups = buildMovieGroups(days, NOW, TZ);
+    expect(groups).toHaveLength(1);
+    expect(groups[0]?.movieId).toBe("amc:movie:swr");
+  });
+
   it("a NULL-capture day contributes nothing (item 4)", () => {
     const days = [day(DAY1, null, "amc:movie:nullcap", "Null", "amc:showtime:nullcap", new Date())];
-    expect(buildMovieGroups(days, FRESHNESS_MS, new Date())).toEqual([]);
+    expect(buildMovieGroups(days, NOW, TZ)).toEqual([]);
   });
 });
 

@@ -63,6 +63,7 @@ describe("bootstrapSlice", () => {
       from: "2026-08-20",
       to: "2026-08-22",
       movies: [],
+      isWarm: true,
     });
     expect(useSeatfirstStore.getState().selectedTheatreMovies).not.toBeNull();
 

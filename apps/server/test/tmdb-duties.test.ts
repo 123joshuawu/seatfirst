@@ -100,6 +100,12 @@ describe("runTmdbPrewarmTick (S25.3)", () => {
               poster_path: input.posterPath,
               runtime_minutes: input.runtimeMinutes,
               genres: [...input.genres],
+              // S63 widening: the pre-warm never observes these, so the fake
+              // mirrors the repository's preserve-on-NULL (all absent).
+              release_date: null,
+              is_now_playing: false,
+              is_upcoming: false,
+              title: null,
               updated_at: new Date(),
             },
           ]);
@@ -260,6 +266,11 @@ describe("processTmdbFetch (S25.5)", () => {
               poster_path: input.posterPath,
               runtime_minutes: input.runtimeMinutes,
               genres: [...input.genres],
+              // S63 widening (same absent-value posture as the pre-warm fake above).
+              release_date: null,
+              is_now_playing: false,
+              is_upcoming: false,
+              title: null,
               updated_at: new Date(),
             },
           ] satisfies TmdbMovieRow[]);

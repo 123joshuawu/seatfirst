@@ -7,6 +7,7 @@ import {
   ShowtimeStatusSchema,
   TheatreIdSchema,
   TheatreMoviesInputSchema,
+  toTheatreLocal,
   type MovieId,
   type ShowtimeId,
   type ShowtimeStatus,
@@ -33,17 +34,15 @@ import type { TheatreSearchContext } from "./searchContext.js";
  * `theatres.movies` (S21; `seatfirst-architecture.md:265`) — a synchronous, read-only
  * browse of the cached schedule over an inclusive `[from, to]` date span: confirm the
  * theatre exists, read every cached schedule day covering the span in ONE boundary call
- * (`SCHEDULE_RANGE_READ`), drop days whose capture is past the injected ADR 0006 §A.1
- * freshness ceiling, group the surviving performances by movie, and return them.
+ * (`SCHEDULE_RANGE_READ`), drop hard-cold days per the S63 tiered freshness matrix
+ * (ADR 0100), group the surviving performances by movie, and return them with `isWarm`.
  *
  * This route builds on the S20 router's `t` (`TheatreSearchContext { db }`) so the shared
  * router stays context-homogeneous (a mixed-context router would degrade `appRouter`'s
- * type). `TheatreSearchContext` names only what S20's route needed; S21.1 additionally
- * needs the injected `freshnessMs`, which the runtime `appRouter` context
- * (`SearchCreateContext`, `searches/createContext.ts`) already carries — the cast at the
- * top of the query documents that extension (the same nested-context coordination the S20
- * router comment records).
- *
+ * type). `TheatreSearchContext` names only what S20's route needed; the runtime
+ * `appRouter` context (`SearchCreateContext`, `searches/createContext.ts`) additionally
+ * carries the request-scoped logger, read via the cast at the top of the query (the same
+ * nested-context coordination the S20 router comment records).
  * Cache-derived ONLY (S21.8): no code path here imports `AmcProvider`, the fetch actor,
  * or any network call — a cold day is absent, never fetched. No rate-limit or ledger
  * interaction (S21.9). S25.4 (ADR 0019 amendment decision 2) adds a read-time poster
@@ -56,10 +55,14 @@ import type { TheatreSearchContext } from "./searchContext.js";
 export const movies = t.procedure
   .input(TheatreMoviesInputSchema)
   .query(async ({ input, ctx }): Promise<TheatreMoviesResponse> => {
-    // S21.1 — the runtime context (SearchCreateContext via appRouter) carries the pool and
-    // the injected freshness ceiling beyond the S20-narrow `TheatreSearchContext`.
-    const { db, freshnessMs } = ctx as TheatreSearchContext & {
-      readonly freshnessMs: number;
+    // S21.1 — the runtime context (SearchCreateContext via appRouter) carries the pool
+    // beyond the S20-narrow `TheatreSearchContext`. S63 no longer reads the injected
+    // flat freshness ceiling here: per-day tiering comes from
+    // `evaluateScheduleDayFreshness` (ADR 0100). The `freshnessMs` context field itself
+    // stays plumbed (facetCounts/capacityPreview still read it) — this route just
+    // stops consuming it.
+    const { db } = ctx as TheatreSearchContext & {
+      readonly logger: SeatfirstLogger;
     };
     // O11.6 — the runtime appRouter context (`SearchCreateContext`) carries the
     // request-scoped Fastify logger (`req.log`, requestId included) as `logger`; this
@@ -67,8 +70,7 @@ export const movies = t.procedure
     // identity and ride the OTel log bridge. The per-request ad hoc `createLogger`
     // fallback this route used to build is gone — that construction path carried
     // neither a requestId nor the OTel log bridge.
-    const logger = (ctx as TheatreSearchContext & { freshnessMs: number; logger: SeatfirstLogger })
-      .logger;
+    const logger = (ctx as TheatreSearchContext & { logger: SeatfirstLogger }).logger;
     // S21.2 — theatre existence check first. Zero rows maps to NOT_FOUND with the
     // boundary's own zeroRowsMeans text; the row's timezone is what the response echoes.
     const theatreRows = await readTheatreById(poolClient(db), input.theatreId);
@@ -100,12 +102,18 @@ export const movies = t.procedure
       dateTo: input.to,
     });
 
-    // S21.5/S21.7 — per-day freshness gate with the injected ceiling, then group the
+    // S63.1/S63.2 — per-day tiered freshness gate (ADR 0100), then group the
     // surviving performances by movie (drop pre-S14/pre-S24 rows, order deterministically).
-    // Extracted as the exported `buildMovieGroups` so the ≤-edge freshness semantics
-    // (a capture exactly AT the ceiling is served, one second past is not) are provable
-    // with a deterministic clock, the same discipline `readCachedSchedule` documents.
-    const moviesOut = buildMovieGroups(range.days, freshnessMs, new Date());
+    // A day contributes iff it is served (`isFresh || isStaleWhileRevalidate`, i.e. not
+    // hard-cold and not absent). `isWarm` is true iff EVERY requested day in the range
+    // is soft-fresh (`isFresh`) — false when ANY day is SWR, hard-cold, or absent.
+    const now = new Date();
+    const moviesOut = buildMovieGroups(range.days, now, theatre.timezone);
+    const dayByDate = new Map(range.days.map((day) => [day.localDate, day]));
+    const isWarm = enumerateRequestedDates(input.from, input.to).every((date) => {
+      const day = dayByDate.get(date);
+      return day !== undefined && evaluateScheduleDayFreshness(day, now, theatre.timezone).isFresh;
+    });
 
     // S25.4 (ADR 0019 amendment decision 2) — resolve each group's poster through the
     // batched MOVIE_READ_BY_ID LEFT JOIN. The boundary is per-id, so "batched" is one
@@ -143,13 +151,14 @@ export const movies = t.procedure
     // S21.6 — the response echoes the namespaced theatre id (branded), the theatre row's
     // timezone, and the requested date span in wire date form. Every movie/showtime field
     // was validated against the boundary schema above; `TheatreIdSchema.parse` re-brands
-    // the id at the wire boundary (the create.ts pattern).
+    // the id at the wire boundary (the create.ts pattern). S63.2 adds `isWarm` (ADR 0100).
     return {
       theatreId: TheatreIdSchema.parse(input.theatreId),
       timezone: theatre.timezone,
       from: input.from,
       to: input.to,
       movies,
+      isWarm,
     };
   });
 
@@ -213,12 +222,89 @@ function requireWireDeepLinkUrl(value: unknown): string {
 }
 
 /**
- * S21.5 + S21.7 — the route's cache-derived grouping core, extracted as a pure function
- * so the exact freshness edge is provable with a deterministic clock (mirroring how
- * `readCachedSchedule` accepts an injected `now`). A day serves iff its key's
- * `latest_captured_at` is non-null and `now - capturedAt <= freshnessMs` — a capture
- * exactly AT the ceiling is served, one past is not (S15 verification item 6's
- * off-by-one discipline). Days failing the gate, NULL-capture days, and no-key days
+ * S63.1 — tiered schedule freshness evaluator (ADR 0100 "Implementation Mechanics",
+ * "Precedence Hierarchy & Freshness Matrix"). Pure: no DB, no clock, no network.
+ *
+ * | Tier (evaluated in order)                  | Condition                    | Soft TTL | Hard TTL |
+ * | ------------------------------------------ | ---------------------------- | -------- | -------- |
+ * | 1. Empty schedules (negative cache, wins)  | `performances.length === 0`  | 2 hours  | 4 hours  |
+ * | 2. Populated today (D+0)                   | `isToday && !isEmpty`        | 2 hours  | 6 hours  |
+ * | 3. Populated future (D+1..D+6)             | `!isToday && !isEmpty`       | 12 hours | 36 hours |
+ *
+ * `isFresh` (age <= soft TTL) means servable with no revalidation. `isStaleWhileRevalidate`
+ * (soft TTL < age <= hard TTL) means still servable, but the caller must stage a
+ * background `SCHEDULE_RESOLUTION` (search admission only — never browse, S21.8). A day
+ * that is neither (age past the hard TTL, or `capturedAt === null`) is hard-cold: the
+ * caller must not serve it as-is. `isToday` compares the day's `localDate` against
+ * `now` rendered in the theatre's timezone (a malformed timezone falls back to the UTC
+ * calendar date, the create.ts representative-`today` precedent). The empty tier is
+ * evaluated FIRST so a transiently empty D+0 crawl never lingers for 6 hours.
+ *
+ * NOTE: `ScheduleRangeDay` carries `localDate` (not `date`): the ADR/spec sketches spell
+ * the field `day.date`, but this repo's durable shape is `localDate` (repository.ts).
+ * NOTE: unlike the spec sketch (whose `isFresh: ageMs <= hardTtlMs` overlaps SWR), the
+ * two flags here are disjoint: `isFresh` means strictly within the soft TTL, so
+ * "servable as-is" is `isFresh || isStaleWhileRevalidate` and "needs no staging" is
+ * exactly `isFresh`.
+ */
+export interface ScheduleDayFreshness {
+  readonly isFresh: boolean;
+  readonly isStaleWhileRevalidate: boolean;
+}
+
+export function evaluateScheduleDayFreshness(
+  day: ScheduleRangeDay,
+  now: Date,
+  theatreTimezone: string,
+): ScheduleDayFreshness {
+  if (day.capturedAt === null) {
+    return { isFresh: false, isStaleWhileRevalidate: false };
+  }
+  const ageMs = now.getTime() - day.capturedAt.getTime();
+  let localToday: string;
+  try {
+    localToday = toTheatreLocal(now.toISOString(), theatreTimezone).localDate;
+  } catch {
+    localToday = now.toISOString().slice(0, 10);
+  }
+  const isToday = day.localDate === localToday;
+  const isEmpty = day.performances.length === 0;
+
+  // Precedence: negative cache (isEmpty) takes precedence over isToday so that
+  // a transiently empty or unposted schedule for today does not linger for 6 hours.
+  const { softTtlMs, hardTtlMs } = isEmpty
+    ? { softTtlMs: 2 * 3600_000, hardTtlMs: 4 * 3600_000 }
+    : isToday
+      ? { softTtlMs: 2 * 3600_000, hardTtlMs: 6 * 3600_000 }
+      : { softTtlMs: 12 * 3600_000, hardTtlMs: 36 * 3600_000 };
+
+  return {
+    isFresh: ageMs <= softTtlMs,
+    isStaleWhileRevalidate: ageMs > softTtlMs && ageMs <= hardTtlMs,
+  };
+}
+
+/**
+ * S63.2 — enumerate every wire date (`YYYY-MM-DD`) in the inclusive `[from, to]` span.
+ * The span refine on the input schema bounds this (≤ 30 days), so the loop is small.
+ */
+export function enumerateRequestedDates(from: string, to: string): string[] {
+  const dates: string[] = [];
+  const startMs = Date.parse(`${from}T00:00:00Z`);
+  const endMs = Date.parse(`${to}T00:00:00Z`);
+  for (let t = startMs; t <= endMs; t += 86_400_000) {
+    dates.push(new Date(t).toISOString().slice(0, 10));
+  }
+  return dates;
+}
+
+/**
+ * S21.5 + S21.7 (S63 tiering) — the route's cache-derived grouping core, extracted as a
+ * pure function so the exact tier edges are provable with a deterministic clock
+ * (mirroring how `readCachedSchedule` accepts an injected `now`). A day serves iff
+ * `evaluateScheduleDayFreshness` says `isFresh || isStaleWhileRevalidate` — a capture
+ * exactly AT the hard TTL is served, one past is not (S15 verification item 6's
+ * off-by-one discipline). Hard-cold days, NULL-capture days, and no-key days
  * contribute nothing. Grouping drops NULL-`movie_id` rows (pre-S14) and rows whose
  * movieId has no movie catalogue row (`title` NULL, pre-S24 — S24.8), never fabricating a
  * title. Movies order by `movieId`, showtimes by `showDateTimeUtc` (deterministic,
@@ -228,13 +314,12 @@ function requireWireDeepLinkUrl(value: unknown): string {
  */
 export function buildMovieGroups(
   days: readonly ScheduleRangeDay[],
-  freshnessMs: number,
   now: Date,
+  theatreTimezone: string,
 ): MovieGroup[] {
-  const nowMs = now.getTime();
   const freshDays = days.filter((day) => {
-    if (day.capturedAt === null) return false;
-    return nowMs - day.capturedAt.getTime() <= freshnessMs;
+    const freshness = evaluateScheduleDayFreshness(day, now, theatreTimezone);
+    return freshness.isFresh || freshness.isStaleWhileRevalidate;
   });
 
   const byMovie = new Map<string, { movieId: MovieId; title: string; showtimes: Showtime[] }>();

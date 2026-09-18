@@ -516,6 +516,9 @@ export type TheatreMovieGroup = z.infer<typeof TheatreMovieGroupSchema>;
  * `theatres.movies` response (S21.6) — envelope `{ theatreId, timezone, from, to, movies }`.
  * `timezone` is the theatre row's; a fully cold/empty span is an honest `movies: []`
  * (E5.13 posture), never a stub.
+ * S63.2 (ADR 0100): `isWarm` is true iff every requested day in `[from, to]` is at
+ * least soft-fresh per the tiered matrix — false when ANY day is stale-while-revalidate,
+ * hard-cold, or absent. The UI uses it for the "data may be stale" affordance.
  */
 export const TheatreMoviesResponseSchema = z.strictObject({
   theatreId: TheatreIdSchema,
@@ -523,6 +526,7 @@ export const TheatreMoviesResponseSchema = z.strictObject({
   from: z.iso.date(),
   to: z.iso.date(),
   movies: z.array(TheatreMovieGroupSchema),
+  isWarm: z.boolean(),
 });
 export type TheatreMoviesResponse = z.infer<typeof TheatreMoviesResponseSchema>;
 

@@ -19,6 +19,8 @@ import { registerSearchGet } from "./routes/searches/get.js";
 import { createSearchGetContextFactory } from "./routes/searches/getContext.js";
 import { appRouter } from "./routes/searches/router.js";
 import type { AppRouter } from "./routes/searches/router.js";
+import { createMoviesSearchContextFactory } from "./routes/movies/context.js";
+import type { TmdbClient } from "./tmdb/client.js";
 import {
   createSessionBootstrapContextFactory,
   registerSessionBootstrap,
@@ -129,6 +131,13 @@ export interface BuildAppOptions {
   readonly geocodeBucket?: GeocodeTokenBucket | undefined;
   /** Readiness check callback verifying required internal dependencies (e.g. Redis). */
   readonly readinessCheck?: () => Promise<boolean>;
+  /**
+   * S63.4 — the live TMDB client for `movies.search` typed queries (Bearer key +
+   * token bucket, built by `startApp` from `TMDB_API_KEY`). Optional seam: tests
+   * inject a fake; assemblies that omit it still serve the empty-query slate path
+   * (local Postgres only) while typed queries fail closed (`search.ts`).
+   */
+  readonly tmdbClient?: TmdbClient | undefined;
 }
 
 /** O11.1 — the request's root span, keyed by request so `onResponse` can end it. A
@@ -290,8 +299,12 @@ export function buildApp(opts: BuildAppOptions): FastifyInstance {
     prefix: "/trpc",
     trpcOptions: {
       router: appRouter,
-      createContext: ({ req }) =>
-        createSearchCreateContextFactory({
+      // S63.4 — the router-wide context is the search-create slice PLUS the movies
+      // slice (pool + TMDB client): each area's procedures see their own context
+      // type, and the merged object satisfies all of them (the same structural
+      // subset discipline the `theatres` router relies on).
+      createContext: ({ req }) => ({
+        ...createSearchCreateContextFactory({
           db: opts.db,
           limits: opts.searchLimits,
           freshnessMs: opts.freshnessMs,
@@ -304,6 +317,8 @@ export function buildApp(opts: BuildAppOptions): FastifyInstance {
           capacityPreviewDeadlineMs: opts.capacityPreviewDeadlineMs,
           capacityPreviewPollIntervalMs: opts.capacityPreviewPollIntervalMs,
         })(req),
+        ...createMoviesSearchContextFactory({ db: opts.db, tmdbClient: opts.tmdbClient })(req),
+      }),
       responseMeta: createSearchResponseMeta,
     },
   });

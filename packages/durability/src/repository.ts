@@ -225,6 +225,27 @@ export interface UpsertTmdbMovieInput {
   readonly posterPath: string | null;
   readonly runtimeMinutes: number | null;
   readonly genres: readonly string[];
+  /**
+   * S63 (migration 025): TMDB `release_date` as an ISO `YYYY-MM-DD` string (the
+   * `date` column's pg text form), or null when unknown. Optional so the S25.3/S25.5
+   * pre-warm/fetch callers — which never observed it — keep compiling and keep
+   * passing NULL (preserve-on-NULL in `TMDB_MOVIE_UPSERT`), until the follow-up
+   * that threads TMDB's `release_date` through the client wires them up.
+   */
+  readonly releaseDate?: string | null;
+  /**
+   * S63 slate flags. `undefined`/null preserves the stored value (the lazy search
+   * upsert never touches slate membership); an explicit boolean sets it (the
+   * future pre-warm slate-marking path).
+   */
+  readonly isNowPlaying?: boolean | null;
+  readonly isUpcoming?: boolean | null;
+  /**
+   * S63 display-case title (TMDB's verbatim title). Null preserves the stored
+   * value; the pre-warm passes nothing yet, the lazy search upsert passes the live
+   * title it already holds.
+   */
+  readonly title?: string | null;
 }
 
 export interface TmdbMovieRow {
@@ -233,6 +254,12 @@ export interface TmdbMovieRow {
   readonly poster_path: string | null;
   readonly runtime_minutes: number | null;
   readonly genres: readonly string[];
+  /** S63: ISO `YYYY-MM-DD` (pg `date` text form), null when TMDB carries no date. */
+  readonly release_date: string | null;
+  readonly is_now_playing: boolean;
+  readonly is_upcoming: boolean;
+  /** S63: display-case title, null when never observed (pre-S63 rows, pre-warm). */
+  readonly title: string | null;
   readonly updated_at: Date;
 }
 
@@ -246,7 +273,59 @@ export function upsertTmdbMovie(
     input.posterPath,
     input.runtimeMinutes,
     [...input.genres],
+    input.releaseDate ?? null,
+    input.isNowPlaying ?? null,
+    input.isUpcoming ?? null,
+    input.title ?? null,
   ]);
+}
+
+/**
+ * S63.4 default-slate read (`TMDB_SLATE_BROWSE`): the flagged now_playing/upcoming
+ * rows with their AMC-catalogue match (nullable `amc_*` when TMDB-only). The LEFT
+ * JOIN can fan out on multi-provider title collisions; rows are ordered
+ * deterministically and the route dedupes by `tmdb_id`.
+ */
+export interface TmdbSlateRow {
+  readonly tmdb_id: number;
+  readonly normalized_title: string;
+  readonly tmdb_title: string | null;
+  readonly poster_path: string | null;
+  readonly runtime_minutes: number | null;
+  readonly genres: readonly string[];
+  readonly release_date: string | null;
+  readonly is_now_playing: boolean;
+  readonly is_upcoming: boolean;
+  readonly updated_at: Date;
+  readonly amc_movie_id: string | null;
+  readonly amc_title: string | null;
+}
+
+export function browseTmdbSlate(db: SqlClient, limit: number): Promise<TmdbSlateRow[]> {
+  return runStatement(db, B.TMDB_SLATE_BROWSE, [limit]);
+}
+
+/**
+ * S63.4 AMC cross-reference (`MOVIE_READ_BY_NORMALIZED_TITLES`): which of the
+ * caller's `normalizeTitle`-form titles the AMC catalogue has ever observed.
+ */
+export function readMoviesByNormalizedTitles(
+  db: SqlClient,
+  normalizedTitles: readonly string[],
+): Promise<MovieRow[]> {
+  return runStatement(db, B.MOVIE_READ_BY_NORMALIZED_TITLES, [[...normalizedTitles]]);
+}
+
+/**
+ * S63.4 AMC special-event lookup (`MOVIE_TITLE_SEARCH`): substring match over the
+ * AMC-observed catalogue. `query` is escaped caller-side so LIKE metacharacters
+ * match only literally, then wrapped as a substring pattern — the exact
+ * `searchTheatresByName` discipline. No SQL-side LIMIT (S20.2/S20.4): the route
+ * caps after merging with live TMDB hits.
+ */
+export function searchMoviesByTitle(db: SqlClient, query: string): Promise<MovieRow[]> {
+  const escaped = query.replace(/[\\%_]/g, (metachar) => `\\${metachar}`);
+  return runStatement(db, B.MOVIE_TITLE_SEARCH, [`%${escaped}%`]);
 }
 
 export interface DispatchTmdbFetchInput {

@@ -23,6 +23,8 @@ import type { SessionCookiePolicy } from "./session/cookie.js";
 import { loadAsnLookup, noopAsnLookup } from "./session/extract.js";
 import { createSessionRateLimiter, redisScriptExecutorFromIoredis } from "./session/limiter.js";
 import type { RateLimitWindow, SessionRateLimitConfig } from "./session/limiter.js";
+import { createTmdbClient } from "./tmdb/client.js";
+import { createTokenBucket } from "./tmdb/token-bucket.js";
 
 /**
  * The `api` role's environment reader and process assembly (S28.2). `buildApp` deliberately
@@ -98,6 +100,15 @@ export interface AppEnvConfig {
   readonly logLevel: LogLevel;
   /** S51-D5 — Mapbox Geocoding access token, requiredString, no default (gate 14, ADR 0019 decision 4). */
   readonly mapboxAccessToken: string;
+  /**
+   * S63.4 — TMDB Bearer API key for the `api` role's `movies.search` typed queries.
+   * Same `TMDB_API_KEY` the `tmdb` worker requires (`tmdb/config.ts`, ADR 0019
+   * decision 4), but OPTIONAL here like `asnDatabasePath` (ADR 0095): the api
+   * role boots without it. When unset, `startApp` wires no client — the route
+   * still serves the empty-query slate from local Postgres while typed queries
+   * fail closed (`search.ts`).
+   */
+  readonly tmdbApiKey: string | undefined;
   /** O5.4 — the built OTel setup (tracer/meter/logger/metrics), built exactly once. */
   readonly otel: ConfiguredOtel;
 }
@@ -134,6 +145,7 @@ export function appConfigFromEnv(env: NodeJS.ProcessEnv = process.env): AppEnvCo
     recheckRecoveryRowWeight: positiveInteger(env, "RECHECK_RECOVERY_ROW_WEIGHT"),
     corsAllowedOrigins: parseCorsAllowedOrigins(env),
     logLevel: logLevelFromEnv(env),
+    tmdbApiKey: optionalString(env, "TMDB_API_KEY"),
     mapboxAccessToken: requiredString(env, "MAPBOX_ACCESS_TOKEN"),
     otel: buildOtelFromEnv(
       env,
@@ -181,6 +193,16 @@ export async function startApp(config: AppEnvConfig): Promise<AppHandle> {
     otelLogger: config.otel.logger,
     serializers: { req: inboundRequestLogSerializer, res: inboundRequestLogSerializer },
   });
+  // S63.4 — the `api` role's live TMDB client for `movies.search` typed queries:
+  // same construction as the `tmdb` worker (`tmdb/entrypoint.ts`: Bearer key +
+  // ADR-pinned 30 req/s bucket), sharing `startApp`'s logger. No lifecycle to
+  // close (plain HTTPS + bucket, no sockets), so it needs no `close()` entry.
+  // Built only when TMDB_API_KEY is set — without it the route still serves the
+  // empty-query slate from local Postgres while typed queries fail closed.
+  const tmdbClient =
+    config.tmdbApiKey === undefined
+      ? undefined
+      : createTmdbClient({ apiKey: config.tmdbApiKey, bucket: createTokenBucket(), logger });
   installCrashHandlers({ logger, otel: config.otel, exit: (code) => process.exit(code) });
   const fastify = buildApp({
     db,
@@ -200,6 +222,7 @@ export async function startApp(config: AppEnvConfig): Promise<AppHandle> {
     recheckDeadlineMs: config.recheckDeadlineMs,
     recheckRecovery,
     mapboxAccessToken: config.mapboxAccessToken,
+    tmdbClient,
     corsAllowedOrigins: config.corsAllowedOrigins,
     logger,
     mintId: mintSessionId,

@@ -830,11 +830,12 @@ describe("searches.create (S15)", () => {
     expect(response.showtimeCount).toBe(limit);
   });
 
-  it("freshness integration: a stale cached schedule resolves cold through the route", async () => {
+  it("freshness integration: a hard-cold cached schedule resolves cold through the route", async () => {
     await seedProvider(admin);
-    // An hour-old capture: beyond the injected 10-minute ceiling.
+    // LOCAL_DATE is 2 days ahead (tier 3, future: 12h soft / 36h hard). 37h old is
+    // beyond the 36h hard TTL, so the cached day must not be served (S63).
     await seedCachedSchedule(pool, {
-      capturedAt: new Date(Date.now() - 60 * 60_000),
+      capturedAt: new Date(Date.now() - 37 * 60 * 60_000),
       performances: [{ showtimeId: "st_stale", status: "OPEN", skipFetch: false }],
     });
     const client = makeClient(server.baseUrl, SESSION);

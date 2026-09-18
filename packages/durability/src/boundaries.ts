@@ -141,7 +141,9 @@ export const MOVIE_READ_BY_ID = define({
   zeroRowsMeans: "no movie catalogue row exists for that movie_id.",
   params: ["movie_id"],
   text: `
-    SELECT movie_id, provider_id, title, first_seen_at, last_seen_at, t.poster_path, t.runtime_minutes, t.genres
+    -- S63: "movie.title" is qualified because migration 025 added a display-case
+    -- "title" to tmdb_movie, making the bare name ambiguous across this LEFT JOIN.
+    SELECT movie_id, provider_id, movie.title, first_seen_at, last_seen_at, t.poster_path, t.runtime_minutes, t.genres
     FROM movie
     LEFT JOIN tmdb_movie t ON lower(movie.title) = t.normalized_title
     WHERE movie_id = $1::text`,
@@ -151,19 +153,55 @@ export const TMDB_MOVIE_UPSERT = define({
   boundary: "catalogue",
   name: "TMDB_MOVIE_UPSERT",
   zeroRowsMeans: "the tmdb_movie upsert unexpectedly returned no row.",
-  params: ["tmdb_id", "normalized_title", "poster_path", "runtime_minutes", "genres"],
+  params: [
+    "tmdb_id",
+    "normalized_title",
+    "poster_path",
+    "runtime_minutes",
+    "genres",
+    "release_date",
+    "is_now_playing",
+    "is_upcoming",
+    "title",
+  ],
   text: `
+    -- S63 widens the S25/S55 upsert with the four 025 columns. Read-model columns
+    -- ($3 poster, $4 runtime, $6 release date, $9 display title) and the slate flags
+    -- ($7/$8) are preserve-on-NULL on conflict: a caller that does not know a value
+    -- passes NULL and keeps the stored one. NULL here always means "unknown", never
+    -- "known absent" — TMDB omits posters/runtimes/dates for entries that have them
+    -- elsewhere — so overwriting stored knowledge with an unknown would be data loss:
+    -- the lazy search upsert (poster-less live summaries) cannot clear enriched rows,
+    -- the pre-warm cannot clear a display title a search observed, and a degraded
+    -- pre-warm (details failed) no longer wipes a runtime a prior pass resolved.
+    -- Passing an explicit non-NULL value always sets it — the future pre-warm
+    -- slate-marking path sets flags TRUE/FALSE per slate the same way. The conflict
+    -- branch references the $N parameter (not
+    -- EXCLUDED) because EXCLUDED already carries the insert-path COALESCE to FALSE;
+    -- referencing EXCLUDED would turn a NULL "don't know" into FALSE on every
+    -- conflict. $1/$2/$5 keep their exact S25/S55 overwrite semantics
+    -- (normalized_title is the stable join key; genres '{}' already reads as
+    -- "no data yet", and the search path skips its upsert rather than writing it).
     INSERT INTO tmdb_movie
-      (tmdb_id, normalized_title, poster_path, runtime_minutes, genres, updated_at)
+      (tmdb_id, normalized_title, poster_path, runtime_minutes, genres, release_date,
+       is_now_playing, is_upcoming, title, updated_at)
     VALUES
-      ($1::int, $2::text, $3::text, $4::int, $5::text[], now())
+      ($1::int, $2::text, $3::text, $4::int, $5::text[], $6::date,
+       COALESCE($7::boolean, FALSE), COALESCE($8::boolean, FALSE), $9::text, now())
     ON CONFLICT (tmdb_id) DO UPDATE SET
       normalized_title = EXCLUDED.normalized_title,
-      poster_path = EXCLUDED.poster_path,
-      runtime_minutes = EXCLUDED.runtime_minutes,
+      poster_path = COALESCE($3::text, tmdb_movie.poster_path),
+      runtime_minutes = COALESCE($4::int, tmdb_movie.runtime_minutes),
       genres = EXCLUDED.genres,
+      release_date = COALESCE($6::date, tmdb_movie.release_date),
+      is_now_playing = COALESCE($7::boolean, tmdb_movie.is_now_playing),
+      is_upcoming = COALESCE($8::boolean, tmdb_movie.is_upcoming),
+      title = COALESCE($9::text, tmdb_movie.title),
       updated_at = now()
-    RETURNING tmdb_id, normalized_title, poster_path, runtime_minutes, genres, updated_at`,
+    RETURNING tmdb_id, normalized_title, poster_path, runtime_minutes, genres,
+              -- S63: release_date::text (the local_date::text precedent below) so the
+              -- row type's string is honest — bare date would arrive as a JS Date.
+              release_date::text AS release_date, is_now_playing, is_upcoming, title, updated_at`,
 });
 
 /* -------------------------------------------------- S25 — TMDB metadata fetch (ADR 0019) */
@@ -702,6 +740,28 @@ export const RUN_CREATE = define({
         EXCLUDED.dispatch_rank
       )
     RETURNING run_id`,
+});
+/**
+ * S63.5 (ADR 0100, "Explicit On-Demand Refresh") — the on-demand refresh poll read:
+ * `provider_run` state by `run_id`. The staged SCHEDULE_RESOLUTION run executes
+ * asynchronously in the fetch-worker process, so `theatres.refreshSchedule` polls this
+ * until the run reaches a terminal state (`DONE | FAILED | CANCELLED` — the exact
+ * state machine B2 leases and B5/B5F terminalize) or its bound elapses.
+ *
+ * A plain SELECT with always-zero-or-one-row semantics: zero rows means no
+ * `provider_run` row exists for that run_id (the staging insert never committed).
+ * Reads carry no `RETURNING` — that convention is for INSERT/UPDATE crash boundaries;
+ * reads like `THEATRE_READ_BY_ID` carry none either.
+ */
+export const PROVIDER_RUN_READ_BY_ID = define({
+  boundary: "B5(read)",
+  name: "PROVIDER_RUN_READ_BY_ID",
+  zeroRowsMeans: "no provider_run row exists for that run_id.",
+  params: ["run_id"],
+  text: `
+    SELECT run_id, state, fail_cause
+    FROM provider_run
+    WHERE run_id = $1::text`,
 });
 
 /* --------------------------------------------------------- S22 — recheck */
@@ -2534,6 +2594,76 @@ export const SCHEDULE_RANGE_READ = define({
       AND rk.local_date >= $3::date
       AND rk.local_date <= $4::date
     ORDER BY rk.local_date, p.showtime_id`,
+});
+
+/* ------------------------------------------- S63 — movie search slate + AMC lookup */
+
+/**
+ * `movies.search` default (empty-query) slate read (S63.4, ADR 0100 §Cold Mode): the
+ * pre-warmed North American theatrical slate — local `tmdb_movie` rows flagged
+ * `is_now_playing` or `is_upcoming` by migration 025 — LEFT JOINed against the
+ * AMC-observed `movie` catalogue on the exact key `MOVIE_READ_BY_ID` uses
+ * (`lower(movie.title) = t.normalized_title`), so the route can badge
+ * `VERIFIED_AMC` without a second round trip. Now-playing sorts before upcoming,
+ * then alphabetical: deterministic across calls, no invented relevance score.
+ * `m.movie_id` in the ORDER BY keeps multi-provider title collisions in a stable
+ * order; the route dedupes by `tmdb_id` keeping the first row.
+ */
+export const TMDB_SLATE_BROWSE = define({
+  boundary: "catalogue",
+  name: "TMDB_SLATE_BROWSE",
+  zeroRowsMeans: "no tmdb_movie row is currently flagged on the now_playing/upcoming slate.",
+  params: ["limit"],
+  text: `
+    SELECT t.tmdb_id, t.normalized_title, t.title AS tmdb_title, t.poster_path,
+           t.runtime_minutes, t.genres, t.release_date::text AS release_date,
+           t.is_now_playing, t.is_upcoming, t.updated_at,
+           m.movie_id AS amc_movie_id, m.title AS amc_title
+    FROM tmdb_movie t
+    LEFT JOIN movie m ON lower(m.title) = t.normalized_title
+    WHERE t.is_now_playing OR t.is_upcoming
+    ORDER BY t.is_now_playing DESC, t.normalized_title, t.tmdb_id, m.movie_id
+    LIMIT $1::int`,
+});
+
+/**
+ * `movies.search` AMC cross-reference (S63.4): batch-resolves which of the caller's
+ * normalized titles (`trim().toLowerCase()`, the `normalizeTitle` key both TMDB write
+ * paths store) the AMC catalogue has ever observed. One statement for the whole
+ * candidate set — never a per-title loop. A matched title is `VERIFIED_AMC`; an
+ * unmatched one falls through to the slate check (`WIDE_THEATRICAL`) or the
+ * general-search badge (`UNVERIFIED`).
+ */
+export const MOVIE_READ_BY_NORMALIZED_TITLES = define({
+  boundary: "catalogue",
+  name: "MOVIE_READ_BY_NORMALIZED_TITLES",
+  zeroRowsMeans: "none of the supplied titles has ever been observed in the AMC catalogue.",
+  params: ["normalized_titles"],
+  text: `
+    SELECT movie_id, provider_id, title, first_seen_at, last_seen_at
+    FROM movie
+    WHERE lower(title) = ANY($1::text[])`,
+});
+
+/**
+ * `movies.search` AMC special-event lookup (S63.4, ADR 0100 §Cold Mode): substring
+ * match over the AMC-observed `movie` catalogue for non-TMDB programming (Screen
+ * Unseen, Met Opera Live, Fathom Events) at zero egress cost. Mirrors
+ * `THEATRE_NAME_SEARCH`: the caller escapes LIKE metacharacters and wraps the
+ * substring pattern, ILIKE keeps it case-insensitive, and there is deliberately no
+ * SQL-side LIMIT — the route caps after merging with the live TMDB hits so the
+ * merge sees the full match set (the S20.2/S20.4 discipline).
+ */
+export const MOVIE_TITLE_SEARCH = define({
+  boundary: "catalogue",
+  name: "MOVIE_TITLE_SEARCH",
+  zeroRowsMeans: "no AMC-observed title matches the caller's substring.",
+  params: ["pattern"],
+  text: `
+    SELECT movie_id, provider_id, title, first_seen_at, last_seen_at
+    FROM movie
+    WHERE title ILIKE $1::text
+    ORDER BY title, movie_id`,
 });
 
 /** Every statement above, in declaration order. Tier 1 prepares all of them. */

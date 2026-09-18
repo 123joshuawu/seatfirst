@@ -66,21 +66,21 @@ async function createEmptyDatabase(): Promise<{ name: string; url: string; clien
 }
 
 describe("tier 0 — ledger: first apply records all", () => {
-  it("first apply on empty DB applies all 24 and records 24 ledger rows", async () => {
+  it("first apply on empty DB applies all 25 and records 25 ledger rows", async () => {
     const { client } = await createEmptyDatabase();
     try {
       const applied = await applyMigrations(client);
       expect(applied).toEqual([...MIGRATIONS]);
-      expect(applied).toHaveLength(24);
+      expect(applied).toHaveLength(25);
 
       const ledger = await appliedMigrations(client);
-      expect(ledger).toHaveLength(24);
+      expect(ledger).toHaveLength(25);
       expect(new Set(ledger)).toEqual(new Set(MIGRATIONS));
 
       const { rows } = await client.query(
         `SELECT count(*)::int AS n FROM ${SCHEMA_MIGRATION_TABLE}`,
       );
-      expect(rows[0].n).toBe(24);
+      expect(rows[0].n).toBe(25);
     } finally {
       await client.end();
     }
@@ -90,7 +90,7 @@ describe("tier 0 — ledger: first apply records all", () => {
     const { client } = await createEmptyDatabase();
     try {
       const first = await applyMigrations(client);
-      expect(first).toHaveLength(24);
+      expect(first).toHaveLength(25);
 
       const second = await applyMigrations(client);
       expect(second).toEqual([]);
@@ -99,7 +99,7 @@ describe("tier 0 — ledger: first apply records all", () => {
       const { rows } = await client.query(
         `SELECT count(*)::int AS n FROM ${SCHEMA_MIGRATION_TABLE}`,
       );
-      expect(rows[0].n).toBe(24);
+      expect(rows[0].n).toBe(25);
     } finally {
       await client.end();
     }
@@ -109,30 +109,32 @@ describe("tier 0 — ledger: first apply records all", () => {
     const { client } = await createEmptyDatabase();
     try {
       const first = await applyMigrations(client);
-      expect(first).toHaveLength(24);
+      expect(first).toHaveLength(25);
       const last = MIGRATIONS[MIGRATIONS.length - 1]!;
-      expect(last).toMatch(/024_/);
-      // 024's DROP FUNCTION/TABLE IF EXISTS are idempotent — unlike 023, no
+      expect(last).toMatch(/025_/);
+      // 025's ADD COLUMN IF NOT EXISTS are idempotent — unlike 023, no
       // pre-revert is needed before re-applying it. Deleting the ledger row is
       // sufficient to make the pending-only property observable.
       await client.query(`DELETE FROM ${SCHEMA_MIGRATION_TABLE} WHERE name = $1`, [last]);
 
       const ledgerBefore = await appliedMigrations(client);
-      expect(ledgerBefore).toHaveLength(23);
+      expect(ledgerBefore).toHaveLength(24);
       expect(ledgerBefore).not.toContain(last);
 
       const second = await applyMigrations(client);
       expect(second).toEqual([last]);
 
       const ledgerAfter = await appliedMigrations(client);
-      expect(ledgerAfter).toHaveLength(24);
+      expect(ledgerAfter).toHaveLength(25);
       expect(new Set(ledgerAfter)).toEqual(new Set(MIGRATIONS));
 
-      // 024 re-ran as a no-op DROP IF EXISTS: both objects stay retired.
+      // 025 re-ran as a guarded no-op: the slate columns are still exactly there.
       const { rows } = await client.query(
-        `SELECT to_regclass('public.restore_sentinel')::text AS regclass`,
+        `SELECT column_name FROM information_schema.columns
+         WHERE table_schema = 'public' AND table_name = 'tmdb_movie'
+           AND column_name IN ('release_date', 'title', 'is_now_playing', 'is_upcoming')`,
       );
-      expect(rows[0].regclass).toBeNull();
+      expect(rows).toHaveLength(4);
     } finally {
       await client.end();
     }
@@ -188,7 +190,7 @@ describe("tier 0 — ledger: verifySchemaVersion", () => {
 
       const ledger = await appliedMigrations(client);
       expect(ledger).toContain("999_future.sql");
-      expect(ledger).toHaveLength(25);
+      expect(ledger).toHaveLength(26);
     } finally {
       await client.end();
     }
@@ -222,7 +224,7 @@ describe("tier 0 — ledger: baseline", () => {
       await expect(baselineMigrations(client)).rejects.toThrow(/empty database/i);
       // Ledger was created by baseline's ensure step, but no names should be recorded
       // because the guard threw before inserts. An empty DB must be migrated, never
-      // baselined, otherwise all 24 files would be permanently skipped.
+      // baselined, otherwise all 25 files would be permanently skipped.
       const { rows } = await client.query(
         `SELECT count(*)::int AS n FROM ${SCHEMA_MIGRATION_TABLE}`,
       );
@@ -240,13 +242,11 @@ describe("tier 0 — ledger: baseline", () => {
       await client.query(`DELETE FROM ${SCHEMA_MIGRATION_TABLE}`);
       const before = await appliedMigrations(client);
       expect(before).toHaveLength(0);
-
       const recorded = await baselineMigrations(client);
-      expect(recorded).toHaveLength(24);
+      expect(recorded).toHaveLength(25);
       expect(new Set(recorded)).toEqual(new Set(MIGRATIONS));
-
       const after = await appliedMigrations(client);
-      expect(after).toHaveLength(24);
+      expect(after).toHaveLength(25);
       expect(new Set(after)).toEqual(new Set(MIGRATIONS));
 
       // Idempotent second baseline inserts nothing.
@@ -280,13 +280,13 @@ describe("tier 0 — ledger: concurrent apply serializes via advisory lock", () 
       // errors — the advisory lock serializes the two runs.
       expect(results).toHaveLength(2);
       const combined = [...results[0], ...results[1]];
-      expect(combined).toHaveLength(24);
+      expect(combined).toHaveLength(25);
       expect(new Set(combined)).toEqual(new Set(MIGRATIONS));
       // Exactly one of the two did the work; the other saw zero pending.
-      expect([results[0].length, results[1].length].sort()).toEqual([0, 24]);
+      expect([results[0].length, results[1].length].sort()).toEqual([0, 25]);
 
       const { rows } = await c1.query(`SELECT count(*)::int AS n FROM ${SCHEMA_MIGRATION_TABLE}`);
-      expect(rows[0].n).toBe(24);
+      expect(rows[0].n).toBe(25);
     } finally {
       await c1.end().catch(() => undefined);
       await c2.end().catch(() => undefined);
