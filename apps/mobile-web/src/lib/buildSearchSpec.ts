@@ -254,6 +254,19 @@ export interface BuildSearchSpecInput {
   whereState?: BuildSearchSpecWhereState | null;
   providerId?: string;
   movieId: string | null;
+  /**
+   * UI42 (ADR 0100 §Cold Mode): the confirmed movie/event title text. Read
+   * from the store's `movie` field when `movieSelectionSource !== null`.
+   * Carries the `titles` leg for custom (universal-search or free-typed)
+   * selections; ignored for `library` picks, which stay ids-only.
+   */
+  movieTitle?: string | null;
+  /**
+   * UI42: which picker confirmed the title. `custom` emits `ids` + `titles`;
+   * `library`/absent keeps the legacy ids-only predicate. Absent preserves
+   * every existing caller exactly.
+   */
+  movieSelectionSource?: "library" | "custom" | null;
   /** UI24 (ADR 0052 §1): the single committed When date selection — canonical
    * sorted unique non-empty theatre-local YYYY-MM-DD strings. The only date
    * input; every submission emits the normalized v2 date scope from it. */
@@ -264,6 +277,23 @@ export interface BuildSearchSpecInput {
   seatPrefs: Record<SeatPrefName, boolean>;
   partySize: number;
   formatPref: FormatPref;
+}
+
+/**
+ * UI42 (ADR 0100): deterministic synthetic movie id for a free-typed custom
+ * event title, so a custom selection without a known provider id still emits
+ * a schema-valid MOVIE predicate (`ids` is `min(1)` in `@seatfirst/core`).
+ * The `titles` leg carries the real match key; the server canonicalizes `ids`
+ * to a known AMC id at admission when a catalog mapping exists.
+ */
+export function customEventMovieId(title: string): string {
+  const slug = title
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g, "-")
+    .replace(/[^a-z0-9-_]/g, "")
+    .slice(0, 80);
+  return `custom:event:${slug || "untitled"}`;
 }
 
 function deriveProviderId(
@@ -335,6 +365,13 @@ function shouldEmitArea(where: BuildSearchSpecWhereState): boolean {
  * resolved movie id is selected, matching UI12.2's requirement that free-typed movie text
  * with no matching live suggestion never reaches the backend.
  *
+ * UI42 (ADR 0100 §Cold Mode): a confirmed custom title (`movieSelectionSource:
+ * "custom"` with a non-blank `movieTitle`) emits `{ kind: "MOVIE", ids, titles:
+ * [title] }` — the hit id when picked from universal search, else a synthetic
+ * `custom:event:…` id — so the evaluator's title-fallback leg can match during
+ * cold schedule resolution. Still fails closed when NEITHER a movieId NOR a
+ * confirmed custom title is present (free-typed, unconfirmed text).
+ *
  * UI18 Phase 1: When `where`/`whereState` is supplied, emits:
  * - `AREA {center, radiusKm, limit}` only for device location with no hand-edit,
  *   radiusKm clamped to DEFAULT_SEARCH_LIMITS.maxAreaRadiusKm and limit set to
@@ -345,7 +382,18 @@ function shouldEmitArea(where: BuildSearchSpecWhereState): boolean {
 export function buildSearchSpec(input: BuildSearchSpecInput): SearchSpec | null {
   const { theatre, movieId, selectedDates, timeOfDay, seatPrefs, partySize, formatPref } = input;
   const whereState = resolveWhereState(input);
-  if (movieId === null) return null;
+  const moviePredicate: PerformancePredicate | null = ((): PerformancePredicate | null => {
+    if (input.movieSelectionSource === "custom") {
+      const title = (input.movieTitle ?? "").trim();
+      if (!title) return null;
+      const ids =
+        movieId !== null && movieId !== undefined ? [movieId] : [customEventMovieId(title)];
+      return { kind: "MOVIE", ids, titles: [title] };
+    }
+    if (movieId === null) return null;
+    return { kind: "MOVIE", ids: [movieId] };
+  })();
+  if (moviePredicate === null) return null;
 
   // Derive providerId and theatres selector
   let providerId: string | null;
@@ -409,7 +457,7 @@ export function buildSearchSpec(input: BuildSearchSpecInput): SearchSpec | null 
           },
         ];
 
-  const whereParts: PerformancePredicate[] = [{ kind: "MOVIE", ids: [movieId] }, ...datePredicates];
+  const whereParts: PerformancePredicate[] = [moviePredicate, ...datePredicates];
   // UI18.10 contiguous-range: selectedBands takes precedence over legacy timeOfDay.
   // UI24 (ADR 0052 §3): Any time emits no TIME_WINDOW; selected bands emit one
   // TIME_WINDOW with the existing ADR 0043 bounds and all seven WeekdaySchema

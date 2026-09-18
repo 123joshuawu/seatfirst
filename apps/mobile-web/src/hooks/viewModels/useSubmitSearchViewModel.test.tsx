@@ -6,14 +6,50 @@ import { buildSearchSpec } from "@/lib/buildSearchSpec";
 import { useSeatfirstStore } from "@/store/seatfirstStore";
 import {
   useSubmitSearchViewModel,
+  type MovieSuggestion,
   type SubmitSearchStart,
   type SubmitSearchViewModel,
 } from "./useSubmitSearchViewModel";
-import { useTheatreMovieSet } from "../useTheatreMovieSet";
+import { clearTheatreMovieCache, useTheatreMovieSet } from "../useTheatreMovieSet";
 import { useFacetCounts, type UseFacetCountsInput } from "../useFacetCounts";
 
+const { mockRefreshMutate, mockQueryClientClear } = vi.hoisted(() => ({
+  mockRefreshMutate: vi.fn<(...args: unknown[]) => unknown>(),
+  mockQueryClientClear: vi.fn<(...args: unknown[]) => unknown>(),
+}));
+vi.mock("@/lib/trpc", () => ({
+  trpcClient: {
+    theatres: {
+      refreshSchedule: { mutate: (...args: unknown[]) => mockRefreshMutate(...args) },
+    },
+  },
+  queryClient: { clear: (...args: unknown[]) => mockQueryClientClear(...args) },
+}));
 vi.mock("../useTheatreMovieSet", () => ({
   useTheatreMovieSet: vi.fn(),
+  clearTheatreMovieCache: vi.fn(),
+}));
+const { mockMovieSearch } = vi.hoisted(() => ({
+  mockMovieSearch: vi.fn<
+    (input?: unknown) => {
+      data: undefined;
+      error: null;
+      isLoading: boolean;
+      isFetching: boolean;
+      refetch: () => void;
+      suggestions: MovieSuggestion[];
+    }
+  >(() => ({
+    data: undefined,
+    error: null,
+    isLoading: false,
+    isFetching: false,
+    refetch: vi.fn(),
+    suggestions: [] as MovieSuggestion[],
+  })),
+}));
+vi.mock("../useMovieSearch", () => ({
+  useMovieSearch: (input?: unknown) => mockMovieSearch(input),
 }));
 vi.mock("../useFacetCounts", () => ({
   useFacetCounts: vi.fn(() => ({
@@ -173,7 +209,15 @@ describe("useSubmitSearchViewModel facet cross-axis bases (ADR 0036 + ADR 0052 Â
 
   beforeEach(() => {
     vi.clearAllMocks();
-    setMovieSet([]);
+    // UI42.8: every selected date carries a cached midday-Pacific showtime, so
+    // the whole scope is warm and facet inputs keep their exact-date scoping.
+    // (A dateless group reads as cold scope and disables the facet hooks.)
+    setMovieSet(
+      ["2026-09-05", "2026-09-06", "2026-09-12"].map((date) => ({
+        showDateTimeUtc: `${date}T19:00:00.000Z`,
+        formatCode: null,
+      })),
+    );
     useSeatfirstStore.setState({
       selectedTheatres: [
         { id: "th_1", providerId: "amc", name: "AMC One", city: "SF", distanceKm: 1.1 },
@@ -565,5 +609,388 @@ describe("useSubmitSearchViewModel in-situ update (UI31 / ADR 0064)", () => {
     captureVm();
     expect(specHash(useSeatfirstStore.getState().pendingSpec)).not.toBe(before);
     expect(specHash(useSeatfirstStore.getState().pendingSpec)).toBe(specHash(expectedDraftSpec()));
+  });
+});
+
+describe("useSubmitSearchViewModel Cold/Hot mode (UI42.1/42.2/42.3)", () => {
+  function setColdMovieSet(): void {
+    mockMovieSet.mockReturnValue({
+      responses: [],
+      movies: [],
+      isFetching: false,
+      isComplete: true,
+      error: null,
+    });
+  }
+
+  function setColdForm(movieState: {
+    movie: string;
+    selectedMovieId: string | null;
+    movieSelectionSource: "library" | "custom" | null;
+  }): void {
+    useSeatfirstStore.setState({
+      screen: "search",
+      error: null,
+      phase: "idle",
+      searchId: null,
+      status: null,
+      serverCoverageSpec: null,
+      pendingSpec: null,
+      previewPlaceholderCount: null,
+      selectedTheatres: [
+        { id: "th_1", providerId: "amc", name: "AMC One", city: "SF", distanceKm: 1.1 },
+      ],
+      selectedDates: ["2026-09-05"],
+      timeOfDay: "All times",
+      selectedBands: [],
+      isCustom: true,
+      whenPreset: "Custom",
+      formatPref: "any",
+      movieFocused: false,
+      movieClearedNotice: null,
+      isCheckingLiveSchedule: false,
+      liveScheduleError: null,
+      ...movieState,
+    });
+  }
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+    mockRefreshMutate.mockReset();
+    mockQueryClientClear.mockClear();
+    setColdMovieSet();
+  });
+
+  it("derives isWarm from cached movie groups (Cold when empty, Hot otherwise)", () => {
+    setColdForm({ movie: "", selectedMovieId: null, movieSelectionSource: null });
+    expect(captureVm().isWarm).toBe(false);
+    setMovieSet([]);
+    expect(captureVm().isWarm).toBe(true);
+  });
+
+  it("Cold Mode unblocks the CTA for a confirmed custom title, bypassing the zero-match gate", () => {
+    setColdForm({ movie: "Met Opera Live", selectedMovieId: null, movieSelectionSource: "custom" });
+    const vm = captureVm();
+    expect(vm.matchingShowtimeCount).toBeNull();
+    expect(vm.searchDisabled).toBe(false);
+    expect(vm.submitButtonLabel).toBe("Find my seats");
+  });
+
+  it("Cold Mode unblocks the CTA for a universal-search hit id", () => {
+    setColdForm({
+      movie: "Nosferatu",
+      selectedMovieId: "tmdb:movie:917496",
+      movieSelectionSource: "custom",
+    });
+    expect(captureVm().searchDisabled).toBe(false);
+  });
+
+  it("Cold Mode keeps the CTA blocked while typing (confirmed nothing yet)", () => {
+    setColdForm({ movie: "Met", selectedMovieId: null, movieSelectionSource: null });
+    const vm = captureVm();
+    expect(vm.searchDisabled).toBe(true);
+    expect(vm.submitButtonLabel).toBe("Choose a movie");
+  });
+
+  it("Hot Mode keeps the zero-match gate (existing behavior unchanged)", () => {
+    setMovieSet([]);
+    setColdForm({ movie: "Dune", selectedMovieId: "mv_dune", movieSelectionSource: "library" });
+    const vm = captureVm();
+    expect(vm.isWarm).toBe(true);
+    expect(vm.matchingShowtimeCount).toBe(0);
+    expect(vm.searchDisabled).toBe(true);
+    expect(vm.submitButtonLabel).toBe("No showtimes match");
+  });
+
+  it("Cold Mode suggestions come from universal search with year/badges", () => {
+    setColdForm({ movie: "nos", selectedMovieId: null, movieSelectionSource: null });
+    mockMovieSearch.mockReturnValue({
+      data: undefined,
+      error: null,
+      isLoading: false,
+      isFetching: false,
+      refetch: vi.fn(),
+      suggestions: [
+        {
+          label: "Nosferatu (2024)",
+          onPress: () => {},
+          posterUrl: null,
+          releaseYear: 2024,
+          badge: null,
+          seenAtAmc: false,
+        },
+        {
+          label: "Met Opera Live",
+          onPress: () => {},
+          posterUrl: null,
+          releaseYear: null,
+          badge: "AMC Event",
+          seenAtAmc: true,
+        },
+      ],
+    });
+    const vm = captureVm();
+    expect(vm.isWarm).toBe(false);
+    expect(vm.movieSuggestions.map((s) => s.label)).toEqual(["Nosferatu (2024)", "Met Opera Live"]);
+    expect(vm.movieSuggestions[1]?.badge).toBe("AMC Event");
+    expect(mockMovieSearch).toHaveBeenCalledWith(
+      expect.objectContaining({ query: "nos", browse: false }),
+    );
+  });
+
+  it("onSelectCustomEvent confirms the free-typed title as a custom selection", () => {
+    setColdForm({
+      movie: "My Mystery Screening",
+      selectedMovieId: null,
+      movieSelectionSource: null,
+    });
+    const vm = captureVm();
+    TestRenderer.act(() => {
+      vm.actions.onSelectCustomEvent("My Mystery Screening");
+    });
+    const s = useSeatfirstStore.getState();
+    expect(s.movie).toBe("My Mystery Screening");
+    expect(s.selectedMovieId).toBeNull();
+    expect(s.movieSelectionSource).toBe("custom");
+    // A confirmed custom title unblocks the CTA.
+    expect(captureVm().searchDisabled).toBe(false);
+  });
+
+  it("submitting a confirmed custom title emits ids + titles (UI42.7)", async () => {
+    setColdForm({
+      movie: "Met Opera Live",
+      selectedMovieId: null,
+      movieSelectionSource: "custom",
+    });
+    const created: unknown[] = [];
+    const vm = captureVm({
+      startSearch: (spec) => {
+        created.push(spec);
+        return Promise.resolve();
+      },
+    });
+    await TestRenderer.act(async () => {
+      vm.actions.startSearch();
+      await Promise.resolve();
+    });
+    expect(created).toHaveLength(1);
+    const spec = created[0] as SearchSpec;
+    if (spec.where.kind !== "AND") throw new Error("expected AND spec");
+    const movie = spec.where.of.find((p) => p.kind === "MOVIE");
+    expect(movie).toEqual({
+      kind: "MOVIE",
+      ids: ["custom:event:met-opera-live"],
+      titles: ["Met Opera Live"],
+    });
+  });
+
+  it("typing without confirming submits nothing (fail-closed)", async () => {
+    setColdForm({ movie: "Met", selectedMovieId: null, movieSelectionSource: null });
+    const created: unknown[] = [];
+    const vm = captureVm({
+      startSearch: (spec) => {
+        created.push(spec);
+        return Promise.resolve();
+      },
+    });
+    await TestRenderer.act(async () => {
+      vm.actions.startSearch();
+      await Promise.resolve();
+    });
+    expect(created).toHaveLength(0);
+  });
+});
+
+describe("useSubmitSearchViewModel live schedule check (UI42.6)", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    mockRefreshMutate.mockReset();
+    mockQueryClientClear.mockClear();
+    mockMovieSet.mockReturnValue({
+      responses: [],
+      movies: [],
+      isFetching: false,
+      isComplete: true,
+      error: null,
+    });
+    useSeatfirstStore.setState({
+      screen: "search",
+      error: null,
+      phase: "idle",
+      searchId: null,
+      status: null,
+      selectedTheatres: [
+        { id: "th_1", providerId: "amc", name: "AMC One", city: "SF", distanceKm: 1.1 },
+      ],
+      movie: "",
+      selectedMovieId: null,
+      movieSelectionSource: null,
+      isCheckingLiveSchedule: false,
+      liveScheduleError: null,
+      selectedDates: ["2026-09-05"],
+      timeOfDay: "All times",
+      selectedBands: [],
+      isCustom: true,
+      whenPreset: "Custom",
+      formatPref: "any",
+    });
+  });
+
+  it("RESOLVED invalidates the movies cache and clears loading", async () => {
+    mockRefreshMutate.mockResolvedValue({ status: "RESOLVED", localDate: "2026-09-05" });
+    const mockClearCache = vi.mocked(clearTheatreMovieCache);
+    const vm = captureVm();
+    expect(vm.isCheckingLiveSchedule).toBe(false);
+    await TestRenderer.act(async () => {
+      vm.onCheckLiveSchedule();
+      await Promise.resolve();
+      await Promise.resolve();
+    });
+    expect(mockRefreshMutate).toHaveBeenCalledWith({ theatreId: "th_1" });
+    expect(captureVm().isCheckingLiveSchedule).toBe(false);
+    expect(captureVm().liveScheduleError).toBeNull();
+    expect(mockClearCache).toHaveBeenCalled();
+    expect(mockQueryClientClear).toHaveBeenCalled();
+  });
+
+  it("FAILED surfaces a generic error and keeps the cache", async () => {
+    mockRefreshMutate.mockResolvedValue({ status: "FAILED", localDate: "2026-09-05" });
+    const mockClearCache = vi.mocked(clearTheatreMovieCache);
+    const vm = captureVm();
+    await TestRenderer.act(async () => {
+      vm.onCheckLiveSchedule();
+      await Promise.resolve();
+      await Promise.resolve();
+    });
+    expect(captureVm().liveScheduleError).not.toBeNull();
+    expect(mockClearCache).not.toHaveBeenCalled();
+    expect(mockQueryClientClear).not.toHaveBeenCalled();
+  });
+
+  it("rejection surfaces a generic error", async () => {
+    mockRefreshMutate.mockRejectedValue(new Error("timeout"));
+    const vm = captureVm();
+    await TestRenderer.act(async () => {
+      vm.onCheckLiveSchedule();
+      await Promise.resolve();
+      await Promise.resolve();
+    });
+    expect(captureVm().liveScheduleError).not.toBeNull();
+    expect(captureVm().isCheckingLiveSchedule).toBe(false);
+  });
+
+  it("holds the loading state while the mutation is in flight", async () => {
+    let release!: (value: unknown) => void;
+    mockRefreshMutate.mockReturnValue(
+      new Promise((resolve) => {
+        release = resolve;
+      }),
+    );
+    const vm = captureVm();
+    TestRenderer.act(() => {
+      vm.onCheckLiveSchedule();
+    });
+    expect(captureVm().isCheckingLiveSchedule).toBe(true);
+    await TestRenderer.act(async () => {
+      release({ status: "RESOLVED", localDate: "2026-09-05" });
+      await Promise.resolve();
+      await Promise.resolve();
+    });
+    expect(captureVm().isCheckingLiveSchedule).toBe(false);
+  });
+
+  it("no-ops without a confirmed theatre", () => {
+    useSeatfirstStore.setState({ selectedTheatres: [] });
+    captureVm().onCheckLiveSchedule();
+    expect(mockRefreshMutate).not.toHaveBeenCalled();
+  });
+});
+
+describe("useSubmitSearchViewModel facet suppression on cold dates (UI42.8)", () => {
+  function facetInputs(): {
+    movie: UseFacetCountsInput | null;
+    format: UseFacetCountsInput | null;
+    date: UseFacetCountsInput | null;
+    time: UseFacetCountsInput | null;
+  } {
+    const calls = mockFacetCounts.mock.calls.slice(-4);
+    expect(calls).toHaveLength(4);
+    const [movieCall, formatCall, dateCall, timeCall] = calls;
+    return {
+      movie: movieCall?.[0] ?? null,
+      format: formatCall?.[0] ?? null,
+      date: dateCall?.[0] ?? null,
+      time: timeCall?.[0] ?? null,
+    };
+  }
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+    useSeatfirstStore.setState({
+      screen: "search",
+      error: null,
+      phase: "idle",
+      searchId: null,
+      status: null,
+      serverCoverageSpec: null,
+      selectedTheatres: [
+        { id: "th_1", providerId: "amc", name: "AMC One", city: "SF", distanceKm: 1.1 },
+      ],
+      movie: "Nosferatu",
+      selectedMovieId: "tmdb:movie:917496",
+      movieSelectionSource: "custom",
+      timeOfDay: "All times",
+      selectedBands: [],
+      isCustom: true,
+      whenPreset: "Custom",
+      formatPref: "any",
+    });
+  });
+
+  it("fully cold scope disables all four facet hooks", () => {
+    mockMovieSet.mockReturnValue({
+      responses: [],
+      movies: [],
+      isFetching: false,
+      isComplete: true,
+      error: null,
+    });
+    useSeatfirstStore.setState({ selectedDates: ["2026-09-05", "2026-09-06"] });
+    captureVm();
+    const { movie, format, date, time } = facetInputs();
+    expect(movie).toBeNull();
+    expect(format).toBeNull();
+    expect(date).toBeNull();
+    expect(time).toBeNull();
+  });
+
+  it("partially cold scope restricts dateScope and DATE candidates to warm dates", () => {
+    // Only D+0 carries a cached showtime; D+2 is cold within the same scope.
+    setMovieSet([{ showDateTimeUtc: "2026-09-05T19:00:00.000Z", formatCode: null }]);
+    useSeatfirstStore.setState({ selectedDates: ["2026-09-05", "2026-09-06"] });
+    captureVm();
+    const { movie, date, time } = facetInputs();
+    const warmOnlyScope = { kind: "DATE_RANGE", from: "2026-09-05", to: "2026-09-05" };
+    expect(movie?.dateScope).toEqual(warmOnlyScope);
+    expect(date?.axes).toEqual([{ kind: "DATE", candidates: ["2026-09-05"] }]);
+    expect(time?.dateScope).toEqual(warmOnlyScope);
+  });
+
+  it("fully warm scope keeps the exact full date scope (no suppression)", () => {
+    setMovieSet(
+      ["2026-09-05", "2026-09-06"].map((d) => ({
+        showDateTimeUtc: `${d}T19:00:00.000Z`,
+        formatCode: null,
+      })),
+    );
+    useSeatfirstStore.setState({ selectedDates: ["2026-09-05", "2026-09-06"] });
+    captureVm();
+    const { movie, date } = facetInputs();
+    expect(movie?.dateScope).toEqual({
+      kind: "DATE_RANGE",
+      from: "2026-09-05",
+      to: "2026-09-06",
+    });
+    expect(date?.axes).toEqual([{ kind: "DATE", candidates: ["2026-09-05", "2026-09-06"] }]);
   });
 });

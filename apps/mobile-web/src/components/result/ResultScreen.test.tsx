@@ -226,6 +226,21 @@ describe("ResultScreen — terminal ranked list (UI15)", () => {
     expect(str).toContain("Widen window");
   });
 
+  it("EMPTY renders the Show what's playing here discovery CTA first (UI42.9)", () => {
+    const str = renderScreen(
+      makeMockVm({
+        answerMode: "EMPTY",
+        emptyCauseLabel: "Too few showtimes match your window",
+        noValidActions: [
+          { label: "Show what's playing here", onPress: () => {} },
+          { label: "Widen window", onPress: () => {} },
+        ],
+      }),
+    );
+    expect(str).toContain("Show what's playing here");
+    expect(str.indexOf("Show what's playing here")).toBeLessThan(str.indexOf("Widen window"));
+  });
+
   it("HEDGED keeps its mode note (UI15.6)", () => {
     const str = renderScreen(
       makeMockVm({

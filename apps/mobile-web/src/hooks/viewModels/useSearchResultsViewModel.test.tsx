@@ -20,11 +20,16 @@ import {
   useSearchResultsViewModel,
   type SearchResultsViewModel,
 } from "./useSearchResultsViewModel";
+import { clearTheatreMovieCache } from "../useTheatreMovieSet";
 
 // useSearchSubscription pulls in the real SSE/tRPC client; this test only exercises
 // the pure EMPTY-cause derivation below, so its network-facing surface is stubbed.
 vi.mock("../useSearchSubscription", () => ({
   useSearchSubscription: () => ({ startSearch: async () => {}, phase: "idle", searchId: null }),
+}));
+vi.mock("../useTheatreMovieSet", () => ({
+  useTheatreMovieSet: vi.fn(),
+  clearTheatreMovieCache: vi.fn(),
 }));
 
 const mockRecheckShowtime = vi.fn<(input: RecheckInput) => Promise<unknown>>();
@@ -324,5 +329,71 @@ describe("useSearchResultsViewModel auto-open handoff (ADR 0063 §4)", () => {
     expect(mockRecheckShowtime).toHaveBeenCalledTimes(1);
     expect(openURL).toHaveBeenCalledTimes(1);
     expect(openURL).toHaveBeenCalledWith(DEEP_LINK);
+  });
+});
+
+describe("useSearchResultsViewModel Show-what's-playing-here discovery (UI42.9)", () => {
+  beforeEach(() => {
+    vi.mocked(clearTheatreMovieCache).mockClear();
+  });
+
+  function seedNoScheduleMatch(): void {
+    // The wire outcome for a cold title search whose SCHEDULE_RESOLUTION
+    // completes with empty schedules (see NO_SCHEDULE_MATCH_WIRE_CAUSE).
+    useSeatfirstStore.setState({
+      searchId: "srch_cold_title",
+      status: "COMPLETE",
+      answer: makeEmptyAnswer("TOO_FEW_SHOWTIMES", [
+        { kind: "WIDEN_WINDOW", direction: "FULL_DAY" },
+      ]),
+      groups: [],
+      scheduleSkeleton: [],
+      resolved: 0,
+      total: 0,
+    });
+  }
+
+  it("invalidates the theatre movie cache when the no-schedule-match outcome is observed", () => {
+    seedNoScheduleMatch();
+    captureVm();
+    expect(clearTheatreMovieCache).toHaveBeenCalled();
+  });
+
+  it("leads noValidActions with the Show-what's-playing-here primary CTA, keeping suggestions after it", () => {
+    seedNoScheduleMatch();
+    const vm = captureVm();
+    expect(vm.noValidActions).toHaveLength(2);
+    expect(vm.noValidActions[0]?.label).toBe("Show what's playing here");
+    expect(vm.noValidActions[1]?.label).toBeTruthy();
+  });
+
+  it("the CTA returns to the search form with the movie picker focused", () => {
+    seedNoScheduleMatch();
+    useSeatfirstStore.setState({
+      screen: "result",
+      movieFocused: false,
+      selectedShowtimeIdx: 3,
+    });
+    const vm = captureVm();
+    vm.noValidActions[0]?.onPress();
+    const s = useSeatfirstStore.getState();
+    expect(s.screen).toBe("search");
+    expect(s.movieFocused).toBe(true);
+    expect(s.selectedShowtimeIdx).toBeNull();
+  });
+
+  it("leaves other EMPTY causes alone: no invalidation, no discovery CTA", () => {
+    useSeatfirstStore.setState({
+      searchId: "srch_soldout",
+      status: "COMPLETE",
+      answer: makeEmptyAnswer("SOLD_OUT", [{ kind: "WIDEN_WINDOW", direction: "FULL_DAY" }]),
+      groups: [],
+      scheduleSkeleton: [],
+      resolved: 1,
+      total: 1,
+    });
+    const vm = captureVm();
+    expect(clearTheatreMovieCache).not.toHaveBeenCalled();
+    expect(vm.noValidActions.map((a) => a.label)).not.toContain("Show what's playing here");
   });
 });

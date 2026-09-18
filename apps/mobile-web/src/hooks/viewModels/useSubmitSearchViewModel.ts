@@ -4,11 +4,17 @@ import type { FormatPref, SeatPrefName } from "@/types/placement";
 import type { ChipItem } from "@/types/ui";
 import type { SearchSpec } from "@seatfirst/core";
 import { localDateString, MOVIE_BROWSE_SPAN_DAYS } from "@/lib/dates";
-import { buildSearchSpec, summarizeMovieWindow } from "@/lib/buildSearchSpec";
+import {
+  buildSearchSpec,
+  showtimeMatchesWindow,
+  summarizeMovieWindow,
+} from "@/lib/buildSearchSpec";
 import { isRecord, readTrpcErrorCode } from "@/lib/errorEnvelope";
 import { useSeatfirstStore } from "@/store/seatfirstStore";
-import { useTheatreMovieSet } from "../useTheatreMovieSet";
+import { clearTheatreMovieCache, useTheatreMovieSet } from "../useTheatreMovieSet";
 import { useFacetCounts } from "../useFacetCounts";
+import { useMovieSearch } from "../useMovieSearch";
+import { queryClient, trpcClient } from "@/lib/trpc";
 import { CAPACITY_CEILING_EXCEEDED, DEFAULT_SEARCH_LIMITS, specHash } from "@seatfirst/core";
 import {
   admissionRejectedLabel as formatAdmissionRejectedLabel,
@@ -24,6 +30,9 @@ export interface MovieSuggestion {
   label: string;
   onPress: () => void;
   posterUrl?: string | null;
+  releaseYear?: number | null;
+  badge?: string | null; // "AMC Event" | "May not be playing here" | null
+  seenAtAmc?: boolean;
 }
 
 const SEAT_PREF_NAMES: SeatPrefName[] = ["Centered", "Aisle", "Avoid front"];
@@ -76,6 +85,14 @@ export interface SubmitSearchViewModel {
   movieIsSearching: boolean;
   movieSearchError: string | null;
   movieClearedNotice: string | null;
+  /** UI42.1 (ADR 0100): Cold vs Hot headline — true iff ≥1 cached movie group. */
+  isWarm: boolean;
+  /** UI42.6: on-demand live-schedule check in flight. */
+  isCheckingLiveSchedule: boolean;
+  /** UI42.6: generic failure state when refreshSchedule fails or rejects. */
+  liveScheduleError: string | null;
+  /** UI42.6: footer CTA — warms D+0 via refreshSchedule, then invalidates movies. */
+  onCheckLiveSchedule: () => void;
   formatOptions: ChipItem[];
   partySize: number;
   partySizeChips: ChipItem[];
@@ -111,6 +128,8 @@ export interface SubmitSearchViewModel {
     onMovieChange: (text: string) => void;
     onMovieFocus: () => void;
     onMovieBlur: () => void;
+    /** UI42.5 plumbing: confirms the free-typed custom event title. */
+    onSelectCustomEvent: (query: string) => void;
     toggleDetails: () => void;
     startSearch: () => void;
     setFormCollapsed: (collapsed: boolean) => void;
@@ -137,6 +156,12 @@ export function useSubmitSearchViewModel(
     partySize,
     movie,
     selectedMovieId,
+    movieSelectionSource,
+    selectCustomMovieTitle,
+    isCheckingLiveSchedule,
+    liveScheduleError,
+    setCheckingLiveSchedule,
+    setLiveScheduleError,
     movieFocused,
     movieClearedNotice,
     detailsExpanded,
@@ -241,9 +266,22 @@ export function useSubmitSearchViewModel(
     from: movieBrowseFrom,
     to: movieBrowseTo,
   });
-  const movieIsSearching = theaterConfirmed && theatreMovieSet.isFetching;
+  // UI42.1 (ADR 0100): date-scoped warmth — the active scope is Hot iff the
+  // cached set holds ≥1 movie group; zero groups (uncached, stale, or fresh
+  // negative-cache) is Cold Mode with universal movie/event discovery.
+  const isWarm = theatreMovieSet.movies.length > 0;
+  // UI42.3: universal discovery backing Cold Mode suggestions. Browse (empty
+  // query) fires immediately on focus; typed queries debounce in the hook.
+  const movieSearch = useMovieSearch({
+    query: movie,
+    // Focused with fewer than 2 chars is still slate-browse (instant); the
+    // hook debounces only once a typed query (≥2 chars) exists.
+    browse: movieFocused && movie.trim().length < 2,
+  });
+  const movieIsSearching =
+    theaterConfirmed && (isWarm ? theatreMovieSet.isFetching : movieSearch.isFetching);
   const movieSearchError = ((): string | null => {
-    const err = theatreMovieSet.error;
+    const err = isWarm ? theatreMovieSet.error : movieSearch.error;
     if (!err) return null;
     const code = readTrpcErrorCode(err);
     if (code === "NOT_FOUND") return "Theatre not found";
@@ -257,16 +295,22 @@ export function useSubmitSearchViewModel(
   const selectedMovieGroup =
     theatreMovieSet.movies.find((group) => group.movieId === selectedMovieId) ?? null;
   useEffect(() => {
+    // UI42: custom (universal-search / free-typed) picks are never in the
+    // cached catalogue by construction — clearing them here would wipe every
+    // Cold Mode selection the moment the set completes. Only library picks
+    // that vanish from a complete set get cleared.
+    if (movieSelectionSource === "custom") return;
     if (!theatreMovieSet.isComplete || selectedMovieId === null || selectedMovieGroup !== null) {
       return;
     }
     useSeatfirstStore.setState({
       movie: "",
       selectedMovieId: null,
+      movieSelectionSource: null,
       movieFocused: false,
       movieClearedNotice: "That movie is not playing at the selected theatres, so it was cleared.",
     });
-  }, [selectedMovieGroup, selectedMovieId, theatreMovieSet.isComplete]);
+  }, [selectedMovieGroup, selectedMovieId, theatreMovieSet.isComplete, movieSelectionSource]);
   // UI24 (ADR 0052 §7): matchingShowtimeCount (which gates searchDisabled below)
   // consumes the identical committed `selectedDates` set that buildSearchSpec
   // submits — local count, facet, preview, and create can never disagree on
@@ -318,6 +362,11 @@ export function useSubmitSearchViewModel(
           isHandEdited: store.theatreListHandPruned,
         },
         movieId: selectedMovieId,
+        // UI42: the confirmed title + source let buildSearchSpec emit the
+        // titles leg for custom picks; null title while typing keeps it
+        // fail-closed (spec null) exactly like a cleared movieId.
+        movieTitle: movieSelectionSource !== null ? movie : null,
+        movieSelectionSource,
         selectedDates,
         timeOfDay,
         selectedBands,
@@ -333,6 +382,8 @@ export function useSubmitSearchViewModel(
       store.whereLimit,
       store.theatreListHandPruned,
       selectedMovieId,
+      movie,
+      movieSelectionSource,
       selectedDates,
       timeOfDay,
       selectedBands,
@@ -372,26 +423,63 @@ export function useSubmitSearchViewModel(
   // active scope on every path. No DATE_SCOPE-axis chip is rendered.
   const facetNow = new Date();
   const quickDayCandidates = resolveQuickDayIsos({ selectedDates, whenPreset, now: facetNow });
-  const activeDateScope = resolveActiveDateScope({ selectedDates, whenPreset, now: facetNow });
+  // UI42.8 (ADR 0100 §Date Switching + ADR 0036): per-date warmth within the
+  // active scope. A selected date is warm iff ≥1 cached showtime falls on it
+  // (theatre-local date membership — filters deliberately ignored, this is
+  // cache presence, not a filter match). Fully cold scope (or Cold Mode)
+  // disables all four facet hooks so counts come back empty and ChipRow
+  // renders neutral chips; partially cold scopes restrict the facet dateScope
+  // (and DATE candidates) to warm dates so warm chips keep honest counts
+  // while cold dates render neutral.
+  const warmDateSet = useMemo(() => {
+    const warm = new Set<string>();
+    for (const date of selectedDates) {
+      const hasCachedShowtime = theatreMovieSet.movies.some((group) =>
+        group.entries.some((entry) =>
+          entry.group.showtimes.some((showtime) =>
+            showtimeMatchesWindow(showtime.showDateTimeUtc, entry.timezone, [date], "All times"),
+          ),
+        ),
+      );
+      if (hasCachedShowtime) warm.add(date);
+    }
+    return warm;
+  }, [theatreMovieSet.movies, selectedDates]);
+  const warmSelectedDates = useMemo(
+    () => selectedDates.filter((date) => warmDateSet.has(date)),
+    [selectedDates, warmDateSet],
+  );
+  const facetDateScope =
+    warmSelectedDates.length > 0
+      ? resolveActiveDateScope({ selectedDates: warmSelectedDates, whenPreset, now: facetNow })
+      : null;
+  const warmDateCandidates = useMemo(
+    () => quickDayCandidates.filter((iso) => warmDateSet.has(iso)),
+    [quickDayCandidates, warmDateSet],
+  );
   // Facet cross-axis bases (ADR 0036 Decision 1: each chip count depends on the
   // other selected filters). Every request carries all other active fields the
   // base schema supports while omitting its own varied axis. The wire schema
   // has no selected-format base field, so FORMAT is varied without one.
   const movieFacet = useFacetCounts(
-    facetTheatreIds.length > 0 && movieIdsForFacet.length > 0
+    isWarm && facetTheatreIds.length > 0 && movieIdsForFacet.length > 0 && facetDateScope !== null
       ? {
           theatreIds: facetTheatreIds,
-          ...(activeDateScope ? { dateScope: activeDateScope } : {}),
+          dateScope: facetDateScope,
           timeOfDay,
           axes: [{ kind: "MOVIE", candidates: movieIdsForFacet }],
         }
       : null,
   );
   const formatFacet = useFacetCounts(
-    facetTheatreIds.length > 0 && formatCandidates.length > 0 && selectedMovieId !== null
+    isWarm &&
+      facetTheatreIds.length > 0 &&
+      formatCandidates.length > 0 &&
+      selectedMovieId !== null &&
+      facetDateScope !== null
       ? {
           theatreIds: facetTheatreIds,
-          ...(activeDateScope ? { dateScope: activeDateScope } : {}),
+          dateScope: facetDateScope,
           timeOfDay,
           movieId: selectedMovieId,
           axes: [{ kind: "FORMAT", candidates: formatCandidates }],
@@ -399,22 +487,25 @@ export function useSubmitSearchViewModel(
       : null,
   );
   const dateFacet = useFacetCounts(
-    facetTheatreIds.length > 0 && selectedMovieId !== null
+    isWarm &&
+      facetTheatreIds.length > 0 &&
+      selectedMovieId !== null &&
+      warmDateCandidates.length > 0
       ? {
           theatreIds: facetTheatreIds,
           movieId: selectedMovieId,
           timeOfDay,
-          axes: [{ kind: "DATE", candidates: quickDayCandidates }],
+          axes: [{ kind: "DATE", candidates: warmDateCandidates }],
         }
       : null,
   );
   const timeOfDayFacet = useFacetCounts(
-    facetTheatreIds.length > 0 && activeDateScope !== null && selectedMovieId !== null
+    isWarm && facetTheatreIds.length > 0 && facetDateScope !== null && selectedMovieId !== null
       ? {
           theatreIds: facetTheatreIds,
           movieId: selectedMovieId,
           axes: [{ kind: "TIME_OF_DAY", candidates: ["morning", "afternoon", "evening", "late"] }],
-          dateScope: activeDateScope,
+          dateScope: facetDateScope,
         }
       : null,
   );
@@ -492,12 +583,20 @@ export function useSubmitSearchViewModel(
   // stays disabled until the draft actually diverges from serverCoverageSpec
   // — resubmitting an unedited form would create a redundant duplicate search
   // instead of the in-situ update this button is for.
+  // UI42.2 (ADR 0100): a confirmed movie/event selection is either a resolved
+  // library id or a confirmed custom title (universal-search hit or free-typed
+  // event). Still-typing text (source null) keeps the CTA blocked.
+  const hasMovieSelection =
+    selectedMovieId !== null || (movieSelectionSource === "custom" && movie.trim().length > 0);
   const searchDisabled =
     !movie.trim() ||
     !theaterConfirmed ||
-    selectedMovieId === null ||
+    !hasMovieSelection ||
     admissionRejected !== null ||
-    (matchingShowtimeCount !== null && matchingShowtimeCount === 0) ||
+    // In Cold Mode client-side window counting is meaningless (no cached
+    // schedule), so the zero-match gate is bypassed once Theatre + Movie/Event
+    // + Date Scope are present. Hot Mode keeps the existing behavior.
+    (isWarm && matchingShowtimeCount !== null && matchingShowtimeCount === 0) ||
     (store.serverCoverageSpec !== null && !isUpdateCandidate);
 
   const hasSelections = !!movie.trim() || theaterConfirmed;
@@ -548,7 +647,7 @@ export function useSubmitSearchViewModel(
     matchingShowtimeCount !== null && selectedTheatres.length > 0 ? selectedTheatres.length : null;
   const submitButtonLabel = !theaterConfirmed
     ? "Choose where to look"
-    : !movie.trim() || selectedMovieId === null
+    : !movie.trim() || !hasMovieSelection
       ? "Choose a movie"
       : isUpdateCandidate
         ? "Update search"
@@ -577,7 +676,7 @@ export function useSubmitSearchViewModel(
   // before the scan runs.
   const ctaSubtext = !theaterConfirmed
     ? "Choose a theatre to see how many showtimes match."
-    : !movie.trim() || selectedMovieId === null
+    : !movie.trim() || !hasMovieSelection
       ? `${selectedTheatres.length} ${selectedTheatres.length === 1 ? "theatre" : "theatres"} selected · choose a movie to see showtimes`
       : matchingShowtimeCount !== null
         ? `Seats for ${partySize} · ${quickWindowLabel}`
@@ -620,6 +719,59 @@ export function useSubmitSearchViewModel(
     formatPref === "any" ? "Any format" : formatMetaSel ? formatMetaSel.label : "Format";
   const quickPartyLabel = `${partySize} together`;
 
+  // UI42.5 plumbing: the combobox's free-typed fallback row
+  // (`🔍 Search for event: "[typed text]"`, rendered by MovieField) confirms
+  // whatever text is currently in the field as a custom event title.
+  const onSelectCustomEvent = useCallback(
+    (query: string) => {
+      selectCustomMovieTitle(query);
+    },
+    [selectCustomMovieTitle],
+  );
+
+  // UI42.6: explicit on-demand D+0 warm for the dropdown footer CTA
+  // ("Check today's live schedule"). Bounded server-side (~20s); the client
+  // holds a loading state while in flight and surfaces a generic failure
+  // state when the status is FAILED or the mutation rejects. RESOLVED/EMPTY
+  // drops the cached movies snapshot (module cache + query cache, the same
+  // pair `fixtures/devSeed` clears) so the newly warmed — or
+  // confirmed-still-cold — schedule flows through on the next read.
+  // Checking flag + failure message live in the store (not hook-local) so
+  // they survive re-renders and stay test-observable.
+  const onCheckLiveSchedule = useCallback(() => {
+    const theatreId = selectedTheatres[0]?.id ?? null;
+    if (theatreId === null || useSeatfirstStore.getState().isCheckingLiveSchedule) return;
+    const mutate = (
+      trpcClient.theatres as unknown as {
+        refreshSchedule?: {
+          mutate: (input: { theatreId: string }) => Promise<{ status: string }>;
+        };
+      }
+    ).refreshSchedule?.mutate;
+    if (!mutate) {
+      setLiveScheduleError("Live schedule check is unavailable. Please try again.");
+      return;
+    }
+    setCheckingLiveSchedule(true);
+    setLiveScheduleError(null);
+    void mutate({ theatreId })
+      .then(
+        (result) => {
+          if (result?.status === "FAILED") {
+            setLiveScheduleError("Live schedule check failed. Please try again.");
+            return;
+          }
+          clearTheatreMovieCache();
+          queryClient.clear();
+        },
+        () => {
+          setLiveScheduleError("Live schedule check failed. Please try again.");
+        },
+      )
+      .finally(() => {
+        setCheckingLiveSchedule(false);
+      });
+  }, [selectedTheatres, setCheckingLiveSchedule, setLiveScheduleError]);
   const showSearchForm = flowScreen === "search" || flowScreen === "checking";
   const showLeftCol = !(isMobile && showSearchForm);
   const leftIsGhost = flowScreen === "search" && !hasSelections;
@@ -655,7 +807,9 @@ export function useSubmitSearchViewModel(
           ? "Now playing nearby"
           : "Choose where to see what is playing",
     movieSuggestions: ((): MovieSuggestion[] => {
-      if (theatreMovieSet.movies.length > 0) {
+      // Hot Mode serves the cached catalogue; Cold Mode serves universal
+      // discovery (pre-warmed slate or debounced `movies.search` hits).
+      if (isWarm) {
         const query = movie.trim().toLocaleLowerCase();
         return theatreMovieSet.movies
           .filter((group) => query.length === 0 || group.title.toLocaleLowerCase().includes(query))
@@ -665,11 +819,15 @@ export function useSubmitSearchViewModel(
             posterUrl: tmdbPosterUrl(group.posterPath),
           }));
       }
-      return [];
+      return movieSearch.suggestions;
     })(),
     movieIsSearching,
     movieSearchError,
     movieClearedNotice,
+    isWarm,
+    isCheckingLiveSchedule,
+    liveScheduleError,
+    onCheckLiveSchedule,
     formatOptions,
     partySize,
     partySizeChips,
@@ -708,6 +866,7 @@ export function useSubmitSearchViewModel(
       onMovieChange,
       onMovieFocus,
       onMovieBlur,
+      onSelectCustomEvent,
       toggleDetails,
       startSearch: wrappedStartSearch,
       setFormCollapsed,

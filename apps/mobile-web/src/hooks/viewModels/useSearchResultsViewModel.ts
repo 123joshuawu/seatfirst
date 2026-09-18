@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import type {
   EmptyCause,
   Placement,
@@ -11,6 +11,7 @@ import type {
 import type { LabeledAction } from "@/types/ui";
 import { useSeatfirstStore } from "@/store/seatfirstStore";
 import { useSearchSubscription } from "../useSearchSubscription";
+import { clearTheatreMovieCache } from "../useTheatreMovieSet";
 import {
   emptyCauseLabel,
   haltedBannerLabel,
@@ -29,6 +30,24 @@ import {
   type HandoffPopupWindow,
 } from "@/lib/handoff";
 
+export const SHOW_PLAYING_HERE_LABEL = "Show what's playing here";
+
+/**
+ * UI42.9 (ADR 0100 §5 "Automated Discovery on NO_SCHEDULE_MATCH"): the spec
+ * names the trigger outcome `EMPTY: NO_SCHEDULE_MATCH`, but no such member
+ * exists on the wire — `EmptyCauseSchema` (core result-contracts.ts) and
+ * durability's `deriveRankedAnswer` have no NO_SCHEDULE_MATCH variant, and the
+ * S63 server emits nothing new here. A cold title search whose
+ * SCHEDULE_RESOLUTION completes with empty schedules terminalizes as
+ * `EMPTY: TOO_FEW_SHOWTIMES` (COMPLETE + EMPTY_RESOLVED schedule outcome), so
+ * that is the outcome that drives the "Show what's playing here" flow.
+ */
+const NO_SCHEDULE_MATCH_WIRE_CAUSE: EmptyCause = "TOO_FEW_SHOWTIMES";
+
+function isNoScheduleMatchOutcome(cause: EmptyCause): boolean {
+  return cause === NO_SCHEDULE_MATCH_WIRE_CAUSE;
+}
+
 export type RowProvenance = "RESOLVED_CURRENT" | "RETAINED_DISPLAY_ONLY" | "PENDING_UPDATE";
 export interface DisplayShowtimeRow {
   readonly showtimeId: string;
@@ -38,6 +57,7 @@ export interface DisplayShowtimeRow {
   readonly isTopPick?: boolean;
   readonly canHandoff: boolean;
 }
+
 function deriveProvenance(
   showtimeId: string,
   resolved: boolean,
@@ -112,6 +132,7 @@ export function useSearchResultsViewModel(): SearchResultsViewModel {
     backToSearch,
     changeFormat,
     widenWindow,
+    showPlayingHere,
     seeOtherOptions,
     restart,
     partySize,
@@ -167,8 +188,33 @@ export function useSearchResultsViewModel(): SearchResultsViewModel {
           else if (s.kind === "OTHER_FORMAT") changeFormat();
         },
       }));
+      // UI42.9: the no-schedule-match outcome leads with the 1-click discovery
+      // CTA — the suggestion actions (widen/format) follow unchanged.
+      if (isNoScheduleMatchOutcome(liveAnswer.cause)) {
+        noValidActions = [
+          { label: SHOW_PLAYING_HERE_LABEL, onPress: () => showPlayingHere() },
+          ...noValidActions,
+        ];
+      }
     }
   }
+
+  // UI42.9: the cold search warmed the theatre schedule server-side
+  // (SCHEDULE_RESOLUTION completes even when nothing matches), so drop the
+  // client movie cache as soon as this outcome is observed — returning to the
+  // form via the CTA above refetches the now-warm schedule into Hot Mode.
+  // Keyed on the search identity so a re-render never re-invalidates.
+  const noScheduleMatchKey =
+    liveAnswer !== null &&
+    liveAnswer.mode === "EMPTY" &&
+    isNoScheduleMatchOutcome(liveAnswer.cause) &&
+    store.searchId !== null
+      ? `${store.searchId}:${liveAnswer.cause}`
+      : null;
+  useEffect(() => {
+    if (noScheduleMatchKey === null) return;
+    clearTheatreMovieCache();
+  }, [noScheduleMatchKey]);
 
   // ADR 0041 §6: the Top Pick badge "never affects row order or eligibility for
   // anything else" — every resolved hit row gets the handoff action, not just the

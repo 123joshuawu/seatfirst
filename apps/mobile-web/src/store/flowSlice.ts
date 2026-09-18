@@ -22,6 +22,7 @@ export interface FlowActions {
   backToSearch: () => void;
   changeFormat: () => void;
   widenWindow: () => void;
+  showPlayingHere: () => void;
   restoreRecommendation: () => void;
   selectShowtime: (idx: number) => void;
   continueHandoff: () => void;
@@ -124,6 +125,27 @@ export const createFlowSlice: StateCreator<SeatfirstStore, [], [], FlowSlice> = 
         ...searchInitialState,
       });
     },
+    showPlayingHere: () => {
+      // UI42.9 (ADR 0100 §5): 1-click discovery from an EMPTY no-schedule-match
+      // outcome. Ends the client-side search session like backToSearch (a stale
+      // terminal answer would re-derive the result screen over screen:"search")
+      // and focuses the movie picker so it opens pre-populated with the newly
+      // warmed theatre schedule in Hot Mode. Cross-slice write: movieFocused
+      // lives in searchFormSlice, but all slices share the one Zustand store
+      // instance, so set() reaches it directly. The user's movie selection is
+      // kept — picking its replacement is the point of the flow.
+      set({
+        screen: "search",
+        movieFocused: true,
+        selectedShowtimeIdx: null,
+        // UI42.6 follow-up: drop any stale live-schedule footer state so the
+        // reopened picker starts clean. movieSelectionSource is kept alongside
+        // the kept movie selection it describes.
+        isCheckingLiveSchedule: false,
+        liveScheduleError: null,
+        ...searchInitialState,
+      });
+    },
 
     restoreRecommendation: () => set({ selectedShowtimeIdx: null, elapsedSeconds: 1 }),
 
@@ -155,6 +177,9 @@ export const createFlowSlice: StateCreator<SeatfirstStore, [], [], FlowSlice> = 
         hasShownReplacement: false,
         movie: "",
         selectedMovieId: null,
+        movieSelectionSource: null,
+        isCheckingLiveSchedule: false,
+        liveScheduleError: null,
         theaterQuery: "",
         theaterFocused: false,
         movieClearedNotice: null,

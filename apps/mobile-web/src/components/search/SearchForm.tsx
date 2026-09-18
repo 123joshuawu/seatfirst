@@ -95,6 +95,11 @@ export function SearchForm({ startSearch }: SearchFormProps = {}): ReactElement 
         isMobile={vm.isMobile}
         warmZeroMovieIds={vm.warmZeroMovieIds}
         onWidenWindow={actions.widenWindow}
+        onSelectCustomEvent={actions.onSelectCustomEvent}
+        onCheckLiveSchedule={vm.onCheckLiveSchedule}
+        isCheckingLiveSchedule={vm.isCheckingLiveSchedule}
+        liveScheduleError={vm.liveScheduleError}
+        isWarm={vm.isWarm}
       />
 
       <ChipRow

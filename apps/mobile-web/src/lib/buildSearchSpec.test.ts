@@ -643,3 +643,77 @@ describe("buildSearchSpec time-only TIME_WINDOW (UI24.4)", () => {
     }
   });
 });
+
+describe("buildSearchSpec custom movie titles (UI42.7)", () => {
+  function moviePredicateOf(spec: ReturnType<typeof buildSearchSpec>) {
+    if (!spec || spec.where.kind !== "AND") throw new Error("expected AND spec");
+    const movie = spec.where.of.find((p) => p.kind === "MOVIE");
+    if (!movie || movie.kind !== "MOVIE") throw new Error("expected MOVIE predicate");
+    return movie;
+  }
+
+  it("free-typed custom title without an id emits synthetic ids + titles", () => {
+    const spec = buildSearchSpec({
+      ...baseInput(),
+      theatre: { id: "amc:theatre:832", providerId: "amc" },
+      movieId: null,
+      movieTitle: "Met Opera Live",
+      movieSelectionSource: "custom",
+    })!;
+    const movie = moviePredicateOf(spec);
+    expect(movie.ids).toEqual(["custom:event:met-opera-live"]);
+    expect(movie.titles).toEqual(["Met Opera Live"]);
+  });
+
+  it("universal-search pick keeps the hit id and adds the titles leg", () => {
+    const spec = buildSearchSpec({
+      ...baseInput(),
+      theatre: { id: "amc:theatre:832", providerId: "amc" },
+      movieId: "tmdb:movie:917496",
+      movieTitle: "Nosferatu",
+      movieSelectionSource: "custom",
+    })!;
+    const movie = moviePredicateOf(spec);
+    expect(movie.ids).toEqual(["tmdb:movie:917496"]);
+    expect(movie.titles).toEqual(["Nosferatu"]);
+  });
+
+  it("library picks stay ids-only with no titles key", () => {
+    const spec = buildSearchSpec({
+      ...baseInput(),
+      theatre: { id: "amc:theatre:832", providerId: "amc" },
+      movieId: MOVIE_ID,
+      movieSelectionSource: "library",
+    })!;
+    const movie = moviePredicateOf(spec);
+    expect(movie.ids).toEqual([MOVIE_ID]);
+    expect("titles" in movie).toBe(false);
+  });
+
+  it("fails closed when neither a movieId nor a confirmed custom title is present", () => {
+    expect(
+      buildSearchSpec({
+        ...baseInput(),
+        theatre: { id: "amc:theatre:832", providerId: "amc" },
+        movieId: null,
+      }),
+    ).toBeNull();
+    // Custom source with blank/whitespace title is still-typing, not a selection.
+    expect(
+      buildSearchSpec({
+        ...baseInput(),
+        theatre: { id: "amc:theatre:832", providerId: "amc" },
+        movieId: null,
+        movieTitle: "   ",
+        movieSelectionSource: "custom",
+      }),
+    ).toBeNull();
+  });
+
+  it("customEventMovieId is deterministic and schema-safe", async () => {
+    const { customEventMovieId } = await import("./buildSearchSpec");
+    expect(customEventMovieId("Met Opera Live")).toBe("custom:event:met-opera-live");
+    expect(customEventMovieId("  Met   Opera Live  ")).toBe("custom:event:met-opera-live");
+    expect(customEventMovieId("L'Étranger @ Midnight!")).toBe("custom:event:ltranger--midnight");
+  });
+});

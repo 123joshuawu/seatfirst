@@ -131,6 +131,23 @@ export interface SearchFormState {
   movie: string;
   movieFocused: boolean;
   selectedMovieId: string | null;
+  /**
+   * UI42 (ADR 0100): how the current movie field value was confirmed — `null`
+   * while free-typing or untouched. `library` = picked from the theatre's
+   * cached catalogue (`selectMovie`); `custom` = picked from universal
+   * `movies.search` (TMDB/AMC-event hit) or the free-typed
+   * `🔍 Search for event` fallback (`selectCustomMovieTitle`). Lets the CTA
+   * gate and `buildSearchSpec` distinguish a confirmed custom title from
+   * still-typing text (which must keep the CTA blocked).
+   */
+  movieSelectionSource: "library" | "custom" | null;
+  /**
+   * UI42.6 (ADR 0100): footer-CTA live-schedule check state. Kept in the
+   * store (not hook-local) so the checking flag and the failure message
+   * survive re-renders and are observable by any consumer of the form.
+   */
+  isCheckingLiveSchedule: boolean;
+  liveScheduleError: string | null;
   theaterQuery: string;
   theaterFocused: boolean;
   movieClearedNotice: string | null;
@@ -166,6 +183,17 @@ export interface SearchFormActions {
   onMovieFocus: () => void;
   onMovieBlur: () => void;
   selectMovie: (title: string, movieId: string) => void;
+  /**
+   * UI42 (ADR 0100): confirm a universal-search or free-typed custom event
+   * title. `movieId` carries the `movies.search` hit id (TMDB `tmdb:movie:…`
+   * or AMC-event `amc:movie:…`) when picked from the list, or is omitted for
+   * the free-typed `🔍 Search for event` fallback (the spec layer mints a
+   * synthetic `custom:event:…` id so the MOVIE predicate stays schema-valid).
+   */
+  selectCustomMovieTitle: (title: string, movieId?: string | null) => void;
+  /** UI42.6: live-schedule check flag / failure message setters. */
+  setCheckingLiveSchedule: (checking: boolean) => void;
+  setLiveScheduleError: (message: string | null) => void;
   onTheaterChange: (text: string) => void;
   onTheaterFocus: () => void;
   onTheaterBlur: () => void;
@@ -279,6 +307,9 @@ export const searchFormInitialState: SearchFormState = {
   movie: "",
   movieFocused: false,
   selectedMovieId: null,
+  movieSelectionSource: null,
+  isCheckingLiveSchedule: false,
+  liveScheduleError: null,
   theaterQuery: "",
   theaterFocused: false,
   movieClearedNotice: null,
@@ -351,13 +382,13 @@ export const createSearchFormSlice: StateCreator<SeatfirstStore, [], [], SearchF
     selectFormat: (v) => set({ formatPref: v }),
 
     toggleDetails: () => set((s) => ({ detailsExpanded: !s.detailsExpanded })),
-
+    onMovieFocus: () => set({ movieFocused: true, movieClearedNotice: null }),
     onMovieChange: (text) =>
       // Free-typing always invalidates any prior real suggestion pick (fail-closed;
       // UI12.2). Re-picking from the dropdown restores selectedMovieId via selectMovie.
-      set({ movie: text, selectedMovieId: null }),
-
-    onMovieFocus: () => set({ movieFocused: true, movieClearedNotice: null }),
+      // UI42: it also clears a prior custom confirmation, so typed-but-abandoned
+      // text never reads as a selection downstream (CTA gate, buildSearchSpec).
+      set({ movie: text, selectedMovieId: null, movieSelectionSource: null }),
 
     onMovieBlur: () => {
       // Deferred so a tap on a suggestion row (which also sets movieFocused false)
@@ -373,10 +404,25 @@ export const createSearchFormSlice: StateCreator<SeatfirstStore, [], [], SearchF
       set({
         movie: title,
         selectedMovieId: movieId,
+        movieSelectionSource: "library",
         movieFocused: false,
         movieClearedNotice: null,
       });
     },
+
+    selectCustomMovieTitle: (title, movieId = null) => {
+      if (movieBlurTimeout) clearTimeout(movieBlurTimeout);
+      set({
+        movie: title,
+        selectedMovieId: movieId ?? null,
+        movieSelectionSource: "custom",
+        movieFocused: false,
+        movieClearedNotice: null,
+      });
+    },
+
+    setCheckingLiveSchedule: (checking) => set({ isCheckingLiveSchedule: checking }),
+    setLiveScheduleError: (message) => set({ liveScheduleError: message }),
 
     onTheaterChange: (text) => set({ theaterQuery: text }),
 

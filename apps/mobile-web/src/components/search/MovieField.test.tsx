@@ -313,3 +313,312 @@ describe("PopoverList mobile bottom sheet passthrough", () => {
     renderer.unmount();
   });
 });
+
+function ui42Props(overrides: Record<string, unknown> = {}) {
+  return {
+    theaterConfirmed: true,
+    movieValue: "",
+    movieFocused: true,
+    movieSuggestionsHeader: "Movies",
+    movieSuggestions: [],
+    movieIsSearching: false,
+    movieSearchError: null,
+    movieClearedNotice: null,
+    onGateClick: vi.fn(),
+    onChangeText: vi.fn(),
+    onFocus: vi.fn(),
+    onBlur: vi.fn(),
+    ...overrides,
+  };
+}
+
+describe("MovieField UI42.4 badging", () => {
+  it("renders title with year and AMC Event badge", () => {
+    const renderer = createRenderer(
+      React.createElement(
+        MovieField,
+        ui42Props({
+          movieValue: "Nos",
+          movieSuggestions: [
+            {
+              label: "Nosferatu",
+              onPress: vi.fn(),
+              posterUrl: null,
+              releaseYear: 2024,
+              badge: "AMC Event",
+            },
+          ],
+        }),
+      ),
+    );
+    const jsonStr = JSON.stringify(renderer.toJSON());
+    expect(jsonStr).toContain("Nosferatu (2024)");
+    expect(jsonStr).toContain("AMC Event");
+    renderer.unmount();
+  });
+
+  it("renders the unverified badge without a year suffix when releaseYear is null", () => {
+    const renderer = createRenderer(
+      React.createElement(
+        MovieField,
+        ui42Props({
+          movieValue: "Loc",
+          movieSuggestions: [
+            {
+              label: "Local Premiere",
+              onPress: vi.fn(),
+              posterUrl: null,
+              releaseYear: null,
+              badge: "May not be playing here",
+            },
+          ],
+        }),
+      ),
+    );
+    const jsonStr = JSON.stringify(renderer.toJSON());
+    expect(jsonStr).toContain("Local Premiere");
+    expect(jsonStr).toContain("May not be playing here");
+    expect(jsonStr).not.toContain("Local Premiere (");
+    renderer.unmount();
+  });
+
+  it("renders no badge for wide theatrical releases", () => {
+    const renderer = createRenderer(
+      React.createElement(
+        MovieField,
+        ui42Props({
+          movieValue: "Dun",
+          movieSuggestions: [
+            { label: "Dune: Part Three", onPress: vi.fn(), posterUrl: null, badge: null },
+          ],
+        }),
+      ),
+    );
+    const jsonStr = JSON.stringify(renderer.toJSON());
+    expect(jsonStr).toContain("Dune: Part Three");
+    expect(jsonStr).not.toContain("AMC Event");
+    expect(jsonStr).not.toContain("May not be playing here");
+    renderer.unmount();
+  });
+
+  it("does not double the year when the label already includes it", () => {
+    const renderer = createRenderer(
+      React.createElement(
+        MovieField,
+        ui42Props({
+          movieValue: "Nos",
+          movieSuggestions: [
+            {
+              label: "Nosferatu (2024)",
+              onPress: vi.fn(),
+              posterUrl: null,
+              releaseYear: 2024,
+              badge: null,
+            },
+          ],
+        }),
+      ),
+    );
+    const jsonStr = JSON.stringify(renderer.toJSON());
+    expect(jsonStr).toContain("Nosferatu (2024)");
+    expect(jsonStr).not.toContain("(2024) (2024)");
+    renderer.unmount();
+  });
+
+  it("renders badges in the counts branch and includes them in the accessibility label", () => {
+    const renderer = createRenderer(
+      React.createElement(
+        MovieField,
+        ui42Props({
+          movieValue: "Nos",
+          movieSuggestions: [
+            {
+              label: "Nosferatu",
+              onPress: vi.fn(),
+              posterUrl: null,
+              releaseYear: 2024,
+              badge: "AMC Event",
+            },
+          ],
+          movieCounts: new Map([["Nosferatu", { count: 2, coldTheatreCount: 0 }]]),
+        }),
+      ),
+    );
+    const jsonStr = JSON.stringify(renderer.toJSON());
+    expect(jsonStr).toContain("Nosferatu (2024)");
+    expect(jsonStr).toContain("AMC Event");
+    const option = renderer.root.find(
+      (node) =>
+        typeof node.props.accessibilityLabel === "string" &&
+        node.props.accessibilityLabel.includes("Nosferatu (2024)") &&
+        node.props.accessibilityLabel.includes("AMC Event"),
+    );
+    expect(option).toBeTruthy();
+    renderer.unmount();
+  });
+});
+
+describe("MovieField UI42.5 custom event row", () => {
+  it("renders at the bottom of the list and fires onSelectCustomEvent with trimmed text", () => {
+    const onSelectCustomEvent = vi.fn();
+    const renderer = createRenderer(
+      React.createElement(
+        MovieField,
+        ui42Props({
+          movieValue: "  Fathom Event  ",
+          movieSuggestions: [{ label: "Dune: Part Three", onPress: vi.fn(), posterUrl: null }],
+          onSelectCustomEvent,
+        }),
+      ),
+    );
+    const row = renderer.root.find(
+      (node) => node.props.accessibilityLabel === '🔍 Search for event: "Fathom Event"',
+    );
+    expect(row).toBeTruthy();
+    TestRenderer.act(() => {
+      (row.props as unknown as { onPress: () => void }).onPress();
+    });
+    expect(onSelectCustomEvent).toHaveBeenCalledTimes(1);
+    expect(onSelectCustomEvent).toHaveBeenCalledWith("Fathom Event");
+    // Bottom of the list: renders after the regular suggestions.
+    const jsonStr = JSON.stringify(renderer.toJSON());
+    expect(jsonStr.indexOf("Dune: Part Three")).toBeLessThan(jsonStr.indexOf("Search for event:"));
+    renderer.unmount();
+  });
+
+  it("is hidden when the input is blank", () => {
+    const renderer = createRenderer(
+      React.createElement(
+        MovieField,
+        ui42Props({
+          movieValue: "   ",
+          movieSuggestions: [{ label: "Dune: Part Three", onPress: vi.fn(), posterUrl: null }],
+          onSelectCustomEvent: vi.fn(),
+        }),
+      ),
+    );
+    const jsonStr = JSON.stringify(renderer.toJSON());
+    expect(jsonStr).not.toContain("Search for event:");
+    renderer.unmount();
+  });
+
+  it("is hidden when onSelectCustomEvent is not provided", () => {
+    const renderer = createRenderer(
+      React.createElement(
+        MovieField,
+        ui42Props({
+          movieValue: "Fathom Event",
+          movieSuggestions: [{ label: "Dune: Part Three", onPress: vi.fn(), posterUrl: null }],
+        }),
+      ),
+    );
+    const jsonStr = JSON.stringify(renderer.toJSON());
+    expect(jsonStr).not.toContain("Search for event:");
+    renderer.unmount();
+  });
+});
+
+describe("MovieField UI42.6 live schedule footer", () => {
+  it("renders the footer sentence and fires onCheckLiveSchedule", () => {
+    const onCheckLiveSchedule = vi.fn();
+    const renderer = createRenderer(
+      React.createElement(
+        MovieField,
+        ui42Props({
+          movieValue: "Dun",
+          movieSuggestions: [{ label: "Dune: Part Three", onPress: vi.fn(), posterUrl: null }],
+          onCheckLiveSchedule,
+        }),
+      ),
+    );
+    const jsonStr = JSON.stringify(renderer.toJSON());
+    expect(jsonStr).toContain("Looking for a special event or Fathom screening?");
+    expect(jsonStr).toContain("Check today's live schedule");
+    const cta = renderer.root.find(
+      (node) => node.props.accessibilityLabel === "Check today's live schedule",
+    );
+    TestRenderer.act(() => {
+      (cta.props as unknown as { onPress: () => void }).onPress();
+    });
+    expect(onCheckLiveSchedule).toHaveBeenCalledTimes(1);
+    renderer.unmount();
+  });
+
+  it("shows a disabled loading state when isCheckingLiveSchedule is true", () => {
+    const onCheckLiveSchedule = vi.fn();
+    const renderer = createRenderer(
+      React.createElement(
+        MovieField,
+        ui42Props({
+          movieValue: "Dun",
+          movieSuggestions: [{ label: "Dune: Part Three", onPress: vi.fn(), posterUrl: null }],
+          onCheckLiveSchedule,
+          isCheckingLiveSchedule: true,
+        }),
+      ),
+    );
+    const jsonStr = JSON.stringify(renderer.toJSON());
+    expect(jsonStr).toContain("Checking…");
+    const cta = renderer.root.find(
+      (node) => node.props.accessibilityLabel === "Checking today's live schedule",
+    );
+    expect(cta.props.disabled).toBe(true);
+    expect((cta.props as unknown as { onPress?: () => void }).onPress).toBeUndefined();
+    expect(onCheckLiveSchedule).not.toHaveBeenCalled();
+    renderer.unmount();
+  });
+
+  it("is hidden when onCheckLiveSchedule is not provided", () => {
+    const renderer = createRenderer(
+      React.createElement(
+        MovieField,
+        ui42Props({
+          movieValue: "Dun",
+          movieSuggestions: [{ label: "Dune: Part Three", onPress: vi.fn(), posterUrl: null }],
+        }),
+      ),
+    );
+    const jsonStr = JSON.stringify(renderer.toJSON());
+    expect(jsonStr).not.toContain("Check today's live schedule");
+    renderer.unmount();
+  });
+});
+
+describe("MovieField UI42.6 live schedule error", () => {
+  it("renders the failure line below the footer when liveScheduleError is set", () => {
+    const renderer = createRenderer(
+      React.createElement(
+        MovieField,
+        ui42Props({
+          movieValue: "Dun",
+          movieSuggestions: [{ label: "Dune: Part Three", onPress: vi.fn(), posterUrl: null }],
+          onCheckLiveSchedule: vi.fn(),
+          liveScheduleError: "Couldn't check the live schedule. Please try again.",
+        }),
+      ),
+    );
+    const jsonStr = JSON.stringify(renderer.toJSON());
+    expect(jsonStr).toContain("Couldn't check the live schedule. Please try again.");
+    expect(jsonStr).toContain("Check today's live schedule");
+    const alert = renderer.root.find((node) => node.props.accessibilityRole === "alert");
+    expect(alert).toBeTruthy();
+    renderer.unmount();
+  });
+
+  it("hides the failure line when liveScheduleError is null", () => {
+    const renderer = createRenderer(
+      React.createElement(
+        MovieField,
+        ui42Props({
+          movieValue: "Dun",
+          movieSuggestions: [{ label: "Dune: Part Three", onPress: vi.fn(), posterUrl: null }],
+          onCheckLiveSchedule: vi.fn(),
+          liveScheduleError: null,
+        }),
+      ),
+    );
+    const jsonStr = JSON.stringify(renderer.toJSON());
+    expect(jsonStr).not.toContain("Couldn't check the live schedule");
+    renderer.unmount();
+  });
+});
