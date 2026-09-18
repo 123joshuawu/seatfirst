@@ -166,7 +166,7 @@ function countEligible(
     }
     for (const perf of day.performances) {
       if (performancePolicy(cachedStatus(perf.status)) === "SKIP_SOLD_OUT") continue;
-      if (!matchesMoviePredicate(perf.movieId, where)) continue;
+      if (!matchesMoviePredicate(perf.movieId, perf.title ?? null, where)) continue;
       if (!matchesFormatPredicate(perf.formatCode, where)) continue;
       let matches: boolean;
       try {

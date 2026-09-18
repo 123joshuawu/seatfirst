@@ -300,6 +300,12 @@ export interface ScheduleShowtime {
   readonly distanceKm?: number | null;
   readonly theatreId?: string;
   /**
+   * C4 — observed schedule title for title-based MOVIE predicate matching in the
+   * cold fan-out filter. Optional so older callers/tests that only carry
+   * provider movie IDs keep compiling; absent reads as `null` (id-only match).
+   */
+  readonly movieTitle?: string | null;
+  /**
    * S57 — theatre-local ISO datetime (`YYYY-MM-DDTHH:mm:ss`), computed by the
    * production `scheduleSubscriberFilter` in apps/server (which owns the timezone
    * conversion via `@seatfirst/core`'s `toTheatreLocal`; durability is firewalled

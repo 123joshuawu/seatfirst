@@ -76,9 +76,9 @@ describe("matchesMoviePredicate", () => {
   it("matches only the selected movie", () => {
     const predicate = SearchSpecSchema.parse(baseSpec).where;
 
-    expect(matchesMoviePredicate("amc:movie:1", predicate)).toBe(true);
-    expect(matchesMoviePredicate("amc:movie:2", predicate)).toBe(false);
-    expect(matchesMoviePredicate(null, predicate)).toBe(false);
+    expect(matchesMoviePredicate("amc:movie:1", null, predicate)).toBe(true);
+    expect(matchesMoviePredicate("amc:movie:2", null, predicate)).toBe(false);
+    expect(matchesMoviePredicate(null, null, predicate)).toBe(false);
   });
 
   it("preserves boolean movie constraints while other predicate leaves stay neutral", () => {
@@ -94,8 +94,89 @@ describe("matchesMoviePredicate", () => {
       },
     }).where;
 
-    expect(matchesMoviePredicate("amc:movie:1", predicate)).toBe(true);
-    expect(matchesMoviePredicate("amc:movie:2", predicate)).toBe(false);
+    expect(matchesMoviePredicate("amc:movie:1", null, predicate)).toBe(true);
+    expect(matchesMoviePredicate("amc:movie:2", null, predicate)).toBe(false);
+  });
+
+  it("matches by title when ids do not match", () => {
+    const predicate = SearchSpecSchema.parse({
+      ...baseSpec,
+      where: {
+        kind: "MOVIE",
+        ids: ["amc:movie:1"],
+        titles: ["Dune: Part Two"],
+      },
+    }).where;
+
+    expect(matchesMoviePredicate("amc:movie:9", "Dune: Part Two", predicate)).toBe(true);
+  });
+
+  it("matches titles case-insensitively", () => {
+    const predicate = SearchSpecSchema.parse({
+      ...baseSpec,
+      where: {
+        kind: "MOVIE",
+        ids: ["amc:movie:1"],
+        titles: ["DUNE: PART TWO"],
+      },
+    }).where;
+
+    expect(matchesMoviePredicate("amc:movie:9", "dune: part two", predicate)).toBe(true);
+  });
+
+  it("collapses whitespace when matching titles", () => {
+    const predicate = SearchSpecSchema.parse({
+      ...baseSpec,
+      where: {
+        kind: "MOVIE",
+        ids: ["amc:movie:1"],
+        titles: ["  Dune:   Part  Two  "],
+      },
+    }).where;
+
+    expect(matchesMoviePredicate("amc:movie:9", "Dune: Part Two", predicate)).toBe(true);
+    expect(matchesMoviePredicate("amc:movie:9", "  dune:   PART   two ", predicate)).toBe(true);
+  });
+
+  it("matches by title when movieId is null", () => {
+    const predicate = SearchSpecSchema.parse({
+      ...baseSpec,
+      where: {
+        kind: "MOVIE",
+        ids: ["amc:movie:1"],
+        titles: ["Dune: Part Two"],
+      },
+    }).where;
+
+    expect(matchesMoviePredicate(null, "Dune: Part Two", predicate)).toBe(true);
+  });
+
+  it("matches by title when movieId differs from every entry in ids", () => {
+    const predicate = SearchSpecSchema.parse({
+      ...baseSpec,
+      where: {
+        kind: "MOVIE",
+        ids: ["amc:movie:1", "amc:movie:2"],
+        titles: ["Dune: Part Two"],
+      },
+    }).where;
+
+    expect(matchesMoviePredicate("amc:movie:3", "Dune: Part Two", predicate)).toBe(true);
+  });
+
+  it("returns false when neither id nor title matches", () => {
+    const predicate = SearchSpecSchema.parse({
+      ...baseSpec,
+      where: {
+        kind: "MOVIE",
+        ids: ["amc:movie:1"],
+        titles: ["Dune: Part Two"],
+      },
+    }).where;
+
+    expect(matchesMoviePredicate("amc:movie:9", "Oppenheimer", predicate)).toBe(false);
+    expect(matchesMoviePredicate("amc:movie:9", null, predicate)).toBe(false);
+    expect(matchesMoviePredicate(null, null, predicate)).toBe(false);
   });
 });
 

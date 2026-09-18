@@ -232,7 +232,9 @@ export function createAggregateAnswerHandler(deps: AnswerAssemblerDeps): Aggrega
     const movieAndWindowEligible = rawPerformances.filter((p) => {
       try {
         return (
-          matchesMoviePredicate(p.movieId, spec.where) &&
+          // C4 — the `performance` table stores no title column, so aggregate assembly
+          // matches on canonical provider movie IDs only (title reads as null).
+          matchesMoviePredicate(p.movieId, null, spec.where) &&
           matchesScheduleWindow(p.startsAt, p.timezone, plan)
         );
       } catch {

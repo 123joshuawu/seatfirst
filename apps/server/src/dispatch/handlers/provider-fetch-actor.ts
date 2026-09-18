@@ -236,7 +236,7 @@ export function providerStateSourceFromPool(pool: Pool): ProviderStateSource {
  *   `resolveScheduleWindowPlan` (ambiguous `OR`/`NOT`, duplicate predicates,
  *   missing/multiple ranges or windows, crossing `startLocal > endLocal`, or
  *   empty plan → fail-closed [] as per ADR 0028 amendment 207-216).
- * - Require both `matchesMoviePredicate(movieId, where)` and
+ * - Require both `matchesMoviePredicate(movieId, movieTitle, where)` and
  *   `matchesScheduleWindow(utcInstant, timezone, plan)`. The stored daily
  *   performance rows remain complete; only this search's fetch fan-out is filtered.
  *
@@ -252,7 +252,8 @@ export const scheduleSubscriberFilter: ScheduleSubscriberFilter = (input) => {
       try {
         const utc = st.startsAt.toISOString();
         return (
-          matchesMoviePredicate(st.movieId, spec.where) && matchesScheduleWindow(utc, tz, plan)
+          matchesMoviePredicate(st.movieId, st.movieTitle ?? null, spec.where) &&
+          matchesScheduleWindow(utc, tz, plan)
         );
       } catch {
         return false;
@@ -760,6 +761,9 @@ async function mapNavigationOutcome(
       const showtimes = parsed.performances.map((performance) => ({
         showtimeId: performance.showtimeId,
         movieId: performance.movieId,
+        // C4 — carry the observed schedule title so the subscriber filter can
+        // match cold titles alongside provider movie IDs.
+        movieTitle: performance.movieTitle,
         startsAt: performance.startsAt,
         skipFetch: performancePolicy(performance.status) === "SKIP_SOLD_OUT",
         formatCode: (performance as { formatCode?: string | null }).formatCode ?? null,

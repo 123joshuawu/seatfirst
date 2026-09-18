@@ -849,7 +849,8 @@ export const create = t.procedure
           for (const perf of day.performances) {
             const status = cachedStatus(perf.status);
             if (performancePolicy(status) === "SKIP_SOLD_OUT") continue;
-            if (!matchesMoviePredicate(perf.movieId, normalizedSpec.where)) continue;
+            if (!matchesMoviePredicate(perf.movieId, perf.title ?? null, normalizedSpec.where))
+              continue;
             if (!matchesFormatPredicate(perf.formatCode, normalizedSpec.where)) continue;
             const utcInstant = perf.startsAt.toISOString();
             let matches: boolean;

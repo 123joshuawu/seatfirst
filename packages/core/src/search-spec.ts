@@ -73,6 +73,7 @@ export type TheatreSelector = z.infer<typeof TheatreSelectorSchema>;
 const moviePredicateSchema = z.strictObject({
   kind: z.literal("MOVIE"),
   ids: z.array(nonemptyString).min(1),
+  titles: z.array(nonemptyString).min(1).optional(),
 });
 const attributePredicateSchema = z.strictObject({
   kind: z.literal("ATTRIBUTE"),
@@ -315,8 +316,34 @@ function movieIds(root: PerformancePredicate): readonly string[] {
   }
   return [];
 }
-
 type MoviePredicateProjection = boolean | undefined;
+
+/**
+ * C4 — whitespace-collapsed, case-insensitive title comparison so a cold-mode
+ * user-entered or catalog title matches the observed schedule title despite
+ * casing/whitespace differences.
+ */
+const normalizeTitle = (s: string): string => s.trim().toLowerCase().replace(/\s+/g, " ");
+
+/**
+ * C4 — MOVIE leaf match: provider movie-id match wins first; otherwise fall back
+ * to normalized title comparison when the predicate carries `titles` and the
+ * observed performance carries a title.
+ */
+function matchesMovieLeaf(
+  movieId: string | null,
+  movieTitle: string | null,
+  node: Extract<PerformancePredicate, { kind: "MOVIE" }>,
+): boolean {
+  if (movieId !== null && node.ids.includes(movieId)) {
+    return true;
+  }
+  if (node.titles !== undefined && movieTitle !== null) {
+    const normalizedTarget = normalizeTitle(movieTitle);
+    return node.titles.some((title) => normalizeTitle(title) === normalizedTarget);
+  }
+  return false;
+}
 
 /**
  * Evaluates only the movie-dependent part of a performance predicate.
@@ -329,23 +356,24 @@ type MoviePredicateProjection = boolean | undefined;
  */
 function projectMoviePredicate(
   movieId: string | null,
+  movieTitle: string | null,
   node: PerformancePredicate,
 ): MoviePredicateProjection {
   if (node.kind === "MOVIE") {
-    return movieId !== null && node.ids.includes(movieId);
+    return matchesMovieLeaf(movieId, movieTitle, node);
   }
   if (node.kind === "AND") {
-    const children = node.of.map((child) => projectMoviePredicate(movieId, child));
+    const children = node.of.map((child) => projectMoviePredicate(movieId, movieTitle, child));
     if (children.some((child) => child === false)) return false;
     return children.some((child) => child === true) ? true : undefined;
   }
   if (node.kind === "OR") {
-    const children = node.of.map((child) => projectMoviePredicate(movieId, child));
+    const children = node.of.map((child) => projectMoviePredicate(movieId, movieTitle, child));
     if (children.some((child) => child === true)) return true;
     return children.every((child) => child === false) ? false : undefined;
   }
   if (node.kind === "NOT") {
-    const child = projectMoviePredicate(movieId, node.of);
+    const child = projectMoviePredicate(movieId, movieTitle, node.of);
     return child === undefined ? undefined : !child;
   }
   return undefined;
@@ -353,9 +381,10 @@ function projectMoviePredicate(
 
 export function matchesMoviePredicate(
   movieId: string | null,
+  movieTitle: string | null,
   predicate: PerformancePredicate,
 ): boolean {
-  return projectMoviePredicate(movieId, predicate) ?? true;
+  return projectMoviePredicate(movieId, movieTitle, predicate) ?? true;
 }
 
 type FormatPredicateProjection = boolean | undefined;
