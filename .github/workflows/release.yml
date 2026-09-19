@@ -21,11 +21,18 @@
 #   judged non-trivial, so this workflow ships without a smoke stage rather
 #   than with a broken one.
 #
-# Trigger: push to main only.
+# Trigger: after CI finishes on main, and only if CI succeeded. This workflow
+# used to trigger independently on `push: branches: [main]`, so it could
+# publish images/bundles built from a commit whose tests were still running
+# or had failed. `workflow_run` makes it wait for the CI workflow (by name,
+# see .github/workflows/ci.yml `name:`) to finish on main; the `if:` guard on
+# each job below then checks CI's conclusion before doing any work.
 name: Release — publish images, web bundle (main)
 
 on:
-  push:
+  workflow_run:
+    workflows: ["CI"]
+    types: [completed]
     branches: [main]
 
 # Deploy.yml used `contents: read`. This workflow needs `contents: write` on
@@ -40,7 +47,7 @@ concurrency:
   cancel-in-progress: false
 
 env:
-  IMAGE_TAG: sha-${{ github.sha }}
+  IMAGE_TAG: sha-${{ github.event.workflow_run.head_sha }}
   BASE_IMAGE: ghcr.io/123joshuawu/seatfirst/seatfirst-base
   APP_IMAGE: ghcr.io/123joshuawu/seatfirst/seatfirst-app
   WORKER_IMAGE: ghcr.io/123joshuawu/seatfirst/seatfirst-fetch-worker
@@ -55,8 +62,11 @@ jobs:
   # managed in GHCR settings (public); pushes here inherit it.
   build-images:
     runs-on: ubuntu-latest
+    if: github.event.workflow_run.conclusion == 'success'
     steps:
       - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
 
       - uses: docker/setup-qemu-action@v3
 
@@ -114,8 +124,11 @@ jobs:
   # the workflow artifact (for automation) and the Release asset (for humans).
   web-dist:
     runs-on: ubuntu-latest
+    if: github.event.workflow_run.conclusion == 'success'
     steps:
       - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
 
       - uses: pnpm/action-setup@v4
 
@@ -135,18 +148,18 @@ jobs:
           EXPO_PUBLIC_API_URL: ""
 
       - name: Zip the bundle
-        run: zip -r seatfirst-web-dist-${{ github.sha }}.zip apps/mobile-web/dist
+        run: zip -r seatfirst-web-dist-${{ github.event.workflow_run.head_sha }}.zip apps/mobile-web/dist
 
       - uses: actions/upload-artifact@v4
         with:
-          name: seatfirst-web-dist-${{ github.sha }}.zip
-          path: seatfirst-web-dist-${{ github.sha }}.zip
+          name: seatfirst-web-dist-${{ github.event.workflow_run.head_sha }}.zip
+          path: seatfirst-web-dist-${{ github.event.workflow_run.head_sha }}.zip
 
       - name: Attach the zip as a GitHub Release asset
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh release create "web-dist-${{ github.sha }}" \
-            "seatfirst-web-dist-${{ github.sha }}.zip" \
-            --title "seatfirst-web-dist-${{ github.sha }}" \
-            --notes "Web bundle for ${{ github.sha }}. Images: ${{ env.APP_IMAGE }}:${{ env.IMAGE_TAG }}."
+          gh release create "web-dist-${{ github.event.workflow_run.head_sha }}" \
+            "seatfirst-web-dist-${{ github.event.workflow_run.head_sha }}.zip" \
+            --title "seatfirst-web-dist-${{ github.event.workflow_run.head_sha }}" \
+            --notes "Web bundle for ${{ github.event.workflow_run.head_sha }}. Images: ${{ env.APP_IMAGE }}:${{ env.IMAGE_TAG }}."
