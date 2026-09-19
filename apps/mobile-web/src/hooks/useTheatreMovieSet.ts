@@ -22,8 +22,18 @@ export interface TheatreMovieSetGroup {
 
 const responseCache = new Map<string, TheatreMoviesResponse>();
 
+// UI42.6: `onCheckLiveSchedule` (the dropdown's "Check today's live
+// schedule" CTA) clears this cache on a successful refresh, but a plain
+// `Map.clear()` is invisible to React — nothing re-renders, so the movie
+// list kept showing the stale Cold Mode snapshot until an unrelated prop
+// changed. Cache clears now notify subscribers so every mounted
+// `useTheatreMovieSet` instance knows to refetch. The dev-transport-change
+// listener below is the pre-existing consumer of this same signal.
+const cacheClearListeners = new Set<() => void>();
+
 export function clearTheatreMovieCache(): void {
   responseCache.clear();
+  for (const listener of cacheClearListeners) listener();
 }
 
 function cacheKey(theatreId: string, from: string, to: string): string {
@@ -100,14 +110,21 @@ export function useTheatreMovieSet(options: {
   const [responses, setResponses] = useState<TheatreMoviesResponse[]>([]);
   const [isFetching, setIsFetching] = useState(false);
   const [error, setError] = useState<unknown>(null);
-  const [devVersion, setDevVersion] = useState(0);
+  const [cacheVersion, setCacheVersion] = useState(0);
+
+  useEffect(() => {
+    const listener = (): void => setCacheVersion((v) => v + 1);
+    cacheClearListeners.add(listener);
+    return () => {
+      cacheClearListeners.delete(listener);
+    };
+  }, []);
 
   useEffect(() => {
     if (!isDevTransportEnabled()) return;
     return onDevTransportChange(() => {
       clearTheatreMovieCache();
       setResponses([]);
-      setDevVersion((v) => v + 1);
     });
   }, []);
 
@@ -189,7 +206,7 @@ export function useTheatreMovieSet(options: {
     options.to,
     theatreIds,
     theatreIdsKey,
-    devVersion,
+    cacheVersion,
   ]);
 
   // Keep the existing single-theatre response usable while callers migrate to the

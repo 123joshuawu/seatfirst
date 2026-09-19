@@ -532,7 +532,6 @@ const styles = StyleSheet.create({
   moviesGrid: {
     padding: 10,
     gap: 4,
-    maxHeight: 326,
   },
   movieCard: {
     // Standard list item styling
