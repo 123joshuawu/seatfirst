@@ -1,8 +1,4 @@
-import {
-  DeleteObjectCommand,
-  PutObjectCommand,
-  S3Client,
-} from "@aws-sdk/client-s3";
+import { DeleteObjectCommand, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 
 /**
  * S3 backing store for provider-run diagnostic captures (migration 026).
@@ -30,9 +26,7 @@ function s3(): S3Client {
 }
 
 /** Resolves the capture bucket or throws a fail-loud error naming the env var. */
-export function diagnosticBucketName(
-  env: NodeJS.ProcessEnv = process.env,
-): string {
+export function diagnosticBucketName(env: NodeJS.ProcessEnv = process.env): string {
   const name = env["DIAGNOSTIC_CAPTURE_BUCKET_NAME"];
   if (name === undefined || name === "") {
     throw new Error(

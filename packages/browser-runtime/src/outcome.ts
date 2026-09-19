@@ -116,7 +116,6 @@ export interface RawBlockedDiagnostic {
   readonly screenshot?: Uint8Array;
 }
 
-
 export type NavigationOutcome =
   | Readonly<{
       kind: "SUCCESS";

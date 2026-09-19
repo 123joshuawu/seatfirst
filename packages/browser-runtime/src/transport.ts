@@ -674,9 +674,7 @@ async function runNativeCorridor(args: NativeCorridorArgs): Promise<NavigationOu
       // so the screenshot still has a live Page subject; the post-goto return path
       // awaits the capture (bounded by the corridor deadline) and attaches it.
       pendingRawDiagnostic = captureRawDiagnostic(page, response);
-      void pendingRawDiagnostic
-        .catch(() => undefined)
-        .then(() => page.close().catch(() => {}));
+      void pendingRawDiagnostic.catch(() => undefined).then(() => page.close().catch(() => {}));
       return;
     }
 
@@ -703,9 +701,7 @@ async function runNativeCorridor(args: NativeCorridorArgs): Promise<NavigationOu
       };
       // Same production-only capture contract as the 403 branch above.
       pendingRawDiagnostic = captureRawDiagnostic(page, response);
-      void pendingRawDiagnostic
-        .catch(() => undefined)
-        .then(() => page.close().catch(() => {}));
+      void pendingRawDiagnostic.catch(() => undefined).then(() => page.close().catch(() => {}));
       return;
     }
 
@@ -903,7 +899,6 @@ async function withRawDiagnostic(
   }
   return { ...outcome, rawDiagnostic: diagnostic };
 }
-
 
 // --- S35.11 observation evaluator (fixed, transport-owned; no caller code) ---------------
 

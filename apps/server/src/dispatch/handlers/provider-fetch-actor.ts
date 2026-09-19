@@ -688,7 +688,8 @@ async function captureUpstreamChangedDiagnostic(
   const captureId = `dcap_${randomUUID()}`;
   const bodyS3Key = `UPSTREAM_CHANGED/${runId}/${captureId}-body`;
   try {
-    const body = typeof diagnostic.body === "string" ? diagnostic.body : Buffer.from(diagnostic.body);
+    const body =
+      typeof diagnostic.body === "string" ? diagnostic.body : Buffer.from(diagnostic.body);
     await uploadDiagnosticBlob(bodyS3Key, body, "text/html; charset=utf-8");
     await runStatement<{ capture_id: string }>(deps.pool, DIAGNOSTIC_CAPTURE_INSERT, [
       captureId,

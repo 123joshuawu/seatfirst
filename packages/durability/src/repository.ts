@@ -817,9 +817,7 @@ export async function readRecheckOutcome(
 }
 
 export type DiagnosticCaptureOutcomeKind =
-  | "UPSTREAM_BLOCKED"
-  | "CHALLENGE_REQUIRED"
-  | "UPSTREAM_CHANGED";
+  "UPSTREAM_BLOCKED" | "CHALLENGE_REQUIRED" | "UPSTREAM_CHANGED";
 
 export interface DiagnosticCaptureRow {
   readonly capture_id: string;

@@ -1,9 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import {
-  insertDiagnosticCapture,
-  sweepExpiredDiagnosticCaptures,
-} from "../src/repository.js";
+import { insertDiagnosticCapture, sweepExpiredDiagnosticCaptures } from "../src/repository.js";
 
 import { useDatabase } from "./support/pg.js";
 
@@ -76,10 +73,7 @@ describe("tier 2 — diagnostic capture insert and expiry sweep", () => {
     });
 
     // A cutoff an hour in the future expires both test rows (captured_at <= now).
-    const swept = await sweepExpiredDiagnosticCaptures(
-      db(),
-      new Date(Date.now() + 60 * 60 * 1000),
-    );
+    const swept = await sweepExpiredDiagnosticCaptures(db(), new Date(Date.now() + 60 * 60 * 1000));
     const byId = new Map(swept.map((row) => [row.capture_id, row]));
     expect(byId.get("cap-swept")).toMatchObject({
       run_id: "run-swept",
