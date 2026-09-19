@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { Animated, Easing } from "react-native";
+import { Animated, Easing, Platform } from "react-native";
 import { useIsReduceMotionEnabled } from "@/hooks/useReducedMotion";
 
 /**
@@ -26,7 +26,9 @@ export function useSpinValue(durationMs = 800) {
         toValue: 1,
         duration: durationMs,
         easing: Easing.linear,
-        useNativeDriver: true,
+        // RN Web has no native animation driver; requesting it just logs a console
+        // warning and silently falls back to JS-based animation anyway.
+        useNativeDriver: Platform.OS !== "web",
       }),
     );
     loop.start();
@@ -50,13 +52,13 @@ export function usePulseOpacity(durationMs = 2000) {
           toValue: 0.35,
           duration: durationMs / 2,
           easing: Easing.inOut(Easing.ease),
-          useNativeDriver: true,
+          useNativeDriver: Platform.OS !== "web",
         }),
         Animated.timing(pulse, {
           toValue: 1,
           duration: durationMs / 2,
           easing: Easing.inOut(Easing.ease),
-          useNativeDriver: true,
+          useNativeDriver: Platform.OS !== "web",
         }),
       ]),
     );
@@ -82,7 +84,7 @@ export function useFadeInStyle(durationMs = 300) {
       toValue: 1,
       duration: durationMs,
       easing: Easing.out(Easing.ease),
-      useNativeDriver: true,
+      useNativeDriver: Platform.OS !== "web",
     }).start();
   }, [progress, durationMs, reduceMotion]);
   return {
