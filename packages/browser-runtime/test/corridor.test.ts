@@ -724,9 +724,9 @@ describe.skipIf(chromeExecutable === null)(
         }
         expect(outcome.classification).toBe("AMC_INITIAL");
         expect(outcome.hops.length).toBe(1);
-        expect(outcome.hops[0].classification).toBe("AMC_INITIAL");
-        expect(outcome.hops[0].status).toBe(200);
-        expect(typeof outcome.hops[0].durationMs).toBe("number");
+        expect(outcome.hops[0]!.classification).toBe("AMC_INITIAL");
+        expect(outcome.hops[0]!.status).toBe(200);
+        expect(typeof outcome.hops[0]!.durationMs).toBe("number");
         expect(outcome.payload.finalStatus).toBe(200);
         expect(outcome.payload.documentHtml).toContain("synthetic subresource response");
         expect(subresourceServer.requests).toContain("/movies");
