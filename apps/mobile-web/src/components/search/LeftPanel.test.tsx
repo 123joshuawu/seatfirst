@@ -1,3 +1,4 @@
+import { AppText } from "@/components/core/AppText";
 import React from "react";
 import TestRenderer from "react-test-renderer";
 import { describe, expect, it, vi } from "vitest";
@@ -72,6 +73,13 @@ describe("LeftPanel poster (confirmation card, State 2)", () => {
     const el = renderer.toJSON() as unknown as Record<string, unknown>;
     expect(findImage(el)).toBeNull();
     expect(JSON.stringify(el)).toContain("Dune: Part Three");
+    // monogram glyph: title initial ("D") centered over the untouched stripe via
+    // AppText, in the stripe's muted palette (#766f64) — exactly one such node.
+    const monograms = renderer.root
+      .findAllByType(AppText)
+      .filter((n) => n.props.children === "D");
+    expect(monograms).toHaveLength(1);
+    expect(JSON.stringify(monograms[0]!.props.style)).toContain("766f64");
   });
 });
 

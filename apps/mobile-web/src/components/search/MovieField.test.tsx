@@ -3,6 +3,7 @@ import TestRenderer from "react-test-renderer";
 import { Image } from "react-native";
 import { describe, expect, it, vi } from "vitest";
 import { MovieField } from "./MovieField";
+import { AppText } from "@/components/core/AppText";
 import { PopoverList } from "./PopoverList";
 
 function createRenderer(el: React.ReactElement): TestRenderer.ReactTestRenderer {
@@ -114,8 +115,13 @@ describe("MovieField poster (picker suggestions)", () => {
     expect(jsonStr).toContain("No Poster Film");
     // neutral striped fallback uses LeftPanel's treatment colors (#e9e5dd / #ddd7cb)
     expect(jsonStr).toContain("e9e5dd");
-    // accessibility still intact
-    expect(jsonStr).toContain("menuitem");
+    // monogram glyph: title initial ("N") centered over the stripe via AppText,
+    // in the stripe's muted palette (#766f64) — exactly one such node.
+    const monograms = renderer.root
+      .findAllByType(AppText)
+      .filter((n) => n.props.children === "N");
+    expect(monograms).toHaveLength(1);
+    expect(JSON.stringify(monograms[0]!.props.style)).toContain("766f64");
     renderer.unmount();
   });
 

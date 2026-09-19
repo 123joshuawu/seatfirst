@@ -8,16 +8,33 @@ import { AutocompleteFieldShell, AutocompletePopover } from "@/components/core/A
 import { EyebrowLabel } from "@/components/core/EyebrowLabel";
 import { getFacetDisplay, shouldDimFacet } from "@/lib/facetCounts";
 
-function MoviePoster({ posterUrl }: { posterUrl: string | null | undefined }): ReactElement {
+function MoviePoster({
+  posterUrl,
+  title,
+}: {
+  posterUrl: string | null | undefined;
+  title: string;
+}): ReactElement {
   const [failed, setFailed] = useState(false);
   if (posterUrl == null || posterUrl === "" || failed) {
+    // Poster not resolved yet: keep the neutral diagonal-stripe treatment as the
+    // base, with the title's first initial centered on top so the placeholder
+    // reads as intentional rather than a rendering glitch. The stripe styles
+    // themselves are untouched; centering comes from posterFallbackCenter.
+    // Hidden from assistive tech (mirroring the poster Image) — the adjacent
+    // suggestion label already announces the title.
+    const initial = title.trim().charAt(0).toUpperCase() || "•";
     return (
       <View
-        style={[styles.poster, styles.posterFallback]}
+        style={[styles.poster, styles.posterFallback, styles.posterFallbackCenter]}
         accessible={false}
         importantForAccessibility="no-hide-descendants"
         {...(Platform.OS === "web" ? { "aria-hidden": true } : {})}
-      />
+      >
+        <AppText weight="700" style={styles.posterMonogram}>
+          {initial}
+        </AppText>
+      </View>
     );
   }
   return (
@@ -375,7 +392,7 @@ export function MovieField({
                             : null,
                         ]}
                       >
-                        <MoviePoster posterUrl={item.posterUrl} />
+                        <MoviePoster posterUrl={item.posterUrl} title={suggestionTitle} />
                         <View style={{ flex: 1, gap: 2 }}>
                           <View style={styles.titleRow}>
                             <AppText style={[styles.itemLabel, warmZero && { opacity: 0.5 }]}>
@@ -451,7 +468,7 @@ export function MovieField({
                             : null,
                         ]}
                       >
-                        <MoviePoster posterUrl={item.posterUrl} />
+                        <MoviePoster posterUrl={item.posterUrl} title={suggestionTitle} />
                         <View style={{ flex: 1 }}>
                           <View style={styles.titleRow}>
                             <AppText style={styles.itemLabel}>{suggestionTitle}</AppText>
@@ -549,6 +566,19 @@ const styles = StyleSheet.create({
           backgroundImage: `repeating-linear-gradient(135deg, ${colors.mapEmptyStart}, ${colors.mapEmptyStart} 6px, ${colors.posterStripe} 6px, ${colors.posterStripe} 12px)`,
         } as unknown as Record<string, unknown>)
       : {}),
+  },
+  // Poster-fallback overlay: centers the title-initial monogram over the
+  // untouched diagonal-stripe treatment. Kept separate from posterFallback so
+  // the stripe itself is never restyled.
+  posterFallbackCenter: {
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  // Muted monogram glyph — matches the stripe's neutral palette
+  // (textTertiary #766f64 on mapEmptyStart #e9e5dd): subtle, not loud.
+  posterMonogram: {
+    fontSize: 16,
+    color: colors.textTertiary,
   },
   item: {
     flexDirection: "row",

@@ -86,7 +86,20 @@ export function LeftPanel({
             {vm.posterUrl !== null ? (
               <Image source={{ uri: vm.posterUrl }} style={styles.poster} resizeMode="cover" />
             ) : (
-              <View style={[styles.poster, posterStripe.stripe]} />
+              // Poster not resolved yet: same intentional-placeholder treatment as
+              // MovieField — existing diagonal stripe untouched, title initial
+              // centered on top in the stripe's muted palette. Hidden from
+              // assistive tech; the adjacent confirmation title announces it.
+              <View
+                style={[styles.poster, posterStripe.stripe, styles.posterFallbackCenter]}
+                accessible={false}
+                importantForAccessibility="no-hide-descendants"
+                {...(Platform.OS === "web" ? { "aria-hidden": true } : {})}
+              >
+                <AppText weight="700" style={styles.posterMonogram}>
+                  {vm.movieTitleDisplay.trim().charAt(0).toUpperCase() || "•"}
+                </AppText>
+              </View>
             )}
             <View style={styles.confirmationText}>
               <AppText family="display" weight="700" style={styles.confirmationTitle}>
@@ -233,6 +246,19 @@ const styles = StyleSheet.create({
     borderRadius: 6,
     borderWidth: 1,
     borderColor: colors.border,
+  },
+  // Poster-fallback overlay: centers the title-initial monogram over the
+  // untouched diagonal-stripe treatment (posterStripe.stripe is never restyled).
+  posterFallbackCenter: {
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  // Muted monogram glyph — matches the stripe's neutral palette
+  // (textTertiary #766f64 on mapEmptyStart #e9e5dd): subtle, not loud.
+  // Larger than MovieField's (80px-wide poster vs 34px).
+  posterMonogram: {
+    fontSize: 28,
+    color: colors.textTertiary,
   },
   confirmationText: {
     flex: 1,
