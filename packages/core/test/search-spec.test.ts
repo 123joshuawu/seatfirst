@@ -480,6 +480,29 @@ describe("v1 validation", () => {
     expect(createSearchSpecV1Schema(context).safeParse(mismatchedMovie).success).toBe(false);
   });
 
+  it("admits a cross-provider movie id when a titles fallback is present (C4/ADR 0100 Cold Mode)", () => {
+    // Reproduces the getseatfirst.com prod outage: Cold Mode picks a movie from
+    // universal `movies.search` (TMDB-namespaced id) at an AMC-provider theatre,
+    // carrying the confirmed title so the evaluator can match during cold
+    // resolution. This must NOT be flagged SELECTOR_UNSUPPORTED — only a
+    // mismatched id with no titles fallback is genuinely unsupported.
+    const coldModeMovie = SearchSpecSchema.parse({
+      ...baseSpec,
+      specVersion: 2,
+      where: {
+        kind: "AND",
+        of: [
+          { kind: "MOVIE", ids: ["tmdb:movie:1108427"], titles: ["Moana"] },
+          { kind: "DATE_RANGE", from: "2026-08-04", to: "2026-08-10" },
+        ],
+      },
+    });
+
+    expect(validateSearchSpec(coldModeMovie, context)).not.toContainEqual({
+      code: "SELECTOR_UNSUPPORTED",
+    });
+  });
+
   it("rejects the v1 surface without making future shapes schema-invalid", () => {
     const spec = SearchSpecSchema.parse({
       ...baseSpec,

@@ -304,17 +304,26 @@ function providerNamespace(value: string): string | undefined {
   return parsed.ok ? parsed.value.providerId : undefined;
 }
 
-function movieIds(root: PerformancePredicate): readonly string[] {
+/**
+ * C4/ADR 0100 (Cold Mode) — a MOVIE leaf whose `ids` fall outside the spec's
+ * provider namespace (e.g. a TMDB id attached to an AMC-provider spec) is
+ * still admissible when it carries a `titles` fallback: the evaluator
+ * (`matchesMovieLeaf`) matches by normalized title during cold resolution
+ * when no id match is found. Only a mismatched id with NO `titles` fallback
+ * can never resolve to anything and is genuinely unsupported.
+ */
+function hasUnsupportedMovieSelector(root: PerformancePredicate, providerId: string): boolean {
   if (root.kind === "MOVIE") {
-    return root.ids;
+    if (root.titles !== undefined) return false;
+    return root.ids.some((id) => providerNamespace(id) !== providerId);
   }
   if (root.kind === "AND" || root.kind === "OR") {
-    return root.of.flatMap((child) => movieIds(child));
+    return root.of.some((child) => hasUnsupportedMovieSelector(child, providerId));
   }
   if (root.kind === "NOT") {
-    return movieIds(root.of);
+    return hasUnsupportedMovieSelector(root.of, providerId);
   }
-  return [];
+  return false;
 }
 type MoviePredicateProjection = boolean | undefined;
 
@@ -758,9 +767,7 @@ export function validateSearchSpec(
     const hasMismatchedTheatre =
       spec.theatres.kind === "LIST" &&
       spec.theatres.refs.some((reference) => providerNamespace(reference.id) !== spec.providerId);
-    const hasMismatchedMovie = movieIds(spec.where).some(
-      (movieId) => providerNamespace(movieId) !== spec.providerId,
-    );
+    const hasMismatchedMovie = hasUnsupportedMovieSelector(spec.where, spec.providerId);
     if (
       (hasMismatchedTheatre || hasMismatchedMovie) &&
       !issues.some((issue) => issue.code === "SELECTOR_UNSUPPORTED")
@@ -997,9 +1004,7 @@ export function validateSearchSpecV1(
   const hasMismatchedTheatre =
     spec.theatres.kind === "LIST" &&
     spec.theatres.refs.some((reference) => providerNamespace(reference.id) !== spec.providerId);
-  const hasMismatchedMovie = movieIds(spec.where).some(
-    (movieId) => providerNamespace(movieId) !== spec.providerId,
-  );
+  const hasMismatchedMovie = hasUnsupportedMovieSelector(spec.where, spec.providerId);
   if (
     (hasMismatchedTheatre || hasMismatchedMovie) &&
     !issues.some((issue) => issue.code === "SELECTOR_UNSUPPORTED")
