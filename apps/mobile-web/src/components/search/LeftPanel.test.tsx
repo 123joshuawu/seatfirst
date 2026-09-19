@@ -75,9 +75,7 @@ describe("LeftPanel poster (confirmation card, State 2)", () => {
     expect(JSON.stringify(el)).toContain("Dune: Part Three");
     // monogram glyph: title initial ("D") centered over the untouched stripe via
     // AppText, in the stripe's muted palette (#766f64) — exactly one such node.
-    const monograms = renderer.root
-      .findAllByType(AppText)
-      .filter((n) => n.props.children === "D");
+    const monograms = renderer.root.findAllByType(AppText).filter((n) => n.props.children === "D");
     expect(monograms).toHaveLength(1);
     expect(JSON.stringify(monograms[0]!.props.style)).toContain("766f64");
   });

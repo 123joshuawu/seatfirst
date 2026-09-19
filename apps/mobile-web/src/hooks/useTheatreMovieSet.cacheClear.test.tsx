@@ -101,7 +101,6 @@ function holdQueriesOpen(pending: Map<string, PendingFetch>): void {
   );
 }
 
-
 describe("useTheatreMovieSet — cache-clear notification (UI42.6 refresh gap)", () => {
   beforeEach(() => {
     mockQuery.mockReset();
@@ -188,9 +187,10 @@ describe("useTheatreMovieSet — in-flight dedup (batched 414 duplicate fix)", (
       });
     });
     expect(mockQuery).toHaveBeenCalledTimes(2);
-    expect(
-      mockQuery.mock.calls.map(([input]) => input.theatreId).sort(),
-    ).toEqual(["amc:theatre:1", "amc:theatre:2"]);
+    expect(mockQuery.mock.calls.map(([input]) => input.theatreId).sort()).toEqual([
+      "amc:theatre:1",
+      "amc:theatre:2",
+    ]);
 
     await act(async () => {
       pending.get("amc:theatre:1")!.resolve(responseFor("amc:theatre:1", "m1", "Alpha"));
@@ -219,9 +219,10 @@ describe("useTheatreMovieSet — in-flight dedup (batched 414 duplicate fix)", (
     });
     // One `movies.query` per theatre — not one per mount (which would be 4).
     expect(mockQuery).toHaveBeenCalledTimes(2);
-    expect(
-      mockQuery.mock.calls.map(([input]) => input.theatreId).sort(),
-    ).toEqual(["amc:theatre:1", "amc:theatre:2"]);
+    expect(mockQuery.mock.calls.map(([input]) => input.theatreId).sort()).toEqual([
+      "amc:theatre:1",
+      "amc:theatre:2",
+    ]);
 
     await act(async () => {
       pending.get("amc:theatre:1")!.resolve(responseFor("amc:theatre:1", "m1", "Alpha"));

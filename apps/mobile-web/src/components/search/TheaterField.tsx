@@ -212,7 +212,12 @@ export function TheaterField({
                   focusable={!isLocked}
                   style={styles.chipInside}
                 >
-                  <AppText weight="500" style={styles.chipInsideText} numberOfLines={1} ellipsizeMode="tail">
+                  <AppText
+                    weight="500"
+                    style={styles.chipInsideText}
+                    numberOfLines={1}
+                    ellipsizeMode="tail"
+                  >
                     {vm.placeChipLabel}
                   </AppText>
                   <AppText weight="700" style={styles.chipRemove}>
@@ -230,7 +235,12 @@ export function TheaterField({
                   focusable={!isLocked}
                   style={styles.chipInside}
                 >
-                  <AppText weight="500" style={styles.chipInsideText} numberOfLines={1} ellipsizeMode="tail">
+                  <AppText
+                    weight="500"
+                    style={styles.chipInsideText}
+                    numberOfLines={1}
+                    ellipsizeMode="tail"
+                  >
                     {vm.deviceChipLabel}
                   </AppText>
                   <AppText weight="700" style={styles.chipRemove}>
@@ -252,7 +262,12 @@ export function TheaterField({
                     focusable={!isLocked}
                     style={styles.chipInside}
                   >
-                    <AppText weight="500" style={styles.chipInsideText} numberOfLines={1} ellipsizeMode="tail">
+                    <AppText
+                      weight="500"
+                      style={styles.chipInsideText}
+                      numberOfLines={1}
+                      ellipsizeMode="tail"
+                    >
                       {ref.name ?? "Selected theatre"}
                     </AppText>
                     <AppText weight="700" style={styles.chipRemove}>

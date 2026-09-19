@@ -168,9 +168,10 @@ describe("httpBatchLink maxURLLength (batched 414 split fix)", () => {
       fetchedUrls.push(url);
       // One envelope per batched op, sized from the request's own `input`
       // param — the same shape `httpBatchLink` parses back.
-      const batchInput = JSON.parse(
-        new URL(url).searchParams.get("input") ?? "{}",
-      ) as Record<string, unknown>;
+      const batchInput = JSON.parse(new URL(url).searchParams.get("input") ?? "{}") as Record<
+        string,
+        unknown
+      >;
       const body = Object.keys(batchInput).map(() => ({
         result: {
           data: {

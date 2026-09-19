@@ -117,9 +117,7 @@ describe("MovieField poster (picker suggestions)", () => {
     expect(jsonStr).toContain("e9e5dd");
     // monogram glyph: title initial ("N") centered over the stripe via AppText,
     // in the stripe's muted palette (#766f64) — exactly one such node.
-    const monograms = renderer.root
-      .findAllByType(AppText)
-      .filter((n) => n.props.children === "N");
+    const monograms = renderer.root.findAllByType(AppText).filter((n) => n.props.children === "N");
     expect(monograms).toHaveLength(1);
     expect(JSON.stringify(monograms[0]!.props.style)).toContain("766f64");
     renderer.unmount();
