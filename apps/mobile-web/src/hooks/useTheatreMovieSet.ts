@@ -40,6 +40,19 @@ function cacheKey(theatreId: string, from: string, to: string): string {
   return `${theatreId}\u0000${from}\u0000${to}`;
 }
 
+// BATCH-414: `trpcClient`'s `httpBatchLink` coalesces every query queued in the
+// same tick into one GET, and `responseCache.set(...)` in the effect below only
+// ran AFTER the promises resolved — so when the effect re-ran (a new
+// `legacyResponse`/store reference, or any dependency change) before the first
+// round settled, the same 'missing' theatre ids were queried a second time.
+// Live: a 6-theatre place emitted `theatres.movies` 12 times (each id exactly
+// twice) and failed with 414. In-flight fetches are tracked by the same
+// `cacheKey` and shared until they settle, so a re-run while a fetch is pending
+// reuses it instead of firing a duplicate. Entries are deleted on settle
+// (success or failure); `clearTheatreMovieCache` intentionally leaves pending
+// work alone — the settling promise still populates the cache exactly once.
+const inflightRequests = new Map<string, Promise<TheatreMoviesResponse>>();
+
 export function aggregateTheatreMovies(
   responses: readonly TheatreMoviesResponse[],
 ): TheatreMovieSetGroup[] {
@@ -177,14 +190,28 @@ export function useTheatreMovieSet(options: {
 
     setIsFetching(true);
     setError(null);
-    void Promise.all(
-      missing.map((theatreId) =>
-        movieQuery({ theatreId, from: options.from, to: options.to }).then((response) => {
-          responseCache.set(cacheKey(theatreId, options.from, options.to), response);
+    // BATCH-414 dedup: a cache key with a pending (unresolved) fetch for this
+    // same range is shared, never re-queried — a re-run before the first round
+    // settles (the live 6-theatre → 12-query duplication) attaches to the same
+    // promise instead of emitting a second `theatres.movies` per theatre.
+    const pending = missing.map((theatreId) => {
+      const key = cacheKey(theatreId, options.from, options.to);
+      const inflight = inflightRequests.get(key);
+      if (inflight) return inflight;
+      const request = movieQuery({ theatreId, from: options.from, to: options.to }).then(
+        (response) => {
+          responseCache.set(key, response);
           return response;
-        }),
-      ),
-    )
+        },
+      );
+      inflightRequests.set(key, request);
+      const forget = (): void => {
+        if (inflightRequests.get(key) === request) inflightRequests.delete(key);
+      };
+      request.then(forget, forget);
+      return request;
+    });
+    void Promise.all(pending)
       .then((loaded) => {
         if (cancelled) return;
         setResponses([...cached, ...loaded]);

@@ -116,6 +116,18 @@ export const queryClient = new QueryClient({
     },
   },
 });
+
+/**
+ * BATCH-414: cap for a single batched tRPC GET URL. Without a cap, every query
+ * queued in the same tick is coalesced into one GET whose comma-joined
+ * procedure-name path grows without bound (6x `theatres.movies` already exceeds
+ * Fastify's 100-char default `maxParamLength` for that path segment). 2000
+ * matches common reverse-proxy/URL-length safety margins; oversized batches
+ * auto-split into sequential requests instead of ever emitting one giant URL.
+ * Exported for tests to assert split behavior against the shipped value.
+ */
+export const TRPC_BATCH_MAX_URL_LENGTH = 2000;
+
 /** React-hooks binding (UI11.2) — `trpc.[router].[procedure].useQuery()` etc. */
 export const trpc = createTRPCReact<AppRouter>();
 
@@ -159,6 +171,8 @@ export const trpcClient = createTRPCClient<AppRouter>({
         }),
         false: httpBatchLink({
           url: `${apiUrl}/trpc`,
+          // BATCH-414: auto-split oversized batches (see TRPC_BATCH_MAX_URL_LENGTH).
+          maxURLLength: TRPC_BATCH_MAX_URL_LENGTH,
           // tRPC's FetchEsque init is `RequestInit | RequestInitEsque`; under
           // exactOptionalPropertyTypes the DOM RequestInit's `signal?: AbortSignal | null`
           // is not assignable to RequestInitEsque's `signal?: AbortSignal | undefined`.

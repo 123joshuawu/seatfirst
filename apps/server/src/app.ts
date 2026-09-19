@@ -166,6 +166,12 @@ export function buildApp(opts: BuildAppOptions): FastifyInstance {
     // handling. (Extraction itself is the explicit socket-peer gate in plugin.ts —
     // this configures Fastify's `req.ip` the same way, never `true`.)
     trustProxy: opts.relayPeerCidr,
+    // BATCH-414: batched tRPC procedure names are comma-joined into a single
+    // dynamic path segment; the 100-char default is too low for realistic
+    // multi-theatre batches (6x `theatres.movies` = 101 chars → 414). Nested under
+    // `routerOptions` per Fastify 5's find-my-way router config (the top-level
+    // `maxParamLength` shorthand is deprecated as of FSTDEP022).
+    routerOptions: { maxParamLength: 2048 },
   });
 
   // O11.1 — start a real request-root span and make it the ambient active context for

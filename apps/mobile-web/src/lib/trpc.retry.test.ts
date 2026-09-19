@@ -155,3 +155,70 @@ describe("unauthorizedRetryLink", () => {
     expect(callCount).toBe(2);
   });
 });
+
+describe("httpBatchLink maxURLLength (batched 414 split fix)", () => {
+  beforeEach(() => {
+    vi.resetModules();
+  });
+
+  it("splits a 16-query theatres.movies batch into multiple fetches within the cap", async () => {
+    const fetchedUrls: string[] = [];
+    const mockFetch = vi.fn(async (input: RequestInfo | URL) => {
+      const url = String(input);
+      fetchedUrls.push(url);
+      // One envelope per batched op, sized from the request's own `input`
+      // param — the same shape `httpBatchLink` parses back.
+      const batchInput = JSON.parse(
+        new URL(url).searchParams.get("input") ?? "{}",
+      ) as Record<string, unknown>;
+      const body = Object.keys(batchInput).map(() => ({
+        result: {
+          data: {
+            theatreId: "amc:theatre:1",
+            timezone: "America/Denver",
+            from: "2026-09-19",
+            to: "2026-09-19",
+            movies: [],
+          },
+        },
+      }));
+      return new Response(JSON.stringify(body), {
+        status: 200,
+        headers: { "content-type": "application/json" },
+      });
+    });
+    vi.doMock("./cookieJar", () => ({ cookieAwareFetch: mockFetch }));
+
+    // Fresh client so the shipped `httpBatchLink` config (not a re-typed
+    // copy) is what batches these queries.
+    const { trpcClient: freshClient, TRPC_BATCH_MAX_URL_LENGTH } = await import("./trpc");
+    const moviesQuery = (
+      freshClient.theatres as unknown as {
+        movies: {
+          query: (input: { theatreId: string; from: string; to: string }) => Promise<unknown>;
+        };
+      }
+    ).movies.query;
+    // A large multi-theatre selection queued in the same tick so the batch
+    // link coalesces it. (Measured: 12 short-id `theatres.movies` queries are
+    // ~1700 chars — under the cap, one request. 16 exceed it, so the link must
+    // split instead of emitting a single giant URL.)
+    const results = await Promise.all(
+      Array.from({ length: 16 }, (_, i) =>
+        moviesQuery({
+          theatreId: `amc:theatre:${i + 1}`,
+          from: "2026-09-19",
+          to: "2026-09-19",
+        }),
+      ),
+    );
+
+    // Without `maxURLLength` this is a single giant URL (the 414); with the
+    // cap it must split into sequential requests, each within the cap.
+    expect(mockFetch.mock.calls.length).toBeGreaterThan(1);
+    expect(results).toHaveLength(16);
+    for (const url of fetchedUrls) {
+      expect(url.length).toBeLessThanOrEqual(TRPC_BATCH_MAX_URL_LENGTH);
+    }
+  });
+});
