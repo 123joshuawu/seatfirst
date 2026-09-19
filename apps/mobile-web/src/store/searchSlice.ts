@@ -74,6 +74,7 @@ export interface SearchActions {
     terminalCause?: string | null | undefined;
   }) => void;
   setSearchError: (error: SearchError) => void;
+  clearSearchError: () => void;
   setProgress: (opts: {
     resolved: number;
     total: number;
@@ -228,6 +229,8 @@ export const createSearchSlice: StateCreator<SeatfirstStore, [], [], SearchSlice
       phase: "idle",
       isCanceling: false,
     }),
+
+  clearSearchError: () => set({ error: null }),
 
   setProgress: ({
     resolved,

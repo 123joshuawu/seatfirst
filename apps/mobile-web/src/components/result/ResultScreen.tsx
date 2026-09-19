@@ -45,6 +45,48 @@ export function ResultScreen({
     setToggles(NO_PREFERENCE);
   }, [vm.searchId]);
 
+  // Terminal poll/subscription failure (e.g. persistent `searches.get` 500 after
+  // polling exhausted its retry budget) — halt the skeleton/progress entirely
+  // and surface a retry card instead of spinning forever.
+  if (progressVm.error !== null) {
+    const searchError = progressVm.error;
+    const detail =
+      searchError.code !== undefined && searchError.code.length > 0
+        ? `${searchError.message} (${searchError.code})`
+        : searchError.message;
+    const handleRetry = (): void => {
+      vm.actions.clearSearchError();
+      vm.actions.startSearch();
+    };
+    return (
+      <FadeInView style={{ width: "100%", maxWidth: 920, gap: 16 }}>
+        <QuickEditBar
+          movieTitle={vm.movieTitleDisplay}
+          theaterName={vm.theaterName}
+          quickFormatLabel={vm.quickFormatLabel}
+          quickPartyLabel={vm.quickPartyLabel}
+          quickWindowLabel={vm.quickWindowLabel}
+          showEditAction={showEditAction}
+          actions={vm.actions}
+        />
+        <View style={styles.errorCard} accessibilityRole="alert">
+          <AppText weight="600" style={styles.errorText}>
+            Couldn&apos;t check seats
+          </AppText>
+          <AppText weight="400" style={styles.errorSubText}>
+            {detail}
+          </AppText>
+          <View style={styles.errorActions}>
+            <SecondaryButton
+              label="Try again"
+              onPress={handleRetry}
+              accessibilityHint="Retries the seat search"
+            />
+          </View>
+        </View>
+      </FadeInView>
+    );
+  }
   const formats = (() => {
     const seen = new Set<string>();
     for (const e of vm.scheduleSkeleton) {
@@ -259,6 +301,30 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
     alignItems: "center",
     gap: 12,
+  },
+  errorCard: {
+    backgroundColor: colors.cardBg,
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderRadius: 18,
+    padding: 26,
+    gap: 12,
+    alignItems: "center",
+  },
+  errorText: {
+    fontSize: 14,
+    color: colors.textPrimary,
+    textAlign: "center",
+  },
+  errorSubText: {
+    fontSize: 12,
+    color: colors.textMuted,
+    textAlign: "center",
+  },
+  errorActions: {
+    flexDirection: "row",
+    gap: 10,
+    marginTop: 8,
   },
   chipText: {
     fontSize: 11,

@@ -107,6 +107,7 @@ function baseVm(): MockViewModel {
     searchId: null,
     phase: "idle",
     phaseDetail: null,
+    error: null,
 
     // useSearchResultsViewModel
     answer: null,
@@ -161,6 +162,7 @@ function baseVm(): MockViewModel {
       widenWindow: noop,
       // progress
       cancelSearch: asyncNoop,
+      clearSearchError: noop,
       // results
       backToSearch: noop,
       changeFormat: noop,

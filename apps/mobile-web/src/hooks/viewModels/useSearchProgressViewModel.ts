@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 import { useSeatfirstStore } from "@/store/seatfirstStore";
 import { cancelCurrentSearch } from "@/lib/cancelSearch";
-import { isScanRunning } from "@/store/searchSlice";
+import { isScanRunning, type SearchError } from "@/store/searchSlice";
 import { DEFAULT_SEARCH_LIMITS } from "@seatfirst/core";
 import type { SearchPhase } from "@/store/searchSlice";
 
@@ -17,8 +17,11 @@ export interface SearchProgressViewModel {
   searchId: string | null;
   phase: SearchPhase;
   phaseDetail: string | null;
+  /** Terminal poll/subscription failure captured via `setSearchError` — null while healthy. */
+  error: SearchError | null;
   actions: {
     cancelSearch: () => Promise<void>;
+    clearSearchError: () => void;
   };
 }
 
@@ -66,6 +69,9 @@ export function useSearchProgressViewModel(): SearchProgressViewModel {
   const cancelSearchAction = useCallback(async () => {
     await cancelCurrentSearch();
   }, []);
+  const clearSearchErrorAction = useCallback(() => {
+    useSeatfirstStore.getState().clearSearchError();
+  }, []);
   const etaLabel = (() => {
     if (!isChecking) return null;
     const ms = store.estimatedMs;
@@ -91,8 +97,10 @@ export function useSearchProgressViewModel(): SearchProgressViewModel {
     searchId,
     phase: store.phase,
     phaseDetail,
+    error: store.error,
     actions: {
       cancelSearch: cancelSearchAction,
+      clearSearchError: clearSearchErrorAction,
     },
   };
 }

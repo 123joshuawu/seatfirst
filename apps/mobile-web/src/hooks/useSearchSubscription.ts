@@ -442,10 +442,14 @@ export function useSearchSubscription(): {
                   if (useSeatfirstStore.getState().operationGeneration !== gen) return;
                   handleProgressFromResult(result);
                 },
-                onError: (pollErr) => {
+                onError: (pollErr, exhausted) => {
                   if (useSeatfirstStore.getState().operationGeneration !== gen) return;
+                  // Transient poll blips keep retrying silently — only a genuinely
+                  // terminal failure (exhausted budget) surfaces store.error.
+                  if (!exhausted) return;
                   const msg = pollErr instanceof Error ? pollErr.message : String(pollErr);
-                  useSeatfirstStore.getState().setSearchError({ message: msg });
+                  const code = readTrpcErrorCode(pollErr) ?? undefined;
+                  useSeatfirstStore.getState().setSearchError({ message: msg, code });
                 },
               });
             }
@@ -502,10 +506,14 @@ export function useSearchSubscription(): {
               if (useSeatfirstStore.getState().operationGeneration !== gen) return;
               handleProgressFromResult(result);
             },
-            onError: (pollErr) => {
+            onError: (pollErr, exhausted) => {
               if (useSeatfirstStore.getState().operationGeneration !== gen) return;
+              // Transient poll blips keep retrying silently — only a genuinely
+              // terminal failure (exhausted budget) surfaces store.error.
+              if (!exhausted) return;
               const msg = pollErr instanceof Error ? pollErr.message : String(pollErr);
-              useSeatfirstStore.getState().setSearchError({ message: msg });
+              const code = readTrpcErrorCode(pollErr) ?? undefined;
+              useSeatfirstStore.getState().setSearchError({ message: msg, code });
             },
           });
         }
