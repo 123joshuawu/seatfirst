@@ -15,3 +15,25 @@
 export function normalizeTitle(title: string): string {
   return title.trim().toLowerCase();
 }
+
+/**
+ * Cleans an AMC catalogue title for TMDB search queries.
+ *
+ * AMC frequently appends anniversary labels, event labels, or re-release tags
+ * (e.g. "The Transformers: The Movie 40th Anniversary", "Ghost in the Shell 30th Anniversary",
+ * "Cars: 20th Anniversary", "The Passion of the Christ (2026 Event)") that prevent TMDB's
+ * search API from matching the canonical movie title.
+ *
+ * This cleaner strips these common suffixes so TMDB search can find the base movie.
+ * Note: `normalizeTitle` is STILL applied to the verbatim AMC title for the database join!
+ */
+export function cleanTitleForSearch(title: string): string {
+  return title
+    .replace(/\s*:\s*\d+(?:st|nd|rd|th)\s+Anniversary.*$/i, "")
+    .replace(/\s+\d+(?:st|nd|rd|th)\s+Anniversary.*$/i, "")
+    .replace(/\s*\(\d{4}\s+Event\).*$/i, "")
+    .replace(/\s*\(\d{4}\s+Re-?release\).*$/i, "")
+    .replace(/\s+Re-?release.*$/i, "")
+    .replace(/\s*-\s*Fan\s+Event.*$/i, "")
+    .trim();
+}

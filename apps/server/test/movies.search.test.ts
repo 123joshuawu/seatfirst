@@ -76,6 +76,7 @@ function fakeTmdbClient(options: FakeTmdbOptions = {}): TmdbClient {
         tmdbId,
         runtimeMinutes: 100 + tmdbId,
         genres: [`Genre ${tmdbId}`],
+        releaseDate: null,
       });
     },
   };
@@ -335,9 +336,9 @@ describe("movies.search typed query (S63.4 live union + lazy upsert)", () => {
     await seedAmc(pool, "amc:movie:dune2", "Dune: Part Two");
     await seedAmc(pool, "amc:movie:dune-event", "Dune Sneak Peek Event");
     liveResults = [
-      { tmdbId: 201, title: "Dune: Part Two", posterPath: "/d.jpg" },
-      { tmdbId: 202, title: "Dune Messiah", posterPath: "/new202.jpg" },
-      { tmdbId: 203, title: "Dune: The Deep Cut", posterPath: null },
+      { tmdbId: 201, title: "Dune: Part Two", posterPath: "/d.jpg", releaseDate: null },
+      { tmdbId: 202, title: "Dune Messiah", posterPath: "/new202.jpg", releaseDate: null },
+      { tmdbId: 203, title: "Dune: The Deep Cut", posterPath: null, releaseDate: null },
     ];
     await restartServer();
 
@@ -437,7 +438,9 @@ describe("movies.search typed query (S63.4 live union + lazy upsert)", () => {
   });
 
   it("skips persistence for entries whose details fetch fails, still serving them", async () => {
-    liveResults = [{ tmdbId: 301, title: "Details Down", posterPath: "/dd.jpg" }];
+    liveResults = [
+      { tmdbId: 301, title: "Details Down", posterPath: "/dd.jpg", releaseDate: null },
+    ];
     await restartServer();
     // Rebuild the server with a details outage for 301 (restartServer uses the
     // shared fake options; details errors need a dedicated server).

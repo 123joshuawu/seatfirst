@@ -16,12 +16,14 @@ export interface TmdbMovieSummary {
   readonly tmdbId: number;
   readonly title: string;
   readonly posterPath: string | null;
+  readonly releaseDate: string | null;
 }
 
 export interface TmdbMovieDetails {
   readonly tmdbId: number;
   readonly runtimeMinutes: number | null;
   readonly genres: readonly string[];
+  readonly releaseDate: string | null;
 }
 
 export interface TmdbClient {
@@ -42,13 +44,22 @@ export interface TmdbClientDeps {
 /** Maps one raw TMDB `results` entry; drops entries lacking an id or title. */
 function toSummary(raw: unknown): TmdbMovieSummary | null {
   if (typeof raw !== "object" || raw === null) return null;
-  const entry = raw as { id?: unknown; title?: unknown; poster_path?: unknown };
+  const entry = raw as {
+    id?: unknown;
+    title?: unknown;
+    poster_path?: unknown;
+    release_date?: unknown;
+  };
   if (typeof entry.id !== "number" || typeof entry.title !== "string") return null;
   return {
     tmdbId: entry.id,
     title: entry.title,
     posterPath:
       typeof entry.poster_path === "string" && entry.poster_path !== "" ? entry.poster_path : null,
+    releaseDate:
+      typeof entry.release_date === "string" && entry.release_date !== ""
+        ? entry.release_date
+        : null,
   };
 }
 
@@ -58,7 +69,9 @@ function toSummary(raw: unknown): TmdbMovieSummary | null {
  *  defensive-parse style. */
 function toDetails(tmdbId: number, raw: unknown): TmdbMovieDetails {
   const entry =
-    typeof raw === "object" && raw !== null ? (raw as { runtime?: unknown; genres?: unknown }) : {};
+    typeof raw === "object" && raw !== null
+      ? (raw as { runtime?: unknown; genres?: unknown; release_date?: unknown })
+      : {};
   const runtime = entry.runtime;
   const genres = Array.isArray(entry.genres)
     ? entry.genres.flatMap((genre) => {
@@ -67,11 +80,14 @@ function toDetails(tmdbId: number, raw: unknown): TmdbMovieDetails {
         return typeof name === "string" && name !== "" ? [name] : [];
       })
     : [];
+  const releaseDate =
+    typeof entry.release_date === "string" && entry.release_date !== "" ? entry.release_date : null;
   return {
     tmdbId,
     runtimeMinutes:
       typeof runtime === "number" && Number.isInteger(runtime) && runtime > 0 ? runtime : null,
     genres,
+    releaseDate,
   };
 }
 

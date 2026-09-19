@@ -215,7 +215,7 @@ async function searchLive(
     return {
       id: `tmdb:movie:${summary.tmdbId}`,
       title: amc?.title ?? summary.title,
-      releaseYear: releaseYearFromDate(upserted?.release_date),
+      releaseYear: releaseYearFromDate(upserted?.release_date ?? summary.releaseDate),
       posterPath: upserted?.poster_path ?? summary.posterPath,
       confidence,
       badge: confidence === "UNVERIFIED" ? UNVERIFIED_BADGE : null,
@@ -269,6 +269,7 @@ async function enrichAndUpsert(
   try {
     const details = await tmdbClient.movieDetails(summary.tmdbId);
     const displayTitle = summary.title.trim() === "" ? null : summary.title;
+    const releaseDate = details.releaseDate ?? summary.releaseDate ?? null;
     const rows = await upsertTmdbMovie(db, {
       tmdbId: summary.tmdbId,
       normalizedTitle: normalizeTitle(summary.title),
@@ -276,9 +277,7 @@ async function enrichAndUpsert(
       posterPath: summary.posterPath,
       runtimeMinutes: details.runtimeMinutes,
       genres: [...details.genres],
-      // S63: TMDB `release_date` ingestion through the client is follow-up work
-      // (see `UpsertTmdbMovieInput.releaseDate`); NULL preserves any stored date.
-      releaseDate: null,
+      releaseDate,
     });
     return { summary, upserted: rows[0] ?? null };
   } catch {

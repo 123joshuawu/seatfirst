@@ -71,7 +71,7 @@ describe("createTmdbClient (S25.5)", () => {
   it("maps results and drops entries without an id or title", async () => {
     const { fn } = fakeFetch({
       results: [
-        { id: 1, title: "One", poster_path: "/one.jpg" },
+        { id: 1, title: "One", poster_path: "/one.jpg", release_date: "2024-05-10" },
         { id: 2, title: "No Poster", poster_path: null },
         { title: "No Id" },
         { id: 3, poster_path: "/no-title.jpg" },
@@ -85,8 +85,8 @@ describe("createTmdbClient (S25.5)", () => {
     });
 
     await expect(client.searchMovie("x")).resolves.toEqual([
-      { tmdbId: 1, title: "One", posterPath: "/one.jpg" },
-      { tmdbId: 2, title: "No Poster", posterPath: null },
+      { tmdbId: 1, title: "One", posterPath: "/one.jpg", releaseDate: "2024-05-10" },
+      { tmdbId: 2, title: "No Poster", posterPath: null, releaseDate: null },
     ] satisfies TmdbMovieSummary[]);
   });
 
@@ -94,6 +94,7 @@ describe("createTmdbClient (S25.5)", () => {
     const { fn, calls } = fakeFetch({
       id: 99,
       runtime: 128,
+      release_date: "2026-08-01",
       genres: [
         { id: 12, name: "Adventure" },
         { id: 28, name: "Action" },
@@ -110,6 +111,7 @@ describe("createTmdbClient (S25.5)", () => {
       tmdbId: 99,
       runtimeMinutes: 128,
       genres: ["Adventure", "Action"],
+      releaseDate: "2026-08-01",
     } satisfies TmdbMovieDetails);
 
     expect(calls).toHaveLength(1);
@@ -156,6 +158,7 @@ describe("createTmdbClient (S25.5)", () => {
       tmdbId: 7,
       runtimeMinutes: 95,
       genres: ["Drama"],
+      releaseDate: null,
     } satisfies TmdbMovieDetails);
   });
 

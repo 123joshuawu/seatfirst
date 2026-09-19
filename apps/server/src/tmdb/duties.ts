@@ -20,7 +20,7 @@ import type { RelayMessage } from "../relay/publisher.js";
 
 import type { TmdbMovieDetails, TmdbMovieSummary } from "./client.js";
 import { isTmdbPrewarmDue } from "./due.js";
-import { normalizeTitle } from "./normalize.js";
+import { cleanTitleForSearch, normalizeTitle } from "./normalize.js";
 
 /* --------------------------------------------------------------- S25.3 — pre-warm */
 
@@ -52,6 +52,8 @@ export async function runTmdbPrewarmTick(deps: TmdbPrewarmDeps): Promise<TmdbPre
   }
 
   const [nowPlaying, upcoming] = await Promise.all([deps.nowPlaying(), deps.upcoming()]);
+  const nowPlayingIds = new Set(nowPlaying.map((m) => m.tmdbId));
+  const upcomingIds = new Set(upcoming.map((m) => m.tmdbId));
   const seen = new Set<number>();
   let upserted = 0;
   for (const movie of [...nowPlaying, ...upcoming]) {
@@ -61,12 +63,20 @@ export async function runTmdbPrewarmTick(deps: TmdbPrewarmDeps): Promise<TmdbPre
     // new job kind). A details failure degrades only this entry to its poster half
     // and never aborts the rest of the batch.
     const details = await deps.movieDetails(movie.tmdbId).catch((): null => null);
+    const isNowPlaying = nowPlayingIds.has(movie.tmdbId);
+    const isUpcoming = upcomingIds.has(movie.tmdbId);
+    const displayTitle = movie.title.trim() === "" ? null : movie.title;
+    const releaseDate = details?.releaseDate ?? movie.releaseDate ?? null;
     await deps.upsertMovie(deps.db, {
       tmdbId: movie.tmdbId,
       normalizedTitle: normalizeTitle(movie.title),
       posterPath: movie.posterPath,
       runtimeMinutes: details?.runtimeMinutes ?? null,
       genres: details?.genres ?? [],
+      isNowPlaying,
+      isUpcoming,
+      title: displayTitle,
+      releaseDate,
     });
     upserted += 1;
   }
@@ -124,7 +134,13 @@ export async function processTmdbFetch(
   }
 
   try {
-    const results = await deps.searchMovie(fetch.movie_title);
+    let results = await deps.searchMovie(fetch.movie_title);
+    if (results.length === 0) {
+      const cleaned = cleanTitleForSearch(fetch.movie_title);
+      if (cleaned !== fetch.movie_title && cleaned.length > 0) {
+        results = await deps.searchMovie(cleaned);
+      }
+    }
     const match = results[0];
     if (match === undefined) {
       await deps.markFailed(deps.db, message.targetId, "no TMDB match");
@@ -138,12 +154,16 @@ export async function processTmdbFetch(
     // Inside the existing per-title try/catch, so a details failure fails only this
     // job (FAILED with its cause) and never aborts any other title's batch entry.
     const details = await deps.movieDetails(match.tmdbId);
+    const displayTitle = match.title.trim() === "" ? null : match.title;
+    const releaseDate = details.releaseDate ?? match.releaseDate ?? null;
     await deps.upsertMovie(deps.db, {
       tmdbId: match.tmdbId,
       normalizedTitle: normalizeTitle(fetch.movie_title),
       posterPath: match.posterPath,
       runtimeMinutes: details.runtimeMinutes,
       genres: [...details.genres],
+      title: displayTitle,
+      releaseDate,
     });
     await deps.markDone(deps.db, message.targetId);
     return { kind: "FETCHED", tmdbId: match.tmdbId };
