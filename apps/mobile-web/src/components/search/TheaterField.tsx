@@ -212,7 +212,7 @@ export function TheaterField({
                   focusable={!isLocked}
                   style={styles.chipInside}
                 >
-                  <AppText weight="500" style={styles.chipInsideText}>
+                  <AppText weight="500" style={styles.chipInsideText} numberOfLines={1} ellipsizeMode="tail">
                     {vm.placeChipLabel}
                   </AppText>
                   <AppText weight="700" style={styles.chipRemove}>
@@ -230,7 +230,7 @@ export function TheaterField({
                   focusable={!isLocked}
                   style={styles.chipInside}
                 >
-                  <AppText weight="500" style={styles.chipInsideText}>
+                  <AppText weight="500" style={styles.chipInsideText} numberOfLines={1} ellipsizeMode="tail">
                     {vm.deviceChipLabel}
                   </AppText>
                   <AppText weight="700" style={styles.chipRemove}>
@@ -252,7 +252,7 @@ export function TheaterField({
                     focusable={!isLocked}
                     style={styles.chipInside}
                   >
-                    <AppText weight="500" style={styles.chipInsideText}>
+                    <AppText weight="500" style={styles.chipInsideText} numberOfLines={1} ellipsizeMode="tail">
                       {ref.name ?? "Selected theatre"}
                     </AppText>
                     <AppText weight="700" style={styles.chipRemove}>
@@ -788,23 +788,35 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.borderSoft,
   },
+  // One very long place/theatre name must not dominate the row: cap the label
+  // width and ellipsize (numberOfLines={1} at each call site) so sibling chips
+  // and the input row keep usable space. Without the cap a single chip takes
+  // its full intrinsic width and squeezes the input's placeholder unreadable.
   chipInsideText: {
     fontSize: 13,
     color: colors.brandDark,
+    maxWidth: 220,
   },
   chipRemove: {
     fontSize: 16,
     color: colors.brandDark,
     lineHeight: 16,
   },
+  // minWidth floor (not 0): once the chips leave less than a usable width, the
+  // tokenfield's flexWrap wraps this row onto its own line instead of crushing
+  // the placeholder down to a few characters. Previously minWidth: 0 let the
+  // row collapse to near-nothing beside a long chip ("Search fo…") and the
+  // wrap point shifted between renders, causing a visible layout jump.
   inputRow: {
     flexDirection: "row",
     alignItems: "center",
     flexGrow: 1,
     flexShrink: 1,
     flexBasis: 0,
-    minWidth: 0,
+    minWidth: 120,
   },
+  // The input keeps its own minWidth: 0 so text truncates *inside* the row's
+  // guaranteed 120px floor above rather than forcing the row wider.
   input: {
     flex: 1,
     minWidth: 0,
@@ -815,7 +827,6 @@ const styles = StyleSheet.create({
     fontFamily: fontFamily.bodyMedium,
     color: colors.textPrimary,
   },
-  // Desktop (≥680px): 1px less text-row height; font size unchanged.
   inputDesktop: {
     paddingVertical: 4,
   },

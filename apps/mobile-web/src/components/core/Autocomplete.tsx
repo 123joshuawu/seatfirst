@@ -1,4 +1,5 @@
-import type { ReactNode } from "react";
+import { useEffect, useRef } from "react";
+import type { ReactNode, RefObject } from "react";
 import type { ReactElement } from "react";
 import {
   Modal,
@@ -42,6 +43,73 @@ export function AutocompleteFieldShell({
     </View>
   );
 }
+/**
+ * Dismiss-on-outside-`pointerdown` for an open popover/sheet.
+ *
+ * WHY this exists: dismissal used to ride only on the target field's `onBlur`.
+ * On web a blur fires in response to the *next* element's mousedown, so by the
+ * time React commits the popover-closed re-render the browser has already
+ * dispatched that same click against the still-mounted (overlapping, higher
+ * z-index) popover instead of the element under the pointer. Reproduced live:
+ * with the WHERE popover open, clicking the MOVIE combobox closed WHERE but
+ * never focused MOVIE — the user had to click a second time.
+ *
+ * A `document`-level `pointerdown` listener in the capture phase runs BEFORE
+ * the click is dispatched, so `onClose` unmounts the popover first and the
+ * real click lands on whatever is actually under the pointer (the MOVIE
+ * input, the search CTA, …). `pointerdown` — not `click` — is the event that
+ * still precedes focus change and click dispatch.
+ *
+ * Two carve-outs keep this from over-dismissing:
+ * - Targets *inside* the popover node (options, radius chips, …) are ignored
+ *   so in-popover presses still complete their click.
+ * - A `pointerdown` on the currently-focused element never blurs it, so e.g.
+ *   repositioning the caret in the WHERE input while its own popover is open
+ *   must not dismiss; any other target will move focus and may dismiss.
+ * Web-only (`Platform.OS === 'web'` + `document` guard): native has no DOM
+ * and already dismisses via the sheet scrim / Close Pressables, which stay
+ * wired to `onClose` untouched — as do Escape/tab/explicit-close paths.
+ * When the popover DOM node can't be resolved (native, test renderers without
+ * a DOM mount) the handler no-ops and the pre-existing blur path decides.
+ */
+function useOutsidePointerDownDismiss(
+  popoverRef: RefObject<View | null>,
+  popoverDomId: string,
+  onClose: (() => void) | undefined,
+): void {
+  // Latest-handler ref so the document listener subscribes once per popover
+  // node instead of churning on every parent re-render (callers pass inline
+  // `vm.actions.handleBlur`, whose identity is stable, but cheap either way).
+  const onCloseRef = useRef(onClose);
+  onCloseRef.current = onClose;
+
+  useEffect(() => {
+    if (Platform.OS !== "web" || typeof document === "undefined") return;
+    const doc = document;
+    const handlePointerDown = (event: Event): void => {
+      const target = event.target as Element | null;
+      if (!target) return;
+      // Clicking the focused element cannot blur it — never dismiss for that.
+      if (target === doc.activeElement) return;
+      // Prefer the live node; react-native-web forwards View refs to the
+      // underlying div. Fall back to the id the node carries on web, which
+      // also covers mounts where the ref never attached.
+      const refNode = popoverRef.current as unknown as Element | null;
+      const popoverEl =
+        refNode && typeof refNode.contains === "function"
+          ? refNode
+          : doc.getElementById(popoverDomId);
+      if (!popoverEl) return;
+      if (popoverEl.contains(target)) return;
+      onCloseRef.current?.();
+    };
+    // Capture phase: must run before the click dispatches to the page.
+    doc.addEventListener("pointerdown", handlePointerDown, true);
+    return () => {
+      doc.removeEventListener("pointerdown", handlePointerDown, true);
+    };
+  }, [popoverDomId, popoverRef]);
+}
 
 export function AutocompletePopover({
   id,
@@ -72,11 +140,20 @@ export function AutocompletePopover({
    * (`width < 680`, same as `vm.isMobile`).
    */
   isMobile?: boolean | undefined;
-  /** Dismiss handler for the sheet scrim and Close button (mobile only). */
+  /** Dismiss handler: sheet scrim + Close button, and outside-pointerdown. */
   onClose?: (() => void) | undefined;
 }): ReactElement {
   const { width } = useWindowDimensions();
   const showAsSheet = isMobile ?? width < AUTOCOMPLETE_MOBILE_BREAKPOINT;
+  // Live node for the outside-pointerdown check: the inline popover itself on
+  // desktop, the sheet *panel* on mobile so a scrim tap dismisses up front
+  // and the follow-on click passes through to the element behind the sheet
+  // instead of being swallowed by the scrim.
+  const popoverRef = useRef<View | null>(null);
+  // Mirrors the DOM id the tracked node carries on web (see the `id` props
+  // below); the hook falls back to it when the ref never attached.
+  const popoverDomId = showAsSheet ? `${id}-panel` : id;
+  useOutsidePointerDownDismiss(popoverRef, popoverDomId, onClose);
   if (showAsSheet) {
     // Mobile bottom sheet — mirrors the established sheet convention
     // (HowItWorksSheet/WhenCustomSheet): rgba(0,0,0,0.4) scrim with a
@@ -105,9 +182,10 @@ export function AutocompletePopover({
             style={styles.sheetScrim}
           />
           <View
+            ref={popoverRef}
             style={styles.sheetPanel}
             {...(Platform.OS === "web"
-              ? ({ role: "document" } as unknown as Record<string, unknown>)
+              ? ({ role: "document", id: `${id}-panel` } as unknown as Record<string, unknown>)
               : {})}
           >
             <View style={styles.sheetHeaderRow}>
@@ -141,6 +219,7 @@ export function AutocompletePopover({
   }
   return (
     <View
+      ref={popoverRef}
       style={[styles.popover, popoverShadow]}
       accessibilityLabel={ariaLabel}
       accessibilityRole={alert ? "alert" : undefined}

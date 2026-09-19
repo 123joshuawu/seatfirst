@@ -1296,3 +1296,94 @@ describe("TheaterField mobile bottom sheet (P1 audit fix)", () => {
     }
   });
 });
+
+describe("TheaterField Where — long chip label keeps input usable (chip-overflow fix)", () => {
+  const LONG_PLACE = "1234 Very Long Street Name Extended, Brooklyn, New York, United States";
+
+  function renderWithLongPlaceChip(): TestRenderer.ReactTestRenderer {
+    useSeatfirstStore.setState({
+      wherePlace: { query: LONG_PLACE, label: `${LONG_PLACE} · 10 mi`, radiusKm: 10, limit: 25 },
+      selectedTheatres: [],
+      whereRadiusKm: 10,
+      whereQuery: "",
+    });
+    let renderer!: TestRenderer.ReactTestRenderer;
+    act(() => {
+      renderer = TestRenderer.create(React.createElement(TheaterField, { isLocked: false }));
+    });
+    return renderer;
+  }
+
+  it("keeps the full input placeholder readable beside a very long place chip", () => {
+    const renderer = renderWithLongPlaceChip();
+    try {
+      const str = jsonString(renderer);
+      // The long chip label itself renders (sanity: this is the squeeze setup).
+      expect(str).toContain("Very Long Street Name Extended");
+      const whereInput = renderer.root
+        .findAllByType(TextInput)
+        .find((n) => typeof n.props.placeholder === "string" && n.props.placeholder.length > 0);
+      expect(whereInput).toBeDefined();
+      // Placeholder must survive at full length — the old minWidth: 0 collapse
+      // clipped it to a few characters ("Search fo") beside a long chip.
+      expect(whereInput!.props.placeholder).toBe("Search for a different place");
+      expect(whereInput!.props.placeholder.length).toBeGreaterThanOrEqual(10);
+    } finally {
+      renderer.unmount();
+    }
+  });
+
+  it("gives the input row a minWidth floor so it wraps instead of collapsing", () => {
+    const renderer = renderWithLongPlaceChip();
+    try {
+      // react-test-renderer cannot measure pixels, so assert the style contract
+      // directly: inputRow carries a usable-width floor (tokenfield flexWrap
+      // then wraps it onto its own line instead of crushing the placeholder).
+      const inputRows = renderer.root.findAll(
+        (node) =>
+          !!node.props &&
+          typeof node.props.style === "object" &&
+          node.props.style !== null &&
+          !Array.isArray(node.props.style) &&
+          (node.props.style as { minWidth?: unknown }).minWidth === 120,
+      );
+      expect(inputRows.length).toBeGreaterThanOrEqual(1);
+      // The TextInput itself keeps minWidth: 0 so text truncates *inside* the
+      // row's floor rather than forcing the row wider.
+      const whereInput = renderer.root
+        .findAllByType(TextInput)
+        .find((n) => typeof n.props.placeholder === "string" && n.props.placeholder.length > 0);
+      const flatStyles = Array.isArray(whereInput!.props.style)
+        ? whereInput!.props.style
+        : [whereInput!.props.style];
+      expect(
+        flatStyles.some(
+          (s) => !!s && typeof s === "object" && (s as { minWidth?: unknown }).minWidth === 0,
+        ),
+      ).toBe(true);
+    } finally {
+      renderer.unmount();
+    }
+  });
+
+  it("caps each chip label width with single-line ellipsis", () => {
+    const renderer = renderWithLongPlaceChip();
+    try {
+      const chipTexts = renderer.root.findAll(
+        (node) =>
+          !!node.props &&
+          typeof node.props.style === "object" &&
+          node.props.style !== null &&
+          !Array.isArray(node.props.style) &&
+          (node.props.style as { maxWidth?: unknown }).maxWidth === 220,
+      );
+      expect(chipTexts.length).toBeGreaterThanOrEqual(1);
+      for (const node of chipTexts) {
+        expect(node.props.numberOfLines).toBe(1);
+        expect(node.props.ellipsizeMode).toBe("tail");
+      }
+    } finally {
+      renderer.unmount();
+    }
+  });
+});
