@@ -706,6 +706,31 @@ describe.skipIf(chromeExecutable === null)(
         expect(outcome.subresourceAborts).toBe(1);
         expect(subresourceServer.requests).toEqual([]);
       });
+
+      it("d. ADR 0101 — native Chromium document navigation without fetchHop connects directly, verifies corridor guard and records hops", async () => {
+        subresourceServer.requests.length = 0;
+        const attempt = await runCorridorNavigation(mappedSupervisor, {
+          scope: SCOPE,
+          targetUrl: MOVIES,
+          userAgent: USER_AGENT,
+          limits: { navigationTimeoutMs: NAV_MS },
+        });
+        const outcome = attempt.outcome;
+        await attempt.cleanupCompleted;
+
+        expect(outcome.kind).toBe("SUCCESS");
+        if (outcome.kind !== "SUCCESS") {
+          throw new Error("expected SUCCESS");
+        }
+        expect(outcome.classification).toBe("AMC_INITIAL");
+        expect(outcome.hops.length).toBe(1);
+        expect(outcome.hops[0].classification).toBe("AMC_INITIAL");
+        expect(outcome.hops[0].status).toBe(200);
+        expect(typeof outcome.hops[0].durationMs).toBe("number");
+        expect(outcome.payload.finalStatus).toBe(200);
+        expect(outcome.payload.documentHtml).toContain("synthetic subresource response");
+        expect(subresourceServer.requests).toContain("/movies");
+      });
     });
 
     it("6. terminal state — Queue-it waiting page produces QUEUE_ENTERED; no countdown, no polling, no further documents", async () => {

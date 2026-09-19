@@ -147,16 +147,6 @@ function scrubErrorUrl(raw: string): string {
   return raw.replace(/https?:\/\/\S+/g, "[REDACTED_URL]");
 }
 
-async function defaultFetchHop(route: Route): Promise<HopResponse> {
-  // Redirects disabled: the walker must see every hop's raw status and headers.
-  const response = await route.fetch({ maxRedirects: 0 });
-  return {
-    status: response.status(),
-    headers: response.headers(),
-    body: await response.text(),
-  };
-}
-
 type AwaitResult =
   | Readonly<{ kind: "raw"; raw: HopResponse }>
   | Readonly<{ kind: "cancelled" }>
@@ -297,221 +287,38 @@ export async function runCorridorNavigation(
   };
   options.signal?.addEventListener("abort", closeOnAbort, { once: true });
 
-  let state: CorridorState = INITIAL_CORRIDOR_STATE;
   const hops: MutableHop[] = [];
   let subresourceAborts = 0;
-  // The walker's current navigation target. Declared before the route handler below,
-  // which reads it for the ADR 0010 theatre-search passthrough check.
-  let currentUrl = options.targetUrl;
 
   try {
     context = await supervisor.newContext({ userAgent: options.userAgent });
     await options.contextSetup?.(context);
     const page: Page = await context.newPage();
-    const fetchHop = options.fetchHop ?? defaultFetchHop;
-    // Per-hop raw-response channel between the route handler and the walker.
-    let channel: PendingFetch | null = null;
 
-    await context.route("**/*", async (route) => {
-      const request = route.request();
-      const isMainDocument =
-        request.resourceType() === "document" && request.frame() === page.mainFrame();
-      if (!isMainDocument) {
-        if (isTheatreSearchPassthrough(currentUrl, request)) {
-          // ADR 0010 (P6.11 amendment): the theatre-search route lets its own
-          // same-origin XHR/fetch through so AMC's search-widget JS can populate
-          // results. A passthrough is not an abort — subresourceAborts keeps counting
-          // only genuinely aborted requests.
-          await route.continue();
-          return;
-        }
-        // P6.11: abort every other non-main-document request — scripts, stylesheets,
-        // images, fonts, media, WebSockets, subframe documents — and every subresource
-        // type on the other three corridor routes (movies, showtimes-by-date, seats).
-        subresourceAborts += 1;
-        await route.abort();
-        return;
-      }
-      const active = channel;
-      if (active === null) {
-        // No walker is waiting for a document (late/unsolicited navigation).
-        await route.abort();
-        return;
-      }
-      let raw: HopResponse;
-      try {
-        raw = await fetchHop(route);
-      } catch (error) {
-        active.reject(error);
-        await route.abort();
-        return;
-      }
-      active.resolve(raw);
-      if (raw.status >= 300 && raw.status < 400) {
-        // Never hand the browser a redirect: Chrome would follow it internally,
-        // bypassing the guard on the next hop — and aborting it would commit an
-        // error-page navigation that races the next dispatch. A 204 keeps the
-        // current document; the walker re-dispatches explicitly.
-        await route.fulfill({ status: 204, body: "" });
-        return;
-      }
-      await route.fulfill({ status: raw.status, headers: raw.headers, body: raw.body });
-    });
-
-    const deadline = Date.now() + options.limits.navigationTimeoutMs;
-    let outcome: NavigationOutcome | null = null;
-
-    while (outcome === null) {
-      if (externalAborted()) {
-        outcome = { kind: "CANCELLED" };
-        break;
-      }
-      if (Date.now() >= deadline) {
-        outcome = { kind: "NAVIGATION_FAILED", error: "navigation timed out" };
-        break;
-      }
-      const check = checkDocument(state, currentUrl);
-      if (!check.ok) {
-        // Fail closed BEFORE another dispatch: the violating document is never sent.
-        outcome = { kind: "GUARD_REJECTED", reason: check.reason, hops };
-        break;
-      }
-      const hop: MutableHop = {
-        classification: check.classification,
-        status: null,
-        durationMs: null,
-      };
-      hops.push(hop);
-      state = check.next;
-
-      const startedAt = Date.now();
-      const attempt = pendingFetch();
-      channel = attempt;
-      try {
-        await page.goto(currentUrl, {
-          waitUntil: "domcontentloaded",
-          timeout: Math.max(1, deadline - Date.now()),
-        });
-      } catch {
-        // A 3xx hop is served as a 204 after publishing its raw response —
-        // an expected rejection. The channel (below) is the source of truth.
-      }
-      hop.durationMs = Date.now() - startedAt;
-
-      const result = await awaitHopResponse(attempt.promise, options.signal, deadline);
-      if (result.kind === "cancelled") {
-        outcome = { kind: "CANCELLED" };
-        break;
-      }
-      if (result.kind === "timed-out") {
-        outcome = { kind: "NAVIGATION_FAILED", error: "navigation timed out" };
-        break;
-      }
-      if (result.kind === "rejected") {
-        const failure = result.error;
-        if (failure instanceof Error && failure.name === "TimeoutError") {
-          outcome = { kind: "NAVIGATION_FAILED", error: "navigation timed out" };
-        } else {
-          outcome = {
-            kind: "NAVIGATION_FAILED",
-            error: scrubErrorUrl(failure instanceof Error ? failure.message : String(failure)),
-          };
-        }
-        break;
-      }
-      const raw = result.raw;
-      hop.status = raw.status;
-
-      // Terminal upstream states: terminate immediately — never wait out, solve,
-      // retry, or follow a Retry-After header (P6.20, ADR 0001 B9).
-      if (raw.status === 403) {
-        outcome = {
-          kind: "UPSTREAM_BLOCKED",
-          classification: hop.classification,
-          hops,
-          status: raw.status,
-          headers: redactHeaders(raw.headers),
-        };
-        break;
-      }
-      if (raw.status === 429) {
-        outcome = {
-          kind: "RATE_LIMITED",
-          classification: hop.classification,
-          hops,
-          status: raw.status,
-          headers: redactHeaders(raw.headers),
-        };
-        break;
-      }
-      if ((raw.headers["cf-mitigated"] ?? "").toLowerCase() === "challenge") {
-        outcome = {
-          kind: "CHALLENGE_REQUIRED",
-          classification: hop.classification,
-          hops,
-          status: raw.status,
-          headers: redactHeaders(raw.headers),
-        };
-        break;
-      }
-
-      if (raw.status >= 300 && raw.status < 400) {
-        const location = raw.headers["location"];
-        if (location === undefined) {
-          outcome = {
-            kind: "NAVIGATION_FAILED",
-            error: `redirect response without a location header at ${hop.classification}`,
-          };
-          break;
-        }
-        // The next hop is validated by the loop's guard check before dispatch.
-        currentUrl = new URL(location, currentUrl).toString();
-        continue;
-      }
-
-      // A final (non-redirect, non-terminal) document committed.
-      switch (hop.classification) {
-        case "AMC_INITIAL":
-        case "AMC_CLEAN_RETURN":
-          // Let subresources settle (each is aborted → error → load fires) so the
-          // payload reflects the final document and the abort count is complete.
-          try {
-            await page.waitForLoadState("load", {
-              timeout: Math.max(1, deadline - Date.now()),
-            });
-          } catch {
-            outcome = { kind: "NAVIGATION_FAILED", error: "navigation timed out" };
-            break;
-          }
-          outcome = await successOutcome(
-            hop,
-            hops,
-            raw,
-            page,
-            subresourceAborts,
-            options.observationPlan,
-            deadline,
-          );
-          break;
-        case "QUEUE_ENTRY":
-          // The Queue-it waiting page committed and the navigation ended there —
-          // entered the queue; never wait out the countdown (verification item 6).
-          outcome = {
-            kind: "QUEUE_ENTERED",
-            classification: "QUEUE_ENTRY",
-            hops,
-            status: raw.status,
-            headers: redactHeaders(raw.headers),
-          };
-          break;
-        case "AMC_TOKEN_RETURN":
-          // The corridor stalled after the token return — not a terminal shape.
-          outcome = {
-            kind: "NAVIGATION_FAILED",
-            error: "corridor stalled at AMC_TOKEN_RETURN",
-          };
-          break;
-      }
+    let outcome: NavigationOutcome;
+    if (options.fetchHop !== undefined) {
+      outcome = await runSyntheticLoop({
+        page,
+        context,
+        options,
+        fetchHop: options.fetchHop,
+        hops,
+        onSubresourceAbort: () => {
+          subresourceAborts += 1;
+        },
+        externalAborted,
+      });
+    } else {
+      outcome = await runNativeCorridor({
+        page,
+        context,
+        options,
+        hops,
+        onSubresourceAbort: () => {
+          subresourceAborts += 1;
+        },
+        externalAborted,
+      });
     }
 
     finishAttempt(span, outcome, options, versions, {
@@ -536,6 +343,464 @@ export async function runCorridorNavigation(
   } finally {
     options.signal?.removeEventListener("abort", closeOnAbort);
   }
+}
+
+interface SyntheticLoopArgs {
+  readonly page: Page;
+  readonly context: BrowserContext;
+  readonly options: CorridorNavigationOptions;
+  readonly fetchHop: (route: Route) => Promise<HopResponse>;
+  readonly hops: MutableHop[];
+  readonly onSubresourceAbort: () => void;
+  readonly externalAborted: () => boolean;
+}
+
+async function runSyntheticLoop(args: SyntheticLoopArgs): Promise<NavigationOutcome> {
+  const { page, context, options, fetchHop, hops, onSubresourceAbort, externalAborted } = args;
+  let state: CorridorState = INITIAL_CORRIDOR_STATE;
+  let currentUrl = options.targetUrl;
+  let subresourceAborts = 0;
+  let channel: PendingFetch | null = null;
+
+  await context.route("**/*", async (route) => {
+    const request = route.request();
+    const isMainDocument =
+      request.resourceType() === "document" && request.frame() === page.mainFrame();
+    if (!isMainDocument) {
+      if (isTheatreSearchPassthrough(currentUrl, request)) {
+        // ADR 0010 (P6.11 amendment): the theatre-search route lets its own
+        // same-origin XHR/fetch through so AMC's search-widget JS can populate
+        // results. A passthrough is not an abort — subresourceAborts keeps counting
+        // only genuinely aborted requests.
+        await route.continue();
+        return;
+      }
+      // P6.11: abort every other non-main-document request — scripts, stylesheets,
+      // images, fonts, media, WebSockets, subframe documents — and every subresource
+      // type on the other three corridor routes (movies, showtimes-by-date, seats).
+      subresourceAborts += 1;
+      onSubresourceAbort();
+      await route.abort();
+      return;
+    }
+    const active = channel;
+    if (active === null) {
+      // No walker is waiting for a document (late/unsolicited navigation).
+      await route.abort();
+      return;
+    }
+    let raw: HopResponse;
+    try {
+      raw = await fetchHop(route);
+    } catch (error) {
+      active.reject(error);
+      await route.abort();
+      return;
+    }
+    active.resolve(raw);
+    if (raw.status >= 300 && raw.status < 400) {
+      // Never hand the browser a redirect: Chrome would follow it internally,
+      // bypassing the guard on the next hop — and aborting it would commit an
+      // error-page navigation that races the next dispatch. A 204 keeps the
+      // current document; the walker re-dispatches explicitly.
+      await route.fulfill({ status: 204, body: "" });
+      return;
+    }
+    await route.fulfill({ status: raw.status, headers: raw.headers, body: raw.body });
+  });
+
+  const deadline = Date.now() + options.limits.navigationTimeoutMs;
+  let outcome: NavigationOutcome | null = null;
+
+  while (outcome === null) {
+    if (externalAborted()) {
+      outcome = { kind: "CANCELLED" };
+      break;
+    }
+    if (Date.now() >= deadline) {
+      outcome = { kind: "NAVIGATION_FAILED", error: "navigation timed out" };
+      break;
+    }
+    const check = checkDocument(state, currentUrl);
+    if (!check.ok) {
+      // Fail closed BEFORE another dispatch: the violating document is never sent.
+      outcome = { kind: "GUARD_REJECTED", reason: check.reason, hops };
+      break;
+    }
+    const hop: MutableHop = {
+      classification: check.classification,
+      status: null,
+      durationMs: null,
+    };
+    hops.push(hop);
+    state = check.next;
+
+    const startedAt = Date.now();
+    const attempt = pendingFetch();
+    channel = attempt;
+    try {
+      await page.goto(currentUrl, {
+        waitUntil: "domcontentloaded",
+        timeout: Math.max(1, deadline - Date.now()),
+      });
+    } catch {
+      // A 3xx hop is served as a 204 after publishing its raw response —
+      // an expected rejection. The channel (below) is the source of truth.
+    }
+    hop.durationMs = Date.now() - startedAt;
+
+    const result = await awaitHopResponse(attempt.promise, options.signal, deadline);
+    if (result.kind === "cancelled") {
+      outcome = { kind: "CANCELLED" };
+      break;
+    }
+    if (result.kind === "timed-out") {
+      outcome = { kind: "NAVIGATION_FAILED", error: "navigation timed out" };
+      break;
+    }
+    if (result.kind === "rejected") {
+      const failure = result.error;
+      if (failure instanceof Error && failure.name === "TimeoutError") {
+        outcome = { kind: "NAVIGATION_FAILED", error: "navigation timed out" };
+      } else {
+        outcome = {
+          kind: "NAVIGATION_FAILED",
+          error: scrubErrorUrl(failure instanceof Error ? failure.message : String(failure)),
+        };
+      }
+      break;
+    }
+    const raw = result.raw;
+    hop.status = raw.status;
+
+    // Terminal upstream states: terminate immediately — never wait out, solve,
+    // retry, or follow a Retry-After header (P6.20, ADR 0001 B9).
+    if (raw.status === 403) {
+      outcome = {
+        kind: "UPSTREAM_BLOCKED",
+        classification: hop.classification,
+        hops,
+        status: raw.status,
+        headers: redactHeaders(raw.headers),
+      };
+      break;
+    }
+    if (raw.status === 429) {
+      outcome = {
+        kind: "RATE_LIMITED",
+        classification: hop.classification,
+        hops,
+        status: raw.status,
+        headers: redactHeaders(raw.headers),
+      };
+      break;
+    }
+    if ((raw.headers["cf-mitigated"] ?? "").toLowerCase() === "challenge") {
+      outcome = {
+        kind: "CHALLENGE_REQUIRED",
+        classification: hop.classification,
+        hops,
+        status: raw.status,
+        headers: redactHeaders(raw.headers),
+      };
+      break;
+    }
+
+    if (raw.status >= 300 && raw.status < 400) {
+      const location = raw.headers["location"];
+      if (location === undefined) {
+        outcome = {
+          kind: "NAVIGATION_FAILED",
+          error: `redirect response without a location header at ${hop.classification}`,
+        };
+        break;
+      }
+      // The next hop is validated by the loop's guard check before dispatch.
+      currentUrl = new URL(location, currentUrl).toString();
+      continue;
+    }
+
+    // A final (non-redirect, non-terminal) document committed.
+    switch (hop.classification) {
+      case "AMC_INITIAL":
+      case "AMC_CLEAN_RETURN":
+        // Let subresources settle (each is aborted → error → load fires) so the
+        // payload reflects the final document and the abort count is complete.
+        try {
+          await page.waitForLoadState("load", {
+            timeout: Math.max(1, deadline - Date.now()),
+          });
+        } catch {
+          outcome = { kind: "NAVIGATION_FAILED", error: "navigation timed out" };
+          break;
+        }
+        outcome = await successOutcome(
+          hop,
+          hops,
+          raw,
+          page,
+          subresourceAborts,
+          options.observationPlan,
+          deadline,
+        );
+        break;
+      case "QUEUE_ENTRY":
+        // The Queue-it waiting page committed and the navigation ended there —
+        // entered the queue; never wait out the countdown (verification item 6).
+        outcome = {
+          kind: "QUEUE_ENTERED",
+          classification: "QUEUE_ENTRY",
+          hops,
+          status: raw.status,
+          headers: redactHeaders(raw.headers),
+        };
+        break;
+      case "AMC_TOKEN_RETURN":
+        // The corridor stalled after the token return — not a terminal shape.
+        outcome = {
+          kind: "NAVIGATION_FAILED",
+          error: "corridor stalled at AMC_TOKEN_RETURN",
+        };
+        break;
+    }
+  }
+
+  return outcome;
+}
+
+interface NativeCorridorArgs {
+  readonly page: Page;
+  readonly context: BrowserContext;
+  readonly options: CorridorNavigationOptions;
+  readonly hops: MutableHop[];
+  readonly onSubresourceAbort: () => void;
+  readonly externalAborted: () => boolean;
+}
+
+async function runNativeCorridor(args: NativeCorridorArgs): Promise<NavigationOutcome> {
+  const { page, context, options, hops, onSubresourceAbort, externalAborted } = args;
+  const deadline = Date.now() + options.limits.navigationTimeoutMs;
+
+  let state: CorridorState = INITIAL_CORRIDOR_STATE;
+  let currentUrl = options.targetUrl;
+  let earlyOutcome: NavigationOutcome | null = null;
+  let lastResponse: { status: number; headers: Record<string, string> } | null = null;
+  const requestHopMap = new Map<Request, { hop: MutableHop; startedAt: number }>();
+  let subresourceAborts = 0;
+
+  // ADR 0101 §1 & §2: Let Chromium's native BoringSSL stack perform document requests
+  // while strictly intercepting and aborting subresources (preserving ADR 0005 §B invariants).
+  await context.route("**/*", async (route) => {
+    const request = route.request();
+    const isMainDocument =
+      request.resourceType() === "document" && request.frame() === page.mainFrame();
+    if (!isMainDocument) {
+      if (isTheatreSearchPassthrough(currentUrl, request)) {
+        try {
+          await route.continue();
+        } catch {}
+        return;
+      }
+      subresourceAborts += 1;
+      onSubresourceAbort();
+      try {
+        await route.abort();
+      } catch {}
+      return;
+    }
+    try {
+      await route.continue();
+    } catch {}
+  });
+
+  // ADR 0101 §3: Event-driven corridor guard validation on every document request
+  page.on("request", (request) => {
+    const isMainDocument =
+      request.resourceType() === "document" && request.frame() === page.mainFrame();
+    if (!isMainDocument) {
+      return;
+    }
+    const check = checkDocument(state, request.url());
+    if (!check.ok) {
+      earlyOutcome = {
+        kind: "GUARD_REJECTED",
+        reason: check.reason,
+        hops,
+      };
+      void page.close().catch(() => {});
+      return;
+    }
+    state = check.next;
+    currentUrl = request.url();
+    const hop: MutableHop = {
+      classification: check.classification,
+      status: null,
+      durationMs: null,
+    };
+    hops.push(hop);
+    requestHopMap.set(request, { hop, startedAt: Date.now() });
+  });
+
+  // ADR 0101 §3: Event-driven response inspection and terminal upstream state detection
+  page.on("response", (response) => {
+    const request = response.request();
+    const isMainDocument =
+      request.resourceType() === "document" && request.frame() === page.mainFrame();
+    if (!isMainDocument) {
+      return;
+    }
+    const tracking = requestHopMap.get(request);
+    if (tracking) {
+      tracking.hop.status = response.status();
+      tracking.hop.durationMs = Date.now() - tracking.startedAt;
+    }
+    lastResponse = {
+      status: response.status(),
+      headers: response.headers(),
+    };
+
+    if (response.status() === 403) {
+      earlyOutcome = {
+        kind: "UPSTREAM_BLOCKED",
+        classification: tracking?.hop.classification ?? "AMC_INITIAL",
+        hops,
+        status: response.status(),
+        headers: redactHeaders(response.headers()),
+      };
+      void page.close().catch(() => {});
+      return;
+    }
+
+    if (response.status() === 429) {
+      earlyOutcome = {
+        kind: "RATE_LIMITED",
+        classification: tracking?.hop.classification ?? "AMC_INITIAL",
+        hops,
+        status: response.status(),
+        headers: redactHeaders(response.headers()),
+      };
+      void page.close().catch(() => {});
+      return;
+    }
+
+    const cfMitigated = (response.headers()["cf-mitigated"] ?? "").toLowerCase();
+    if (cfMitigated === "challenge") {
+      earlyOutcome = {
+        kind: "CHALLENGE_REQUIRED",
+        classification: tracking?.hop.classification ?? "AMC_INITIAL",
+        hops,
+        status: response.status(),
+        headers: redactHeaders(response.headers()),
+      };
+      void page.close().catch(() => {});
+      return;
+    }
+
+    if (tracking?.hop.classification === "QUEUE_ENTRY" && response.status() === 200) {
+      earlyOutcome = {
+        kind: "QUEUE_ENTERED",
+        classification: "QUEUE_ENTRY",
+        hops,
+        status: response.status(),
+        headers: redactHeaders(response.headers()),
+      };
+      void page.close().catch(() => {});
+      return;
+    }
+  });
+
+  let pageGotoError: unknown = null;
+  try {
+    await page.goto(options.targetUrl, {
+      waitUntil: "domcontentloaded",
+      timeout: Math.max(1, deadline - Date.now()),
+    });
+  } catch (error) {
+    pageGotoError = error;
+  }
+
+  if (earlyOutcome !== null) {
+    return earlyOutcome;
+  }
+  if (externalAborted()) {
+    return { kind: "CANCELLED" };
+  }
+  if (Date.now() >= deadline) {
+    return { kind: "NAVIGATION_FAILED", error: "navigation timed out" };
+  }
+  if (pageGotoError !== null) {
+    const failure = pageGotoError;
+    if (failure instanceof Error && failure.name === "TimeoutError") {
+      return { kind: "NAVIGATION_FAILED", error: "navigation timed out" };
+    }
+    return {
+      kind: "NAVIGATION_FAILED",
+      error: scrubErrorUrl(failure instanceof Error ? failure.message : String(failure)),
+    };
+  }
+
+  const lastHop = hops[hops.length - 1];
+  const finalResponse = lastResponse as {
+    status: number;
+    headers: Record<string, string>;
+  } | null;
+  if (!lastHop || finalResponse === null) {
+    return { kind: "NAVIGATION_FAILED", error: "no document hops recorded" };
+  }
+
+  if (lastHop.classification === "AMC_INITIAL" || lastHop.classification === "AMC_CLEAN_RETURN") {
+    try {
+      await page.waitForLoadState("load", {
+        timeout: Math.max(1, deadline - Date.now()),
+      });
+    } catch (err) {
+      if (externalAborted()) {
+        return { kind: "CANCELLED" };
+      }
+      if (Date.now() >= deadline || (err instanceof Error && err.name === "TimeoutError")) {
+        return { kind: "NAVIGATION_FAILED", error: "navigation timed out" };
+      }
+      return {
+        kind: "NAVIGATION_FAILED",
+        error: scrubErrorUrl(err instanceof Error ? err.message : String(err)),
+      };
+    }
+    return await successOutcome(
+      lastHop,
+      hops,
+      {
+        status: finalResponse.status,
+        headers: finalResponse.headers,
+        body: "",
+      },
+      page,
+      subresourceAborts,
+      options.observationPlan,
+      deadline,
+    );
+  }
+
+  if (lastHop.classification === "QUEUE_ENTRY") {
+    return {
+      kind: "QUEUE_ENTERED",
+      classification: "QUEUE_ENTRY",
+      hops,
+      status: finalResponse.status,
+      headers: redactHeaders(finalResponse.headers),
+    };
+  }
+
+  if (lastHop.classification === "AMC_TOKEN_RETURN") {
+    return {
+      kind: "NAVIGATION_FAILED",
+      error: "corridor stalled at AMC_TOKEN_RETURN",
+    };
+  }
+
+  return {
+    kind: "NAVIGATION_FAILED",
+    error: "unexpected corridor state at completion",
+  };
 }
 
 // --- S35.11 observation evaluator (fixed, transport-owned; no caller code) ---------------
