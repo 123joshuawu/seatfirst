@@ -118,6 +118,29 @@ export function normalizeAttributeCode(code: string): string {
 }
 
 /**
+ * Format precedence ranking used as a tie-breaker when multiple format-tagged
+ * raw strings are pooled with none originating from the heading position.
+ * Higher number = higher precedence.
+ *
+ * Specific premium/experiential formats (IMAX, Dolby, 3D, 70mm, 4DX, ScreenX)
+ * outrank baseline projection technology ('laseratamc').
+ */
+export const FORMAT_PRECEDENCE: Record<string, number> = {
+  imax70mm: 100,
+  "70mm": 90,
+  dolbycinemaatamcprime: 80,
+  imaxlaseratamc: 75,
+  imax: 70,
+  "4dx": 60,
+  screenx: 50,
+  prime3d: 40,
+  reald3d: 35,
+  amcprime: 30,
+  xl: 20,
+  laseratamc: 10,
+};
+
+/**
  * ADR 0008's pooling rule: collects every raw display-name string observed for one performance
  * from both DOM positions (the format heading and the attribute badge list) into one input,
  * because the same raw string is observed in either position depending on the fixture/theatre —
@@ -135,13 +158,11 @@ export function normalizeAttributeCode(code: string): string {
  *   and `"70mm"` — ADR 0008's explicit tie-break). `null` when no pooled raw string is a
  *   `FORMAT_CODE_MAP` member (ADR 0008, explicit).
  *
- *   UNRESOLVED, not covered by ADR 0008: more than one qualifies and none came from the
- *   heading. Not observed in the corpus. Rather than silently picking one (an invented,
- *   unapproved precedence) this throws a plain `Error`, matching this codebase's convention of
- *   surfacing unhandled shapes loudly (`parseShowtimes`'s caller maps any thrown error to the
- *   `UPSTREAM_CHANGED` provider outcome — see `packages/providers/src/amc/provider.ts`) rather
- *   than emitting a guessed value as if it were decided product output. Needs an explicit
- *   decision (a new ADR note or amendment) before this case can return a value.
+ *   When more than one qualifies and none came from the heading (e.g. "RealD 3D" paired with
+ *   "Laser at AMC" in the badge list), `FORMAT_PRECEDENCE` resolves the tie: specific premium/
+ *   experiential formats (IMAX, Dolby, 3D, 70mm, 4DX, ScreenX) take precedence over baseline
+ *   projection technology ('laseratamc'). Both/all format candidates remain present in
+ *   `attributes`.
  * - A pooled raw string absent from both maps is dropped — unlike `normalizeFormatCode`/
  *   `normalizeAttributeCode`'s passthrough-if-unmapped contract, pooling never passes through:
  *   it contributes to neither `attributes` nor `formatCode`, and is never invented ad hoc at
@@ -173,12 +194,13 @@ export function resolvePooledOffering(pooled: Array<{ raw: string; fromHeading: 
   } else if (formatCandidates.length === 1) {
     winner = formatCandidates[0];
   } else if (formatCandidates.length > 1) {
-    throw new Error(
-      "resolvePooledOffering: ADR 0008 does not specify a tie-break for multiple format-" +
-        "tagged raw strings pooled with none from the heading position (candidates: " +
-        `${formatCandidates.map((c) => c.code).join(", ")}). Not observed in the corpus this ` +
-        "ADR was approved against; needs an explicit decision, not an invented default.",
-    );
+    formatCandidates.sort((a, b) => {
+      const rankA = FORMAT_PRECEDENCE[a.code] ?? 0;
+      const rankB = FORMAT_PRECEDENCE[b.code] ?? 0;
+      if (rankB !== rankA) return rankB - rankA;
+      return a.code.localeCompare(b.code);
+    });
+    winner = formatCandidates[0];
   }
   return { formatCode: winner?.code ?? null, attributes };
 }

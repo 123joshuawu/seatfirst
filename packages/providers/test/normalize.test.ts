@@ -77,16 +77,22 @@ describe("AMC schedule-page offering vocabulary (ADR 0008)", () => {
     expect(result.formatCode).toBe("imax70mm");
   });
 
-  it("throws rather than inventing a precedence when multiple format candidates are pooled and none came from the heading position", () => {
-    // ADR 0008 does not specify a tie-break for this shape (not observed in the corpus it was
-    // approved against). `resolvePooledOffering` surfaces it as a thrown error rather than
-    // silently picking one, matching this codebase's UPSTREAM_CHANGED-surfacing convention.
-    expect(() =>
-      resolvePooledOffering([
-        { raw: "IMAX at AMC", fromHeading: false },
-        { raw: "70mm", fromHeading: false },
-      ]),
-    ).toThrow(/does not specify a tie-break/);
+  it("uses FORMAT_PRECEDENCE to tie-break when multiple format candidates are pooled and none came from the heading position", () => {
+    // 70mm outranks imax in FORMAT_PRECEDENCE (90 > 70)
+    const result1 = resolvePooledOffering([
+      { raw: "IMAX at AMC", fromHeading: false },
+      { raw: "70mm", fromHeading: false },
+    ]);
+    expect(result1.formatCode).toBe("70mm");
+    expect(result1.attributes).toEqual(["imax", "70mm"]);
+
+    // reald3d outranks laseratamc in FORMAT_PRECEDENCE (35 > 10)
+    const result2 = resolvePooledOffering([
+      { raw: "RealD 3D", fromHeading: false },
+      { raw: "Laser at AMC", fromHeading: false },
+    ]);
+    expect(result2.formatCode).toBe("reald3d");
+    expect(result2.attributes).toEqual(["reald3d", "laseratamc"]);
   });
 
   it('reuses the select\'s prime3d code for the inexact-match heading text "PRIME 3D"', () => {
