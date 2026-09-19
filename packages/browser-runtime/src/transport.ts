@@ -600,19 +600,25 @@ async function runNativeCorridor(args: NativeCorridorArgs): Promise<NavigationOu
       if (isTheatreSearchPassthrough(currentUrl, request)) {
         try {
           await route.continue();
-        } catch {}
+        } catch {
+          // Best-effort: the route may already be resolved/aborted elsewhere.
+        }
         return;
       }
       subresourceAborts += 1;
       onSubresourceAbort();
       try {
         await route.abort();
-      } catch {}
+      } catch {
+        // Best-effort: the route may already be resolved/aborted elsewhere.
+      }
       return;
     }
     try {
       await route.continue();
-    } catch {}
+    } catch {
+      // Best-effort: the route may already be resolved/aborted elsewhere.
+    }
   });
 
   // ADR 0101 §3: Event-driven corridor guard validation on every document request
@@ -738,7 +744,7 @@ async function runNativeCorridor(args: NativeCorridorArgs): Promise<NavigationOu
     return { kind: "NAVIGATION_FAILED", error: "navigation timed out" };
   }
   if (pageGotoError !== null) {
-    const failure = pageGotoError;
+    const failure: unknown = pageGotoError;
     if (failure instanceof Error && failure.name === "TimeoutError") {
       return { kind: "NAVIGATION_FAILED", error: "navigation timed out" };
     }
