@@ -1,6 +1,6 @@
 import * as cheerio from "cheerio";
 import { extractShapeFromHtml, deepFind, extractFlightJSON } from "../flight.js";
-import { ProviderError } from "../../errors.js";
+import { ProviderError, attachUpstreamChangedDiagnostic } from "../../errors.js";
 
 /**
  * Schedule-page DOM/ARIA-association resolver.
@@ -99,7 +99,7 @@ function upstreamChanged(message: string, requestUrl: string, observationTime: D
  * returned value is intentionally shaped to match `PublicTheatreScheduleSchema` so the existing
  * per-group `parseShowtimes` loop needs no branching to consume it.
  */
-export function resolveScheduleFromDom(
+function resolveScheduleFromDomImpl(
   html: string,
   requestUrl: string,
   observationTime: Date,
@@ -408,4 +408,19 @@ export function resolveScheduleFromDom(
       showtimes: g.showtimes,
     })),
   };
+}
+
+export function resolveScheduleFromDom(
+  html: string,
+  requestUrl: string,
+  observationTime: Date,
+): unknown {
+  try {
+    return resolveScheduleFromDomImpl(html, requestUrl, observationTime);
+  } catch (error) {
+    // UPSTREAM_CHANGED-only raw capture: no headers exist at this boundary, so only the
+    // genuinely in-scope body + URL are attached. Other error codes pass through untouched.
+    attachUpstreamChangedDiagnostic(error, { url: requestUrl, body: html });
+    throw error;
+  }
 }

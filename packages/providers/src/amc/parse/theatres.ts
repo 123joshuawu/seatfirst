@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { formatNamespacedId, TheatreIdSchema, TheatreSchema, type Theatre } from "@seatfirst/core";
 import { extractShapeFromHtml } from "../flight.js";
-import { ProviderError } from "../../errors.js";
+import { ProviderError, attachUpstreamChangedDiagnostic } from "../../errors.js";
 import { resolvePostalCodeTimezone } from "../postal-timezone.js";
 import { normalizeStateCode } from "../us-states.js";
 
@@ -37,7 +37,7 @@ export type PublicTheatreSummary = z.infer<typeof PublicTheatreSummarySchema>;
 // ad hoc at a call site.
 const PROVIDER_ID = "amc";
 
-export function parseTheatres(html: string, observationTime: Date, requestUrl: string): Theatre[] {
+function parseTheatresImpl(html: string, observationTime: Date, requestUrl: string): Theatre[] {
   const extracted = extractShapeFromHtml<PublicTheatreSummary>(
     html,
     (val) => typeof val.theatreId === "number" && typeof val.marketSlug === "string",
@@ -117,6 +117,17 @@ export function parseTheatres(html: string, observationTime: Date, requestUrl: s
   }
 
   return theatres;
+}
+
+export function parseTheatres(html: string, observationTime: Date, requestUrl: string): Theatre[] {
+  try {
+    return parseTheatresImpl(html, observationTime, requestUrl);
+  } catch (error) {
+    // UPSTREAM_CHANGED-only raw capture: no headers exist at this boundary, so only the
+    // genuinely in-scope body + URL are attached. Other error codes pass through untouched.
+    attachUpstreamChangedDiagnostic(error, { url: requestUrl, body: html });
+    throw error;
+  }
 }
 
 function extractCity(t: PublicTheatreSummary): string | null {

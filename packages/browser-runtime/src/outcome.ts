@@ -97,6 +97,25 @@ export const observationSchema = z.object({
   geometryNearTarget: z.array(observationGeometrySeatSchema),
 });
 export type Observation = z.infer<typeof observationSchema>;
+/**
+ * Raw/unredacted forensics for `UPSTREAM_BLOCKED` / `CHALLENGE_REQUIRED`.
+ * Populated ONLY by `runNativeCorridor`'s production response handler, which
+ * observes a real upstream response through a live Playwright `Page` — the
+ * synthetic/offline test path never sets it. Purely additive: `headers` keeps
+ * its existing redacted general-case telemetry; this field carries the raw
+ * payload for the durability capture row. Absent (`undefined`) = no capture.
+ */
+export interface RawBlockedDiagnostic {
+  /** Raw response URL, full query string included — never redacted. */
+  readonly url: string;
+  /** Full raw response headers — NOT the redacted allowlist. */
+  readonly headers: Record<string, string>;
+  /** Raw response body, when safely readable exactly once at capture time. */
+  readonly body?: string;
+  /** PNG screenshot bytes, when the live-`Page` capture succeeded. */
+  readonly screenshot?: Uint8Array;
+}
+
 
 export type NavigationOutcome =
   | Readonly<{
@@ -126,6 +145,11 @@ export type NavigationOutcome =
       hops: readonly DocumentHop[];
       status: number;
       headers: Record<string, string>;
+      /**
+       * Production-only raw forensics (see `RawBlockedDiagnostic`); never set on
+       * the synthetic/offline path.
+       */
+      rawDiagnostic?: RawBlockedDiagnostic;
     }>
   /** HTTP 403 at a guard-accepted corridor document. */
   | Readonly<{
@@ -134,6 +158,11 @@ export type NavigationOutcome =
       hops: readonly DocumentHop[];
       status: number;
       headers: Record<string, string>;
+      /**
+       * Production-only raw forensics (see `RawBlockedDiagnostic`); never set on
+       * the synthetic/offline path.
+       */
+      rawDiagnostic?: RawBlockedDiagnostic;
     }>
   /** HTTP 429 (or other rate-limiting response) — S8 maps to B9 `RATE_LIMITED` (`:1156`). */
   | Readonly<{

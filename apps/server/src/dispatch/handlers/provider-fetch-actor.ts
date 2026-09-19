@@ -16,6 +16,8 @@
  * (search-to-`FetchKey` subscription, freshness gate, find-or-create-run) has no
  * production durability code today and is a separate, not-yet-specced task.
  */
+import { randomUUID } from "node:crypto";
+
 import type { Pool } from "pg";
 import type { BrowserContext, Route } from "playwright-core";
 import { trace } from "@opentelemetry/api";
@@ -44,9 +46,17 @@ import {
   type TaggedFreshPerformance,
 } from "@seatfirst/core";
 import type { Performance } from "@seatfirst/providers";
+// TODO(diagnostic-capture): uploadDiagnosticBlob is the exact name from this batch's
+// shared contract but no sibling owns it yet (InfraS3AndOps is infra-repo only and
+// declined it; no AWS SDK usage exists in the app repo to reuse — assumed home is
+// @seatfirst/durability next to DIAGNOSTIC_CAPTURE_INSERT). DIAGNOSTIC_CAPTURE_INSERT
+// itself has landed (packages/durability/src/boundaries.ts, params in contract order)
+// and IS exported from the package index. Confirm the helper's home module once it
+// lands and fix this import if it differs.
 import {
   B3_HEARTBEAT_RUN,
   B4_PREDISPATCH,
+  DIAGNOSTIC_CAPTURE_INSERT,
   RUN_DEFER_BUSY,
   SEMAPHORE_ACQUIRE,
   SEMAPHORE_RELEASE,
@@ -60,6 +70,7 @@ import {
   stageRecheckFail,
   stageScheduleAcceptance,
   updatePerformanceProduct,
+  uploadDiagnosticBlob,
   upsertMovie,
   withTransaction,
 } from "@seatfirst/durability";
@@ -129,8 +140,28 @@ export type ParseResult =
       })[];
     }>
   | Readonly<{ ok: true; kind: "RECHECK"; placementAvailable: boolean }>
-  | Readonly<{ ok: false; cause: "PARSER_SCHEMA_INCOMPATIBLE" }>
-  | Readonly<{ ok: false; cause: string }>;
+  | Readonly<{
+      ok: false;
+      cause: "PARSER_SCHEMA_INCOMPATIBLE";
+      diagnostic?: UpstreamChangedDiagnostic;
+    }>
+  | Readonly<{ ok: false; cause: string; diagnostic?: UpstreamChangedDiagnostic }>;
+
+/**
+ * Raw/unredacted diagnostic payload for `UPSTREAM_CHANGED` (risk-accepted by Josh Wu;
+ * see the ADR amendments in this batch). Populated by the provider parse layer, which
+ * fires on an already-fetched HTML string with no live `Page` — so url+body+headers
+ * only, never a screenshot. Additive: consumers that never look for it observe the
+ * exact same outcome shape as before. Absent (undefined) = no capture attempted.
+ */
+export interface UpstreamChangedDiagnostic {
+  /** Raw request URL, full query string included — never redacted. */
+  readonly url: string;
+  /** Raw response body (HTML string or bytes) — never redacted. */
+  readonly body: string | Uint8Array;
+  /** All raw response headers; whatever was available at the parse call site. */
+  readonly headers?: Readonly<Record<string, string | readonly string[]>>;
+}
 
 /**
  * P6's offline synthetic test-harness seams, passed through to `runCorridorNavigation`
@@ -638,6 +669,91 @@ async function failRunWithRecheckOutcome(
 }
 
 /**
+ * Best-effort raw diagnostic capture for `UPSTREAM_CHANGED` only. Runs strictly AFTER
+ * the real outcome/durability transition has committed: a capture failure (S3 or
+ * Postgres) logs a warning and never fails the run. No-op when the parse failure
+ * carries no diagnostic payload. `screenshot_s3_key` is always NULL here — the parser
+ * boundary has no live `Page`.
+ */
+async function captureUpstreamChangedDiagnostic(
+  deps: ProviderFetchActorDeps,
+  logger: SeatfirstLogger,
+  runId: string,
+  parsed: Extract<ParseResult, { ok: false }>,
+): Promise<void> {
+  const diagnostic = parsed.diagnostic;
+  if (diagnostic === undefined) {
+    return;
+  }
+  const captureId = `dcap_${randomUUID()}`;
+  const bodyS3Key = `UPSTREAM_CHANGED/${runId}/${captureId}-body`;
+  try {
+    const body = typeof diagnostic.body === "string" ? diagnostic.body : Buffer.from(diagnostic.body);
+    await uploadDiagnosticBlob(bodyS3Key, body, "text/html; charset=utf-8");
+    await runStatement<{ capture_id: string }>(deps.pool, DIAGNOSTIC_CAPTURE_INSERT, [
+      captureId,
+      runId,
+      "UPSTREAM_CHANGED",
+      diagnostic.url,
+      JSON.stringify(diagnostic.headers ?? {}),
+      bodyS3Key,
+      null,
+    ]);
+  } catch (err) {
+    logger.warn(
+      { run_id: runId, capture_id: captureId, err },
+      "provider fetch: diagnostic capture failed — outcome already recorded",
+    );
+  }
+}
+/**
+ * Best-effort raw diagnostic capture for `UPSTREAM_BLOCKED` / `CHALLENGE_REQUIRED`.
+ * Runs strictly AFTER the real B9/control transition has committed: a capture
+ * failure (S3 or Postgres) logs a warning and never fails the run. No-op when the
+ * outcome carries no raw payload — synthetic/offline corridors never populate it.
+ * Mirrors `captureUpstreamChangedDiagnostic` exactly: upload-then-insert, the whole
+ * step in one try/catch. One deliberate adaptation: `body_s3_key` is NOT NULL in
+ * `026_diagnostic_capture.sql`, so a bodyless capture is unrepresentable and skips
+ * cleanly (no uploads, no row) instead of issuing an insert the schema rejects.
+ */
+async function captureBlockedOrChallengeDiagnostic(
+  deps: ProviderFetchActorDeps,
+  logger: SeatfirstLogger,
+  runId: string,
+  outcome: Extract<NavigationOutcome, { kind: "UPSTREAM_BLOCKED" | "CHALLENGE_REQUIRED" }>,
+): Promise<void> {
+  const raw = outcome.rawDiagnostic;
+  if (raw === undefined || raw.body === undefined) {
+    return;
+  }
+  const captureId = `dcap_${randomUUID()}`;
+  const bodyS3Key = `${outcome.kind}/${runId}/${captureId}-body`;
+  const screenshotS3Key = `${outcome.kind}/${runId}/${captureId}-screenshot`;
+  try {
+    await uploadDiagnosticBlob(bodyS3Key, raw.body, "text/html; charset=utf-8");
+    let persistedScreenshotKey: string | null = null;
+    if (raw.screenshot !== undefined) {
+      await uploadDiagnosticBlob(screenshotS3Key, Buffer.from(raw.screenshot), "image/png");
+      persistedScreenshotKey = screenshotS3Key;
+    }
+    await runStatement<{ capture_id: string }>(deps.pool, DIAGNOSTIC_CAPTURE_INSERT, [
+      captureId,
+      runId,
+      outcome.kind,
+      raw.url,
+      JSON.stringify(raw.headers),
+      bodyS3Key,
+      persistedScreenshotKey,
+    ]);
+  } catch (err) {
+    logger.warn(
+      { run_id: runId, capture_id: captureId, err },
+      "provider fetch: diagnostic capture failed — outcome already recorded",
+    );
+  }
+}
+
+/**
  * S8.7 — the exhaustive `NavigationOutcome` → durability mapping, over all 8 variants
  * with a `never` check (mirroring `deriveControlTransition`'s pattern). Never a default
  * branch that swallows an unhandled variant.
@@ -684,12 +800,16 @@ async function mapNavigationOutcome(
             kind: "PARSER_SCHEMA_INCOMPATIBLE",
             routeClass,
           });
+          // Best-effort raw capture AFTER the real transition committed — never throws.
+          await captureUpstreamChangedDiagnostic(deps, logger, handle.runId, parsed);
           recordFetchDuration(deps.metrics, startedAt, "HALTED");
           return;
         }
         // Any other parse failure: fail this run only, no B9 call (S8.15's contrast —
         // a generic parse failure is not by itself a validated schema incompatibility).
         await failRunWithRecheckOutcome(deps, handle, kind, parsed.cause, "UPSTREAM_CHANGED");
+        // Best-effort raw capture AFTER the real transition committed — never throws.
+        await captureUpstreamChangedDiagnostic(deps, logger, handle.runId, parsed);
         recordFetchDuration(deps.metrics, startedAt, "PARTIAL");
         return;
       }
@@ -827,10 +947,14 @@ async function mapNavigationOutcome(
       return;
     case "CHALLENGE_REQUIRED":
       await controlTransition(deps, providerId, { kind: "CHALLENGE_REQUIRED" });
+      // Best-effort raw capture AFTER the real transition committed — never throws.
+      await captureBlockedOrChallengeDiagnostic(deps, logger, handle.runId, outcome);
       recordFetchDuration(deps.metrics, startedAt, "HALTED");
       return;
     case "UPSTREAM_BLOCKED":
       await controlTransition(deps, providerId, { kind: "UPSTREAM_BLOCKED" });
+      // Best-effort raw capture AFTER the real transition committed — never throws.
+      await captureBlockedOrChallengeDiagnostic(deps, logger, handle.runId, outcome);
       recordFetchDuration(deps.metrics, startedAt, "HALTED");
       return;
     case "RATE_LIMITED": {

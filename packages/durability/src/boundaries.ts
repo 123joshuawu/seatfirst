@@ -2666,5 +2666,56 @@ export const MOVIE_TITLE_SEARCH = define({
     ORDER BY title, movie_id`,
 });
 
+/* --------------------------------- diagnostic capture (terminal-outcome forensics) */
+
+/**
+ * The provider-fetch actor's diagnostic insert: one row per captured terminal
+ * outcome (UPSTREAM_BLOCKED / CHALLENGE_REQUIRED / UPSTREAM_CHANGED), carrying the
+ * raw unredacted URL and raw response headers as jsonb plus the S3 keys of the
+ * body (always) and screenshot (when a live Page existed). The body/screenshot
+ * bytes are uploaded to S3 BEFORE this insert runs, so a row always points at
+ * objects that already exist. Best-effort by contract: the caller wraps this in a
+ * try/catch that logs and never fails the run on a capture error.
+ */
+export const DIAGNOSTIC_CAPTURE_INSERT = define({
+  boundary: "provider-fetch",
+  name: "DIAGNOSTIC_CAPTURE_INSERT",
+  zeroRowsMeans: "unreachable — this is an insert of a fresh capture row.",
+  params: [
+    "capture_id",
+    "run_id",
+    "outcome_kind",
+    "url",
+    "headers",
+    "body_s3_key",
+    "screenshot_s3_key",
+  ],
+  text: `
+    INSERT INTO provider_run_diagnostic_capture
+      (capture_id, run_id, outcome_kind, url, headers, body_s3_key, screenshot_s3_key)
+    VALUES ($1::text, $2::text, $3::text, $4::text, $5::jsonb, $6::text, $7::text)
+    RETURNING capture_id, run_id, outcome_kind, url, headers, body_s3_key,
+              screenshot_s3_key, captured_at`,
+});
+
+/**
+ * The 30-day hard-delete sweep (ADR 0002 §3.2's shortest class). One statement in
+ * the SWEEP_FAIL_EXHAUSTED_JOB shape: a fenced write whose RETURNING drives the
+ * follow-up effects — here the caller deletes the returned S3 objects AFTER the
+ * Postgres delete commits. The ordering is delete-first deliberately: a crash
+ * between the two leaves orphaned S3 objects, never dangling Postgres pointers,
+ * and the orphans self-heal via the bucket's 30-day lifecycle expiration.
+ */
+export const DIAGNOSTIC_CAPTURE_SWEEP_EXPIRED = define({
+  boundary: "sweeper(6)",
+  name: "DIAGNOSTIC_CAPTURE_SWEEP_EXPIRED",
+  zeroRowsMeans: "no capture is older than the cutoff — nothing expired.",
+  params: ["cutoff"],
+  text: `
+    DELETE FROM provider_run_diagnostic_capture
+    WHERE captured_at < $1::timestamptz
+    RETURNING capture_id, run_id, outcome_kind, body_s3_key, screenshot_s3_key`,
+});
+
 /** Every statement above, in declaration order. Tier 1 prepares all of them. */
 export const ALL_STATEMENTS: readonly Statement[] = statements;

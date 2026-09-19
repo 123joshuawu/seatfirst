@@ -6,7 +6,7 @@ import {
   SeatPageResultSchema,
 } from "../../contract.js";
 import { extractShapeFromHtml } from "../flight.js";
-import { ProviderError } from "../../errors.js";
+import { ProviderError, attachUpstreamChangedDiagnostic } from "../../errors.js";
 import { normalizeSeatKind } from "../normalize.js";
 
 const PublicSeatSchema = z
@@ -67,7 +67,7 @@ const PublicSeatMapSchema = z
 export type PublicShowtime = z.infer<typeof PublicShowtimeSchema>;
 export type PublicSeatMap = z.infer<typeof PublicSeatMapSchema>;
 
-export function parseSeats(
+function parseSeatsImpl(
   html: string,
   observationTime: Date,
   requestUrl: string,
@@ -200,4 +200,20 @@ export function parseSeats(
   }
 
   return validatedResult.data;
+}
+
+export function parseSeats(
+  html: string,
+  observationTime: Date,
+  requestUrl: string,
+  expectedShowtimeId: number,
+): SeatPageResult {
+  try {
+    return parseSeatsImpl(html, observationTime, requestUrl, expectedShowtimeId);
+  } catch (error) {
+    // UPSTREAM_CHANGED-only raw capture: no headers exist at this boundary, so only the
+    // genuinely in-scope body + URL are attached. Other error codes pass through untouched.
+    attachUpstreamChangedDiagnostic(error, { url: requestUrl, body: html });
+    throw error;
+  }
 }

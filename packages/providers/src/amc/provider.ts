@@ -10,7 +10,11 @@ import { buildTheatresUrl, buildShowtimesUrl, buildSeatsUrl, isAllowedUrl } from
 import { parseTheatres } from "./parse/theatres.js";
 import { parseShowtimes } from "./parse/showtimes.js";
 import { parseSeats } from "./parse/seats.js";
-import { ProviderError } from "../errors.js";
+import {
+  ProviderError,
+  attachUpstreamChangedDiagnostic,
+  getUpstreamChangedDiagnostic,
+} from "../errors.js";
 import { EXTRACTOR_VERSION } from "./flight.js";
 
 export class AmcProvider implements VenueProvider {
@@ -33,9 +37,36 @@ export class AmcProvider implements VenueProvider {
         err instanceof Error ? err.message : String(err),
       );
       if (err instanceof ProviderError) {
-        return { ok: false, code: err.code, message: err.message, providerMeta: err.providerMeta };
+        const outcome = {
+          ok: false as const,
+          code: err.code,
+          message: err.message,
+          providerMeta: err.providerMeta,
+        };
+        if (err.code === "UPSTREAM_CHANGED") {
+          // Raw capture side channel: prefer the parser-attached payload, else build from
+          // the genuinely in-scope body + URL. Non-enumerable — invisible to existing consumers.
+          attachUpstreamChangedDiagnostic(
+            outcome,
+            getUpstreamChangedDiagnostic(err) ?? {
+              url: url.toString(),
+              body: fetchOutcome.value.body,
+            },
+          );
+        }
+        return outcome;
       }
-      return { ok: false, code: "UPSTREAM_CHANGED", message: String(err), providerMeta: {} };
+      const outcome = {
+        ok: false as const,
+        code: "UPSTREAM_CHANGED" as const,
+        message: String(err),
+        providerMeta: {},
+      };
+      attachUpstreamChangedDiagnostic(outcome, {
+        url: url.toString(),
+        body: fetchOutcome.value.body,
+      });
+      return outcome;
     }
   }
 
@@ -75,9 +106,36 @@ export class AmcProvider implements VenueProvider {
         err instanceof Error ? err.message : String(err),
       );
       if (err instanceof ProviderError) {
-        return { ok: false, code: err.code, message: err.message, providerMeta: err.providerMeta };
+        const outcome = {
+          ok: false as const,
+          code: err.code,
+          message: err.message,
+          providerMeta: err.providerMeta,
+        };
+        if (err.code === "UPSTREAM_CHANGED") {
+          // Raw capture side channel: prefer the parser-attached payload, else build from
+          // the genuinely in-scope body + URL. Non-enumerable — invisible to existing consumers.
+          attachUpstreamChangedDiagnostic(
+            outcome,
+            getUpstreamChangedDiagnostic(err) ?? {
+              url: url.toString(),
+              body: fetchOutcome.value.body,
+            },
+          );
+        }
+        return outcome;
       }
-      return { ok: false, code: "UPSTREAM_CHANGED", message: String(err), providerMeta: {} };
+      const outcome = {
+        ok: false as const,
+        code: "UPSTREAM_CHANGED" as const,
+        message: String(err),
+        providerMeta: {},
+      };
+      attachUpstreamChangedDiagnostic(outcome, {
+        url: url.toString(),
+        body: fetchOutcome.value.body,
+      });
+      return outcome;
     }
   }
 
@@ -122,9 +180,36 @@ export class AmcProvider implements VenueProvider {
         err instanceof Error ? err.message : String(err),
       );
       if (err instanceof ProviderError) {
-        return { ok: false, code: err.code, message: err.message, providerMeta: err.providerMeta };
+        const outcome = {
+          ok: false as const,
+          code: err.code,
+          message: err.message,
+          providerMeta: err.providerMeta,
+        };
+        if (err.code === "UPSTREAM_CHANGED") {
+          // Raw capture side channel: prefer the parser-attached payload, else build from
+          // the genuinely in-scope body + URL. Non-enumerable — invisible to existing consumers.
+          attachUpstreamChangedDiagnostic(
+            outcome,
+            getUpstreamChangedDiagnostic(err) ?? {
+              url: url.toString(),
+              body: fetchOutcome.value.body,
+            },
+          );
+        }
+        return outcome;
       }
-      return { ok: false, code: "UPSTREAM_CHANGED", message: String(err), providerMeta: {} };
+      const outcome = {
+        ok: false as const,
+        code: "UPSTREAM_CHANGED" as const,
+        message: String(err),
+        providerMeta: {},
+      };
+      attachUpstreamChangedDiagnostic(outcome, {
+        url: url.toString(),
+        body: fetchOutcome.value.body,
+      });
+      return outcome;
     }
   }
 

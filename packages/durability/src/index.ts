@@ -7,6 +7,7 @@
  * when the two disagree the code is right.
  */
 export * from "./boundaries.js";
+export * from "./blob-store.js";
 export * from "./expect-row.js";
 export * from "./invariants.js";
 export * from "./pool.js";
@@ -24,6 +25,8 @@ export {
   createSearch,
   dispatchTmdbFetch,
   findTheatresWithinRadius,
+  insertDiagnosticCapture,
+  sweepExpiredDiagnosticCaptures,
   markOutboxPublished,
   markTmdbFetchDone,
   markTmdbFetchFailed,
@@ -52,8 +55,12 @@ export type {
   CachedScheduleInput,
   CatalogueCrawlStateRow,
   CreateSearchInput,
+  DiagnosticCaptureOutcomeKind,
+  DiagnosticCaptureRow,
+  DiagnosticCaptureSweptRow,
   DispatchTmdbFetchInput,
   EventAppendedRow,
+  InsertDiagnosticCaptureInput,
   MovieRow,
   MovieRowWithPoster,
   OutboxCreatedRow,

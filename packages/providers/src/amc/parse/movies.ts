@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { extractFlightJSON } from "../flight.js";
-import { ProviderError } from "../../errors.js";
+import { ProviderError, attachUpstreamChangedDiagnostic } from "../../errors.js";
 
 const PublicMovieSummarySchema = z
   .object({
@@ -22,7 +22,7 @@ const PublicMovieSummarySchema = z
 
 export type PublicMovieSummary = z.infer<typeof PublicMovieSummarySchema>;
 
-export function parseMovies(
+function parseMoviesImpl(
   html: string,
   observationTime: Date,
   requestUrl: string,
@@ -77,4 +77,19 @@ export function parseMovies(
       observationTime: observationTime.toISOString(),
     },
   }));
+}
+
+export function parseMovies(
+  html: string,
+  observationTime: Date,
+  requestUrl: string,
+): PublicMovieSummary[] {
+  try {
+    return parseMoviesImpl(html, observationTime, requestUrl);
+  } catch (error) {
+    // UPSTREAM_CHANGED-only raw capture: no headers exist at this boundary, so only the
+    // genuinely in-scope body + URL are attached. Other error codes pass through untouched.
+    attachUpstreamChangedDiagnostic(error, { url: requestUrl, body: html });
+    throw error;
+  }
 }

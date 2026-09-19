@@ -14,7 +14,7 @@
 
 import type { Span } from "@opentelemetry/api";
 import * as cheerio from "cheerio";
-import type { BrowserContext, Page, Request, Route } from "playwright-core";
+import type { BrowserContext, Page, Request, Response, Route } from "playwright-core";
 import {
   isAllowedUrl,
   parseSeats,
@@ -39,6 +39,7 @@ import {
   type NavigationOutcome,
   type NavigationScope,
   type Observation,
+  type RawBlockedDiagnostic,
   type SanitizedPayload,
 } from "./outcome.js";
 
@@ -584,6 +585,7 @@ async function runNativeCorridor(args: NativeCorridorArgs): Promise<NavigationOu
   let state: CorridorState = INITIAL_CORRIDOR_STATE;
   let currentUrl = options.targetUrl;
   let earlyOutcome: NavigationOutcome | null = null;
+  let pendingRawDiagnostic: Promise<RawBlockedDiagnostic | undefined> | null = null;
   let lastResponse: { status: number; headers: Record<string, string> } | null = null;
   const requestHopMap = new Map<Request, { hop: MutableHop; startedAt: number }>();
   let subresourceAborts = 0;
@@ -667,7 +669,14 @@ async function runNativeCorridor(args: NativeCorridorArgs): Promise<NavigationOu
         status: response.status(),
         headers: redactHeaders(response.headers()),
       };
-      void page.close().catch(() => {});
+      // Production-only raw forensics: the base outcome above settles synchronously,
+      // so capture can never change the outcome kind. The close waits for the capture
+      // so the screenshot still has a live Page subject; the post-goto return path
+      // awaits the capture (bounded by the corridor deadline) and attaches it.
+      pendingRawDiagnostic = captureRawDiagnostic(page, response);
+      void pendingRawDiagnostic
+        .catch(() => undefined)
+        .then(() => page.close().catch(() => {}));
       return;
     }
 
@@ -692,7 +701,11 @@ async function runNativeCorridor(args: NativeCorridorArgs): Promise<NavigationOu
         status: response.status(),
         headers: redactHeaders(response.headers()),
       };
-      void page.close().catch(() => {});
+      // Same production-only capture contract as the 403 branch above.
+      pendingRawDiagnostic = captureRawDiagnostic(page, response);
+      void pendingRawDiagnostic
+        .catch(() => undefined)
+        .then(() => page.close().catch(() => {}));
       return;
     }
 
@@ -720,7 +733,7 @@ async function runNativeCorridor(args: NativeCorridorArgs): Promise<NavigationOu
   }
 
   if (earlyOutcome !== null) {
-    return earlyOutcome;
+    return await withRawDiagnostic(earlyOutcome, pendingRawDiagnostic, deadline);
   }
   if (externalAborted()) {
     return { kind: "CANCELLED" };
@@ -802,6 +815,95 @@ async function runNativeCorridor(args: NativeCorridorArgs): Promise<NavigationOu
     error: "unexpected corridor state at completion",
   };
 }
+/**
+ * Best-effort raw forensics for one production `UPSTREAM_BLOCKED` /
+ * `CHALLENGE_REQUIRED` response. The raw URL and full raw headers are read
+ * synchronously; the body is then consumed exactly once — nothing else in the
+ * response handler reads it, so this is its single safe read — and the live
+ * `Page` is screenshotted, each in its own try/catch. Any failure omits that
+ * piece, never the outcome: capture must never change the navigation result.
+ * Returns `undefined` only when even the URL/headers are unreadable.
+ */
+async function captureRawDiagnostic(
+  page: Page,
+  response: Response,
+): Promise<RawBlockedDiagnostic | undefined> {
+  let url: string;
+  let headers: Record<string, string>;
+  try {
+    url = response.url();
+    headers = response.headers();
+  } catch {
+    return undefined;
+  }
+  let body: string | undefined;
+  try {
+    body = (await response.body()).toString("utf-8");
+  } catch {
+    body = undefined;
+  }
+  // No logger is plumbed through the transport — and P6.13 keeps raw bytes out of
+  // spans/logs regardless — so a failed screenshot is silent by design: the field is
+  // omitted and the real navigation outcome still resolves.
+  let screenshot: Uint8Array | undefined;
+  try {
+    screenshot = await page.screenshot();
+  } catch {
+    screenshot = undefined;
+  }
+  if (body === undefined) {
+    if (screenshot === undefined) {
+      return { url, headers };
+    }
+    return { url, headers, screenshot };
+  }
+  if (screenshot === undefined) {
+    return { url, headers, body };
+  }
+  return { url, headers, body, screenshot };
+}
+
+/**
+ * Attaches a settled production capture to an early terminal outcome. Bounded by
+ * the corridor deadline (the same `setTimeout`/`clearTimeout` shape as
+ * `awaitHopResponse`): a slow body/screenshot read degrades to the base outcome,
+ * never to a hung navigation. Attaches only to the two capture outcomes — a stale
+ * pending capture from a superseded response is dropped.
+ */
+async function withRawDiagnostic(
+  outcome: NavigationOutcome,
+  pending: Promise<RawBlockedDiagnostic | undefined> | null,
+  deadlineMs: number,
+): Promise<NavigationOutcome> {
+  if (pending === null) {
+    return outcome;
+  }
+  if (outcome.kind !== "UPSTREAM_BLOCKED" && outcome.kind !== "CHALLENGE_REQUIRED") {
+    return outcome;
+  }
+  const remaining = deadlineMs - Date.now();
+  if (remaining <= 0) {
+    return outcome;
+  }
+  const diagnostic = await new Promise<RawBlockedDiagnostic | undefined>((resolve) => {
+    const timer = setTimeout(() => resolve(undefined), remaining);
+    pending.then(
+      (captured) => {
+        clearTimeout(timer);
+        resolve(captured);
+      },
+      () => {
+        clearTimeout(timer);
+        resolve(undefined);
+      },
+    );
+  });
+  if (diagnostic === undefined) {
+    return outcome;
+  }
+  return { ...outcome, rawDiagnostic: diagnostic };
+}
+
 
 // --- S35.11 observation evaluator (fixed, transport-owned; no caller code) ---------------
 

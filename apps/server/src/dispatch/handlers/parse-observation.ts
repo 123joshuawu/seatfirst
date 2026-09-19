@@ -9,7 +9,13 @@
  * `PARSER_SCHEMA_INCOMPATIBLE` path; anything else → its message.
  */
 import { buildAuditoriumLayout, getBit, parseNamespacedId, popcount } from "@seatfirst/core";
-import { parseSeats, parseShowtimes, ProviderError } from "@seatfirst/providers";
+import {
+  parseSeats,
+  parseShowtimes,
+  ProviderError,
+  attachUpstreamChangedDiagnostic,
+  getUpstreamChangedDiagnostic,
+} from "@seatfirst/providers";
 
 import type { ParseResult, ProviderFetchActorDeps } from "./provider-fetch-actor.js";
 
@@ -110,7 +116,14 @@ export const parseObservation: ProviderFetchActorDeps["parseObservation"] = (
     }
   } catch (error) {
     if (error instanceof ProviderError && error.code === "UPSTREAM_CHANGED") {
-      return Promise.resolve({ ok: false, cause: "PARSER_SCHEMA_INCOMPATIBLE" });
+      const failure = { ok: false as const, cause: "PARSER_SCHEMA_INCOMPATIBLE" as const };
+      // Forward the parse layer's raw capture side channel (non-enumerable `diagnostic`,
+      // invisible to existing `toEqual` pins) so the actor's best-effort capture can read it.
+      const diagnostic = getUpstreamChangedDiagnostic(error);
+      if (diagnostic !== undefined) {
+        attachUpstreamChangedDiagnostic(failure, diagnostic);
+      }
+      return Promise.resolve(failure);
     }
     return Promise.resolve({
       ok: false,

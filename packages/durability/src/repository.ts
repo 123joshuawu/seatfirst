@@ -815,3 +815,72 @@ export async function readRecheckOutcome(
   const rows = await runStatement<RecheckOutcomeRow>(db, B.RECHECK_OUTCOME_READ, [runId]);
   return rows[0] ?? null;
 }
+
+export type DiagnosticCaptureOutcomeKind =
+  | "UPSTREAM_BLOCKED"
+  | "CHALLENGE_REQUIRED"
+  | "UPSTREAM_CHANGED";
+
+export interface DiagnosticCaptureRow {
+  readonly capture_id: string;
+  readonly run_id: string;
+  readonly outcome_kind: DiagnosticCaptureOutcomeKind;
+  readonly url: string;
+  readonly headers: Record<string, string>;
+  readonly body_s3_key: string;
+  readonly screenshot_s3_key: string | null;
+  readonly captured_at: Date;
+}
+
+export interface InsertDiagnosticCaptureInput {
+  readonly captureId: string;
+  readonly runId: string;
+  readonly outcomeKind: DiagnosticCaptureOutcomeKind;
+  readonly url: string;
+  readonly headers: Record<string, string>;
+  readonly bodyS3Key: string;
+  readonly screenshotS3Key: string | null;
+}
+
+/**
+ * The provider-fetch actor's diagnostic insert. One row per captured terminal
+ * outcome; the body/screenshot bytes already live in S3 under the supplied keys.
+ * Best-effort by contract — the caller try/catches and never fails the run on a
+ * capture error. A duplicate capture_id raises a unique violation (the caller
+ * mints a fresh id per attempt), so zero rows is unreachable here.
+ */
+export function insertDiagnosticCapture(
+  db: SqlClient,
+  input: InsertDiagnosticCaptureInput,
+): Promise<DiagnosticCaptureRow[]> {
+  return runStatement(db, B.DIAGNOSTIC_CAPTURE_INSERT, [
+    input.captureId,
+    input.runId,
+    input.outcomeKind,
+    input.url,
+    json(input.headers, "headers"),
+    input.bodyS3Key,
+    input.screenshotS3Key,
+  ]);
+}
+
+export interface DiagnosticCaptureSweptRow {
+  readonly capture_id: string;
+  readonly run_id: string;
+  readonly outcome_kind: DiagnosticCaptureOutcomeKind;
+  readonly body_s3_key: string;
+  readonly screenshot_s3_key: string | null;
+}
+
+/**
+ * The 30-day hard-delete sweep. Deletes every capture older than `cutoff` and
+ * returns the deleted rows' S3 keys so the caller can delete the objects after
+ * the Postgres delete commits (orphans self-heal via the bucket lifecycle).
+ * Zero rows means nothing expired.
+ */
+export function sweepExpiredDiagnosticCaptures(
+  db: SqlClient,
+  cutoff: Date,
+): Promise<DiagnosticCaptureSweptRow[]> {
+  return runStatement(db, B.DIAGNOSTIC_CAPTURE_SWEEP_EXPIRED, [cutoff]);
+}

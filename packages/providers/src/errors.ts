@@ -61,3 +61,65 @@ export class ProviderError extends Error {
     this.providerMeta = options.providerMeta ?? {};
   }
 }
+
+/**
+ * Raw/unredacted diagnostic payload for an `UPSTREAM_CHANGED` terminal outcome
+ * (risk-accepted standing capture, not counsel-cleared — see this batch's ADR amendments).
+ *
+ * Internal-only side channel, never a wire field: it is attached as a NON-ENUMERABLE own
+ * `diagnostic` property (see `attachUpstreamChangedDiagnostic`), so every consumer that never
+ * looks for it observes byte-identical behavior — `toEqual`, `toStrictEqual`,
+ * `JSON.stringify`, golden diffs, and object spread all skip non-enumerable keys. It is never
+ * placed in `providerMeta` (which IS persisted and golden-compared) and never added to any
+ * Zod-validated wire schema.
+ */
+export interface UpstreamChangedDiagnostic {
+  /** Raw request URL, full query string included — never redacted. */
+  readonly url: string;
+  /** Raw response body (the HTML string the parser failed on) — never redacted. */
+  readonly body: string;
+  /**
+   * Raw response headers, only when the throw site genuinely has them in scope. The AMC
+   * parse layer receives a body string + URL and nothing else (the fetcher returns no
+   * headers), so this is absent there by construction — capture what is available, never
+   * fabricate.
+   */
+  readonly headers?: Record<string, string | readonly string[]>;
+}
+
+/**
+ * Attaches a diagnostic payload to an `UPSTREAM_CHANGED` error/outcome object. First write
+ * wins; anything that is not an `UPSTREAM_CHANGED` `ProviderError` or a plain carrier object
+ * (e.g. a different error code) is left untouched so non-`UPSTREAM_CHANGED` behavior is
+ * identical with or without this call.
+ */
+export function attachUpstreamChangedDiagnostic(
+  target: unknown,
+  diagnostic: UpstreamChangedDiagnostic,
+): void {
+  if (typeof target !== "object" || target === null) return;
+  if (target instanceof ProviderError && target.code !== "UPSTREAM_CHANGED") return;
+  if (getUpstreamChangedDiagnostic(target) !== undefined) return;
+  Object.defineProperty(target, "diagnostic", {
+    value: diagnostic,
+    enumerable: false,
+    writable: false,
+    configurable: true,
+  });
+}
+
+/**
+ * Reads a diagnostic payload attached by `attachUpstreamChangedDiagnostic`. Returns
+ * `undefined` when absent or malformed — never throws, so capture probing cannot break the
+ * outcome path it inspects.
+ */
+export function getUpstreamChangedDiagnostic(
+  target: unknown,
+): UpstreamChangedDiagnostic | undefined {
+  if (typeof target !== "object" || target === null) return undefined;
+  const candidate = (target as { readonly diagnostic?: unknown }).diagnostic;
+  if (typeof candidate !== "object" || candidate === null) return undefined;
+  const record = candidate as Record<string, unknown>;
+  if (typeof record["url"] !== "string" || typeof record["body"] !== "string") return undefined;
+  return candidate as UpstreamChangedDiagnostic;
+}

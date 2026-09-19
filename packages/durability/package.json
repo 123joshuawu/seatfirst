@@ -7,7 +7,7 @@
     "access": "public"
   },
   "type": "module",
-  "description": "Executable verification of ADR 0001: migrations are the source of SQL truth, boundaries B1\u2013B10/B5F are named statements, tiers 0\u20136 assert them (docs/durability-harness-plan.md)",
+  "description": "Executable verification of ADR 0001: migrations are the source of SQL truth, boundaries B1–B10/B5F are named statements, tiers 0–6 assert them (docs/durability-harness-plan.md)",
   "exports": {
     ".": {
       "types": "./dist/src/index.d.ts",
@@ -28,13 +28,13 @@
     "pretest": "pnpm run test:built",
     "pretest:built": "pnpm run build",
     "test:built": "node test/built-package.smoke.mjs",
-    "test": "vitest run --bail=1 test/tier0.schema.test.ts test/tier0.ledger.test.ts test/tier0.session.test.ts test/tier0.retention.test.ts test/tier0.recheck.test.ts test/tier1.executes.test.ts test/tier2.effects.test.ts test/tier2.repository.test.ts test/tier2.session.test.ts test/tier2.catalog.test.ts test/tier2.catalogue.test.ts test/tier2.provider-control.test.ts test/tier2.sweeper-rearm-runs.test.ts test/tier2.outbox-relay.test.ts test/tier2.provider-fetch-acceptance.test.ts test/tier2.preview-schedule-runs.test.ts test/tier2.search-creation.test.ts test/tier2.cost-ledger.test.ts test/tier2.group-skeletons.test.ts test/tier2.retention.test.ts test/tier2.theatre-search.test.ts test/tier2.theatre-city.test.ts test/tier2.theatre-movies.test.ts test/tier2.cancel.test.ts test/tier2.tmdb.test.ts test/tier2.recheck.test.ts test/tier2.job-admission-dedup.test.ts test/tier3.lifecycle.test.ts test/cli.migrate.test.ts",
+    "test": "vitest run --bail=1 test/tier0.schema.test.ts test/tier0.ledger.test.ts test/tier0.session.test.ts test/tier0.retention.test.ts test/tier0.recheck.test.ts test/tier1.executes.test.ts test/tier2.effects.test.ts test/tier2.repository.test.ts test/tier2.session.test.ts test/tier2.catalog.test.ts test/tier2.catalogue.test.ts test/tier2.provider-control.test.ts test/tier2.sweeper-rearm-runs.test.ts test/tier2.outbox-relay.test.ts test/tier2.provider-fetch-acceptance.test.ts test/tier2.preview-schedule-runs.test.ts test/tier2.search-creation.test.ts test/tier2.cost-ledger.test.ts test/tier2.group-skeletons.test.ts test/tier2.retention.test.ts test/tier2.theatre-search.test.ts test/tier2.theatre-city.test.ts test/tier2.theatre-movies.test.ts test/tier2.cancel.test.ts test/tier2.tmdb.test.ts test/tier2.diagnostic-capture.test.ts test/tier2.recheck.test.ts test/tier2.job-admission-dedup.test.ts test/tier3.lifecycle.test.ts test/cli.migrate.test.ts",
     "test:coverage": "pnpm run test --coverage",
     "test:all": "DURABILITY_REDIS_REQUIRED=1 vitest run --bail=1",
     "test:extended": "DURABILITY_REDIS_REQUIRED=1 vitest run --bail=1 test/tier4.crash.test.ts test/tier5.race.test.ts test/tier6.invariant.test.ts",
     "test:tier0": "vitest run test/tier0.schema.test.ts test/tier0.ledger.test.ts test/tier0.session.test.ts test/tier0.retention.test.ts test/tier0.recheck.test.ts",
     "test:tier1": "vitest run test/tier1.executes.test.ts",
-    "test:tier2": "vitest run test/tier2.effects.test.ts test/tier2.repository.test.ts test/tier2.session.test.ts test/tier2.catalog.test.ts test/tier2.catalogue.test.ts test/tier2.provider-control.test.ts test/tier2.sweeper-rearm-runs.test.ts test/tier2.outbox-relay.test.ts test/tier2.provider-fetch-acceptance.test.ts test/tier2.preview-schedule-runs.test.ts test/tier2.search-creation.test.ts test/tier2.cost-ledger.test.ts test/tier2.group-skeletons.test.ts test/tier2.retention.test.ts test/tier2.theatre-search.test.ts test/tier2.theatre-city.test.ts test/tier2.theatre-movies.test.ts test/tier2.cancel.test.ts test/tier2.tmdb.test.ts test/tier2.recheck.test.ts test/tier2.job-admission-dedup.test.ts",
+    "test:tier2": "vitest run test/tier2.effects.test.ts test/tier2.repository.test.ts test/tier2.session.test.ts test/tier2.catalog.test.ts test/tier2.catalogue.test.ts test/tier2.provider-control.test.ts test/tier2.sweeper-rearm-runs.test.ts test/tier2.outbox-relay.test.ts test/tier2.provider-fetch-acceptance.test.ts test/tier2.preview-schedule-runs.test.ts test/tier2.search-creation.test.ts test/tier2.cost-ledger.test.ts test/tier2.group-skeletons.test.ts test/tier2.retention.test.ts test/tier2.theatre-search.test.ts test/tier2.theatre-city.test.ts test/tier2.theatre-movies.test.ts test/tier2.cancel.test.ts test/tier2.tmdb.test.ts test/tier2.diagnostic-capture.test.ts test/tier2.recheck.test.ts test/tier2.job-admission-dedup.test.ts",
     "test:tier3": "vitest run test/tier3.lifecycle.test.ts",
     "test:tier4": "DURABILITY_REDIS_REQUIRED=1 vitest run test/tier4.crash.test.ts",
     "test:tier5": "DURABILITY_REDIS_REQUIRED=1 vitest run test/tier5.race.test.ts",
@@ -42,6 +42,7 @@
     "clean": "rm -rf dist .turbo"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.1135.0",
     "pg": "8.16.3"
   },
   "devDependencies": {

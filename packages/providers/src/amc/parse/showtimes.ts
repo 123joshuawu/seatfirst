@@ -10,7 +10,7 @@ import {
 import { type Performance, PerformanceSchema } from "../../contract.js";
 import { extractShapeFromHtml } from "../flight.js";
 import { resolveScheduleFromDom } from "./schedule-dom.js";
-import { ProviderError } from "../../errors.js";
+import { ProviderError, attachUpstreamChangedDiagnostic } from "../../errors.js";
 import { resolvePostalCodeTimezone } from "../postal-timezone.js";
 import {
   normalizeShowtimeStatus,
@@ -96,7 +96,7 @@ export type PublicTheatreSchedule = z.infer<typeof PublicTheatreScheduleSchema>;
 // ad hoc at a call site. Matches parse/theatres.ts's own constant of the same name/value.
 const PROVIDER_ID = "amc";
 
-export function parseShowtimes(
+function parseShowtimesImpl(
   html: string,
   observationTime: Date,
   requestUrl: string,
@@ -287,4 +287,19 @@ export function parseShowtimes(
   }
 
   return performances;
+}
+
+export function parseShowtimes(
+  html: string,
+  observationTime: Date,
+  requestUrl: string,
+): Performance[] {
+  try {
+    return parseShowtimesImpl(html, observationTime, requestUrl);
+  } catch (error) {
+    // UPSTREAM_CHANGED-only raw capture: no headers exist at this boundary, so only the
+    // genuinely in-scope body + URL are attached. Other error codes pass through untouched.
+    attachUpstreamChangedDiagnostic(error, { url: requestUrl, body: html });
+    throw error;
+  }
 }
