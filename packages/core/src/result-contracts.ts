@@ -634,12 +634,23 @@ const resolvedCountRefinement = {
   message: "resolved must not exceed total",
 };
 
+/**
+ * C4/ADR 0100 (Cold Mode) — visits movie ids for namespace validation, skipping
+ * any MOVIE leaf that carries a `titles` fallback: the evaluator
+ * (`matchesMovieLeaf` in search-spec.ts) matches by normalized title during
+ * cold resolution when no id match is found, so a cross-namespace id on such a
+ * leaf is admissible. Must stay consistent with `hasUnsupportedMovieSelector`
+ * in search-spec.ts, which applies the same exception.
+ */
 function visitMovieIds(
   predicate: PerformancePredicate,
   visit: (id: string, index: number) => void,
 ): void {
   switch (predicate.kind) {
     case "MOVIE":
+      // C4/ADR 0100 (Cold Mode) — a MOVIE leaf with a `titles` fallback resolves
+      // by title, so none of its ids are subject to the namespace check.
+      if (predicate.titles !== undefined) break;
       predicate.ids.forEach(visit);
       break;
     case "AND":

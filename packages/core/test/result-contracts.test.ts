@@ -438,6 +438,37 @@ describe("aggregate integrity", () => {
     ).toBe(false);
   });
 
+  it("admits a cold-mode TMDB movie id when the MOVIE leaf carries a titles fallback (C4/ADR 0100)", () => {
+    const base = resultWith("RUNNING", null);
+    const withTitlesFallback = resultWith("RUNNING", null, {
+      spec: {
+        ...base.spec,
+        where: { kind: "MOVIE", ids: ["tmdb:movie:1506560"], titles: ["Some Movie"] },
+      },
+      resolved: 0,
+      total: 1,
+    });
+    expect(contracts.SearchResultSchema.safeParse(withTitlesFallback).success).toBe(true);
+
+    const withoutTitlesFallback = resultWith("RUNNING", null, {
+      spec: {
+        ...base.spec,
+        where: { kind: "MOVIE", ids: ["tmdb:movie:1506560"] },
+      },
+      resolved: 0,
+      total: 1,
+    });
+    const parsed = contracts.SearchResultSchema.safeParse(withoutTitlesFallback);
+    expect(parsed.success).toBe(false);
+    expect(
+      !parsed.success &&
+        parsed.error.issues.some(
+          (issue) =>
+            issue.message === "SearchSpec movie namespace must match SearchSpec.providerId",
+        ),
+    ).toBe(true);
+  });
+
   it("rejects captured offers outside the declared capture range", () => {
     expect(
       contracts.SearchResultSchema.safeParse(
