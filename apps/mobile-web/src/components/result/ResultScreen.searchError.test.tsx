@@ -61,7 +61,7 @@ describe("ResultScreen — terminal search error card", () => {
     const retry = renderer.root.findByType(SecondaryButton);
     expect(retry.props.label).toBe("Try again");
     TestRenderer.act(() => {
-      retry.props.onPress();
+      (retry.props as { onPress: () => void }).onPress();
     });
     expect(clearSearchError).toHaveBeenCalledTimes(1);
     expect(startSearch).toHaveBeenCalledTimes(1);

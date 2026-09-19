@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 
-const mockGetQuery = vi.fn();
+const mockGetQuery = vi.fn<(...args: unknown[]) => unknown>();
 
 vi.mock("@/lib/trpc", () => ({
   trpcClient: {
