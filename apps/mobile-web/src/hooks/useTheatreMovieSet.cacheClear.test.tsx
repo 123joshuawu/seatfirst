@@ -198,7 +198,10 @@ describe("useTheatreMovieSet — in-flight dedup (batched 414 duplicate fix)", (
       for (let i = 0; i < 10; i += 1) await Promise.resolve();
     });
     const el = renderer!.root.findByProps({ "data-testid": "movies-multi" });
-    expect(JSON.parse(el.props["data-titles"] as string).sort()).toEqual(["Alpha", "Beta"]);
+    expect((JSON.parse(el.props["data-titles"] as string) as string[]).sort()).toEqual([
+      "Alpha",
+      "Beta",
+    ]);
   });
 
   it("shares one fetch per theatre across two simultaneously mounted instances", async () => {
@@ -232,7 +235,10 @@ describe("useTheatreMovieSet — in-flight dedup (batched 414 duplicate fix)", (
     const nodes = renderer!.root.findAllByProps({ "data-testid": "movies-multi" });
     expect(nodes).toHaveLength(2);
     for (const node of nodes) {
-      expect(JSON.parse(node.props["data-titles"] as string).sort()).toEqual(["Alpha", "Beta"]);
+      expect((JSON.parse(node.props["data-titles"] as string) as string[]).sort()).toEqual([
+        "Alpha",
+        "Beta",
+      ]);
     }
   });
 

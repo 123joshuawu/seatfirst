@@ -1326,8 +1326,9 @@ describe("TheaterField Where — long chip label keeps input usable (chip-overfl
       expect(whereInput).toBeDefined();
       // Placeholder must survive at full length — the old minWidth: 0 collapse
       // clipped it to a few characters ("Search fo") beside a long chip.
-      expect(whereInput!.props.placeholder).toBe("Search for a different place");
-      expect(whereInput!.props.placeholder.length).toBeGreaterThanOrEqual(10);
+      const placeholder = whereInput!.props.placeholder as string;
+      expect(placeholder).toBe("Search for a different place");
+      expect(placeholder.length).toBeGreaterThanOrEqual(10);
     } finally {
       renderer.unmount();
     }
