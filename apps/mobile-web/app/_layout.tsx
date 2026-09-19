@@ -12,9 +12,8 @@ import {
 import { QueryClientProvider } from "@tanstack/react-query";
 import { useFonts } from "expo-font";
 import { Slot } from "expo-router";
-import Head from "expo-router/head";
 import { useEffect, useRef, useState, type ComponentType } from "react";
-import { ActivityIndicator, Pressable, View } from "react-native";
+import { ActivityIndicator, Platform, Pressable, View } from "react-native";
 
 import { AppText } from "@/components/core/AppText";
 import { applySeedFromEnvironment, hasPendingDevSeed, isDevSeedEnabled } from "@/fixtures/devSeed";
@@ -23,6 +22,46 @@ import { renewSession } from "@/lib/session";
 import { queryClient, trpc, trpcClient } from "@/lib/trpc";
 import { useSeatfirstStore } from "@/store/seatfirstStore";
 import { colors } from "@/theme/colors";
+
+// UI-favicon: expo-router/head (react-helmet-async, vendored react-navigation) pulls in
+// the real react-native package from inside an unmocked, unaliased require chain — that
+// package ships raw Flow syntax (`import typeof … from './index.js.flow'`) neither esbuild
+// nor plain Node can parse, so importing expo-router/head crashes any test that renders
+// RootLayout. Managing the document head directly sidesteps the dependency and is
+// equivalent for a client-hydrated SPA: both approaches set these tags after mount, on
+// the web platform only.
+function setMetaDescription(content: string): void {
+  let tag = document.querySelector('meta[name="description"]');
+  if (!tag) {
+    tag = document.createElement("meta");
+    tag.setAttribute("name", "description");
+    document.head.appendChild(tag);
+  }
+  tag.setAttribute("content", content);
+}
+
+function setFaviconLink(type: string, href: string): void {
+  let link = document.querySelector(`link[rel="icon"][type="${type}"]`);
+  if (!link) {
+    link = document.createElement("link");
+    link.setAttribute("rel", "icon");
+    link.setAttribute("type", type);
+    document.head.appendChild(link);
+  }
+  link.setAttribute("href", href);
+}
+
+function useDocumentHead(): void {
+  useEffect(() => {
+    if (Platform.OS !== "web") return;
+    document.title = "Seatfirst • Find your seats";
+    setMetaDescription(
+      "Find the best available seats at a theatre, fast, and hand off to checkout.",
+    );
+    setFaviconLink("image/svg+xml", "/favicon.svg");
+    setFaviconLink("image/png", "/favicon.png");
+  }, []);
+}
 
 function BootstrapGate({ children }: { children: React.ReactNode }) {
   const bootstrapReady = useSeatfirstStore((s) => s.bootstrapReady);
@@ -147,6 +186,7 @@ function useDevSeed(): { DevSeedBar: ComponentType | null; seedSettled: boolean 
 }
 
 export default function RootLayout() {
+  useDocumentHead();
   const { DevSeedBar, seedSettled } = useDevSeed();
   const [fontsLoaded] = useFonts({
     Archivo_600SemiBold,
@@ -165,15 +205,6 @@ export default function RootLayout() {
   return (
     <trpc.Provider client={trpcClient} queryClient={queryClient}>
       <QueryClientProvider client={queryClient}>
-        <Head>
-          <title>Seatfirst • Find your seats</title>
-          <meta
-            name="description"
-            content="Find the best available seats at a theatre, fast, and hand off to checkout."
-          />
-          <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-          <link rel="icon" type="image/png" href="/favicon.png" />
-        </Head>
         <View style={{ flex: 1, backgroundColor: colors.pageBg }}>
           <BootstrapGate>
             <Slot />
