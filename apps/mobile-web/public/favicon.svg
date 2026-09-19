@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <defs>
+    <filter id="chair-shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="6" stdDeviation="10" flood-color="#000000" flood-opacity="0.3" />
+    </filter>
+  </defs>
+
+  <!-- Background Squircle Tile (Charcoal #1c1a17) -->
+  <rect width="512" height="512" rx="128" fill="#1c1a17" />
+
+  <!-- Cinema Chair Group -->
+  <g filter="url(#chair-shadow)">
+    <!-- Headrest Cushion -->
+    <rect x="196" y="90" width="120" height="58" rx="20" fill="#a75f1f" />
+
+    <!-- Backrest Cushion -->
+    <path d="M 166 160 C 166 148 178 142 192 142 L 320 142 C 334 142 346 148 346 160 L 334 292 C 334 304 324 312 310 312 L 202 312 C 188 312 178 304 178 292 Z"
+          fill="#c8752c" />
+
+    <!-- Lower Seat Cushion -->
+    <rect x="146" y="306" width="220" height="74" rx="22" fill="#a75f1f" />
+
+    <!-- Left Armrest Base & Pad -->
+    <rect x="100" y="212" width="46" height="120" rx="18" fill="#c8752c" stroke="#1c1a17" stroke-width="4" />
+    <rect x="94" y="204" width="58" height="24" rx="12" fill="#a75f1f" />
+
+    <!-- Right Armrest Base & Pad -->
+    <rect x="366" y="212" width="46" height="120" rx="18" fill="#c8752c" stroke="#1c1a17" stroke-width="4" />
+    <rect x="360" y="204" width="58" height="24" rx="12" fill="#a75f1f" />
+
+    <!-- Sweet Spot Focus Indicator in Seat Center -->
+    <circle cx="256" cy="232" r="46" fill="none" stroke="#f7f5f1" stroke-width="8" opacity="0.9" />
+    <circle cx="256" cy="232" r="34" fill="#4a5bc4" />
+  </g>
+</svg>

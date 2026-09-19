@@ -12,6 +12,7 @@ import {
 import { QueryClientProvider } from "@tanstack/react-query";
 import { useFonts } from "expo-font";
 import { Slot } from "expo-router";
+import Head from "expo-router/head";
 import { useEffect, useRef, useState, type ComponentType } from "react";
 import { ActivityIndicator, Pressable, View } from "react-native";
 
@@ -164,6 +165,15 @@ export default function RootLayout() {
   return (
     <trpc.Provider client={trpcClient} queryClient={queryClient}>
       <QueryClientProvider client={queryClient}>
+        <Head>
+          <title>Seatfirst • Find your seats</title>
+          <meta
+            name="description"
+            content="Find the best available seats at a theatre, fast, and hand off to checkout."
+          />
+          <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+          <link rel="icon" type="image/png" href="/favicon.png" />
+        </Head>
         <View style={{ flex: 1, backgroundColor: colors.pageBg }}>
           <BootstrapGate>
             <Slot />
