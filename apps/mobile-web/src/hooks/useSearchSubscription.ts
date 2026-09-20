@@ -563,14 +563,31 @@ export function useSearchSubscription(): {
       const hash = specHash(spec);
       const pendingKey = getOrCreatePendingKey(hash);
       const store = useSeatfirstStore.getState();
-      const isContinuation = typeof continuesSearchId === "string" && continuesSearchId.length > 0;
-      // Genuine in-situ diff-merge submission targeting a DIFFERENT spec than
-      // the active server search — distinct from the checkMore/BATCH_DEFERRED
-      // continuation, which resubmits the IDENTICAL spec and keeps working as before.
+      const isContinuationHint =
+        typeof continuesSearchId === "string" && continuesSearchId.length > 0;
+      // S45/ADR-0037 gate (UI31 fix): the backend only accepts continuesSearchId
+      // when the referenced search terminalized with BATCH_DEFERRED. An in-situ
+      // diff-merge update submitted while the live search is still RUNNING must
+      // NOT chain through that mechanism — ADR 0064 Search B is an independent
+      // search with purely client-side retained-row anchors. Gate the forwarded
+      // id here, where store.terminalCause is read at call time; the caller's
+      // hint stays a plain "logically continues from" search id.
+      const forwardedContinuesSearchId =
+        typeof continuesSearchId === "string" &&
+        continuesSearchId.length > 0 &&
+        store.terminalCause === "BATCH_DEFERRED"
+          ? continuesSearchId
+          : undefined;
+      // Client-side diff-merge treatment keys on spec divergence from the active
+      // server-covered spec (ADR 0064) — independent of the continuation hint
+      // above. Distinct from the checkMore/BATCH_DEFERRED continuation, which
+      // resubmits the IDENTICAL spec and keeps working as before.
       const isUpdate =
-        isContinuation &&
-        store.serverCoverageSpec !== null &&
-        specHash(store.serverCoverageSpec) !== hash;
+        store.serverCoverageSpec !== null && specHash(store.serverCoverageSpec) !== hash;
+      // Either an in-situ update or a same-spec continuation keeps skeleton/groups
+      // as retained anchors and resets only the progress fields (UI14.12); a
+      // genuinely fresh search resets everything.
+      const retainsRows = isUpdate || isContinuationHint;
       // Rollback bookkeeping for the optimistic in-situ reset below.
       let rollbackProgress: {
         answer: typeof store.answer;
@@ -592,7 +609,7 @@ export function useSearchSubscription(): {
         };
         store.beginInSituUpdate(retainedIds, retainedGroupsSnapshot);
       }
-      if (isContinuation) {
+      if (retainsRows) {
         useSeatfirstStore.setState({
           lastEventId: null,
           answer: null,
@@ -620,7 +637,7 @@ export function useSearchSubscription(): {
       teardown();
 
       try {
-        const res = await createSearch(spec, pendingKey, continuesSearchId);
+        const res = await createSearch(spec, pendingKey, forwardedContinuesSearchId);
         if (useSeatfirstStore.getState().operationGeneration !== capturedGen) return;
         if (!mountedRef.current) return;
         const sid = res.searchId;
@@ -634,7 +651,7 @@ export function useSearchSubscription(): {
         const skeleton = (res as unknown as { scheduleSkeleton?: ScheduleSkeletonEntry[] })
           .scheduleSkeleton;
         if (Array.isArray(skeleton)) {
-          if (isContinuation) s.appendScheduleSkeleton(skeleton);
+          if (retainsRows) s.appendScheduleSkeleton(skeleton);
           else s.setScheduleSkeleton(skeleton);
           // Seed total from skeleton length if server total not yet known
           if (skeleton.length > 0 && s.total === 0) {

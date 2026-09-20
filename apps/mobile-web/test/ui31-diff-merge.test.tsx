@@ -390,4 +390,87 @@ describe("UI31 in-situ diff-merge end to end (ADR 0064)", () => {
     expect(st.scheduleSkeleton.map((e) => e.showtimeId)).toEqual(["sh_1", "sh_2"]);
     expect(st.error?.code).toBe("ADMISSION_REJECTED");
   });
+  it("update submitted while the live search is still RUNNING omits continuesSearchId but still retains rows (S45 CONTINUATION_NOT_DEFERRED fix)", async () => {
+    const specA = fakeSpec("a");
+    const specB = fakeSpec("b");
+    mockCreate.mockResolvedValueOnce({ searchId: "srch_1", status: "RUNNING" });
+    mockGet.mockResolvedValue(nonTerminalGet("srch_1"));
+    const { result } = renderHook(() => useSearchSubscription());
+    await act(async () => {
+      await result.current.startSearch(specA as never);
+    });
+    await act(() => {
+      lastSubscribeHandlers().onData(
+        skeletonEnvelope([mkEntry("sh_1"), mkEntry("sh_2")], { resolved: 0, total: 2 }),
+      );
+    });
+    useSeatfirstStore.getState().setProgress({
+      resolved: 0,
+      total: 2,
+      groups: [mkGroup("th_old", ["sh_1", "sh_2"])] as never,
+    });
+    // Search A is still RUNNING — it never reached BATCH_DEFERRED.
+    expect(useSeatfirstStore.getState().terminalCause).not.toBe("BATCH_DEFERRED");
+
+    mockCreate.mockResolvedValueOnce({ searchId: "srch_2", status: "RUNNING" });
+    mockGet.mockResolvedValue(nonTerminalGet("srch_2"));
+    await act(async () => {
+      await result.current.startSearch(specB as never, "srch_1");
+    });
+
+    // Backend contract (S45/ADR-0037): continuesSearchId is only valid after
+    // BATCH_DEFERRED — the RUNNING update must go out as an independent
+    // Search B without it, or create rejects with CONTINUATION_NOT_DEFERRED.
+    const createInput = mockCreate.mock.calls[mockCreate.mock.calls.length - 1]![0] as Record<
+      string,
+      unknown
+    >;
+    expect(createInput).not.toHaveProperty("continuesSearchId");
+    // ...but the client-side diff-merge treatment still applies.
+    expect([...(useSeatfirstStore.getState().retainedRowIds as Set<string>)].sort()).toEqual([
+      "sh_1",
+      "sh_2",
+    ]);
+    expect(useSeatfirstStore.getState().searchId).toBe("srch_2");
+    expect(useSeatfirstStore.getState().error).toBeNull();
+  });
+
+  it("update submitted after BATCH_DEFERRED still forwards continuesSearchId (checkMore contract intact)", async () => {
+    const specA = fakeSpec("a");
+    const specB = fakeSpec("b");
+    mockCreate.mockResolvedValueOnce({ searchId: "srch_1", status: "RUNNING" });
+    mockGet.mockResolvedValue(nonTerminalGet("srch_1"));
+    const { result } = renderHook(() => useSearchSubscription());
+    await act(async () => {
+      await result.current.startSearch(specA as never);
+    });
+    await act(() => {
+      lastSubscribeHandlers().onData(
+        skeletonEnvelope([mkEntry("sh_1"), mkEntry("sh_2")], { resolved: 0, total: 2 }),
+      );
+    });
+    useSeatfirstStore.getState().setProgress({
+      resolved: 0,
+      total: 2,
+      groups: [mkGroup("th_old", ["sh_1", "sh_2"])] as never,
+    });
+    useSeatfirstStore.getState().setTerminalCause("BATCH_DEFERRED");
+
+    mockCreate.mockResolvedValueOnce({ searchId: "srch_2", status: "RUNNING" });
+    mockGet.mockResolvedValue(nonTerminalGet("srch_2"));
+    await act(async () => {
+      await result.current.startSearch(specB as never, "srch_1");
+    });
+
+    const createInput = mockCreate.mock.calls[mockCreate.mock.calls.length - 1]![0] as Record<
+      string,
+      unknown
+    >;
+    expect(createInput.continuesSearchId).toBe("srch_1");
+    expect([...(useSeatfirstStore.getState().retainedRowIds as Set<string>)].sort()).toEqual([
+      "sh_1",
+      "sh_2",
+    ]);
+    expect(useSeatfirstStore.getState().searchId).toBe("srch_2");
+  });
 });

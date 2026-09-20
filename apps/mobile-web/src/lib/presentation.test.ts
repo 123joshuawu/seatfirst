@@ -13,6 +13,7 @@ import {
   resolveActivePlacementCard,
   resolveHandoffTarget,
   runtimeLabel,
+  searchErrorDetailLabel,
 } from "./presentation";
 
 describe("runtimeLabel", () => {
@@ -191,5 +192,27 @@ describe("handoffHonestyLabel (P9.6)", () => {
   it("names the placement being handed off", () => {
     const placement = makePlacement({ seatNames: ["J10", "J9", "J8", "J7"] });
     expect(handoffHonestyLabel(placement)).toContain("Row J 7–10");
+  });
+});
+
+describe("searchErrorDetailLabel (UI31 fix)", () => {
+  it("maps CONTINUATION_NOT_DEFERRED to friendly copy without the raw code", () => {
+    const label = searchErrorDetailLabel(
+      "continuation requires BATCH_DEFERRED terminal cause",
+      "CONTINUATION_NOT_DEFERRED",
+    );
+    expect(label).toContain("still loading");
+    expect(label).not.toContain("CONTINUATION_NOT_DEFERRED");
+    expect(label).not.toContain("BATCH_DEFERRED");
+  });
+
+  it("preserves the message (code) debug format for every other code", () => {
+    expect(searchErrorDetailLabel("Internal server error", "INTERNAL_SERVER_ERROR")).toBe(
+      "Internal server error (INTERNAL_SERVER_ERROR)",
+    );
+  });
+
+  it("renders the bare message when code is undefined", () => {
+    expect(searchErrorDetailLabel("boom", undefined)).toBe("boom");
   });
 });

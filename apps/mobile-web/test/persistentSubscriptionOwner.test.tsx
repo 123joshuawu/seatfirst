@@ -247,6 +247,13 @@ describe("persistent subscription owner — form unmount during create", () => {
     mockSubscribe.mockReturnValue({ unsubscribe: vi.fn() });
 
     const spec = fakeSpec();
+    // Genuine BATCH_DEFERRED continuation state, as checkMore in
+    // useSearchResultsViewModel.ts observes before threading the hint (UI31
+    // fix: startSearch only forwards continuesSearchId in that state).
+    useSeatfirstStore.setState({
+      serverCoverageSpec: spec as never,
+      terminalCause: "BATCH_DEFERRED",
+    });
     await act(async () => {
       await persistent.result.current.startSearch(spec as never, "srch_prev_999");
     });

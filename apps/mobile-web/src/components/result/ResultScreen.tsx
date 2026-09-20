@@ -17,6 +17,7 @@ import { QuickEditBar } from "./QuickEditBar";
 import { PreferBar } from "./PreferBar";
 import { NO_PREFERENCE, type PreferToggles } from "@/lib/preferSort";
 import { formatCodeToPref } from "@/lib/buildSearchSpec";
+import { searchErrorDetailLabel } from "@/lib/presentation";
 
 export interface ResultScreenProps {
   startSearch?: SubmitSearchStart;
@@ -50,10 +51,10 @@ export function ResultScreen({
   // and surface a retry card instead of spinning forever.
   if (progressVm.error !== null) {
     const searchError = progressVm.error;
-    const detail =
-      searchError.code !== undefined && searchError.code.length > 0
-        ? `${searchError.message} (${searchError.code})`
-        : searchError.message;
+    // UI31 fix: never render the raw CONTINUATION_NOT_DEFERRED backend code
+    // verbatim — searchErrorDetailLabel maps that single race code to friendly
+    // copy and preserves the `message (code)` debug format for all others.
+    const detail = searchErrorDetailLabel(searchError.message, searchError.code);
     const handleRetry = (): void => {
       vm.actions.clearSearchError();
       vm.actions.startSearch();

@@ -42,6 +42,24 @@ describe("ResultScreen — terminal search error card", () => {
     expect(str).not.toContain("Checking showtimes");
   });
 
+  it("maps CONTINUATION_NOT_DEFERRED to friendly copy instead of the raw backend code", () => {
+    const renderer = renderScreen(
+      makeMockVm({
+        isChecking: true,
+        searchStatus: "RUNNING",
+        error: {
+          message: "continuation requires BATCH_DEFERRED terminal cause",
+          code: "CONTINUATION_NOT_DEFERRED",
+        },
+      }),
+    );
+    const str = JSON.stringify(renderer.toJSON());
+    expect(str).toContain("Couldn't check seats");
+    expect(str).toContain("still loading");
+    expect(str).not.toContain("CONTINUATION_NOT_DEFERRED");
+    expect(str).not.toContain("BATCH_DEFERRED");
+  });
+
   it("does not render the error card when error is null", () => {
     const renderer = renderScreen(makeMockVm({ error: null }));
     const str = JSON.stringify(renderer.toJSON());

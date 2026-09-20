@@ -408,6 +408,19 @@ export function haltedBannerLabel(cause: EmptyCause): string {
 export function admissionRejectedLabel(retryAfterSeconds: number): string {
   return `No capacity — try again. Retry in ${retryAfterSeconds} seconds`;
 }
+/**
+ * Submission-time error detail for the result screen's retry card (UI31 fix).
+ * A residual CONTINUATION_NOT_DEFERRED race (terminalCause flipped between the
+ * startSearch gate read and request dispatch, or multi-tab) must never surface
+ * the raw backend code verbatim — map that single code to friendly copy and
+ * preserve the existing `message (code)` debug format for everything else.
+ */
+export function searchErrorDetailLabel(message: string, code: string | undefined): string {
+  if (code === "CONTINUATION_NOT_DEFERRED") {
+    return "Your search updated while results were still loading — please try again.";
+  }
+  return code !== undefined && code.length > 0 ? `${message} (${code})` : message;
+}
 // ---------------------------------------------------------------------------
 // Recheck presentation helpers (UI6)
 // ---------------------------------------------------------------------------
