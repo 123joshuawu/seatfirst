@@ -292,7 +292,7 @@ describe("useMovieSearch request de-duplication (audit finding 8)", () => {
   }
 
   async function settle(releases: Array<(value: unknown) => void>): Promise<void> {
-    await act(async () => {
+    await act(() => {
       for (const release of releases) release({ movies: [] });
     });
     await flush();
