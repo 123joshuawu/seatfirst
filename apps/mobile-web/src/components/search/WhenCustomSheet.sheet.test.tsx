@@ -122,7 +122,7 @@ describe("mobile sheet full-height layout (P0-3)", () => {
     expect(spanText(root)).toContain("3 days selected");
   });
 
-  it("HowItWorksSheet body scrolls with the close action outside, no sub-viewport cap", () => {
+  it("HowItWorksSheet panel sizes to content with the close action outside (UX-03)", () => {
     act(() => {
       renderer = TestRenderer.create(<HowItWorksSheet open={true} onClose={() => {}} />);
     });
@@ -131,8 +131,8 @@ describe("mobile sheet full-height layout (P0-3)", () => {
     expect(bodies).toHaveLength(1);
     const body = bodies[0]!;
     const panelStyle = (body.parent!.props as { style: Record<string, unknown> }).style;
-    expect(panelStyle.flex).toBe(1);
-    expect(panelStyle.maxHeight).toBeUndefined();
+    expect(panelStyle.flex).toBeUndefined();
+    expect(panelStyle.maxHeight).toBeDefined();
     const insideLabels = body
       .findAllByType(Pressable)
       .map((n) => (n.props as { accessibilityLabel?: string }).accessibilityLabel);
@@ -339,5 +339,116 @@ describe("WhenCustomSheet draft bands (ADR 0044 amendment 2026-09-05)", () => {
     expect(s.whenPreset).toBe("Custom");
     expect(s.isCustom).toBe(true);
     expect(s.whenSheetOpen).toBe(false);
+  });
+});
+
+describe("WhenCustomSheet Escape + backdrop dismiss (BUG-03)", () => {
+  let renderer: TestRenderer.ReactTestRenderer | undefined;
+
+  beforeEach(() => {
+    vi.setSystemTime(new Date(2026, 7, 29, 12, 0));
+  });
+
+  afterEach(() => {
+    renderer?.unmount();
+    renderer = undefined;
+    useSeatfirstStore.setState({ whenSheetOpen: false });
+    vi.useRealTimers();
+  });
+
+  // Tapping the Custom chip eagerly flags Custom without changing the commit;
+  // Cancel (and therefore Escape/backdrop, which reuse its handler) must
+  // reconcile back to Tonight. Mirrors the Cancel test above.
+  function openEagerCustom(): { tonightDates: string[]; root: TestRenderer.ReactTestInstance } {
+    act(() => {
+      useSeatfirstStore.getState().selectWhenPreset("Tonight");
+    });
+    const tonightDates = useSeatfirstStore.getState().selectedDates;
+    act(() => {
+      useSeatfirstStore.getState().selectWhenPreset("Custom");
+    });
+    expect(useSeatfirstStore.getState().whenPreset).toBe("Custom");
+    act(() => {
+      renderer = TestRenderer.create(<WhenCustomSheet />);
+    });
+    return { tonightDates, root: renderer!.root };
+  }
+
+  function expectCancelBehavior(tonightDates: string[]): void {
+    const s = useSeatfirstStore.getState();
+    expect(s.whenPreset).toBe("Tonight");
+    expect(s.isCustom).toBe(false);
+    expect(s.whenSheetOpen).toBe(false);
+    expect(s.selectedDates).toEqual(tonightDates);
+  }
+
+  it("Escape discards the draft and closes, matching Cancel behavior", () => {
+    const { tonightDates, root } = openEagerCustom();
+    expect(root).toBeDefined();
+    // Non-Escape keys must not dismiss.
+    act(() => {
+      document.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter" }));
+    });
+    expect(useSeatfirstStore.getState().whenSheetOpen).toBe(true);
+    act(() => {
+      document.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape" }));
+    });
+    expectCancelBehavior(tonightDates);
+  });
+
+  it("closed sheet subscribes to nothing: Escape does not touch the store", () => {
+    act(() => {
+      useSeatfirstStore.getState().selectWhenPreset("Tonight");
+    });
+    const before = useSeatfirstStore.getState().selectedDates;
+    act(() => {
+      renderer = TestRenderer.create(<WhenCustomSheet />);
+    });
+    expect(renderer!.toJSON()).toBeNull();
+    act(() => {
+      document.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape" }));
+    });
+    const s = useSeatfirstStore.getState();
+    expect(s.whenPreset).toBe("Tonight");
+    expect(s.selectedDates).toEqual(before);
+  });
+
+  it("tapping the backdrop scrim closes via the Cancel path", () => {
+    const { tonightDates, root } = openEagerCustom();
+    pressByLabel(root, "Close custom window dialog");
+    expectCancelBehavior(tonightDates);
+  });
+
+  it("the scrim is a sibling behind the panel: panel taps never dismiss", () => {
+    const { root } = openEagerCustom();
+    // The scrim is a direct child of the overlay and a sibling of the white
+    // card panel — not an ancestor of it — so the panel subtree contains no
+    // dismiss handler and in-panel interaction cannot close the sheet.
+    const scrim = root
+      .findAllByType(Pressable)
+      .find(
+        (n) =>
+          (n.props as { accessibilityLabel?: string }).accessibilityLabel ===
+          "Close custom window dialog",
+      );
+    expect(scrim, "scrim pressable exists").toBeDefined();
+    const overlayPressables = scrim!.parent!.findAllByType(Pressable);
+    expect(overlayPressables).toContain(scrim);
+    const panelPressables = overlayPressables.filter((n) => n !== scrim);
+    expect(panelPressables.length).toBeGreaterThan(0);
+    for (const node of panelPressables) {
+      expect((node.props as { accessibilityLabel?: string }).accessibilityLabel).not.toBe(
+        "Close custom window dialog",
+      );
+    }
+    // Behavioral check: pressing a date cell inside the panel edits the
+    // draft but leaves the sheet open.
+    const saturdayLabel = new Intl.DateTimeFormat("en-US", {
+      weekday: "long",
+      month: "long",
+      day: "numeric",
+    }).format(new Date(2026, 7, 29));
+    pressByLabel(root, saturdayLabel);
+    expect(useSeatfirstStore.getState().whenSheetOpen).toBe(true);
   });
 });

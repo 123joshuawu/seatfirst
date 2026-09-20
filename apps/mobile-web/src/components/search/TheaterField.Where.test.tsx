@@ -1166,7 +1166,7 @@ describe("TheaterField Where — UI21 place panel actions", () => {
     expect(useSeatfirstStore.getState().wherePlace).toBeNull();
     expect(useSeatfirstStore.getState().deviceCenter).toBeNull();
     expect(useSeatfirstStore.getState().selectedTheatres).toEqual(refs);
-    expect(jsonString(renderer)).toContain("Search for another theatre");
+    expect(jsonString(renderer)).toContain("+ Add theatre");
   });
 
   it("clears the selected mode from the labelled control", () => {

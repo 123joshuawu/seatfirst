@@ -108,6 +108,7 @@ export function SearchForm({ startSearch }: SearchFormProps = {}): ReactElement 
         marginBottom={vm.isMobile ? 20 : 12}
         isMobile={vm.isMobile}
         isLocked={isLocked}
+        balancedGridMobile
         {...(vm.formatCounts ? { facetCounts: vm.formatCounts } : {})}
         {...(vm.facetTotalTheatres !== undefined
           ? { totalTheatres: vm.facetTotalTheatres }

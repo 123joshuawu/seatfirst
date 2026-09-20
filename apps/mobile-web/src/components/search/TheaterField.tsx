@@ -290,7 +290,7 @@ export function TheaterField({
                 vm.whereFieldMode === "place"
                   ? "Search for a different place"
                   : vm.whereFieldMode === "theatres"
-                    ? "Search for another theatre"
+                    ? "+ Add theatre"
                     : "Add a place or theatre"
               }
               placeholderTextColor={colors.textTertiary}

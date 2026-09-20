@@ -270,12 +270,20 @@ const styles = StyleSheet.create({
   disabled: {
     opacity: 0.5,
   },
+  // Desktop inline popover — BUG-01: this used to be an absolutely-positioned
+  // overlay (`position: "absolute", top: "100%", left: 0, right: 0`), whose
+  // bounding box (scroll region up to 360px tall plus header chrome) always
+  // extended over the next sibling field (MOVIE input / FORMAT pills) on the
+  // tight desktop rhythm, trapping pointer events: a click aimed at the
+  // covered field landed ON the popover and the outside-dismiss hook
+  // correctly treated it as inside. Rendered in-flow instead, the open list
+  // pushes the fields below it down, so nothing is ever occluded and a real
+  // click lands on its visible target first try. The 150ms-deferred blur
+  // close (searchFormSlice onWhereBlur/onMovieBlur) keeps layout stable
+  // through press/release, so option selection and the capture-phase dismiss
+  // below both still win their races unchanged. Mobile is untouched (sheet).
   popover: {
-    position: "absolute",
-    top: "100%",
     marginTop: 4,
-    left: 0,
-    right: 0,
     backgroundColor: colors.cardBg,
     borderWidth: 1,
     borderColor: colors.popoverBorder,

@@ -39,15 +39,26 @@ export function WhenPresetRow({
           marginBottom: desktop ? 6 : 8,
         }}
       >
-        {vm.dedupedPresets.map((label) => (
-          <Chip
-            key={label}
-            label={label}
-            active={vm.activePreset === label}
-            onPress={() => vm.actions.handlePresetPress(label)}
-            disabled={isLocked}
-          />
-        ))}
+        {vm.dedupedPresets.map((label) => {
+          const chip = (
+            <Chip
+              key={label}
+              label={label}
+              active={vm.activePreset === label}
+              onPress={() => vm.actions.handlePresetPress(label)}
+              disabled={isLocked}
+            />
+          );
+          // UX-04: mobile 2-up grid so presets fill even rows; desktop keeps bare chips.
+          if (!desktop) {
+            return (
+              <View key={label} style={styles.gridCell}>
+                {chip}
+              </View>
+            );
+          }
+          return chip;
+        })}
       </View>
       {!hideResolvedReadout && (
         <View style={[styles.resolved, desktop && styles.resolvedDesktop]}>
@@ -78,5 +89,10 @@ const styles = StyleSheet.create({
   resolvedDesktop: {
     paddingVertical: 8,
     gap: 8,
+  },
+  // UX-04: mobile 2-up grid cell for the WHEN preset pills.
+  gridCell: {
+    flexBasis: "48%",
+    flexGrow: 1,
   },
 });

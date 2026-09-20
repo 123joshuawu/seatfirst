@@ -1,4 +1,4 @@
-import { useState, type ReactElement } from "react";
+import { useEffect, useState, type ReactElement } from "react";
 import { View, Pressable, ScrollView, Platform } from "react-native";
 import { AppText } from "@/components/core/AppText";
 import { EyebrowLabel } from "@/components/core/EyebrowLabel";
@@ -13,6 +13,22 @@ export function WhenCustomSheet(): ReactElement | null {
   const [scrollContentHeight, setScrollContentHeight] = useState(0);
   const [scrollOffsetY, setScrollOffsetY] = useState(0);
 
+  // BUG-03: web-only Escape-to-dismiss (matches the `Platform.OS === "web"` +
+  // `document` guard convention in Autocomplete's `useOutsidePointerDownDismiss`
+  // and HowItWorksSheet). Reuses the same `handleCancel` the Cancel button
+  // calls, so Escape discards the draft exactly like Cancel. Hooks stay above
+  // the `!whenSheetOpen` early return so hook order is stable across renders.
+  useEffect(() => {
+    if (!vm.whenSheetOpen) return;
+    if (Platform.OS !== "web" || typeof document === "undefined") return;
+    const handleKeyDown = (event: KeyboardEvent): void => {
+      if (event.key === "Escape") vm.actions.handleCancel();
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [vm.whenSheetOpen, vm.actions.handleCancel]);
   if (!vm.whenSheetOpen) return null;
 
   // Bottom fade (web-only, matches LeftPanel's poster-stripe convention of a
@@ -32,7 +48,6 @@ export function WhenCustomSheet(): ReactElement | null {
         left: 0,
         right: 0,
         bottom: 0,
-        backgroundColor: "rgba(0,0,0,0.4)",
         justifyContent: "center",
         alignItems: "center",
         padding: 16,
@@ -41,15 +56,37 @@ export function WhenCustomSheet(): ReactElement | null {
       accessible={true}
       accessibilityLabel="Custom window"
     >
+      {/* BUG-03: scrim Pressable behind a separately-hit-tested panel (mirrors
+        `AutocompletePopover`'s mobile sheet branch `sheetScrim` + `sheetPanel`):
+        tapping the dark backdrop calls the same `handleCancel` as the Cancel
+        button, while taps inside the white card hit the panel sibling above
+        and never dismiss. */}
+      <Pressable
+        onPress={vm.actions.handleCancel}
+        accessibilityRole="button"
+        accessibilityLabel="Close custom window dialog"
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: "rgba(0,0,0,0.4)",
+        }}
+      />
       <View
         style={{
           backgroundColor: "#fff",
           borderRadius: 12,
-          padding: 16,
+          // UX-01: tighter panel chrome (was padding 16 / gap 12) hands ~24px
+          // of vertical budget back to the calendar ScrollView below, so the
+          // second month and the selection summary are visible without
+          // scrolling at 1280x900. The `hasMoreBelow` fade stays as fallback.
+          padding: 12,
           width: "100%",
           maxWidth: 400,
           flex: 1,
-          gap: 12,
+          gap: 8,
           overflow: "hidden",
         }}
       >
@@ -131,10 +168,11 @@ export function WhenCustomSheet(): ReactElement | null {
             flexDirection: "row",
             alignItems: "center",
             justifyContent: "space-between",
-            marginTop: 12,
+            // UX-01: was marginTop 12 + paddingBottom 8; trims 12px more of
+            // fixed chrome for the calendar ScrollView above.
+            marginTop: 8,
             flexShrink: 0,
             backgroundColor: "#fff",
-            paddingBottom: 8,
           }}
         >
           <Pressable

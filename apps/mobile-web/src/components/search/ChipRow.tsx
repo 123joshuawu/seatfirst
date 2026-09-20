@@ -32,6 +32,13 @@ export interface ChipRowProps {
    * viewports. `undefined` keeps the long-standing mobile values.
    */
   isMobile?: boolean;
+  /**
+   * UX-04: on mobile, lay pills out in a balanced 2-up grid (each chip
+   * `flexBasis: "48%"` + `flexGrow: 1` inside the wrapping row) so a 4-chip
+   * row settles into two full rows instead of stranding one pill alone.
+   * Desktop layout untouched. Opt-in per caller.
+   */
+  balancedGridMobile?: boolean;
 }
 
 export function ChipRow({
@@ -48,9 +55,11 @@ export function ChipRow({
   totalTheatres,
   getFacetKey,
   isMobile,
+  balancedGridMobile = false,
 }: ChipRowProps): ReactElement {
   const groupDisabled = isLocked || disabled;
   const desktop = isMobile === false;
+  const grid = balancedGridMobile && !desktop;
   const facetMap: Map<string, FacetCountEntry> | null = (() => {
     if (!facetCounts) return null;
     if (facetCounts instanceof Map) return facetCounts;
@@ -212,7 +221,7 @@ export function ChipRow({
               </Pressable>
             );
           }
-          return (
+          const pill = (
             <Chip
               key={i}
               label={chipLabel}
@@ -223,6 +232,15 @@ export function ChipRow({
               disabled={isDisabled}
             />
           );
+          // UX-04: grid cell wrapper only on mobile opt-in; desktop keeps bare chips.
+          if (grid) {
+            return (
+              <View key={i} style={styles.gridCell}>
+                {pill}
+              </View>
+            );
+          }
+          return pill;
         })}
       </View>
     </View>
@@ -288,5 +306,10 @@ const styles = StyleSheet.create({
   hrs: {
     fontSize: 11,
     color: colors.textTertiary,
+  },
+  // UX-04: mobile 2-up grid cell for opted-in pill rows (Format).
+  gridCell: {
+    flexBasis: "48%",
+    flexGrow: 1,
   },
 });
