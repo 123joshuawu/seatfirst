@@ -29,8 +29,9 @@ describe("MovieField poster (picker suggestions)", () => {
         theaterConfirmed: true,
         movieValue: "",
         movieFocused: true,
-        movieSuggestionsHeader: "Now playing",
-        movieSuggestions: [
+        liveScheduleHeader: "Now playing at AMC",
+        nowPlayingHeader: "Now Playing (general release)",
+        liveScheduleMovies: [
           {
             label: "Dune: Part Three",
             onPress: vi.fn(),
@@ -67,8 +68,9 @@ describe("MovieField poster (picker suggestions)", () => {
         theaterConfirmed: true,
         movieValue: "",
         movieFocused: true,
-        movieSuggestionsHeader: "Now playing",
-        movieSuggestions: [
+        liveScheduleHeader: "Now playing at AMC",
+        nowPlayingHeader: "Now Playing (general release)",
+        nowPlayingSuggestions: [
           {
             label: "Interstellar",
             onPress: vi.fn(),
@@ -97,8 +99,9 @@ describe("MovieField poster (picker suggestions)", () => {
         theaterConfirmed: true,
         movieValue: "",
         movieFocused: true,
-        movieSuggestionsHeader: "Now playing",
-        movieSuggestions: [{ label: "No Poster Film", onPress: vi.fn(), posterUrl: null }],
+        liveScheduleHeader: "Now playing at AMC",
+        nowPlayingHeader: "Now Playing (general release)",
+        nowPlayingSuggestions: [{ label: "No Poster Film", onPress: vi.fn(), posterUrl: null }],
         movieIsSearching: false,
         movieSearchError: null,
         movieClearedNotice: null,
@@ -129,8 +132,9 @@ describe("MovieField poster (picker suggestions)", () => {
         theaterConfirmed: true,
         movieValue: "",
         movieFocused: true,
-        movieSuggestionsHeader: "Now playing",
-        movieSuggestions: [
+        liveScheduleHeader: "Now playing at AMC",
+        nowPlayingHeader: "Now Playing (general release)",
+        nowPlayingSuggestions: [
           {
             label: "Broken Poster",
             onPress: vi.fn(),
@@ -170,8 +174,9 @@ describe("MovieField poster (picker suggestions)", () => {
         theaterConfirmed: true,
         movieValue: "",
         movieFocused: true,
-        movieSuggestionsHeader: "Now playing",
-        movieSuggestions: [
+        liveScheduleHeader: "Now playing at AMC",
+        nowPlayingHeader: "Now Playing (general release)",
+        nowPlayingSuggestions: [
           { label: "With Poster", onPress, posterUrl: "https://image.tmdb.org/t/p/w185/a.jpg" },
           { label: "Without Poster", onPress: vi.fn(), posterUrl: null },
         ],
@@ -201,8 +206,9 @@ describe("MovieField mobile bottom sheet (P1 audit fix)", () => {
       theaterConfirmed: true,
       movieValue: "",
       movieFocused: true,
-      movieSuggestionsHeader: "Now playing",
-      movieSuggestions: [{ label: "Dune: Part Three", onPress: vi.fn(), posterUrl: null }],
+      liveScheduleHeader: "Now playing",
+      nowPlayingHeader: "Now Playing (general release)",
+      liveScheduleMovies: [{ label: "Dune: Part Three", onPress: vi.fn(), posterUrl: null }],
       movieIsSearching: false,
       movieSearchError: null,
       movieClearedNotice: null,
@@ -245,7 +251,7 @@ describe("MovieField mobile bottom sheet (P1 audit fix)", () => {
     const renderer = createRenderer(
       React.createElement(MovieField, {
         ...sheetProps({ isMobile: true }),
-        movieSuggestions: [{ label: "Dune: Part Three", onPress: onSelect, posterUrl: null }],
+        liveScheduleMovies: [{ label: "Dune: Part Three", onPress: onSelect, posterUrl: null }],
       }),
     );
     const option = renderer.root.find(
@@ -323,8 +329,10 @@ function ui42Props(overrides: Record<string, unknown> = {}) {
     theaterConfirmed: true,
     movieValue: "",
     movieFocused: true,
-    movieSuggestionsHeader: "Movies",
-    movieSuggestions: [],
+    liveScheduleHeader: "Movies",
+    nowPlayingHeader: "Now Playing (general release)",
+    liveScheduleMovies: [],
+    nowPlayingSuggestions: [],
     movieIsSearching: false,
     movieSearchError: null,
     movieClearedNotice: null,
@@ -343,7 +351,7 @@ describe("MovieField UI42.4 badging", () => {
         MovieField,
         ui42Props({
           movieValue: "Nos",
-          movieSuggestions: [
+          nowPlayingSuggestions: [
             {
               label: "Nosferatu",
               onPress: vi.fn(),
@@ -367,7 +375,7 @@ describe("MovieField UI42.4 badging", () => {
         MovieField,
         ui42Props({
           movieValue: "Loc",
-          movieSuggestions: [
+          nowPlayingSuggestions: [
             {
               label: "Local Premiere",
               onPress: vi.fn(),
@@ -392,7 +400,7 @@ describe("MovieField UI42.4 badging", () => {
         MovieField,
         ui42Props({
           movieValue: "Dun",
-          movieSuggestions: [
+          nowPlayingSuggestions: [
             { label: "Dune: Part Three", onPress: vi.fn(), posterUrl: null, badge: null },
           ],
         }),
@@ -411,7 +419,7 @@ describe("MovieField UI42.4 badging", () => {
         MovieField,
         ui42Props({
           movieValue: "Nos",
-          movieSuggestions: [
+          nowPlayingSuggestions: [
             {
               label: "Nosferatu (2024)",
               onPress: vi.fn(),
@@ -435,7 +443,7 @@ describe("MovieField UI42.4 badging", () => {
         MovieField,
         ui42Props({
           movieValue: "Nos",
-          movieSuggestions: [
+          liveScheduleMovies: [
             {
               label: "Nosferatu",
               onPress: vi.fn(),
@@ -463,14 +471,14 @@ describe("MovieField UI42.4 badging", () => {
 });
 
 describe("MovieField UI42.5 custom event row", () => {
-  it("renders at the bottom of the list and fires onSelectCustomEvent with trimmed text", () => {
+  it("renders at the top of the list and fires onSelectCustomEvent with trimmed text", () => {
     const onSelectCustomEvent = vi.fn();
     const renderer = createRenderer(
       React.createElement(
         MovieField,
         ui42Props({
           movieValue: "  Fathom Event  ",
-          movieSuggestions: [{ label: "Dune: Part Three", onPress: vi.fn(), posterUrl: null }],
+          nowPlayingSuggestions: [{ label: "Dune: Part Three", onPress: vi.fn(), posterUrl: null }],
           onSelectCustomEvent,
         }),
       ),
@@ -484,9 +492,9 @@ describe("MovieField UI42.5 custom event row", () => {
     });
     expect(onSelectCustomEvent).toHaveBeenCalledTimes(1);
     expect(onSelectCustomEvent).toHaveBeenCalledWith("Fathom Event");
-    // Bottom of the list: renders after the regular suggestions.
+    // Top of the list: renders before the movie groups.
     const jsonStr = JSON.stringify(renderer.toJSON());
-    expect(jsonStr.indexOf("Dune: Part Three")).toBeLessThan(jsonStr.indexOf("Search for event:"));
+    expect(jsonStr.indexOf("Search for event:")).toBeLessThan(jsonStr.indexOf("Dune: Part Three"));
     renderer.unmount();
   });
 
@@ -496,7 +504,7 @@ describe("MovieField UI42.5 custom event row", () => {
         MovieField,
         ui42Props({
           movieValue: "   ",
-          movieSuggestions: [{ label: "Dune: Part Three", onPress: vi.fn(), posterUrl: null }],
+          nowPlayingSuggestions: [{ label: "Dune: Part Three", onPress: vi.fn(), posterUrl: null }],
           onSelectCustomEvent: vi.fn(),
         }),
       ),
@@ -512,7 +520,7 @@ describe("MovieField UI42.5 custom event row", () => {
         MovieField,
         ui42Props({
           movieValue: "Fathom Event",
-          movieSuggestions: [{ label: "Dune: Part Three", onPress: vi.fn(), posterUrl: null }],
+          nowPlayingSuggestions: [{ label: "Dune: Part Three", onPress: vi.fn(), posterUrl: null }],
         }),
       ),
     );
@@ -522,15 +530,15 @@ describe("MovieField UI42.5 custom event row", () => {
   });
 });
 
-describe("MovieField UI42.6 live schedule footer", () => {
-  it("renders the footer sentence and fires onCheckLiveSchedule", () => {
+describe("MovieField UI42.6 live schedule status block", () => {
+  it("renders the status sentence at the top and fires onCheckLiveSchedule", () => {
     const onCheckLiveSchedule = vi.fn();
     const renderer = createRenderer(
       React.createElement(
         MovieField,
         ui42Props({
           movieValue: "Dun",
-          movieSuggestions: [{ label: "Dune: Part Three", onPress: vi.fn(), posterUrl: null }],
+          liveScheduleMovies: [{ label: "Dune: Part Three", onPress: vi.fn(), posterUrl: null }],
           onCheckLiveSchedule,
         }),
       ),
@@ -538,6 +546,10 @@ describe("MovieField UI42.6 live schedule footer", () => {
     const jsonStr = JSON.stringify(renderer.toJSON());
     expect(jsonStr).toContain("Looking for a special event or Fathom screening?");
     expect(jsonStr).toContain("Check today's live schedule");
+    // Top slot: the status block renders before the movie groups.
+    expect(jsonStr.indexOf("Looking for a special event")).toBeLessThan(
+      jsonStr.indexOf("Dune: Part Three"),
+    );
     const cta = renderer.root.find(
       (node) => node.props.accessibilityLabel === "Check today's live schedule",
     );
@@ -548,21 +560,26 @@ describe("MovieField UI42.6 live schedule footer", () => {
     renderer.unmount();
   });
 
-  it("shows a disabled loading state when isCheckingLiveSchedule is true", () => {
+  it("shows a disabled loading state at the top when isCheckingLiveSchedule is true", () => {
     const onCheckLiveSchedule = vi.fn();
     const renderer = createRenderer(
       React.createElement(
         MovieField,
         ui42Props({
           movieValue: "Dun",
-          movieSuggestions: [{ label: "Dune: Part Three", onPress: vi.fn(), posterUrl: null }],
+          liveScheduleMovies: [{ label: "Dune: Part Three", onPress: vi.fn(), posterUrl: null }],
           onCheckLiveSchedule,
           isCheckingLiveSchedule: true,
         }),
       ),
     );
     const jsonStr = JSON.stringify(renderer.toJSON());
-    expect(jsonStr).toContain("Checking…");
+    expect(jsonStr).toContain("Checking today's live schedule…");
+    expect(jsonStr).not.toContain("Looking for a special event");
+    // Top slot: the loading line renders before the movie groups.
+    expect(jsonStr.indexOf("Checking today's live schedule")).toBeLessThan(
+      jsonStr.indexOf("Dune: Part Three"),
+    );
     const cta = renderer.root.find(
       (node) => node.props.accessibilityLabel === "Checking today's live schedule",
     );
@@ -578,7 +595,7 @@ describe("MovieField UI42.6 live schedule footer", () => {
         MovieField,
         ui42Props({
           movieValue: "Dun",
-          movieSuggestions: [{ label: "Dune: Part Three", onPress: vi.fn(), posterUrl: null }],
+          liveScheduleMovies: [{ label: "Dune: Part Three", onPress: vi.fn(), posterUrl: null }],
         }),
       ),
     );
@@ -595,7 +612,7 @@ describe("MovieField UI42.6 live schedule error", () => {
         MovieField,
         ui42Props({
           movieValue: "Dun",
-          movieSuggestions: [{ label: "Dune: Part Three", onPress: vi.fn(), posterUrl: null }],
+          liveScheduleMovies: [{ label: "Dune: Part Three", onPress: vi.fn(), posterUrl: null }],
           onCheckLiveSchedule: vi.fn(),
           liveScheduleError: "Couldn't check the live schedule. Please try again.",
         }),
@@ -616,7 +633,7 @@ describe("MovieField UI42.6 live schedule error", () => {
         ui42Props({
           movieFocused: false,
           movieValue: "Dun",
-          movieSuggestions: [{ label: "Dune: Part Three", onPress: vi.fn(), posterUrl: null }],
+          liveScheduleMovies: [{ label: "Dune: Part Three", onPress: vi.fn(), posterUrl: null }],
           onCheckLiveSchedule: vi.fn(),
           liveScheduleError: "Couldn't check the live schedule. Please try again.",
         }),
@@ -638,7 +655,7 @@ describe("MovieField UI42.6 live schedule error", () => {
         MovieField,
         ui42Props({
           movieValue: "Dun",
-          movieSuggestions: [{ label: "Dune: Part Three", onPress: vi.fn(), posterUrl: null }],
+          liveScheduleMovies: [{ label: "Dune: Part Three", onPress: vi.fn(), posterUrl: null }],
           onCheckLiveSchedule: vi.fn(),
           liveScheduleError: null,
         }),
@@ -646,6 +663,139 @@ describe("MovieField UI42.6 live schedule error", () => {
     );
     const jsonStr = JSON.stringify(renderer.toJSON());
     expect(jsonStr).not.toContain("Couldn't check the live schedule");
+    renderer.unmount();
+  });
+});
+
+describe("MovieField ADR-0100 two-group split", () => {
+  const liveHeader = "Now playing at AMC Test";
+  const guessHeader = "Now Playing (general release)";
+
+  function splitProps(overrides: Record<string, unknown> = {}) {
+    return ui42Props({
+      liveScheduleHeader: liveHeader,
+      nowPlayingHeader: guessHeader,
+      onCheckLiveSchedule: vi.fn(),
+      ...overrides,
+    });
+  }
+
+  it("renders both groups with distinct headers in top-to-bottom order", () => {
+    const renderer = createRenderer(
+      React.createElement(
+        MovieField,
+        splitProps({
+          movieValue: "Dune",
+          onSelectCustomEvent: vi.fn(),
+          liveScheduleMovies: [
+            { label: "Dune: Part Three", onPress: vi.fn(), posterUrl: null },
+          ],
+          nowPlayingSuggestions: [
+            { label: "Dune: Part Four (general)", onPress: vi.fn(), posterUrl: null },
+          ],
+        }),
+      ),
+    );
+    const jsonStr = JSON.stringify(renderer.toJSON());
+    // Both section headers render, and the confirmed group is distinct from
+    // the guess group (no single shared header mislabels the guesses).
+    expect(jsonStr).toContain(liveHeader);
+    expect(jsonStr).toContain(guessHeader);
+    expect(jsonStr).toContain("Dune: Part Three");
+    expect(jsonStr).toContain("Dune: Part Four (general)");
+    // Order: status block → custom-event row → live group → guess group.
+    const statusIdx = jsonStr.indexOf("Looking for a special event");
+    const eventIdx = jsonStr.indexOf("Search for event:");
+    const liveIdx = jsonStr.indexOf("Dune: Part Three");
+    const guessIdx = jsonStr.indexOf("Dune: Part Four (general)");
+    expect(statusIdx).toBeGreaterThanOrEqual(0);
+    expect(eventIdx).toBeGreaterThanOrEqual(0);
+    expect(statusIdx).toBeLessThan(eventIdx);
+    expect(eventIdx).toBeLessThan(liveIdx);
+    expect(liveIdx).toBeLessThan(guessIdx);
+    renderer.unmount();
+  });
+
+  it("renders only the guess group when liveScheduleMovies is empty", () => {
+    const renderer = createRenderer(
+      React.createElement(
+        MovieField,
+        splitProps({
+          movieValue: "",
+          liveScheduleMovies: [],
+          nowPlayingSuggestions: [
+            { label: "Dune: Part Three", onPress: vi.fn(), posterUrl: null },
+          ],
+        }),
+      ),
+    );
+    const jsonStr = JSON.stringify(renderer.toJSON());
+    expect(jsonStr).toContain(guessHeader);
+    expect(jsonStr).toContain("Dune: Part Three");
+    expect(jsonStr).not.toContain(liveHeader);
+    renderer.unmount();
+  });
+
+  it("renders only the live group when nowPlayingSuggestions is empty", () => {
+    const renderer = createRenderer(
+      React.createElement(
+        MovieField,
+        splitProps({
+          movieValue: "",
+          liveScheduleMovies: [
+            { label: "Dune: Part Three", onPress: vi.fn(), posterUrl: null },
+          ],
+          nowPlayingSuggestions: [],
+        }),
+      ),
+    );
+    const jsonStr = JSON.stringify(renderer.toJSON());
+    expect(jsonStr).toContain(liveHeader);
+    expect(jsonStr).toContain("Dune: Part Three");
+    expect(jsonStr).not.toContain(guessHeader);
+    renderer.unmount();
+  });
+
+  it("keeps the empty state when both groups are empty", () => {
+    const renderer = createRenderer(
+      React.createElement(
+        MovieField,
+        splitProps({ movieValue: "", liveScheduleMovies: [], nowPlayingSuggestions: [] }),
+      ),
+    );
+    const jsonStr = JSON.stringify(renderer.toJSON());
+    expect(jsonStr).toContain("No movies found");
+    // The status block still leads the empty popover.
+    expect(jsonStr.indexOf("Looking for a special event")).toBeLessThan(
+      jsonStr.indexOf("No movies found"),
+    );
+    renderer.unmount();
+  });
+
+  it("shows the loading line at the top when checking with both groups present", () => {
+    const renderer = createRenderer(
+      React.createElement(
+        MovieField,
+        splitProps({
+          movieValue: "",
+          isCheckingLiveSchedule: true,
+          liveScheduleMovies: [
+            { label: "Dune: Part Three", onPress: vi.fn(), posterUrl: null },
+          ],
+          nowPlayingSuggestions: [
+            { label: "Interstellar", onPress: vi.fn(), posterUrl: null },
+          ],
+        }),
+      ),
+    );
+    const jsonStr = JSON.stringify(renderer.toJSON());
+    expect(jsonStr).toContain("Checking today's live schedule…");
+    expect(jsonStr.indexOf("Checking today's live schedule")).toBeLessThan(
+      jsonStr.indexOf("Dune: Part Three"),
+    );
+    expect(jsonStr.indexOf("Checking today's live schedule")).toBeLessThan(
+      jsonStr.indexOf("Interstellar"),
+    );
     renderer.unmount();
   });
 });

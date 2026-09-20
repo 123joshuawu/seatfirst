@@ -53,8 +53,21 @@ export interface MovieFieldProps {
   theaterConfirmed: boolean;
   movieValue: string;
   movieFocused: boolean;
-  movieSuggestionsHeader: string;
-  movieSuggestions: MovieSuggestion[];
+  /**
+   * Confirmed, theatre-specific schedule data. Empty when cold, still
+   * loading, or the live refresh returned EMPTY. Rendered with theatre
+   * counts (the counted-card branch).
+   */
+  liveScheduleMovies?: MovieSuggestion[];
+  /** Header for the confirmed group — theatre-specific, never mislabels guesses. */
+  liveScheduleHeader: string;
+  /**
+   * Generic TMDB/AMC-catalog guess list, independent of warm state.
+   * Rendered with the plain (non-counted) card branch.
+   */
+  nowPlayingSuggestions?: MovieSuggestion[];
+  /** Header for the guess group — copy must make clear it is NOT theatre-specific. */
+  nowPlayingHeader: string;
   movieIsSearching: boolean;
   movieSearchError: string | null;
   movieClearedNotice: string | null;
@@ -80,24 +93,25 @@ export interface MovieFieldProps {
   isMobile?: boolean;
   /**
    * UI42.5 — custom event fallback. When provided and `movieValue` is
-   * non-blank, a `🔍 Search for event: "[typed text]"` row renders at the
-   * bottom of the suggestion list; pressing it calls this with the trimmed
-   * typed text.
+   * non-blank, a `🔍 Search for event: "[typed text]"` row renders near the
+   * top of the suggestion list (right after the live-schedule status block);
+   * pressing it calls this with the trimmed typed text.
    */
   onSelectCustomEvent?: ((query: string) => void) | undefined;
   /**
-   * UI42.6 — dropdown footer CTA. When provided, the suggestion popover
-   * renders a "Check today's live schedule" footer action below the list.
+   * UI42.6/ADR-0100 — live-schedule status block. When provided, the
+   * suggestion popover renders the status/CTA block at the TOP of the list.
    */
   onCheckLiveSchedule?: (() => void) | undefined;
-  /** UI42.6 — loading/disabled state for the footer CTA while refresh is in flight. */
+  /** UI42.6 — loading/disabled state for the status block while refresh is in flight. */
   isCheckingLiveSchedule?: boolean;
-  /** UI42 Cold vs Hot mode flag for mode-specific footer prominence. */
+  /** UI42 Cold vs Hot mode flag for mode-specific status-block prominence. */
   isWarm?: boolean;
   /**
    * UI42.6 — generic failure state when `refreshSchedule` resolves FAILED or
    * rejects (owned + set by the viewmodel). When non-null, renders an error
-   * line below the live-schedule footer in the open suggestion popover.
+   * line below the field, outside the popover, so it stays visible after the
+   * dropdown closes on input blur.
    */
   liveScheduleError?: string | null;
 }
@@ -146,8 +160,12 @@ export function MovieField({
   theaterConfirmed,
   movieValue,
   movieFocused,
-  movieSuggestionsHeader,
-  movieSuggestions,
+  // Both groups default to empty so single-group callers (tests, previews)
+  // never crash on `.length`; the viewmodel always passes both explicitly.
+  liveScheduleMovies = [],
+  liveScheduleHeader,
+  nowPlayingSuggestions = [],
+  nowPlayingHeader,
   movieIsSearching,
   movieSearchError,
   movieClearedNotice,
@@ -175,14 +193,18 @@ export function MovieField({
         ? movieCounts.size
         : Object.keys(movieCounts).length
       : 1);
-  // UI42.5 — custom event fallback row, shown at the bottom of the suggestion
-  // list whenever the user has typed non-blank text.
+  // UI42.5 — custom event fallback row, shown near the TOP of the suggestion
+  // list (right after the live-schedule status block) whenever the user has
+  // typed non-blank text.
   const trimmedEventQuery = movieValue.trim();
   const showCustomEventRow = trimmedEventQuery.length > 0 && onSelectCustomEvent != null;
-  // UI42.6 — dropdown footer CTA. Rendered below the suggestion list whenever
-  // the caller wires the live-schedule check; `isWarm === false` (Cold Mode)
-  // gets a more prominent tinted treatment, Hot Mode a neutral one.
-  const showLiveScheduleFooter = onCheckLiveSchedule != null;
+  // ADR-0100 — live-schedule status block. Rendered FIRST inside the open
+  // popover (top slot, above all movie groups) whenever the caller wires the
+  // live-schedule check; `isWarm === false` (Cold Mode) gets a more prominent
+  // tinted treatment, Hot Mode a neutral one. While a refresh is in flight the
+  // block swaps its idle CTA copy for a busy status line, keeping the same
+  // disabled/busy Pressable a11y pattern.
+  const showLiveScheduleStatus = onCheckLiveSchedule != null;
   const customEventRow = showCustomEventRow ? (
     <Pressable
       onPress={() => onSelectCustomEvent?.(trimmedEventQuery)}
@@ -204,30 +226,48 @@ export function MovieField({
       >{`🔍 Search for event: "${trimmedEventQuery}"`}</AppText>
     </Pressable>
   ) : null;
-  const liveScheduleFooter = showLiveScheduleFooter ? (
-    <View style={[styles.footer, isWarm === false && styles.footerCold]}>
-      <AppText style={styles.footerText}>Looking for a special event or Fathom screening? </AppText>
-      <Pressable
-        onPress={isCheckingLiveSchedule ? undefined : onCheckLiveSchedule}
-        disabled={!!isCheckingLiveSchedule}
-        accessibilityRole="button"
-        accessibilityLabel={
-          isCheckingLiveSchedule ? "Checking today's live schedule" : "Check today's live schedule"
-        }
-        accessibilityState={{ disabled: !!isCheckingLiveSchedule, busy: !!isCheckingLiveSchedule }}
-        accessibilityHint="Checks today's live schedule"
-        focusable={!isCheckingLiveSchedule}
-      >
-        <AppText weight="600" style={styles.footerLink}>
-          {isCheckingLiveSchedule ? "Checking…" : "Check today's live schedule"}
-        </AppText>
-      </Pressable>
+  const liveScheduleStatusBlock = showLiveScheduleStatus ? (
+    <View style={[styles.statusBlock, isWarm === false && styles.statusBlockCold]}>
+      {isCheckingLiveSchedule ? (
+        <Pressable
+          onPress={undefined}
+          disabled
+          accessibilityRole="button"
+          accessibilityLabel="Checking today's live schedule"
+          accessibilityState={{ disabled: true, busy: true }}
+          accessibilityHint="Checking today's live schedule"
+          focusable={false}
+        >
+          <AppText weight="600" style={styles.footerLink}>
+            Checking today's live schedule…
+          </AppText>
+        </Pressable>
+      ) : (
+        <>
+          <AppText style={styles.footerText}>
+            Looking for a special event or Fathom screening?{' '}
+          </AppText>
+          <Pressable
+            onPress={onCheckLiveSchedule}
+            disabled={false}
+            accessibilityRole="button"
+            accessibilityLabel="Check today's live schedule"
+            accessibilityState={{ disabled: false, busy: false }}
+            accessibilityHint="Checks today's live schedule"
+            focusable
+          >
+            <AppText weight="600" style={styles.footerLink}>
+              Check today's live schedule
+            </AppText>
+          </Pressable>
+        </>
+      )}
     </View>
   ) : null;
   // UI42.6 — failure line for the on-demand refresh; rendered unconditionally
   // outside the `movieFocused`-gated dropdown (alongside `movieClearedNotice`)
   // so a FAILED resolve or rejected mutation stays visible after the dropdown
-  // closes on input blur. Independent of the footer-flag gate so the message
+  // closes on input blur. Independent of the status-block gate so the message
   // survives even if the CTA handler is momentarily unwired.
   const liveScheduleErrorRow =
     liveScheduleError != null && liveScheduleError !== "" ? (
@@ -245,6 +285,135 @@ export function MovieField({
   // rhythm so the form CTA clears ~900px viewports. `undefined` (no override
   // passed) keeps the long-standing mobile values.
   const desktop = isMobile === false;
+  // ADR-0100 — two explicit suggestion groups. The confirmed schedule group
+  // renders with theatre counts (the Hot Mode counted-card branch); the
+  // generic guess group renders plain cards (the Cold Mode branch).
+  const hasLiveGroup = liveScheduleMovies.length > 0;
+  const hasNowPlayingGroup = nowPlayingSuggestions.length > 0;
+  const hasAnyGroup = hasLiveGroup || hasNowPlayingGroup;
+  // The popover shell takes a single `header`, but the list body carries two
+  // labelled section headers. The shell follows the first visible group
+  // (confirmed schedule when warm, otherwise the general-release guesses).
+  const listHeader = hasLiveGroup ? liveScheduleHeader : nowPlayingHeader;
+  const renderCountedCard = (item: MovieSuggestion, i: number): ReactElement => {
+    const entry: { count: number; coldTheatreCount: number } | undefined = (() => {
+      if (!movieCounts) return undefined;
+      if (movieCounts instanceof Map)
+        return (
+          movieCounts as Map<string, { count: number; coldTheatreCount: number }>
+        ).get(item.label);
+      return (
+        movieCounts as Record<string, { count: number; coldTheatreCount: number }>
+      )[item.label];
+    })();
+    const display = entry ? getFacetDisplay(entry, effectiveTotal) : null;
+    const warmZero = (() => {
+      if (warmZeroMovieIds?.has(item.label)) return true;
+      if (!entry) return false;
+      return shouldDimFacet(entry, effectiveTotal);
+    })();
+    const countText = display ? display.text : null;
+    const isRowDisabled = !!isLocked || warmZero;
+    // UI42.4 — title with release year + expectation badge.
+    const suggestionTitle = getSuggestionTitle(item);
+    const suggestionBadge = getSuggestionBadge(item);
+    return (
+      <Pressable
+        key={i}
+        onPress={isRowDisabled ? undefined : item.onPress}
+        disabled={isRowDisabled}
+        accessibilityRole="menuitem"
+        accessibilityLabel={`${suggestionTitle}${suggestionBadge ? `, ${suggestionBadge}` : ""}${countText ? `, ${countText}` : ""}`}
+        accessibilityState={{ disabled: !!isRowDisabled }}
+        focusable={!isRowDisabled}
+        {...(Platform.OS === "web"
+          ? ({ role: "option" } as unknown as Record<string, unknown>)
+          : {})}
+        style={({ pressed, hovered }: { pressed: boolean; hovered?: boolean }) => [
+          styles.item,
+          styles.movieCard,
+          warmZero && { opacity: 0.5 },
+          warmZero && styles.itemDisabled,
+          (pressed || hovered) && !isRowDisabled && styles.itemPressed,
+          Platform.OS === "web"
+            ? ({
+                cursor: isRowDisabled ? "default" : "pointer",
+              } as unknown as Record<string, unknown>)
+            : null,
+        ]}
+      >
+        <MoviePoster posterUrl={item.posterUrl} title={suggestionTitle} />
+        <View style={{ flex: 1, gap: 2 }}>
+          <View style={styles.titleRow}>
+            <AppText style={[styles.itemLabel, warmZero && { opacity: 0.5 }]}>
+              {suggestionTitle}
+            </AppText>
+            {suggestionBadge ? <SuggestionBadge text={suggestionBadge} /> : null}
+          </View>
+          {countText ? (
+            <AppText weight="400" style={styles.countLabel}>
+              {countText === "not checked yet"
+                ? countText
+                : `${countText} showtime${countText === "1" ? "" : "s"}`}
+            </AppText>
+          ) : null}
+        </View>
+        {warmZero && onWidenWindow ? (
+          <Pressable
+            onPress={isLocked ? undefined : onWidenWindow}
+            disabled={isLocked}
+            accessibilityRole="button"
+            accessibilityLabel="Try tomorrow"
+            accessibilityHint="Widens window to tomorrow"
+            focusable={!isLocked}
+            style={styles.forwardAction}
+          >
+            <AppText weight="600" style={styles.forwardActionText}>
+              none · Try tomorrow →
+            </AppText>
+          </Pressable>
+        ) : null}
+      </Pressable>
+    );
+  };
+  const renderPlainCard = (item: MovieSuggestion, i: number): ReactElement => {
+    // UI42.4 — title with release year + expectation badge.
+    const suggestionTitle = getSuggestionTitle(item);
+    const suggestionBadge = getSuggestionBadge(item);
+    return (
+      <Pressable
+        key={i}
+        onPress={isLocked ? undefined : item.onPress}
+        disabled={!!isLocked}
+        accessibilityRole="menuitem"
+        accessibilityLabel={`${suggestionTitle}${suggestionBadge ? `, ${suggestionBadge}` : ""}`}
+        accessibilityState={{ disabled: !!isLocked }}
+        focusable={!isLocked}
+        {...(Platform.OS === "web"
+          ? ({ role: "option" } as unknown as Record<string, unknown>)
+          : {})}
+        style={({ pressed, hovered }: { pressed: boolean; hovered?: boolean }) => [
+          styles.item,
+          styles.movieCard,
+          (pressed || hovered) && !isLocked && styles.itemPressed,
+          Platform.OS === "web"
+            ? ({ cursor: isLocked ? "default" : "pointer" } as unknown as Record<
+                string,
+                unknown
+              >)
+            : null,
+        ]}
+      >
+        <MoviePoster posterUrl={item.posterUrl} title={suggestionTitle} />
+        <View style={{ flex: 1 }}>
+          <View style={styles.titleRow}>
+            <AppText style={styles.itemLabel}>{suggestionTitle}</AppText>
+            {suggestionBadge ? <SuggestionBadge text={suggestionBadge} /> : null}
+          </View>
+        </View>
+      </Pressable>
+    );
+  };
   return (
     // A positioned popover's own zIndex only wins within its parent's stacking context, not
     // against the ChipRow siblings further down this card — this wrapper needs its own zIndex
@@ -297,11 +466,14 @@ export function MovieField({
             </AppText>
           </View>
         </AutocompleteFieldShell>
+        {/* Guard/loading shells below reuse `liveScheduleHeader`: with no list
+            content there is no guess group to label, so the theatre-specific
+            header is the honest shell title. */}
         {movieFocused && !isLocked ? (
           !theaterConfirmed ? (
             <AutocompletePopover
               id="movie-listbox"
-              header={movieSuggestionsHeader}
+              header={liveScheduleHeader}
               isMobile={isMobile}
               onClose={onBlur}
             >
@@ -314,7 +486,7 @@ export function MovieField({
           ) : movieSearchError ? (
             <AutocompletePopover
               id="movie-listbox"
-              header={movieSuggestionsHeader}
+              header={liveScheduleHeader}
               alert
               isMobile={isMobile}
               onClose={onBlur}
@@ -326,7 +498,7 @@ export function MovieField({
           ) : movieIsSearching ? (
             <AutocompletePopover
               id="movie-listbox"
-              header={movieSuggestionsHeader}
+              header={liveScheduleHeader}
               isMobile={isMobile}
               onClose={onBlur}
             >
@@ -340,165 +512,61 @@ export function MovieField({
                 <AppText style={styles.itemLabelMuted}>Loading…</AppText>
               </View>
             </AutocompletePopover>
-          ) : movieSuggestions.length > 0 ? (
-            movieCounts ? (
-              <AutocompletePopover
-                id="movie-listbox"
-                header={movieSuggestionsHeader}
-                scrollMaxHeight={326}
-                isMobile={isMobile}
-                onClose={onBlur}
-              >
-                <View style={styles.moviesGrid}>
-                  {movieSuggestions.map((item, i) => {
-                    const entry: { count: number; coldTheatreCount: number } | undefined = (() => {
-                      if (!movieCounts) return undefined;
-                      if (movieCounts instanceof Map)
-                        return (
-                          movieCounts as Map<string, { count: number; coldTheatreCount: number }>
-                        ).get(item.label);
-                      return (
-                        movieCounts as Record<string, { count: number; coldTheatreCount: number }>
-                      )[item.label];
-                    })();
-                    const display = entry ? getFacetDisplay(entry, effectiveTotal) : null;
-                    const warmZero = (() => {
-                      if (warmZeroMovieIds?.has(item.label)) return true;
-                      if (!entry) return false;
-                      return shouldDimFacet(entry, effectiveTotal);
-                    })();
-                    const countText = display ? display.text : null;
-                    const isRowDisabled = !!isLocked || warmZero;
-                    // UI42.4 — title with release year + expectation badge.
-                    const suggestionTitle = getSuggestionTitle(item);
-                    const suggestionBadge = getSuggestionBadge(item);
-                    return (
-                      <Pressable
-                        key={i}
-                        onPress={isRowDisabled ? undefined : item.onPress}
-                        disabled={isRowDisabled}
-                        accessibilityRole="menuitem"
-                        accessibilityLabel={`${suggestionTitle}${suggestionBadge ? `, ${suggestionBadge}` : ""}${countText ? `, ${countText}` : ""}`}
-                        accessibilityState={{ disabled: !!isRowDisabled }}
-                        focusable={!isRowDisabled}
-                        {...(Platform.OS === "web"
-                          ? ({ role: "option" } as unknown as Record<string, unknown>)
-                          : {})}
-                        style={({ pressed, hovered }: { pressed: boolean; hovered?: boolean }) => [
-                          styles.item,
-                          styles.movieCard,
-                          warmZero && { opacity: 0.5 },
-                          warmZero && styles.itemDisabled,
-                          (pressed || hovered) && !isRowDisabled && styles.itemPressed,
-                          Platform.OS === "web"
-                            ? ({
-                                cursor: isRowDisabled ? "default" : "pointer",
-                              } as unknown as Record<string, unknown>)
-                            : null,
-                        ]}
-                      >
-                        <MoviePoster posterUrl={item.posterUrl} title={suggestionTitle} />
-                        <View style={{ flex: 1, gap: 2 }}>
-                          <View style={styles.titleRow}>
-                            <AppText style={[styles.itemLabel, warmZero && { opacity: 0.5 }]}>
-                              {suggestionTitle}
-                            </AppText>
-                            {suggestionBadge ? <SuggestionBadge text={suggestionBadge} /> : null}
-                          </View>
-                          {countText ? (
-                            <AppText weight="400" style={styles.countLabel}>
-                              {countText === "not checked yet"
-                                ? countText
-                                : `${countText} showtime${countText === "1" ? "" : "s"}`}
-                            </AppText>
-                          ) : null}
-                        </View>
-                        {warmZero && onWidenWindow ? (
-                          <Pressable
-                            onPress={isLocked ? undefined : onWidenWindow}
-                            disabled={isLocked}
-                            accessibilityRole="button"
-                            accessibilityLabel="Try tomorrow"
-                            accessibilityHint="Widens window to tomorrow"
-                            focusable={!isLocked}
-                            style={styles.forwardAction}
-                          >
-                            <AppText weight="600" style={styles.forwardActionText}>
-                              none · Try tomorrow →
-                            </AppText>
-                          </Pressable>
-                        ) : null}
-                      </Pressable>
-                    );
-                  })}
-                  {customEventRow}
-                </View>
-                {liveScheduleFooter}
-              </AutocompletePopover>
-            ) : (
-              <AutocompletePopover
-                id="movie-listbox"
-                header={movieSuggestionsHeader}
-                scrollMaxHeight={326}
-                isMobile={isMobile}
-                onClose={onBlur}
-              >
-                <View style={styles.moviesGrid}>
-                  {movieSuggestions.map((item, i) => {
-                    // UI42.4 — title with release year + expectation badge.
-                    const suggestionTitle = getSuggestionTitle(item);
-                    const suggestionBadge = getSuggestionBadge(item);
-                    return (
-                      <Pressable
-                        key={i}
-                        onPress={isLocked ? undefined : item.onPress}
-                        disabled={!!isLocked}
-                        accessibilityRole="menuitem"
-                        accessibilityLabel={`${suggestionTitle}${suggestionBadge ? `, ${suggestionBadge}` : ""}`}
-                        accessibilityState={{ disabled: !!isLocked }}
-                        focusable={!isLocked}
-                        {...(Platform.OS === "web"
-                          ? ({ role: "option" } as unknown as Record<string, unknown>)
-                          : {})}
-                        style={({ pressed, hovered }: { pressed: boolean; hovered?: boolean }) => [
-                          styles.item,
-                          styles.movieCard,
-                          (pressed || hovered) && !isLocked && styles.itemPressed,
-                          Platform.OS === "web"
-                            ? ({ cursor: isLocked ? "default" : "pointer" } as unknown as Record<
-                                string,
-                                unknown
-                              >)
-                            : null,
-                        ]}
-                      >
-                        <MoviePoster posterUrl={item.posterUrl} title={suggestionTitle} />
-                        <View style={{ flex: 1 }}>
-                          <View style={styles.titleRow}>
-                            <AppText style={styles.itemLabel}>{suggestionTitle}</AppText>
-                            {suggestionBadge ? <SuggestionBadge text={suggestionBadge} /> : null}
-                          </View>
-                        </View>
-                      </Pressable>
-                    );
-                  })}
-                  {customEventRow}
-                </View>
-                {liveScheduleFooter}
-              </AutocompletePopover>
-            )
-          ) : (
+          ) : hasAnyGroup ? (
             <AutocompletePopover
               id="movie-listbox"
-              header={movieSuggestionsHeader}
+              header={listHeader}
+              scrollMaxHeight={326}
               isMobile={isMobile}
               onClose={onBlur}
             >
+              {liveScheduleStatusBlock}
+              {showCustomEventRow ? (
+                <View style={styles.moviesGrid}>{customEventRow}</View>
+              ) : null}
+              {hasLiveGroup ? (
+                <View>
+                  <AppText
+                    weight="700"
+                    style={styles.sectionHeader}
+                    accessibilityRole="header"
+                  >
+                    {liveScheduleHeader}
+                  </AppText>
+                  <View style={styles.moviesGrid}>
+                    {liveScheduleMovies.map((item, i) => renderCountedCard(item, i))}
+                  </View>
+                </View>
+              ) : null}
+              {hasNowPlayingGroup ? (
+                <View style={hasLiveGroup ? styles.sectionDivider : undefined}>
+                  <AppText
+                    weight="700"
+                    style={styles.sectionHeader}
+                    accessibilityRole="header"
+                  >
+                    {nowPlayingHeader}
+                  </AppText>
+                  <View style={styles.moviesGrid}>
+                    {nowPlayingSuggestions.map((item, i) => renderPlainCard(item, i))}
+                  </View>
+                </View>
+              ) : null}
+            </AutocompletePopover>
+          ) : (
+            <AutocompletePopover
+              id="movie-listbox"
+              header={listHeader}
+              isMobile={isMobile}
+              onClose={onBlur}
+            >
+              {liveScheduleStatusBlock}
+              {showCustomEventRow ? (
+                <View style={styles.moviesGrid}>{customEventRow}</View>
+              ) : null}
               <View style={styles.item}>
                 <AppText style={styles.itemLabelMuted}>No movies found</AppText>
               </View>
-              {showCustomEventRow ? <View style={styles.moviesGrid}>{customEventRow}</View> : null}
-              {liveScheduleFooter}
             </AutocompletePopover>
           )
         ) : null}
@@ -631,20 +699,41 @@ const styles = StyleSheet.create({
   badgeTextUnverified: {
     color: colors.textTertiary,
   },
-  // UI42.6 — dropdown footer CTA below the suggestion list.
-  footer: {
+  // ADR-0100 — live-schedule status block at the TOP of the suggestion list.
+  // Same treatment as the old bottom footer CTA, but the separator sits below
+  // the block (borderBottom) instead of above it.
+  statusBlock: {
     flexDirection: "row",
     flexWrap: "wrap",
     alignItems: "center",
     paddingHorizontal: 12,
     paddingVertical: 10,
-    borderTopWidth: 1,
-    borderTopColor: colors.borderSoft,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.borderSoft,
     gap: 4,
   },
   // Cold Mode prominence for the live-schedule check.
-  footerCold: {
+  statusBlockCold: {
     backgroundColor: colors.theaterConfirmBg,
+  },
+  // ADR-0100 — in-body section headers for the two movie groups. Mirrors the
+  // popover shell header treatment (uppercase micro-label, tertiary) so each
+  // group reads as a distinct section under the shared shell title.
+  sectionHeader: {
+    paddingHorizontal: 12,
+    paddingTop: 10,
+    paddingBottom: 2,
+    fontSize: 10,
+    textTransform: "uppercase",
+    letterSpacing: 0.7,
+    color: colors.textTertiary,
+  },
+  // Visual separation between the confirmed-schedule group and the
+  // general-release guess group when both render.
+  sectionDivider: {
+    borderTopWidth: 1,
+    borderTopColor: colors.borderSoft,
+    marginTop: 6,
   },
   footerText: {
     fontSize: 12,

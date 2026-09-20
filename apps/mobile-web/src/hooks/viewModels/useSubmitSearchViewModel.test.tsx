@@ -14,7 +14,12 @@ import { clearTheatreMovieCache, useTheatreMovieSet } from "../useTheatreMovieSe
 import { useFacetCounts, type UseFacetCountsInput } from "../useFacetCounts";
 
 const { mockRefreshMutate, mockQueryClientClear } = vi.hoisted(() => ({
-  mockRefreshMutate: vi.fn<(...args: unknown[]) => unknown>(),
+  // The view model now auto-checks exactly one selected theatre on mount.
+  // Keep unrelated view-model tests deterministic while dedicated cases
+  // below replace this with pending/rejected responses as needed.
+  mockRefreshMutate: vi.fn<(...args: unknown[]) => unknown>(() =>
+    Promise.resolve({ status: "RESOLVED" }),
+  ),
   mockQueryClientClear: vi.fn<(...args: unknown[]) => unknown>(),
 }));
 vi.mock("@/lib/trpc", () => ({
@@ -60,6 +65,19 @@ vi.mock("../useFacetCounts", () => ({
     error: null,
   })),
 }));
+
+const mountedRenderers: Array<{ unmount: () => void }> = [];
+
+function resetRefreshMutate(): void {
+  mockRefreshMutate.mockReset();
+  mockRefreshMutate.mockResolvedValue({ status: "RESOLVED" });
+}
+
+afterEach(() => {
+  TestRenderer.act(() => {
+    for (const renderer of mountedRenderers.splice(0)) renderer.unmount();
+  });
+});
 
 const mockMovieSet = vi.mocked(useTheatreMovieSet);
 const mockFacetCounts = vi.mocked(useFacetCounts);
@@ -127,8 +145,9 @@ function setFormState(): void {
     formatPref: "any",
   });
 }
-
-function captureVm(options?: { startSearch?: SubmitSearchStart }): SubmitSearchViewModel {
+function mountVm(options?: { startSearch?: SubmitSearchStart }): {
+  getVm: () => SubmitSearchViewModel;
+} {
   let captured!: SubmitSearchViewModel;
   function Harness(): null {
     captured = useSubmitSearchViewModel(
@@ -136,10 +155,16 @@ function captureVm(options?: { startSearch?: SubmitSearchStart }): SubmitSearchV
     );
     return null;
   }
+  let renderer!: ReturnType<typeof TestRenderer.create>;
   TestRenderer.act(() => {
-    TestRenderer.create(React.createElement(Harness));
+    renderer = TestRenderer.create(React.createElement(Harness));
   });
-  return captured;
+  mountedRenderers.push(renderer);
+  return { getVm: () => captured };
+}
+
+function captureVm(options?: { startSearch?: SubmitSearchStart }): SubmitSearchViewModel {
+  return mountVm(options).getVm();
 }
 
 describe("useSubmitSearchViewModel CTA label and format chips (UX audit)", () => {
@@ -656,7 +681,7 @@ describe("useSubmitSearchViewModel Cold/Hot mode (UI42.1/42.2/42.3)", () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    mockRefreshMutate.mockReset();
+    resetRefreshMutate();
     mockQueryClientClear.mockClear();
     setColdMovieSet();
   });
@@ -692,17 +717,30 @@ describe("useSubmitSearchViewModel Cold/Hot mode (UI42.1/42.2/42.3)", () => {
     expect(vm.submitButtonLabel).toBe("Choose a movie");
   });
 
-  it("Hot Mode keeps the zero-match gate (existing behavior unchanged)", () => {
+  it("Hot Mode keeps the zero-match gate and filters confirmed schedule movies", () => {
     setMovieSet([]);
-    setColdForm({ movie: "Dune", selectedMovieId: "mv_dune", movieSelectionSource: "library" });
+    setColdForm({ movie: "dUn", selectedMovieId: "mv_dune", movieSelectionSource: "library" });
+    mockMovieSearch.mockReturnValue({
+      data: undefined,
+      error: null,
+      isLoading: false,
+      isFetching: false,
+      refetch: vi.fn(),
+      suggestions: [{ label: "Dune (general release)", onPress: () => {}, posterUrl: null }],
+    });
     const vm = captureVm();
     expect(vm.isWarm).toBe(true);
     expect(vm.matchingShowtimeCount).toBe(0);
     expect(vm.searchDisabled).toBe(true);
     expect(vm.submitButtonLabel).toBe("No showtimes match");
+    expect(vm.liveScheduleHeader).toBe("Now playing at AMC One");
+    expect(vm.liveScheduleMovies.map((suggestion) => suggestion.label)).toEqual(["Dune"]);
+    expect(vm.nowPlayingSuggestions.map((suggestion) => suggestion.label)).toEqual([
+      "Dune (general release)",
+    ]);
   });
 
-  it("Cold Mode suggestions come from universal search with year/badges", () => {
+  it("exposes generic universal-search suggestions separately from confirmed schedules", () => {
     setColdForm({ movie: "nos", selectedMovieId: null, movieSelectionSource: null });
     mockMovieSearch.mockReturnValue({
       data: undefined,
@@ -731,8 +769,13 @@ describe("useSubmitSearchViewModel Cold/Hot mode (UI42.1/42.2/42.3)", () => {
     });
     const vm = captureVm();
     expect(vm.isWarm).toBe(false);
-    expect(vm.movieSuggestions.map((s) => s.label)).toEqual(["Nosferatu (2024)", "Met Opera Live"]);
-    expect(vm.movieSuggestions[1]?.badge).toBe("AMC Event");
+    expect(vm.liveScheduleMovies).toEqual([]);
+    expect(vm.nowPlayingHeader).toBe("Now Playing (general release)");
+    expect(vm.nowPlayingSuggestions.map((s) => s.label)).toEqual([
+      "Nosferatu (2024)",
+      "Met Opera Live",
+    ]);
+    expect(vm.nowPlayingSuggestions[1]?.badge).toBe("AMC Event");
     expect(mockMovieSearch).toHaveBeenCalledWith(
       expect.objectContaining({ query: "nos", browse: false }),
     );
@@ -804,7 +847,7 @@ describe("useSubmitSearchViewModel Cold/Hot mode (UI42.1/42.2/42.3)", () => {
 describe("useSubmitSearchViewModel live schedule check (UI42.6)", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    mockRefreshMutate.mockReset();
+    resetRefreshMutate();
     mockQueryClientClear.mockClear();
     mockMovieSet.mockReturnValue({
       responses: [],
@@ -836,47 +879,102 @@ describe("useSubmitSearchViewModel live schedule check (UI42.6)", () => {
     });
   });
 
-  it("RESOLVED invalidates the movies cache and clears loading", async () => {
+  it("RESOLVED invalidates caches and still allows a manual retry after auto-check", async () => {
     mockRefreshMutate.mockResolvedValue({ status: "RESOLVED", localDate: "2026-09-05" });
     const mockClearCache = vi.mocked(clearTheatreMovieCache);
-    const vm = captureVm();
-    expect(vm.isCheckingLiveSchedule).toBe(false);
+    const harness = mountVm();
     await TestRenderer.act(async () => {
-      vm.onCheckLiveSchedule();
       await Promise.resolve();
       await Promise.resolve();
     });
-    expect(mockRefreshMutate).toHaveBeenCalledWith({ theatreId: "th_1" });
-    expect(captureVm().isCheckingLiveSchedule).toBe(false);
-    expect(captureVm().liveScheduleError).toBeNull();
-    expect(mockClearCache).toHaveBeenCalled();
-    expect(mockQueryClientClear).toHaveBeenCalled();
+    expect(mockRefreshMutate).toHaveBeenCalledTimes(1);
+
+    await TestRenderer.act(async () => {
+      harness.getVm().onCheckLiveSchedule();
+      await Promise.resolve();
+      await Promise.resolve();
+    });
+    expect(mockRefreshMutate).toHaveBeenCalledTimes(2);
+    expect(harness.getVm().isCheckingLiveSchedule).toBe(false);
+    expect(harness.getVm().liveScheduleError).toBeNull();
+    expect(mockClearCache).toHaveBeenCalledTimes(2);
+    expect(mockQueryClientClear).toHaveBeenCalledTimes(2);
   });
+  it("auto-checks a failed zero-to-one transition once and never rechecks that theatre", async () => {
+    mockRefreshMutate.mockResolvedValue({ status: "FAILED", localDate: "2026-09-05" });
+    useSeatfirstStore.setState({ selectedTheatres: [] });
+    mountVm();
+    expect(mockRefreshMutate).not.toHaveBeenCalled();
+
+    await TestRenderer.act(async () => {
+      useSeatfirstStore.setState({
+        selectedTheatres: [
+          { id: "th_1", providerId: "amc", name: "AMC One", city: "SF", distanceKm: 1.1 },
+        ],
+      });
+      await Promise.resolve();
+      await Promise.resolve();
+    });
+    expect(mockRefreshMutate).toHaveBeenCalledTimes(1);
+
+    await TestRenderer.act(async () => {
+      useSeatfirstStore.setState({ selectedTheatres: [] });
+      useSeatfirstStore.setState({
+        selectedTheatres: [
+          { id: "th_1", providerId: "amc", name: "AMC One", city: "SF", distanceKm: 1.1 },
+        ],
+      });
+      await Promise.resolve();
+      await Promise.resolve();
+    });
+    expect(mockRefreshMutate).toHaveBeenCalledTimes(1);
+  });
+
+  it("does not auto-check two theatres, then checks exactly once after a two-to-one transition", async () => {
+    useSeatfirstStore.setState({
+      selectedTheatres: [
+        { id: "th_1", providerId: "amc", name: "AMC One", city: "SF", distanceKm: 1.1 },
+        { id: "th_2", providerId: "amc", name: "AMC Two", city: "SF", distanceKm: 2.2 },
+      ],
+    });
+    mountVm();
+    expect(mockRefreshMutate).not.toHaveBeenCalled();
+
+    await TestRenderer.act(async () => {
+      useSeatfirstStore.setState({
+        selectedTheatres: [
+          { id: "th_1", providerId: "amc", name: "AMC One", city: "SF", distanceKm: 1.1 },
+        ],
+      });
+      await Promise.resolve();
+      await Promise.resolve();
+    });
+    expect(mockRefreshMutate).toHaveBeenCalledTimes(1);
+  });
+
 
   it("FAILED surfaces a generic error and keeps the cache", async () => {
     mockRefreshMutate.mockResolvedValue({ status: "FAILED", localDate: "2026-09-05" });
     const mockClearCache = vi.mocked(clearTheatreMovieCache);
-    const vm = captureVm();
+    const harness = mountVm();
     await TestRenderer.act(async () => {
-      vm.onCheckLiveSchedule();
       await Promise.resolve();
       await Promise.resolve();
     });
-    expect(captureVm().liveScheduleError).not.toBeNull();
+    expect(harness.getVm().liveScheduleError).not.toBeNull();
     expect(mockClearCache).not.toHaveBeenCalled();
     expect(mockQueryClientClear).not.toHaveBeenCalled();
   });
 
   it("rejection surfaces a generic error", async () => {
     mockRefreshMutate.mockRejectedValue(new Error("timeout"));
-    const vm = captureVm();
+    const harness = mountVm();
     await TestRenderer.act(async () => {
-      vm.onCheckLiveSchedule();
       await Promise.resolve();
       await Promise.resolve();
     });
-    expect(captureVm().liveScheduleError).not.toBeNull();
-    expect(captureVm().isCheckingLiveSchedule).toBe(false);
+    expect(harness.getVm().liveScheduleError).not.toBeNull();
+    expect(harness.getVm().isCheckingLiveSchedule).toBe(false);
   });
 
   it("holds the loading state while the mutation is in flight", async () => {
@@ -886,17 +984,14 @@ describe("useSubmitSearchViewModel live schedule check (UI42.6)", () => {
         release = resolve;
       }),
     );
-    const vm = captureVm();
-    TestRenderer.act(() => {
-      vm.onCheckLiveSchedule();
-    });
-    expect(captureVm().isCheckingLiveSchedule).toBe(true);
+    const harness = mountVm();
+    expect(harness.getVm().isCheckingLiveSchedule).toBe(true);
     await TestRenderer.act(async () => {
       release({ status: "RESOLVED", localDate: "2026-09-05" });
       await Promise.resolve();
       await Promise.resolve();
     });
-    expect(captureVm().isCheckingLiveSchedule).toBe(false);
+    expect(harness.getVm().isCheckingLiveSchedule).toBe(false);
   });
 
   it("no-ops without a confirmed theatre", () => {

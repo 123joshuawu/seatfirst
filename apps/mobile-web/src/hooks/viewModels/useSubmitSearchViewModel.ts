@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 import { useWindowDimensions } from "react-native";
 import type { FormatPref, SeatPrefName } from "@/types/placement";
 import type { ChipItem } from "@/types/ui";
@@ -80,8 +80,10 @@ export interface SubmitSearchViewModel {
   movieRuntimeGenreLabel: string | null;
   movieValue: string;
   movieFocused: boolean;
-  movieSuggestionsHeader: string;
-  movieSuggestions: MovieSuggestion[];
+  liveScheduleMovies: MovieSuggestion[];
+  liveScheduleHeader: string;
+  nowPlayingSuggestions: MovieSuggestion[];
+  nowPlayingHeader: string;
   movieIsSearching: boolean;
   movieSearchError: string | null;
   movieClearedNotice: string | null;
@@ -278,10 +280,15 @@ export function useSubmitSearchViewModel(
     // hook debounces only once a typed query (≥2 chars) exists.
     browse: movieFocused && movie.trim().length < 2,
   });
+  // Both suggestion groups are now always shown, so loading/error can no
+  // longer branch on isWarm to pick one source. Loading reflects either
+  // source fetching while a theatre is confirmed (a spinner is honest while
+  // either group is still populating); error prefers the theatre-confirmed
+  // source since a stale/missing schedule is the more actionable failure.
   const movieIsSearching =
-    theaterConfirmed && (isWarm ? theatreMovieSet.isFetching : movieSearch.isFetching);
+    theaterConfirmed && (theatreMovieSet.isFetching || movieSearch.isFetching);
   const movieSearchError = ((): string | null => {
-    const err = isWarm ? theatreMovieSet.error : movieSearch.error;
+    const err = theatreMovieSet.error ?? movieSearch.error;
     if (!err) return null;
     const code = readTrpcErrorCode(err);
     if (code === "NOT_FOUND") return "Theatre not found";
@@ -729,7 +736,7 @@ export function useSubmitSearchViewModel(
     [selectCustomMovieTitle],
   );
 
-  // UI42.6: explicit on-demand D+0 warm for the dropdown footer CTA
+  // UI42.6: explicit on-demand D+0 warm for the dropdown CTA
   // ("Check today's live schedule"). Bounded server-side (~20s); the client
   // holds a loading state while in flight and surfaces a generic failure
   // state when the status is FAILED or the mutation rejects. RESOLVED/EMPTY
@@ -737,41 +744,65 @@ export function useSubmitSearchViewModel(
   // pair `fixtures/devSeed` clears) so the newly warmed — or
   // confirmed-still-cold — schedule flows through on the next read.
   // Checking flag + failure message live in the store (not hook-local) so
-  // they survive re-renders and stay test-observable.
+  // they survive re-renders and stay test-observable. Shared by the manual
+  // callback and the single-theatre auto-trigger below.
+  const triggerLiveScheduleCheck = useCallback(
+    (theatreId: string) => {
+      if (useSeatfirstStore.getState().isCheckingLiveSchedule) return;
+      const mutate = (
+        trpcClient.theatres as
+          | {
+              refreshSchedule?: {
+                mutate: (input: { theatreId: string }) => Promise<{ status: string }>;
+              };
+            }
+          | undefined
+      )?.refreshSchedule?.mutate;
+      if (!mutate) {
+        setLiveScheduleError("Live schedule check is unavailable. Please try again.");
+        return;
+      }
+      setCheckingLiveSchedule(true);
+      setLiveScheduleError(null);
+      void mutate({ theatreId })
+        .then(
+          (result) => {
+            if (result?.status === "FAILED") {
+              setLiveScheduleError("Live schedule check failed. Please try again.");
+              return;
+            }
+            clearTheatreMovieCache();
+            queryClient.clear();
+          },
+          () => {
+            setLiveScheduleError("Live schedule check failed. Please try again.");
+          },
+        )
+        .finally(() => {
+          setCheckingLiveSchedule(false);
+        });
+    },
+    [setCheckingLiveSchedule, setLiveScheduleError],
+  );
   const onCheckLiveSchedule = useCallback(() => {
     const theatreId = selectedTheatres[0]?.id ?? null;
-    if (theatreId === null || useSeatfirstStore.getState().isCheckingLiveSchedule) return;
-    const mutate = (
-      trpcClient.theatres as unknown as {
-        refreshSchedule?: {
-          mutate: (input: { theatreId: string }) => Promise<{ status: string }>;
-        };
-      }
-    ).refreshSchedule?.mutate;
-    if (!mutate) {
-      setLiveScheduleError("Live schedule check is unavailable. Please try again.");
-      return;
-    }
-    setCheckingLiveSchedule(true);
-    setLiveScheduleError(null);
-    void mutate({ theatreId })
-      .then(
-        (result) => {
-          if (result?.status === "FAILED") {
-            setLiveScheduleError("Live schedule check failed. Please try again.");
-            return;
-          }
-          clearTheatreMovieCache();
-          queryClient.clear();
-        },
-        () => {
-          setLiveScheduleError("Live schedule check failed. Please try again.");
-        },
-      )
-      .finally(() => {
-        setCheckingLiveSchedule(false);
-      });
-  }, [selectedTheatres, setCheckingLiveSchedule, setLiveScheduleError]);
+    if (theatreId === null) return;
+    triggerLiveScheduleCheck(theatreId);
+  }, [selectedTheatres, triggerLiveScheduleCheck]);
+  // ADR 0100 amendment (2026-09-20): single-theatre auto D+0 check. When
+  // exactly one theatre is selected, fire the same refresh once per theatre
+  // per session. The id is recorded synchronously with firing (not on
+  // success) so FAILED/EMPTY never retry-loop; the ref only suppresses the
+  // automatic effect — the manual callback above stays usable as a retry.
+  const autoCheckedTheatreIdsRef = useRef<Set<string>>(new Set());
+  useEffect(() => {
+    if (selectedTheatres.length !== 1) return;
+    const theatreId = selectedTheatres[0]?.id ?? null;
+    if (theatreId === null || autoCheckedTheatreIdsRef.current.has(theatreId)) return;
+    if (isCheckingLiveSchedule) return;
+    autoCheckedTheatreIdsRef.current.add(theatreId);
+    triggerLiveScheduleCheck(theatreId);
+  }, [selectedTheatres, triggerLiveScheduleCheck, isCheckingLiveSchedule]);
   const showSearchForm = flowScreen === "search" || flowScreen === "checking";
   const showLeftCol = !(isMobile && showSearchForm);
   const leftIsGhost = flowScreen === "search" && !hasSelections;
@@ -800,27 +831,30 @@ export function useSubmitSearchViewModel(
     movieRuntimeGenreLabel,
     movieValue: movie,
     movieFocused,
-    movieSuggestionsHeader:
+    liveScheduleMovies: ((): MovieSuggestion[] => {
+      // Confirmed, theatre-specific schedule data. Empty when cold, still
+      // loading, or the refresh returned EMPTY — never mixed with guesses.
+      const query = movie.trim().toLocaleLowerCase();
+      return theatreMovieSet.movies
+        .filter((group) => query.length === 0 || group.title.toLocaleLowerCase().includes(query))
+        .map((group) => ({
+          label: group.title,
+          onPress: () => selectMovie(group.title, group.movieId),
+          posterUrl: tmdbPosterUrl(group.posterPath),
+        }));
+    })(),
+    liveScheduleHeader:
       selectedTheatres.length === 1
         ? `Now playing at ${primaryTheatre?.name ?? "selected theatre"}`
         : selectedTheatres.length > 1
           ? "Now playing nearby"
           : "Choose where to see what is playing",
-    movieSuggestions: ((): MovieSuggestion[] => {
-      // Hot Mode serves the cached catalogue; Cold Mode serves universal
-      // discovery (pre-warmed slate or debounced `movies.search` hits).
-      if (isWarm) {
-        const query = movie.trim().toLocaleLowerCase();
-        return theatreMovieSet.movies
-          .filter((group) => query.length === 0 || group.title.toLocaleLowerCase().includes(query))
-          .map((group) => ({
-            label: group.title,
-            onPress: () => selectMovie(group.title, group.movieId),
-            posterUrl: tmdbPosterUrl(group.posterPath),
-          }));
-      }
-      return movieSearch.suggestions;
-    })(),
+    // Generic TMDB/AMC-catalog slate. The movieSearch hook already owns
+    // query-awareness (browse vs. debounced typed query), so its
+    // suggestions pass through unfiltered, exactly as the old Cold Mode
+    // branch did — no client-side double-filtering.
+    nowPlayingSuggestions: movieSearch.suggestions,
+    nowPlayingHeader: "Now Playing (general release)",
     movieIsSearching,
     movieSearchError,
     movieClearedNotice,
