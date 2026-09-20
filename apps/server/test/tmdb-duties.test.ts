@@ -4,13 +4,12 @@ import type {
   SqlClient,
   TmdbFetchRow,
   TmdbMovieRow,
-  TmdbPrewarmStateRow,
   UpsertTmdbMovieInput,
 } from "@seatfirst/durability";
 
 import type { TmdbMovieDetails, TmdbMovieSummary } from "../src/tmdb/client.js";
-import { processTmdbFetch, runTmdbPrewarmTick } from "../src/tmdb/duties.js";
-import type { TmdbFetchDeps, TmdbPrewarmDeps } from "../src/tmdb/duties.js";
+import { processTmdbFetch } from "../src/tmdb/duties.js";
+import type { TmdbFetchDeps } from "../src/tmdb/duties.js";
 import { cleanTitleForSearch } from "../src/tmdb/normalize.js";
 import type { RelayMessage } from "../src/relay/publisher.js";
 
@@ -18,18 +17,13 @@ import { capturingLogger } from "./support/logger.js";
 import type { CapturingLogger } from "./support/logger.js";
 
 /**
- * Fake-dependency harness for the two TMDB duties (S25.3/S25.5): every wrapper is a
- * recording stub, so the orchestration — due-ness, dedup, normalize-then-upsert, and the
+ * Fake-dependency harness for the TMDB fetch duty (S25.5): every wrapper is a
+ * recording stub, so the orchestration — normalize-then-upsert and the
  * PENDING→DONE/FAILED transitions — is asserted on the exact calls made, with no
  * durability, no Redis, no HTTP.
  */
 
 const db = { query: () => Promise.resolve({ rows: [] }) } as unknown as SqlClient;
-const NOW = new Date("2026-08-15T12:00:00Z"); // after today's 08:00 UTC boundary (EDT)
-
-function summary(tmdbId: number, posterPath: string | null = `/p${tmdbId}.jpg`): TmdbMovieSummary {
-  return { tmdbId, title: `Title ${tmdbId}`, posterPath, releaseDate: null };
-}
 
 function details(
   tmdbId: number,
@@ -57,167 +51,6 @@ const message: RelayMessage = {
   targetId: "fetch-1",
   traceparent: null,
 };
-
-describe("runTmdbPrewarmTick (S25.3)", () => {
-  interface PrewarmHarness {
-    deps: TmdbPrewarmDeps;
-    upserts: UpsertTmdbMovieInput[];
-    detailCalls: number[];
-    completed: number;
-  }
-  function makePrewarmHarness(options: {
-    state: TmdbPrewarmStateRow[];
-    nowPlaying: TmdbMovieSummary[];
-    upcoming: TmdbMovieSummary[];
-    detailsErrorIds?: readonly number[];
-  }): PrewarmHarness {
-    const upserts: UpsertTmdbMovieInput[] = [];
-    const detailCalls: number[] = [];
-    const harness: PrewarmHarness = {
-      upserts,
-      detailCalls,
-      completed: 0,
-      deps: {
-        db,
-        readPrewarmState: () => Promise.resolve(options.state),
-        completePrewarm: () => {
-          harness.completed += 1;
-          return Promise.resolve([{ last_completed_at: new Date() }]);
-        },
-        nowPlaying: () => Promise.resolve(options.nowPlaying),
-        upcoming: () => Promise.resolve(options.upcoming),
-        movieDetails: (tmdbId) => {
-          detailCalls.push(tmdbId);
-          if (options.detailsErrorIds?.includes(tmdbId)) {
-            return Promise.reject(new Error(`details down for ${tmdbId}`));
-          }
-          return Promise.resolve(details(tmdbId));
-        },
-        upsertMovie: (_db, input) => {
-          upserts.push(input);
-          return Promise.resolve([
-            {
-              tmdb_id: input.tmdbId,
-              normalized_title: input.normalizedTitle,
-              poster_path: input.posterPath,
-              runtime_minutes: input.runtimeMinutes,
-              genres: [...input.genres],
-              // S63 widening: the pre-warm never observes these, so the fake
-              // mirrors the repository's preserve-on-NULL (all absent).
-              release_date: null,
-              is_now_playing: false,
-              is_upcoming: false,
-              title: null,
-              updated_at: new Date(),
-            },
-          ]);
-        },
-        now: () => NOW,
-      },
-    };
-    return harness;
-  }
-
-  it("skips when the last completed pass is already past today's boundary", async () => {
-    const harness = makePrewarmHarness({
-      state: [{ last_completed_at: new Date("2026-08-15T09:00:00Z") }],
-      nowPlaying: [],
-      upcoming: [],
-    });
-    await expect(runTmdbPrewarmTick(harness.deps)).resolves.toEqual({ kind: "SKIPPED_NOT_DUE" });
-    expect(harness.upserts).toEqual([]);
-    expect(harness.completed).toBe(0);
-  });
-
-  it("is due when never run, normalizes titles, dedups by tmdb_id, and completes", async () => {
-    const harness = makePrewarmHarness({
-      state: [],
-      nowPlaying: [summary(1), summary(2)],
-      upcoming: [summary(2), summary(3, null)],
-    });
-    await expect(runTmdbPrewarmTick(harness.deps)).resolves.toEqual({
-      kind: "PREWARMED",
-      upserted: 3,
-    });
-    expect(harness.upserts).toEqual([
-      {
-        tmdbId: 1,
-        normalizedTitle: "title 1",
-        title: "Title 1",
-        posterPath: "/p1.jpg",
-        runtimeMinutes: 101,
-        genres: ["Genre 1"],
-        isNowPlaying: true,
-        isUpcoming: false,
-        releaseDate: null,
-      },
-      {
-        tmdbId: 2,
-        normalizedTitle: "title 2",
-        title: "Title 2",
-        posterPath: "/p2.jpg",
-        runtimeMinutes: 102,
-        genres: ["Genre 2"],
-        isNowPlaying: true,
-        isUpcoming: true,
-        releaseDate: null,
-      },
-      {
-        tmdbId: 3,
-        normalizedTitle: "title 3",
-        title: "Title 3",
-        posterPath: null,
-        runtimeMinutes: 103,
-        genres: ["Genre 3"],
-        isNowPlaying: false,
-        isUpcoming: true,
-        releaseDate: null,
-      },
-    ]);
-    // One details call per deduped tmdbId, before the upsert — no new job kind.
-    expect(harness.detailCalls).toEqual([1, 2, 3]);
-    expect(harness.completed).toBe(1);
-  });
-
-  it("S55.5 — a details failure degrades only that entry to its poster half, never the batch", async () => {
-    const harness = makePrewarmHarness({
-      state: [],
-      nowPlaying: [summary(1), summary(2)],
-      upcoming: [],
-      detailsErrorIds: [1],
-    });
-    await expect(runTmdbPrewarmTick(harness.deps)).resolves.toEqual({
-      kind: "PREWARMED",
-      upserted: 2,
-    });
-    expect(harness.upserts).toEqual([
-      {
-        tmdbId: 1,
-        normalizedTitle: "title 1",
-        title: "Title 1",
-        posterPath: "/p1.jpg",
-        runtimeMinutes: null,
-        genres: [],
-        isNowPlaying: true,
-        isUpcoming: false,
-        releaseDate: null,
-      },
-      {
-        tmdbId: 2,
-        normalizedTitle: "title 2",
-        title: "Title 2",
-        posterPath: "/p2.jpg",
-        runtimeMinutes: 102,
-        genres: ["Genre 2"],
-        isNowPlaying: true,
-        isUpcoming: false,
-        releaseDate: null,
-      },
-    ]);
-    expect(harness.detailCalls).toEqual([1, 2]);
-    expect(harness.completed).toBe(1);
-  });
-});
 
 describe("processTmdbFetch (S25.5)", () => {
   interface FetchHarness {
@@ -294,10 +127,9 @@ describe("processTmdbFetch (S25.5)", () => {
               poster_path: input.posterPath,
               runtime_minutes: input.runtimeMinutes,
               genres: [...input.genres],
-              // S63 widening (same absent-value posture as the pre-warm fake above).
+              // S63 widening: the fetch never observes these, so the fake mirrors the
+              // repository's preserve-on-NULL (all absent; ADR 0102 dropped the slate flags).
               release_date: null,
-              is_now_playing: false,
-              is_upcoming: false,
               title: null,
               updated_at: new Date(),
             },

@@ -1,16 +1,16 @@
 /**
- * The TMDB worker's two duties (S25.3 pre-warm, S25.5 fetch), each extracted as a
- * dependency-injected pure-ish function so both are unit-testable with fakes (the same
- * discipline `apps/server/src/catalogue-crawl/duties.ts` uses). No duty touches a network
- * or a database directly — the entrypoint wires the injected functions to the TMDB client
- * and `@seatfirst/durability` repository wrappers.
+ * The TMDB worker's fetch duty (S25.5), extracted as a dependency-injected pure-ish
+ * function so it is unit-testable with fakes (the same discipline
+ * `apps/server/src/catalogue-crawl/duties.ts` uses). The S25.3 pre-warm duty is
+ * decommissioned (ADR 0102 decision 7). The duty touches no network or database
+ * directly — the entrypoint wires the injected functions to the TMDB client and
+ * `@seatfirst/durability` repository wrappers.
  */
 
 import type {
   SqlClient,
   TmdbFetchRow,
   TmdbMovieRow,
-  TmdbPrewarmStateRow,
   UpsertTmdbMovieInput,
 } from "@seatfirst/durability";
 
@@ -19,70 +19,7 @@ import type { SeatfirstLogger } from "@seatfirst/config/logger";
 import type { RelayMessage } from "../relay/publisher.js";
 
 import type { TmdbMovieDetails, TmdbMovieSummary } from "./client.js";
-import { isTmdbPrewarmDue } from "./due.js";
 import { cleanTitleForSearch, normalizeTitle } from "./normalize.js";
-
-/* --------------------------------------------------------------- S25.3 — pre-warm */
-
-export interface TmdbPrewarmDeps {
-  readonly readPrewarmState: (db: SqlClient) => Promise<TmdbPrewarmStateRow[]>;
-  readonly completePrewarm: (db: SqlClient) => Promise<TmdbPrewarmStateRow[]>;
-  readonly nowPlaying: () => Promise<TmdbMovieSummary[]>;
-  readonly upcoming: () => Promise<TmdbMovieSummary[]>;
-  readonly movieDetails: (tmdbId: number) => Promise<TmdbMovieDetails>;
-  readonly upsertMovie: (db: SqlClient, input: UpsertTmdbMovieInput) => Promise<TmdbMovieRow[]>;
-  readonly now: () => Date;
-  readonly db: SqlClient;
-}
-
-export type TmdbPrewarmTick =
-  { readonly kind: "SKIPPED_NOT_DUE" } | { readonly kind: "PREWARMED"; readonly upserted: number };
-
-/**
- * One pre-warm tick (S25.3): due-ness against the persisted checkpoint, then — only if due —
- * fetch `now_playing` + `upcoming` (concurrently), dedup by `tmdb_id`, normalize each
- * upstream title, and upsert. The checkpoint is written only after the pass succeeds, so a
- * crashed pass retries on the next tick (same restart-safety S26's cursor relies on).
- */
-export async function runTmdbPrewarmTick(deps: TmdbPrewarmDeps): Promise<TmdbPrewarmTick> {
-  const stateRow = (await deps.readPrewarmState(deps.db))[0] ?? null;
-  const lastCompletedAt = stateRow?.last_completed_at ?? null;
-  if (!isTmdbPrewarmDue(lastCompletedAt, deps.now())) {
-    return { kind: "SKIPPED_NOT_DUE" };
-  }
-
-  const [nowPlaying, upcoming] = await Promise.all([deps.nowPlaying(), deps.upcoming()]);
-  const nowPlayingIds = new Set(nowPlaying.map((m) => m.tmdbId));
-  const upcomingIds = new Set(upcoming.map((m) => m.tmdbId));
-  const seen = new Set<number>();
-  let upserted = 0;
-  for (const movie of [...nowPlaying, ...upcoming]) {
-    if (seen.has(movie.tmdbId)) continue;
-    seen.add(movie.tmdbId);
-    // S55.5 — one details call per resolved tmdbId, merged into the same upsert (no
-    // new job kind). A details failure degrades only this entry to its poster half
-    // and never aborts the rest of the batch.
-    const details = await deps.movieDetails(movie.tmdbId).catch((): null => null);
-    const isNowPlaying = nowPlayingIds.has(movie.tmdbId);
-    const isUpcoming = upcomingIds.has(movie.tmdbId);
-    const displayTitle = movie.title.trim() === "" ? null : movie.title;
-    const releaseDate = details?.releaseDate ?? movie.releaseDate ?? null;
-    await deps.upsertMovie(deps.db, {
-      tmdbId: movie.tmdbId,
-      normalizedTitle: normalizeTitle(movie.title),
-      posterPath: movie.posterPath,
-      runtimeMinutes: details?.runtimeMinutes ?? null,
-      genres: details?.genres ?? [],
-      isNowPlaying,
-      isUpcoming,
-      title: displayTitle,
-      releaseDate,
-    });
-    upserted += 1;
-  }
-  await deps.completePrewarm(deps.db);
-  return { kind: "PREWARMED", upserted };
-}
 
 /* ----------------------------------------------------------------- S25.5 — fetch */
 

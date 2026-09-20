@@ -88,6 +88,7 @@ export const MIGRATIONS: readonly string[] = [
   "024_retire_restore_sentinel.sql",
   "025_tmdb_movie_slate_release.sql",
   "026_diagnostic_capture.sql",
+  "027_amc_movie_catalogue.sql",
 ];
 
 /**

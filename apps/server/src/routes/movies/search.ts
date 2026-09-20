@@ -2,11 +2,13 @@ import { initTRPC, TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import {
-  browseTmdbSlate,
+  browseAmcMovieCatalogue,
   poolClient,
+  readAmcMovieCatalogueByNormalizedTitles,
   readMoviesByNormalizedTitles,
   searchMoviesByTitle,
   upsertTmdbMovie,
+  type AmcMovieCatalogueSlateRow,
   type MovieRow,
   type SqlClient,
   type TmdbMovieRow,
@@ -19,15 +21,15 @@ import type { MoviesSearchContext } from "./context.js";
 
 /**
  * `movies.search` (S63.4, ADR 0100 §Cold Mode) — unified movie & special-event
- * discovery across the local TMDB slate and the AMC-observed catalogue, for the
+ * discovery across the AMC movies catalogue and the AMC-observed catalogue, for the
  * search form's Cold Mode (`isWarm === false`): the user can pick any active
  * theatrical release or special event and submit, instead of deadlocking on an
  * empty `theatres.movies` list.
  *
  * - **Empty query** (`query` omitted, blank, or shorter than
- *   `MIN_TYPED_QUERY_LENGTH`): serves the pre-warmed North American theatrical
- *   slate (`now_playing` + `upcoming`) from local `tmdb_movie` in one query —
- *   no TMDB egress, no AMC traffic.
+ *   `MIN_TYPED_QUERY_LENGTH`): serves the AMC movies catalogue from local
+ *   `amc_movie_catalogue` in one query — no TMDB egress, no AMC traffic (the
+ *   catalogue is already locally cached by the periodic worker, ADR 0102).
  * - **Typed query** (`query.length >= 2`, spec S63.4 §4.2): live
  *   `tmdbClient.searchMovie(query)` (under its own 30 req/s bucket, ADR 0019
  *   §5), each hit lazily upserted into `tmdb_movie` enriched with `movieDetails`
@@ -36,7 +38,8 @@ import type { MoviesSearchContext } from "./context.js";
  *   Fathom Events).
  * - **Tri-state confidence** (spec S63.4 §4.3): `VERIFIED_AMC` (observed at AMC;
  *   `"AMC Event"` badge only when AMC-only, i.e. non-TMDB), `WIDE_THEATRICAL`
- *   (on the local now_playing/upcoming slate; no badge — a nationwide release
+ *   (AMC lists this title in its own movies catalogue but has not yet confirmed
+ *   a showtime for it at any observed theatre; no badge — an AMC-listed release
  *   is expected to play here), `UNVERIFIED` (general TMDB search only;
  *   `"May not be playing here"` badge).
  *
@@ -74,11 +77,17 @@ export const MovieSearchConfidenceSchema = z.enum([
 export type MovieSearchConfidence = z.infer<typeof MovieSearchConfidenceSchema>;
 
 export interface MovieSearchHit {
-  /** `tmdb:movie:<id>` for TMDB-backed hits, the verbatim `movie.movie_id` otherwise. */
+  /**
+   * `tmdb:movie:<id>` for typed-query TMDB-backed hits, the verbatim
+   * `movie.movie_id` for AMC-schedule-confirmed hits, and
+   * `amc:catalogue:<movie_id>` for catalogue-only default-slate hits not yet
+   * on a live schedule (AMC's own numeric id, a different id space than
+   * `movie.movie_id`).
+   */
   readonly id: string;
-  /** AMC-observed verbatim title when matched, else TMDB's display title. */
+  /** AMC-observed verbatim title when matched, else the catalogue/TMDB display title. */
   readonly title: string;
-  /** Parsed from `tmdb_movie.release_date`; null when TMDB carries no date. */
+  /** Parsed from the catalogue or TMDB `release_date`; null when no date is carried. */
   readonly releaseYear: number | null;
   readonly posterPath: string | null;
   readonly confidence: MovieSearchConfidence;
@@ -131,26 +140,28 @@ export const search = t.procedure
   });
 
 /**
- * Default-slate browse: flagged `tmdb_movie` rows with their AMC match. Slate
- * rows are TMDB-backed by construction, so confidence is `VERIFIED_AMC` (AMC
- * observed — normal chip, no badge) or `WIDE_THEATRICAL`, never `UNVERIFIED`.
+ * Default-slate browse (ADR 0102 decision 5): AMC movies catalogue rows with
+ * their AMC schedule match. Catalogue rows carry no compliant poster (ADR 0102
+ * decision 5), so `posterPath` is always null; confidence is `VERIFIED_AMC`
+ * (AMC observed — normal chip, no badge) or `WIDE_THEATRICAL`, never
+ * `UNVERIFIED`.
  */
 async function readSlate(db: SqlClient, limit: number): Promise<MovieSearchHit[]> {
   const hits: MovieSearchHit[] = [];
   const seen = new Set<number>();
-  for (const row of await browseTmdbSlate(db, limit)) {
+  const slate: AmcMovieCatalogueSlateRow[] = await browseAmcMovieCatalogue(db, limit);
+  for (const row of slate) {
     // The AMC LEFT JOIN fans out on multi-provider title collisions; the
-    // statement orders deterministically and the first row wins.
-    if (seen.has(row.tmdb_id)) {
+    if (seen.has(row.movie_id)) {
       continue;
     }
-    seen.add(row.tmdb_id);
+    seen.add(row.movie_id);
     const seenAtAmc = row.amc_movie_id !== null;
     hits.push({
-      id: `tmdb:movie:${row.tmdb_id}`,
-      title: row.amc_title ?? row.tmdb_title ?? row.normalized_title,
+      id: row.amc_movie_id ?? `amc:catalogue:${row.movie_id}`,
+      title: row.amc_title ?? row.name,
       releaseYear: releaseYearFromDate(row.release_date),
-      posterPath: row.poster_path,
+      posterPath: null,
       confidence: seenAtAmc ? "VERIFIED_AMC" : "WIDE_THEATRICAL",
       badge: null,
       seenAtAmc,
@@ -195,6 +206,11 @@ async function searchLive(
   const liveKeys = new Set(enriched.map(({ summary }) => normalizeTitle(summary.title)));
   const amcByTitle = new Map<string, MovieRow>();
   const normalizedKeys = [...liveKeys];
+  // ADR 0102 2026-09-20 amendment: typed-query `WIDE_THEATRICAL` repoints from
+  // the deleted `tmdb_movie` slate flags to `amc_movie_catalogue` membership
+  // by normalized title — the same "AMC lists this as playing/coming" signal
+  // as the empty-query path, batched in one query mirroring `amcByTitle` above.
+  const catalogueByTitle = new Set<string>();
   if (normalizedKeys.length > 0) {
     for (const row of await readMoviesByNormalizedTitles(db, normalizedKeys)) {
       const key = normalizeTitle(row.title);
@@ -202,14 +218,17 @@ async function searchLive(
         amcByTitle.set(key, row);
       }
     }
+    for (const row of await readAmcMovieCatalogueByNormalizedTitles(db, normalizedKeys)) {
+      catalogueByTitle.add(normalizeTitle(row.name));
+    }
   }
   const hits: MovieSearchHit[] = enriched.map(({ summary, upserted }) => {
     const amc = amcByTitle.get(normalizeTitle(summary.title));
     const seenAtAmc = amc !== undefined;
-    const onSlate = (upserted?.is_now_playing ?? false) || (upserted?.is_upcoming ?? false);
+    const onCatalogue = catalogueByTitle.has(normalizeTitle(summary.title));
     const confidence: MovieSearchConfidence = seenAtAmc
       ? "VERIFIED_AMC"
-      : onSlate
+      : onCatalogue
         ? "WIDE_THEATRICAL"
         : "UNVERIFIED";
     return {
@@ -264,8 +283,8 @@ async function queryTmdb(tmdbClient: TmdbClient, query: string): Promise<TmdbMov
  * Lazy upsert for one live hit: `movieDetails` enrichment merged into the same
  * upsert (the S55.5 discipline). Any failure — details outage, `tmdb_id`
  * conflict, `normalized_title` cross-id collision — skips persistence for this
- * entry only; the hit still serves from live data with unknown slate flags
- * (hence `UNVERIFIED` unless AMC-matched).
+ * entry only; the hit still serves from live data with catalogue-only
+ * confidence (hence `UNVERIFIED` unless AMC-matched or catalogue-listed).
  */
 async function enrichAndUpsert(
   db: SqlClient,

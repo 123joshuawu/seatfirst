@@ -50,24 +50,6 @@ describe("createTmdbClient (S25.5)", () => {
     });
   });
 
-  it("hits now_playing and upcoming at their pinned endpoints", async () => {
-    const { fn, calls } = fakeFetch({ results: [] });
-    const client = createTmdbClient({
-      apiKey: "k",
-      bucket: instantBucket,
-      fetch: fn,
-      logger: capturingLogger(),
-    });
-
-    await client.nowPlaying();
-    await client.upcoming();
-
-    expect(calls.map((c) => c.url)).toEqual([
-      "https://api.themoviedb.org/3/movie/now_playing?language=en-US",
-      "https://api.themoviedb.org/3/movie/upcoming?language=en-US",
-    ]);
-  });
-
   it("maps results and drops entries without an id or title", async () => {
     const { fn } = fakeFetch({
       results: [
@@ -167,7 +149,7 @@ describe("createTmdbClient (S25.5)", () => {
     const logger = capturingLogger();
     const client = createTmdbClient({ apiKey: "k", bucket: instantBucket, fetch: fn, logger });
 
-    await expect(client.nowPlaying()).rejects.toThrow(/responded 429/);
+    await expect(client.searchMovie("Dune")).rejects.toThrow(/responded 429/);
 
     // O11.8 — the wire-level failure is a logged operator signal before the rethrow.
     expect(logger.calls).toHaveLength(1);
@@ -208,7 +190,7 @@ describe("createTmdbClient (S25.5)", () => {
     const logger = capturingLogger();
     const client = createTmdbClient({ apiKey: "k", bucket: instantBucket, fetch: fn, logger });
 
-    await expect(client.nowPlaying()).rejects.toBe(timeoutError);
+    await expect(client.searchMovie("Dune")).rejects.toBe(timeoutError);
 
     expect(abortSignalTimeout).toHaveBeenCalledExactlyOnceWith(5000);
     expect(calls).toHaveLength(1);

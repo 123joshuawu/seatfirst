@@ -3,7 +3,12 @@ import { Redis } from "ioredis";
 import { Client, Pool } from "pg";
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
 
-import { poolClient, upsertMovie, upsertTmdbMovie } from "@seatfirst/durability";
+import {
+  poolClient,
+  upsertAmcMovieCatalogue,
+  upsertMovie,
+  upsertTmdbMovie,
+} from "@seatfirst/durability";
 import { buildApp } from "../src/app.js";
 import type { AppRouter } from "../src/routes/searches/router.js";
 import { releaseYearFromDate } from "../src/routes/movies/search.js";
@@ -58,8 +63,6 @@ interface FakeTmdbOptions {
 function fakeTmdbClient(options: FakeTmdbOptions = {}): TmdbClient {
   const calls = options.calls ?? { search: [], details: [] };
   return {
-    nowPlaying: () => Promise.resolve([]),
-    upcoming: () => Promise.resolve([]),
     searchMovie: (query) => {
       calls.search.push(query);
       if (options.searchError !== undefined) {
@@ -156,28 +159,26 @@ async function seedAmc(pool: Pool, movieId: string, title: string): Promise<void
   });
 }
 
-async function seedSlate(
+async function seedAmcCatalogue(
   pool: Pool,
   row: {
-    tmdbId: number;
-    normalizedTitle: string;
-    title?: string | null;
-    posterPath?: string | null;
+    movieId: number;
+    slug?: string;
+    name: string;
     releaseDate?: string | null;
-    isNowPlaying?: boolean;
-    isUpcoming?: boolean;
   },
 ): Promise<void> {
-  await upsertTmdbMovie(poolClient(pool), {
-    tmdbId: row.tmdbId,
-    normalizedTitle: row.normalizedTitle,
-    posterPath: row.posterPath ?? null,
+  await upsertAmcMovieCatalogue(poolClient(pool), {
+    movieId: row.movieId,
+    slug: row.slug ?? `movie-${row.movieId}`,
+    name: row.name,
+    mpaaRating: null,
     runtimeMinutes: null,
-    genres: [],
     releaseDate: row.releaseDate ?? null,
-    isNowPlaying: row.isNowPlaying ?? false,
-    isUpcoming: row.isUpcoming ?? false,
-    title: row.title ?? null,
+    status: null,
+    imageUrl: null,
+    detailsPath: null,
+    showtimesPath: null,
   });
 }
 
@@ -231,35 +232,30 @@ beforeEach(async () => {
   await admin.query(
     `TRUNCATE search, run_key, performance, outbox, provider_admission, provider_fence,
      provider_run, observation, admission_reservation, search_job, run_subscription,
-     theatre, movie, tmdb_movie, tmdb_fetch, tmdb_prewarm_state CASCADE`,
+     theatre, movie, tmdb_movie, tmdb_fetch, amc_movie_catalogue,
+     amc_movie_catalogue_state CASCADE`,
   );
   resetFake();
   await restartServer();
 });
 
 describe("movies.search default slate (S63.4 empty query)", () => {
-  it("serves now_playing + upcoming rows locally with zero TMDB calls", async () => {
-    await seedSlate(pool, {
-      tmdbId: 101,
-      normalizedTitle: "dune: part two",
-      title: "Dune: Part Two",
-      posterPath: "/dune.jpg",
+  it("serves catalogue rows locally with zero TMDB calls", async () => {
+    await seedAmcCatalogue(pool, {
+      movieId: 101,
+      slug: "dune-part-two",
+      name: "Dune: Part Two",
       releaseDate: "2024-03-01",
-      isNowPlaying: true,
     });
-    await seedSlate(pool, {
-      tmdbId: 102,
-      normalizedTitle: "mickey 17",
-      posterPath: null,
+    await seedAmcCatalogue(pool, {
+      movieId: 102,
+      slug: "mickey-17",
+      name: "Mickey 17",
       releaseDate: "2025-03-07",
-      isUpcoming: true,
     });
-    await seedSlate(pool, {
-      tmdbId: 103,
-      normalizedTitle: "off slate",
-      posterPath: null,
-      releaseDate: "2020-01-01",
-    });
+    // Observed on an AMC schedule but absent from the catalogue: never surfaces
+    // on the default slate (catalogue membership IS the slate now, ADR 0102).
+    await seedAmc(pool, "amc:movie:off-slate", "Off Slate");
     await seedAmc(pool, "amc:movie:dune2", "Dune: Part Two");
 
     const client = makeClient(server.baseUrl);
@@ -268,20 +264,21 @@ describe("movies.search default slate (S63.4 empty query)", () => {
     expect(tmdbCalls.search).toEqual([]);
     expect(tmdbCalls.details).toEqual([]);
     expect(res.movies).toHaveLength(2);
-    // Now-playing sorts before upcoming.
+    // Catalogue order (`ORDER BY name, movie_id`): Dune before Mickey.
     expect(res.movies[0]).toEqual({
-      id: "tmdb:movie:101",
+      id: "amc:movie:dune2",
       title: "Dune: Part Two",
       releaseYear: 2024,
-      posterPath: "/dune.jpg",
+      // ADR 0102 decision 5: the catalogue never supplies a compliant poster.
+      posterPath: null,
       confidence: "VERIFIED_AMC",
       badge: null,
       seenAtAmc: true,
     });
     expect(res.movies[1]).toEqual({
-      id: "tmdb:movie:102",
-      // No display title and no AMC match: falls back to the normalized key.
-      title: "mickey 17",
+      id: "amc:catalogue:102",
+      // No AMC schedule match: falls back to the catalogue name.
+      title: "Mickey 17",
       releaseYear: 2025,
       posterPath: null,
       confidence: "WIDE_THEATRICAL",
@@ -291,18 +288,14 @@ describe("movies.search default slate (S63.4 empty query)", () => {
   });
 
   it("treats blank and single-character queries as default browse", async () => {
-    await seedSlate(pool, {
-      tmdbId: 111,
-      normalizedTitle: "sinners",
-      isNowPlaying: true,
-    });
+    await seedAmcCatalogue(pool, { movieId: 111, slug: "sinners", name: "Sinners" });
     const client = makeClient(server.baseUrl);
     for (const query of [undefined, "", "   ", "a"]) {
       const res =
         query === undefined
           ? await client.movies.search.query({})
           : await client.movies.search.query({ query });
-      expect(res.movies.map((m) => m.id)).toEqual(["tmdb:movie:111"]);
+      expect(res.movies.map((m) => m.id)).toEqual(["amc:catalogue:111"]);
     }
     expect(tmdbCalls.search).toEqual([]);
   });
@@ -313,25 +306,35 @@ describe("movies.search default slate (S63.4 empty query)", () => {
   });
 
   it("caps the slate at the requested limit", async () => {
-    await seedSlate(pool, { tmdbId: 121, normalizedTitle: "alpha", isNowPlaying: true });
-    await seedSlate(pool, { tmdbId: 122, normalizedTitle: "beta", isNowPlaying: true });
-    await seedSlate(pool, { tmdbId: 123, normalizedTitle: "gamma", isNowPlaying: true });
+    await seedAmcCatalogue(pool, { movieId: 121, slug: "alpha", name: "Alpha" });
+    await seedAmcCatalogue(pool, { movieId: 122, slug: "beta", name: "Beta" });
+    await seedAmcCatalogue(pool, { movieId: 123, slug: "gamma", name: "Gamma" });
     const client = makeClient(server.baseUrl);
     const res = await client.movies.search.query({ limit: 2 });
-    expect(res.movies.map((m) => m.id)).toEqual(["tmdb:movie:121", "tmdb:movie:122"]);
+    expect(res.movies.map((m) => m.id)).toEqual(["amc:catalogue:121", "amc:catalogue:122"]);
   });
 });
 
 describe("movies.search typed query (S63.4 live union + lazy upsert)", () => {
   it("unions live TMDB hits with AMC events, upserts each hit, and badges tri-state", async () => {
-    // A slate row the live query will also return: the lazy upsert must
-    // preserve its flags (not clear them) while refreshing the poster.
-    await seedSlate(pool, {
+    // A catalogue row the live query will also return: typed-query
+    // `WIDE_THEATRICAL` keys off catalogue membership now (ADR 0102), while the
+    // lazy upsert must preserve the pre-seeded TMDB release date it never sets
+    // and refresh the poster.
+    await seedAmcCatalogue(pool, {
+      movieId: 502,
+      slug: "dune-messiah",
+      name: "Dune Messiah",
+      releaseDate: "2026-12-18",
+    });
+    await upsertTmdbMovie(poolClient(pool), {
       tmdbId: 202,
       normalizedTitle: "dune messiah",
+      title: "Dune Messiah",
       posterPath: "/old.jpg",
+      runtimeMinutes: null,
+      genres: [],
       releaseDate: "2026-12-18",
-      isUpcoming: true,
     });
     await seedAmc(pool, "amc:movie:dune2", "Dune: Part Two");
     await seedAmc(pool, "amc:movie:dune-event", "Dune Sneak Peek Event");
@@ -351,7 +354,7 @@ describe("movies.search typed query (S63.4 live union + lazy upsert)", () => {
     // Lazy upsert persisted every live hit with details enrichment...
     const stored = await pool.query(
       `SELECT tmdb_id, normalized_title, title, poster_path, runtime_minutes, genres,
-              release_date::text AS release_date, is_now_playing, is_upcoming
+              release_date::text AS release_date
        FROM tmdb_movie WHERE tmdb_id = ANY($1) ORDER BY tmdb_id`,
       [[201, 202, 203]],
     );
@@ -364,13 +367,11 @@ describe("movies.search typed query (S63.4 live union + lazy upsert)", () => {
       runtime_minutes: 301,
       genres: ["Genre 201"],
     });
-    // ...while preserving the pre-seeded slate flags and release date it never sets.
+    // ...while preserving the pre-seeded release date it never sets.
     expect(stored.rows[1]).toMatchObject({
       tmdb_id: 202,
       poster_path: "/new202.jpg",
       release_date: "2026-12-18",
-      is_now_playing: false,
-      is_upcoming: true,
     });
 
     // ...and the union carries the tri-state confidence.
@@ -491,14 +492,14 @@ describe("movies.search typed query (S63.4 live union + lazy upsert)", () => {
   });
 
   it("fails closed on a typed query when no TMDB client is wired", async () => {
-    await seedSlate(pool, { tmdbId: 401, normalizedTitle: "wired?", isNowPlaying: true });
+    await seedAmcCatalogue(pool, { movieId: 401, slug: "wired", name: "Wired?" });
     // An assembly without the client: slate browse works, typed queries cannot.
     await server.close();
     server = await startServer(pool, redis.url);
 
     const client = makeClient(server.baseUrl);
     await expect(client.movies.search.query({})).resolves.toMatchObject({
-      movies: [{ id: "tmdb:movie:401" }],
+      movies: [{ id: "amc:catalogue:401" }],
     });
     const failure = await client.movies.search.query({ query: "wired" }).then(
       () => null,

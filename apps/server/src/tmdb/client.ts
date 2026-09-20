@@ -1,9 +1,10 @@
 /**
- * The TMDB HTTP client (S25.5) — Bearer-authenticated calls to `now_playing`, `upcoming`,
- * and `search/movie`, each gated by the injected token bucket so the worker never exceeds
+ * The TMDB HTTP client (S25.5) — Bearer-authenticated calls to `search/movie` and
+ * `movie/{id}`, each gated by the injected token bucket so the worker never exceeds
  * the ADR-pinned 30 req/sec (decision 3). `fetch` is injectable for tests (no live TMDB);
  * only the API host is a literal here, and it is the TMDB public REST endpoint, not a
- * gate-14 tunable.
+ * gate-14 tunable. (ADR 0102 decision 7 removed the pre-warm-only `now_playing` and
+ * `upcoming` calls; the typed-query search/enrichment path is all that remains.)
  */
 
 import type { SeatfirstLogger } from "@seatfirst/config/logger";
@@ -27,8 +28,6 @@ export interface TmdbMovieDetails {
 }
 
 export interface TmdbClient {
-  nowPlaying(): Promise<TmdbMovieSummary[]>;
-  upcoming(): Promise<TmdbMovieSummary[]>;
   searchMovie(query: string): Promise<TmdbMovieSummary[]>;
   movieDetails(tmdbId: number): Promise<TmdbMovieDetails>;
 }
@@ -131,8 +130,6 @@ export function createTmdbClient(deps: TmdbClientDeps): TmdbClient {
   }
 
   return {
-    nowPlaying: () => get("/movie/now_playing?language=en-US"),
-    upcoming: () => get("/movie/upcoming?language=en-US"),
     searchMovie: (query) => get(`/search/movie?query=${encodeURIComponent(query)}&language=en-US`),
     movieDetails: async (tmdbId) =>
       toDetails(tmdbId, await fetchJson(`/movie/${tmdbId}?language=en-US`)),

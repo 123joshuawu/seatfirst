@@ -32,6 +32,7 @@ assert.deepEqual(
     "024_retire_restore_sentinel.sql",
     "025_tmdb_movie_slate_release.sql",
     "026_diagnostic_capture.sql",
+    "027_amc_movie_catalogue.sql",
   ],
 );
 
@@ -57,8 +58,10 @@ assert.equal(typeof durability.dispatchTmdbFetch, "function");
 assert.equal(typeof durability.readTmdbFetchById, "function");
 assert.equal(typeof durability.markTmdbFetchDone, "function");
 assert.equal(typeof durability.markTmdbFetchFailed, "function");
-assert.equal(typeof durability.readTmdbPrewarmState, "function");
-assert.equal(typeof durability.completeTmdbPrewarm, "function");
+assert.equal(typeof durability.readAmcMovieCatalogueState, "function");
+assert.equal(typeof durability.completeAmcMovieCatalogueCrawl, "function");
+assert.equal(typeof durability.upsertAmcMovieCatalogue, "function");
+assert.equal(typeof durability.browseAmcMovieCatalogue, "function");
 assert.equal(typeof durability.markOutboxPublished, "function");
 // The generic executor is a public escape hatch (B1): a caller needing one of the 22
 // boundary families with no named wrapper must be able to reach it through the built

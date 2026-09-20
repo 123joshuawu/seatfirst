@@ -133,7 +133,7 @@ describe("tier 0 — structural claims", () => {
     expect(ddl).not.toMatch(imageish);
   });
 
-  it("creates the tmdb_movie table with exactly the ten S25+S55+S63 columns (ADR 0019 §1, amendment 2026-09-02, migration 025)", async () => {
+  it("creates the tmdb_movie table with exactly the eight S25+S55+S63 columns (ADR 0019 §1, amendment 2026-09-02, migration 025; ADR 0102 via migration 027 drops the slate flags)", async () => {
     const columns = await db().rows<{ column_name: string }>(
       `SELECT column_name
        FROM information_schema.columns
@@ -141,8 +141,6 @@ describe("tier 0 — structural claims", () => {
     );
     expect(columns.map((column) => column.column_name).sort()).toEqual([
       "genres",
-      "is_now_playing",
-      "is_upcoming",
       "normalized_title",
       "poster_path",
       "release_date",
@@ -212,11 +210,40 @@ describe("tier 0 — structural claims", () => {
     expect(indexes[0]!.indexdef).toMatch(/WHERE \(state = 'PENDING'::text\)/);
   });
 
-  it("creates the tmdb_prewarm_state singleton checkpoint with exactly the three S25 columns", async () => {
+  it("creates the amc_movie_catalogue table with exactly the twelve ADR 0102 columns (migration 027)", async () => {
     const columns = await db().rows<{ column_name: string }>(
       `SELECT column_name
        FROM information_schema.columns
-       WHERE table_schema = 'public' AND table_name = 'tmdb_prewarm_state'`,
+       WHERE table_schema = 'public' AND table_name = 'amc_movie_catalogue'`,
+    );
+    expect(columns.map((column) => column.column_name).sort()).toEqual([
+      "details_path",
+      "first_seen_at",
+      "image_url",
+      "movie_id",
+      "mpaa_rating",
+      "name",
+      "release_date",
+      "runtime_minutes",
+      "showtimes_path",
+      "slug",
+      "status",
+      "updated_at",
+    ]);
+    const pk = await db().one<{ column_name: string }>(
+      `SELECT a.attname AS column_name
+       FROM pg_index i
+       JOIN pg_attribute a ON a.attrelid = i.indrelid AND a.attnum = ANY(i.indkey)
+       WHERE i.indrelid = 'amc_movie_catalogue'::regclass AND i.indisprimary`,
+    );
+    expect(pk.column_name).toBe("movie_id");
+  });
+
+  it("creates the amc_movie_catalogue_state singleton checkpoint with exactly the three ADR 0102 columns (migration 027, replacing tmdb_prewarm_state)", async () => {
+    const columns = await db().rows<{ column_name: string }>(
+      `SELECT column_name
+       FROM information_schema.columns
+       WHERE table_schema = 'public' AND table_name = 'amc_movie_catalogue_state'`,
     );
     expect(columns.map((column) => column.column_name).sort()).toEqual([
       "last_completed_at",
@@ -227,7 +254,7 @@ describe("tier 0 — structural claims", () => {
       `SELECT a.attname AS column_name
        FROM pg_index i
        JOIN pg_attribute a ON a.attrelid = i.indrelid AND a.attnum = ANY(i.indkey)
-       WHERE i.indrelid = 'tmdb_prewarm_state'::regclass AND i.indisprimary`,
+       WHERE i.indrelid = 'amc_movie_catalogue_state'::regclass AND i.indisprimary`,
     );
     expect(pk.column_name).toBe("singleton");
   });

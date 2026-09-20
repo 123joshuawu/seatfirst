@@ -3,24 +3,23 @@ import { describe, expect, it } from "vitest";
 import * as B from "../src/boundaries.js";
 import { expectRow } from "../src/expect-row.js";
 import {
-  completeTmdbPrewarm,
   dispatchTmdbFetch,
   markTmdbFetchDone,
   markTmdbFetchFailed,
   readTmdbFetchById,
-  readTmdbPrewarmState,
 } from "../src/repository.js";
 
 import { useDatabase } from "./support/pg.js";
 
 /**
  * Tier 2 — the S25 TMDB fetch machinery's boundaries (ADR 0019 amendment decisions 2 and
- * 5): the idempotent read-time dispatch, the searchless fetch row's lifecycle transitions,
- * and the pre-warm checkpoint. Lowest tier that catches each bug (dispatch dedup is a
- * conditional-insert effect; the transitions are guarded UPDATEs; the checkpoint is a
- * singleton upsert).
+ * 5): the idempotent read-time dispatch and the searchless fetch row's lifecycle
+ * transitions. Lowest tier that catches each bug (dispatch dedup is a
+ * conditional-insert effect; the transitions are guarded UPDATEs). The pre-warm
+ * checkpoint this file once covered is gone (ADR 0102 supersedes ADR 0019 decision 3,
+ * migration 027 drops it) — see tier2.amc-movie-catalogue.test.ts for its replacement.
  */
-describe("tier 2 — TMDB fetch dispatch and pre-warm state", () => {
+describe("tier 2 — TMDB fetch dispatch", () => {
   const db = useDatabase();
 
   it("TMDB_FETCH_DISPATCH inserts a PENDING fetch + TMDB_FETCH outbox, then dedups on repeat", async () => {
@@ -99,25 +98,5 @@ describe("tier 2 — TMDB fetch dispatch and pre-warm state", () => {
     );
     expect(failed).toMatchObject({ state: "FAILED", attempt: 1, fail_cause: "no TMDB match" });
     expect(await markTmdbFetchFailed(db(), "fetch-fail", "again")).toEqual([]);
-  });
-
-  it("TMDB_PREWARM_STATE_READ returns [] before any pass, and COMPLETE upserts the singleton", async () => {
-    expect(await readTmdbPrewarmState(db())).toEqual([]);
-
-    const first = expectRow(B.TMDB_PREWARM_COMPLETE, await completeTmdbPrewarm(db()));
-    expect(first.last_completed_at).toBeInstanceOf(Date);
-
-    const state = await readTmdbPrewarmState(db());
-    expect(state).toHaveLength(1);
-    expect(state[0]!.last_completed_at).toEqual(first.last_completed_at);
-
-    const second = expectRow(B.TMDB_PREWARM_COMPLETE, await completeTmdbPrewarm(db()));
-    expect(second.last_completed_at!.getTime()).toBeGreaterThanOrEqual(
-      first.last_completed_at!.getTime(),
-    );
-    const count = await db().one<{ n: string }>(
-      `SELECT count(*)::text AS n FROM tmdb_prewarm_state`,
-    );
-    expect(count.n).toBe("1");
   });
 });

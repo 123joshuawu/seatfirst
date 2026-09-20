@@ -248,7 +248,7 @@ beforeEach(async () => {
   await admin.query(
     `TRUNCATE search, run_key, performance, outbox, provider_admission, provider_fence,
      provider_run, observation, admission_reservation, search_job, run_subscription,
-     theatre, movie, tmdb_movie, tmdb_fetch, tmdb_prewarm_state CASCADE`,
+     theatre, movie, tmdb_movie, tmdb_fetch, amc_movie_catalogue, amc_movie_catalogue_state CASCADE`,
   );
   await seedProvider(admin);
   await seedTheatre(pool);

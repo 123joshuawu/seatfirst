@@ -96,6 +96,32 @@ vi.mock("../src/catalogue-crawl/entrypoint.js", () => ({
   }),
 }));
 
+vi.mock("../src/amc-movies-crawl/entrypoint.js", () => ({
+  amcMoviesCrawlConfigFromEnv: vi.fn(() => ({
+    postgres: {
+      connectionString: "postgres://test:test@127.0.0.1:5999/test",
+      max: 2,
+      idleTimeoutMillis: 1000,
+      connectionTimeoutMillis: 1000,
+    },
+    redis: { host: "127.0.0.1", port: 6399 },
+    egressIdentityLabel: "test-egress",
+    userAgent: "test-agent",
+    navigationTimeoutMs: 5000,
+    semaphoreTtlMs: 60_000,
+  })),
+  createAmcMoviesCrawler: vi.fn(() => {
+    state.stopped.push("amcMoviesCrawler");
+    return Promise.resolve({
+      pause(): void {},
+      resume(): void {},
+      close(): Promise<void> {
+        return Promise.resolve();
+      },
+    });
+  }),
+}));
+
 vi.mock("../src/dispatch/entry.js", () => ({
   dispatchConfigFromEnv: vi.fn(() => ({})),
   startDispatchWorker: vi.fn(() => {

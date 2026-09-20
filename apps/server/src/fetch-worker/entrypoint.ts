@@ -36,6 +36,10 @@ import {
   catalogueCrawlConfigFromEnv,
   createCatalogueCrawler,
 } from "../catalogue-crawl/entrypoint.js";
+import {
+  amcMoviesCrawlConfigFromEnv,
+  createAmcMoviesCrawler,
+} from "../amc-movies-crawl/entrypoint.js";
 import { dispatchConfigFromEnv, startDispatchWorker } from "../dispatch/entry.js";
 import { createPlaceholderRegistry, withProviderFetchActor } from "../dispatch/handlers.js";
 import { withAnswerAssembler } from "../dispatch/handlers/aggregate-answer-assembler.js";
@@ -148,9 +152,12 @@ export async function startFetchWorker(
   const envDeps = providerFetchActorDepsFromEnv(env);
 
   // S31.8 — the single warm Chrome, built from the crawl's chrome/readiness/cleanup config
-  // and shared by both the RUN actor and the crawler (ADR 0022 §6).
+  // and shared by both the RUN actor and the crawlers (ADR 0022 §6, ADR 0102 decision 8).
+  // One `reconcileEgressIdentity` result feeds both crawl configs — never two calls with
+  // divergent results.
+  const resolvedEnv = reconcileEgressIdentity(env);
   const crawlConfig = {
-    ...catalogueCrawlConfigFromEnv(reconcileEgressIdentity(env)),
+    ...catalogueCrawlConfigFromEnv(resolvedEnv),
     logger,
   };
   const supervisor = await BrowserSupervisor.start({
@@ -209,6 +216,19 @@ export async function startFetchWorker(
       ? { fetchHop: options.navigationSeams.fetchHop }
       : {}),
   });
+  // Start the AMC movies catalogue tick loop (ADR 0102), sharing the supervisor built
+  // above — never a second Chrome. Same dev-fixture seam forwarding as the
+  // theatre-catalogue crawler: a fresh dev stack can never leak an unintercepted
+  // `/movies` hop to the live network.
+  const amcMoviesCrawler = await createAmcMoviesCrawler({
+    ...amcMoviesCrawlConfigFromEnv(resolvedEnv),
+    supervisor,
+    metrics: otel.metrics,
+    logger,
+    ...(options?.navigationSeams?.fetchHop !== undefined
+      ? { fetchHop: options.navigationSeams.fetchHop }
+      : {}),
+  });
 
   let closing = false;
   let paused = false;
@@ -250,6 +270,7 @@ export async function startFetchWorker(
       paused = true;
       notifyReadiness(false);
       crawler.pause();
+      amcMoviesCrawler.pause();
       await dispatch.pause();
       await supervisor.shutdown().catch(() => undefined);
     },
@@ -259,16 +280,18 @@ export async function startFetchWorker(
       await supervisor.recycle().catch(() => undefined);
       await dispatch.resume();
       crawler.resume();
+      amcMoviesCrawler.resume();
       notifyReadiness(supervisor.isReady());
     },
     async close() {
       closing = true;
       notifyReadiness(false);
-      // Stop the crawl loop + its own pool/redis first, then the dispatch consumers, then the
-      // actor's and assembler's own pools and the actor's redis client. The shared supervisor
-      // is owned here and shut down last: no Chrome after every loop has stopped issuing
-      // navigations.
+      // Stop both crawl loops + their own pools/redis first, then the dispatch consumers,
+      // then the actor's and assembler's own pools and the actor's redis client. The shared
+      // supervisor is owned here and shut down last: no Chrome after every loop has stopped
+      // issuing navigations.
       await crawler.close();
+      await amcMoviesCrawler.close();
       await dispatch.close();
       await envDeps.pool.end();
       await assemblerDeps.pool.end();

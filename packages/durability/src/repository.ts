@@ -227,23 +227,14 @@ export interface UpsertTmdbMovieInput {
   readonly genres: readonly string[];
   /**
    * S63 (migration 025): TMDB `release_date` as an ISO `YYYY-MM-DD` string (the
-   * `date` column's pg text form), or null when unknown. Optional so the S25.3/S25.5
-   * pre-warm/fetch callers — which never observed it — keep compiling and keep
-   * passing NULL (preserve-on-NULL in `TMDB_MOVIE_UPSERT`), until the follow-up
-   * that threads TMDB's `release_date` through the client wires them up.
+   * `date` column's pg text form), or null when unknown. Optional so the S25.5
+   * fetch caller — which never observed it — keeps compiling and keeps
+   * passing NULL (preserve-on-NULL in `TMDB_MOVIE_UPSERT`).
    */
   readonly releaseDate?: string | null;
   /**
-   * S63 slate flags. `undefined`/null preserves the stored value (the lazy search
-   * upsert never touches slate membership); an explicit boolean sets it (the
-   * future pre-warm slate-marking path).
-   */
-  readonly isNowPlaying?: boolean | null;
-  readonly isUpcoming?: boolean | null;
-  /**
    * S63 display-case title (TMDB's verbatim title). Null preserves the stored
-   * value; the pre-warm passes nothing yet, the lazy search upsert passes the live
-   * title it already holds.
+   * value; the lazy search upsert passes the live title it already holds.
    */
   readonly title?: string | null;
 }
@@ -256,9 +247,7 @@ export interface TmdbMovieRow {
   readonly genres: readonly string[];
   /** S63: ISO `YYYY-MM-DD` (pg `date` text form), null when TMDB carries no date. */
   readonly release_date: string | null;
-  readonly is_now_playing: boolean;
-  readonly is_upcoming: boolean;
-  /** S63: display-case title, null when never observed (pre-S63 rows, pre-warm). */
+  /** S63: display-case title, null when never observed. */
   readonly title: string | null;
   readonly updated_at: Date;
 }
@@ -274,35 +263,8 @@ export function upsertTmdbMovie(
     input.runtimeMinutes,
     [...input.genres],
     input.releaseDate ?? null,
-    input.isNowPlaying ?? null,
-    input.isUpcoming ?? null,
     input.title ?? null,
   ]);
-}
-
-/**
- * S63.4 default-slate read (`TMDB_SLATE_BROWSE`): the flagged now_playing/upcoming
- * rows with their AMC-catalogue match (nullable `amc_*` when TMDB-only). The LEFT
- * JOIN can fan out on multi-provider title collisions; rows are ordered
- * deterministically and the route dedupes by `tmdb_id`.
- */
-export interface TmdbSlateRow {
-  readonly tmdb_id: number;
-  readonly normalized_title: string;
-  readonly tmdb_title: string | null;
-  readonly poster_path: string | null;
-  readonly runtime_minutes: number | null;
-  readonly genres: readonly string[];
-  readonly release_date: string | null;
-  readonly is_now_playing: boolean;
-  readonly is_upcoming: boolean;
-  readonly updated_at: Date;
-  readonly amc_movie_id: string | null;
-  readonly amc_title: string | null;
-}
-
-export function browseTmdbSlate(db: SqlClient, limit: number): Promise<TmdbSlateRow[]> {
-  return runStatement(db, B.TMDB_SLATE_BROWSE, [limit]);
 }
 
 /**
@@ -314,6 +276,23 @@ export function readMoviesByNormalizedTitles(
   normalizedTitles: readonly string[],
 ): Promise<MovieRow[]> {
   return runStatement(db, B.MOVIE_READ_BY_NORMALIZED_TITLES, [[...normalizedTitles]]);
+}
+
+/**
+ * `movies.search` typed-query WIDE_THEATRICAL check (`AMC_MOVIE_CATALOGUE_READ_BY_NORMALIZED_TITLES`,
+ * ADR 0102 decision 6): which of the caller's `normalizeTitle`-form titles the AMC movies
+ * catalogue has ever listed.
+ */
+export interface AmcMovieCatalogueTitleRow {
+  readonly movie_id: number;
+  readonly name: string;
+}
+
+export function readAmcMovieCatalogueByNormalizedTitles(
+  db: SqlClient,
+  normalizedTitles: readonly string[],
+): Promise<AmcMovieCatalogueTitleRow[]> {
+  return runStatement(db, B.AMC_MOVIE_CATALOGUE_READ_BY_NORMALIZED_TITLES, [[...normalizedTitles]]);
 }
 
 /**
@@ -383,18 +362,94 @@ export function markTmdbFetchFailed(
   return runStatement(db, B.TMDB_FETCH_FAIL, [tmdbFetchId, failCause]);
 }
 
-export interface TmdbPrewarmStateRow {
+/* --------------------------------------- ADR 0102 — AMC movies catalogue periodic fetch */
+
+export interface UpsertAmcMovieCatalogueInput {
+  readonly movieId: number;
+  readonly slug: string;
+  readonly name: string;
+  readonly mpaaRating: string | null;
+  readonly runtimeMinutes: number | null;
+  readonly releaseDate: string | null;
+  readonly status: string | null;
+  readonly imageUrl: string | null;
+  readonly detailsPath: string | null;
+  readonly showtimesPath: string | null;
+}
+
+export interface AmcMovieCatalogueRow {
+  readonly movie_id: number;
+  readonly slug: string;
+  readonly name: string;
+  readonly mpaa_rating: string | null;
+  readonly runtime_minutes: number | null;
+  readonly release_date: string | null;
+  readonly status: string | null;
+  readonly image_url: string | null;
+  readonly details_path: string | null;
+  readonly showtimes_path: string | null;
+  readonly first_seen_at: Date;
+  readonly updated_at: Date;
+}
+
+/** ADR 0102 decision 4 — one upsert per parsed `PublicMovieSummary`, no delete path. */
+export function upsertAmcMovieCatalogue(
+  db: SqlClient,
+  input: UpsertAmcMovieCatalogueInput,
+): Promise<AmcMovieCatalogueRow[]> {
+  return runStatement(db, B.AMC_MOVIE_CATALOGUE_UPSERT, [
+    input.movieId,
+    input.slug,
+    input.name,
+    input.mpaaRating,
+    input.runtimeMinutes,
+    input.releaseDate,
+    input.status,
+    input.imageUrl,
+    input.detailsPath,
+    input.showtimesPath,
+  ]);
+}
+
+/**
+ * `movies.search` default-slate read (ADR 0102, supersedes `browseTmdbSlate`): AMC's own
+ * catalogue with its AMC-observed-schedule match (nullable `amc_*` when catalogue-only, not
+ * yet observed on a live schedule).
+ */
+export interface AmcMovieCatalogueSlateRow {
+  readonly movie_id: number;
+  readonly slug: string;
+  readonly name: string;
+  readonly mpaa_rating: string | null;
+  readonly runtime_minutes: number | null;
+  readonly release_date: string | null;
+  readonly status: string | null;
+  readonly updated_at: Date;
+  readonly amc_movie_id: string | null;
+  readonly amc_title: string | null;
+}
+
+export function browseAmcMovieCatalogue(
+  db: SqlClient,
+  limit: number,
+): Promise<AmcMovieCatalogueSlateRow[]> {
+  return runStatement(db, B.AMC_MOVIE_CATALOGUE_BROWSE, [limit]);
+}
+
+export interface AmcMovieCatalogueStateRow {
   readonly last_completed_at: Date | null;
 }
 
-/** S25.3 — the pre-warm due-ness read. Zero rows means no pass has ever completed. */
-export function readTmdbPrewarmState(db: SqlClient): Promise<TmdbPrewarmStateRow[]> {
-  return runStatement(db, B.TMDB_PREWARM_STATE_READ, []);
+/** ADR 0102 decision 1 — the worker's due-ness read. Zero rows means no pass has ever completed. */
+export function readAmcMovieCatalogueState(db: SqlClient): Promise<AmcMovieCatalogueStateRow[]> {
+  return runStatement(db, B.AMC_MOVIE_CATALOGUE_STATE_READ, []);
 }
 
-/** S25.3 — records the pre-warm pass's completion instant (checkpoint for due-ness). */
-export function completeTmdbPrewarm(db: SqlClient): Promise<TmdbPrewarmStateRow[]> {
-  return runStatement(db, B.TMDB_PREWARM_COMPLETE, []);
+/** ADR 0102 decision 1 — records the pass's completion instant (checkpoint for due-ness). */
+export function completeAmcMovieCatalogueCrawl(
+  db: SqlClient,
+): Promise<AmcMovieCatalogueStateRow[]> {
+  return runStatement(db, B.AMC_MOVIE_CATALOGUE_STATE_COMPLETE, []);
 }
 
 export interface TheatreRadiusInput {
