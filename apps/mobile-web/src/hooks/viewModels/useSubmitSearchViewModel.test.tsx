@@ -952,7 +952,6 @@ describe("useSubmitSearchViewModel live schedule check (UI42.6)", () => {
     expect(mockRefreshMutate).toHaveBeenCalledTimes(1);
   });
 
-
   it("FAILED surfaces a generic error and keeps the cache", async () => {
     mockRefreshMutate.mockResolvedValue({ status: "FAILED", localDate: "2026-09-05" });
     const mockClearCache = vi.mocked(clearTheatreMovieCache);

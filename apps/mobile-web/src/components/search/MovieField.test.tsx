@@ -687,9 +687,7 @@ describe("MovieField ADR-0100 two-group split", () => {
         splitProps({
           movieValue: "Dune",
           onSelectCustomEvent: vi.fn(),
-          liveScheduleMovies: [
-            { label: "Dune: Part Three", onPress: vi.fn(), posterUrl: null },
-          ],
+          liveScheduleMovies: [{ label: "Dune: Part Three", onPress: vi.fn(), posterUrl: null }],
           nowPlayingSuggestions: [
             { label: "Dune: Part Four (general)", onPress: vi.fn(), posterUrl: null },
           ],
@@ -723,9 +721,7 @@ describe("MovieField ADR-0100 two-group split", () => {
         splitProps({
           movieValue: "",
           liveScheduleMovies: [],
-          nowPlayingSuggestions: [
-            { label: "Dune: Part Three", onPress: vi.fn(), posterUrl: null },
-          ],
+          nowPlayingSuggestions: [{ label: "Dune: Part Three", onPress: vi.fn(), posterUrl: null }],
         }),
       ),
     );
@@ -742,9 +738,7 @@ describe("MovieField ADR-0100 two-group split", () => {
         MovieField,
         splitProps({
           movieValue: "",
-          liveScheduleMovies: [
-            { label: "Dune: Part Three", onPress: vi.fn(), posterUrl: null },
-          ],
+          liveScheduleMovies: [{ label: "Dune: Part Three", onPress: vi.fn(), posterUrl: null }],
           nowPlayingSuggestions: [],
         }),
       ),
@@ -779,12 +773,8 @@ describe("MovieField ADR-0100 two-group split", () => {
         splitProps({
           movieValue: "",
           isCheckingLiveSchedule: true,
-          liveScheduleMovies: [
-            { label: "Dune: Part Three", onPress: vi.fn(), posterUrl: null },
-          ],
-          nowPlayingSuggestions: [
-            { label: "Interstellar", onPress: vi.fn(), posterUrl: null },
-          ],
+          liveScheduleMovies: [{ label: "Dune: Part Three", onPress: vi.fn(), posterUrl: null }],
+          nowPlayingSuggestions: [{ label: "Interstellar", onPress: vi.fn(), posterUrl: null }],
         }),
       ),
     );

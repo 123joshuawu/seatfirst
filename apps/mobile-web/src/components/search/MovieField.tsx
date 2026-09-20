@@ -245,7 +245,7 @@ export function MovieField({
       ) : (
         <>
           <AppText style={styles.footerText}>
-            Looking for a special event or Fathom screening?{' '}
+            Looking for a special event or Fathom screening?{" "}
           </AppText>
           <Pressable
             onPress={onCheckLiveSchedule}
@@ -299,12 +299,12 @@ export function MovieField({
     const entry: { count: number; coldTheatreCount: number } | undefined = (() => {
       if (!movieCounts) return undefined;
       if (movieCounts instanceof Map)
-        return (
-          movieCounts as Map<string, { count: number; coldTheatreCount: number }>
-        ).get(item.label);
-      return (
-        movieCounts as Record<string, { count: number; coldTheatreCount: number }>
-      )[item.label];
+        return (movieCounts as Map<string, { count: number; coldTheatreCount: number }>).get(
+          item.label,
+        );
+      return (movieCounts as Record<string, { count: number; coldTheatreCount: number }>)[
+        item.label
+      ];
     })();
     const display = entry ? getFacetDisplay(entry, effectiveTotal) : null;
     const warmZero = (() => {
@@ -397,10 +397,7 @@ export function MovieField({
           styles.movieCard,
           (pressed || hovered) && !isLocked && styles.itemPressed,
           Platform.OS === "web"
-            ? ({ cursor: isLocked ? "default" : "pointer" } as unknown as Record<
-                string,
-                unknown
-              >)
+            ? ({ cursor: isLocked ? "default" : "pointer" } as unknown as Record<string, unknown>)
             : null,
         ]}
       >
@@ -521,16 +518,10 @@ export function MovieField({
               onClose={onBlur}
             >
               {liveScheduleStatusBlock}
-              {showCustomEventRow ? (
-                <View style={styles.moviesGrid}>{customEventRow}</View>
-              ) : null}
+              {showCustomEventRow ? <View style={styles.moviesGrid}>{customEventRow}</View> : null}
               {hasLiveGroup ? (
                 <View>
-                  <AppText
-                    weight="700"
-                    style={styles.sectionHeader}
-                    accessibilityRole="header"
-                  >
+                  <AppText weight="700" style={styles.sectionHeader} accessibilityRole="header">
                     {liveScheduleHeader}
                   </AppText>
                   <View style={styles.moviesGrid}>
@@ -540,11 +531,7 @@ export function MovieField({
               ) : null}
               {hasNowPlayingGroup ? (
                 <View style={hasLiveGroup ? styles.sectionDivider : undefined}>
-                  <AppText
-                    weight="700"
-                    style={styles.sectionHeader}
-                    accessibilityRole="header"
-                  >
+                  <AppText weight="700" style={styles.sectionHeader} accessibilityRole="header">
                     {nowPlayingHeader}
                   </AppText>
                   <View style={styles.moviesGrid}>
@@ -561,9 +548,7 @@ export function MovieField({
               onClose={onBlur}
             >
               {liveScheduleStatusBlock}
-              {showCustomEventRow ? (
-                <View style={styles.moviesGrid}>{customEventRow}</View>
-              ) : null}
+              {showCustomEventRow ? <View style={styles.moviesGrid}>{customEventRow}</View> : null}
               <View style={styles.item}>
                 <AppText style={styles.itemLabelMuted}>No movies found</AppText>
               </View>
