@@ -844,8 +844,8 @@ describe("TheaterField Where — place suggestions (UI20)", () => {
   });
 });
 
-describe("TheaterField Where — empty-state ordering (Places before AMC theaters)", () => {
-  it("renders Places before AMC theaters when both a theatre hit and a place candidate are present in empty mode", async () => {
+describe("TheaterField Where — empty-state ordering (theatre-name matches surface first)", () => {
+  it("renders AMC theaters before Places when the query substring-matches a theatre name", async () => {
     vi.useFakeTimers();
     const suggestPlace = vi.fn().mockResolvedValue({
       candidates: [{ label: "Metropolis, California, United States" }],
@@ -873,8 +873,181 @@ describe("TheaterField Where — empty-state ordering (Places before AMC theater
     expect(str).toContain("AMC theaters");
     expect(str).toContain("Metropolis, CA");
     expect(str).toContain("AMC Metreon 16");
-    // Regression guard: Places group must precede AMC theaters group in empty-state reading order.
-    expect(str.indexOf("Places")).toBeLessThan(str.indexOf("AMC theaters"));
+    // Client-side relevance: "met" substring-matches "AMC Metreon 16", so the
+    // matching theatre surfaces ahead of the unrelated place candidate.
+    expect(str.indexOf("where-group-theatres")).toBeLessThan(str.indexOf("where-group-places"));
+    expect(str.indexOf("AMC Metreon 16")).toBeLessThan(str.indexOf("Metropolis, CA"));
+  });
+
+  it("keeps Places before AMC theaters when the query matches no theatre name", async () => {
+    vi.useFakeTimers();
+    const suggestPlace = vi.fn().mockResolvedValue({
+      candidates: [{ label: "Sunnyvale, California, United States" }],
+    });
+    // Force nearby theatres that do NOT substring-match the query: relevance
+    // must not reorder, preserving the long-standing Places-first layout.
+    mockUseTheatreSearch.mockReturnValue({
+      data: BROWSE_TWO_THEATRES_DATA,
+      isFetching: false,
+      error: null,
+    });
+    useSeatfirstStore.setState({ whereQuery: "xyz", whereFocused: true });
+    let renderer!: TestRenderer.ReactTestRenderer;
+    act(() => {
+      renderer = TestRenderer.create(
+        React.createElement(TheaterField, {
+          isLocked: false,
+          suggestPlaceResolver: { suggestPlace },
+        }),
+      );
+    });
+    act(() => {
+      vi.advanceTimersByTime(300);
+    });
+    await act(async () => {
+      await Promise.resolve();
+      await Promise.resolve();
+    });
+    const str = jsonString(renderer);
+    expect(str).toContain("Sunnyvale, CA");
+    expect(str).toContain("AMC Metreon 16");
+    expect(str.indexOf("where-group-places")).toBeLessThan(str.indexOf("where-group-theatres"));
+  });
+
+  it("moves keyboard focus to the matching theatre before place candidates", async () => {
+    vi.useFakeTimers();
+    const suggestPlace = vi.fn().mockResolvedValue({
+      candidates: [{ label: "Metropolis, California, United States" }],
+    });
+    useSeatfirstStore.setState({ whereQuery: "met", whereFocused: true });
+    let renderer!: TestRenderer.ReactTestRenderer;
+    act(() => {
+      renderer = TestRenderer.create(
+        React.createElement(TheaterField, {
+          isLocked: false,
+          suggestPlaceResolver: { suggestPlace },
+        }),
+      );
+    });
+    act(() => {
+      vi.advanceTimersByTime(300);
+    });
+    await act(async () => {
+      await Promise.resolve();
+      await Promise.resolve();
+    });
+    const input = renderer.root.find(
+      (n) => n.props.accessibilityLabel === "Where — place or theatre",
+    );
+    act(() => {
+      (input.props as { onKeyPress?: (e: unknown) => void }).onKeyPress?.({
+        nativeEvent: { key: "ArrowDown" },
+        preventDefault: () => {},
+      });
+    });
+    const after = renderer.root.find(
+      (n) => n.props.accessibilityLabel === "Where — place or theatre",
+    );
+    const props = after.props as { "aria-activedescendant"?: string };
+    expect(props["aria-activedescendant"]).toBe("where-option-theatre-amc:theatre:1");
+  });
+});
+
+describe("TheaterField Where — audit fixes (empty state, error copy, input attrs)", () => {
+  it("shows a no-matching-locations row when a query matches nothing", async () => {
+    vi.useFakeTimers();
+    const suggestPlace = vi.fn().mockResolvedValue({ candidates: [] });
+    // "zzzz" matches no theatre in the mocked search and yields no place
+    // candidates: the dropdown must explain instead of showing only location.
+    useSeatfirstStore.setState({ whereQuery: "zzzz", whereFocused: true });
+    let renderer!: TestRenderer.ReactTestRenderer;
+    act(() => {
+      renderer = TestRenderer.create(
+        React.createElement(TheaterField, {
+          isLocked: false,
+          suggestPlaceResolver: { suggestPlace },
+        }),
+      );
+    });
+    act(() => {
+      vi.advanceTimersByTime(300);
+    });
+    await act(async () => {
+      await Promise.resolve();
+      await Promise.resolve();
+    });
+    const str = jsonString(renderer);
+    expect(str).toContain("No matching locations found");
+    expect(str).toContain("Use my location");
+    expect(str).toContain("No theatre matches “zzzz”");
+  });
+
+  it("renders the place-not-found hint exactly once for seeded store errors", () => {
+    // Mirrors fixtures/scenarios.ts `where-place-not-found`: the store keeps
+    // only the core sentence and the component appends the hint once.
+    useSeatfirstStore.setState({
+      whereQuery: "Atlantis",
+      whereFocused: true,
+      wherePlaceError: "We couldn't find that place.",
+      wherePlaceErrorKind: "PLACE_NOT_FOUND",
+    });
+    let renderer!: TestRenderer.ReactTestRenderer;
+    act(() => {
+      renderer = TestRenderer.create(React.createElement(TheaterField, { isLocked: false }));
+    });
+    const str = jsonString(renderer);
+    expect(str).toContain("We couldn't find that place.");
+    const hintCount = str.split("Try a different address, neighborhood, or city.").length - 1;
+    expect(hintCount).toBe(1);
+  });
+
+  it("stores the short core sentence on live PLACE_NOT_FOUND and renders the hint once", async () => {
+    vi.useFakeTimers();
+    const suggestPlace = vi.fn().mockResolvedValue({ candidates: [] });
+    // The default mocked geocode resolver maps "notfound" to PLACE_NOT_FOUND.
+    useSeatfirstStore.setState({ whereQuery: "notfound nowhere", whereFocused: true });
+    let renderer!: TestRenderer.ReactTestRenderer;
+    act(() => {
+      renderer = TestRenderer.create(
+        React.createElement(TheaterField, {
+          isLocked: false,
+          suggestPlaceResolver: { suggestPlace },
+        }),
+      );
+    });
+    const input = renderer.root.find(
+      (n) => n.props.accessibilityLabel === "Where — place or theatre",
+    );
+    await act(async () => {
+      (input.props as { onKeyPress?: (e: unknown) => void }).onKeyPress?.({
+        nativeEvent: { key: "Enter" },
+        preventDefault: () => {},
+      });
+      await Promise.resolve();
+      await Promise.resolve();
+    });
+    const str = jsonString(renderer);
+    expect(str).toContain("We couldn't find that place.");
+    const hintCount = str.split("Try a different address, neighborhood, or city.").length - 1;
+    expect(hintCount).toBe(1);
+  });
+
+  it("exposes id and name on the WHERE input", () => {
+    useSeatfirstStore.setState({ whereQuery: "", whereFocused: true });
+    let renderer!: TestRenderer.ReactTestRenderer;
+    act(() => {
+      renderer = TestRenderer.create(React.createElement(TheaterField, { isLocked: false }));
+    });
+    const input = renderer.root
+      .findAllByType(TextInput)
+      .find((n) => typeof n.props.placeholder === "string" && n.props.placeholder.length > 0);
+    expect(input).toBeDefined();
+    expect(input!.props.nativeID).toBe("seatfirst-where");
+    const webProps = input!.props as Record<string, unknown>;
+    if (webProps.id !== undefined || webProps.name !== undefined) {
+      expect(webProps.id).toBe("seatfirst-where");
+      expect(webProps.name).toBe("where");
+    }
   });
 });
 

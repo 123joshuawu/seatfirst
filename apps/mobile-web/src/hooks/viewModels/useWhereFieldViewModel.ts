@@ -111,6 +111,8 @@ export interface WhereFieldViewModel {
   activeIndex: number;
   activeKey: WhereOptionKey | null;
   theatres: TheatreSearchHit[];
+  /** True when the typed query substring-matches a theatre name: theatres sort before places. */
+  theatresFirst: boolean;
   shouldShowLegacyConfirmed: boolean;
   showDropdown: boolean;
   inputAriaProps: Record<string, unknown>;
@@ -318,12 +320,27 @@ export function useWhereFieldViewModel({
     inputValue.trim().length > 0 &&
     theatres.length === 0 &&
     suggestCandidates.length > 0;
+  // Client-side relevance: when the typed query substring-matches any visible
+  // theatre name, surface theatres ahead of generic place/address candidates.
+  // Theatre-vs-theatre relative order (server radius/distance) is preserved;
+  // only the group boundary moves. No new data required.
+  const theatresFirst = useMemo(() => {
+    const q = inputValue.trim().toLowerCase();
+    if (q.length === 0 || navigableTheatres.length === 0) return false;
+    return navigableTheatres.some((hit) => getHitName(hit).toLowerCase().includes(q));
+  }, [inputValue, navigableTheatres]);
   const optionKeys = useMemo<WhereOptionKey[]>(
-    () => [
-      ...navigablePlaceCandidates.map((_, index) => getPlaceOptionKey(index)),
-      ...navigableTheatres.map((hit) => getTheatreOptionKey(hit)),
-    ],
-    [navigablePlaceCandidates, navigableTheatres],
+    () =>
+      theatresFirst
+        ? [
+            ...navigableTheatres.map((hit) => getTheatreOptionKey(hit)),
+            ...navigablePlaceCandidates.map((_, index) => getPlaceOptionKey(index)),
+          ]
+        : [
+            ...navigablePlaceCandidates.map((_, index) => getPlaceOptionKey(index)),
+            ...navigableTheatres.map((hit) => getTheatreOptionKey(hit)),
+          ],
+    [navigablePlaceCandidates, navigableTheatres, theatresFirst],
   );
   const effectiveActiveKey =
     activeKey !== null && (optionKeys as readonly string[]).includes(activeKey) ? activeKey : null;
@@ -494,9 +511,9 @@ export function useWhereFieldViewModel({
         const result = await placeResolver.resolvePlace(q, clampedRadius, limit);
         const kind = (result as { kind?: string }).kind;
         if (kind === "PLACE_NOT_FOUND") {
-          setPlaceError(
-            "We couldn't find that place. Try a different address, neighborhood, or city.",
-          );
+          // Keep only the core sentence here: `TheaterField` appends the
+          // "Try a different..." hint exactly once for PLACE_NOT_FOUND.
+          setPlaceError("We couldn't find that place.");
           setPlaceErrorKind("PLACE_NOT_FOUND");
         } else if (kind === "PLACE_RESOLUTION_UNAVAILABLE") {
           setPlaceError("Place lookup is temporarily unavailable. Please try again.");
@@ -725,6 +742,7 @@ export function useWhereFieldViewModel({
     activeIndex,
     activeKey: effectiveActiveKey,
     theatres,
+    theatresFirst,
     shouldShowLegacyConfirmed,
     showDropdown,
     inputAriaProps,

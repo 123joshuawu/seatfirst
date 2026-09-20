@@ -281,6 +281,7 @@ export function TheaterField({
           <View style={styles.inputRow}>
             <TextInput
               ref={inputRef}
+              nativeID="seatfirst-where"
               value={vm.inputValue}
               onChangeText={isLocked ? undefined : vm.actions.handleChangeText}
               onFocus={isLocked ? undefined : vm.actions.handleFocus}
@@ -304,6 +305,12 @@ export function TheaterField({
               accessibilityHint="Type a place or theatre name, or use current location"
               accessibilityState={{ disabled: !!isLocked, expanded: !!vm.showDropdown }}
               onKeyPress={(e) => vm.actions.handleKeyDown(e, inputRef)}
+              {...(Platform.OS === "web"
+                ? ({
+                    id: "seatfirst-where",
+                    name: "where",
+                  } as unknown as Record<string, unknown>)
+                : {})}
               {...vm.inputAriaProps}
             />
             <AppText
@@ -530,7 +537,7 @@ export function TheaterField({
               isMobile={isMobile}
               onClose={vm.actions.handleBlur}
             >
-              {vm.whereFieldMode === "empty" ? (
+              {vm.whereFieldMode === "empty" && !vm.theatresFirst ? (
                 <View
                   style={styles.placesGroup}
                   {...(Platform.OS === "web"
@@ -560,6 +567,15 @@ export function TheaterField({
                   >
                     {emptyPlacesSubhead}
                   </AppText>
+                  {trimmedQuery.length > 0 &&
+                  vm.suggestCandidates.length === 0 &&
+                  vm.theatres.length === 0 &&
+                  !vm.isSearching &&
+                  !vm.effectiveTheatreSearchError ? (
+                    <View style={styles.item}>
+                      <AppText style={styles.itemLabelMuted}>No matching locations found</AppText>
+                    </View>
+                  ) : null}
                   <Pressable
                     onPress={isLocked ? undefined : vm.actions.handleUseLocation}
                     disabled={isLocked || vm.geolocationBusy}
@@ -692,6 +708,125 @@ export function TheaterField({
                   </View>
                 )}
               </View>
+              {vm.whereFieldMode === "empty" && vm.theatresFirst ? (
+                <View
+                  style={styles.placesGroup}
+                  {...(Platform.OS === "web"
+                    ? ({
+                        role: "group",
+                        "aria-labelledby": "where-group-places",
+                      } as unknown as Record<string, unknown>)
+                    : {})}
+                >
+                  <AppText
+                    weight="700"
+                    style={styles.groupHeading}
+                    {...(Platform.OS === "web"
+                      ? ({
+                          id: "where-group-places",
+                          role: "presentation",
+                        } as unknown as Record<string, unknown>)
+                      : {})}
+                  >
+                    Places
+                  </AppText>
+                  <AppText
+                    style={styles.placesSubhead}
+                    {...(Platform.OS === "web"
+                      ? ({ role: "presentation" } as unknown as Record<string, unknown>)
+                      : {})}
+                  >
+                    {emptyPlacesSubhead}
+                  </AppText>
+                  {trimmedQuery.length > 0 &&
+                  vm.suggestCandidates.length === 0 &&
+                  vm.theatres.length === 0 &&
+                  !vm.isSearching &&
+                  !vm.effectiveTheatreSearchError ? (
+                    <View style={styles.item}>
+                      <AppText style={styles.itemLabelMuted}>No matching locations found</AppText>
+                    </View>
+                  ) : null}
+                  <Pressable
+                    onPress={isLocked ? undefined : vm.actions.handleUseLocation}
+                    disabled={isLocked || vm.geolocationBusy}
+                    accessibilityRole="button"
+                    accessibilityLabel="Use my location"
+                    accessibilityState={{ disabled: isLocked, busy: vm.geolocationBusy }}
+                    focusable={!isLocked}
+                    {...(Platform.OS === "web"
+                      ? ({
+                          role: "option",
+                          "aria-disabled": isLocked ? "true" : undefined,
+                        } as unknown as Record<string, unknown>)
+                      : {})}
+                    style={[styles.item, styles.theatreRow, isLocked && styles.itemDisabled]}
+                  >
+                    <View style={styles.theatreRowLeft}>
+                      <View
+                        accessible={false}
+                        importantForAccessibility="no"
+                        style={[styles.checkbox, styles.pinSlot]}
+                      >
+                        <AppText weight="800" style={styles.pinGlyph}>
+                          📍
+                        </AppText>
+                      </View>
+                      <AppText
+                        style={[styles.itemLabel, { color: colors.brandDark, fontWeight: "600" }]}
+                      >
+                        {vm.geolocationBusy ? "Locating…" : "Use my location"}
+                      </AppText>
+                    </View>
+                  </Pressable>
+                  {vm.suggestCandidates.map((candidate, index) => {
+                    const optionKey = getPlaceOptionKey(index);
+                    const isActive = vm.activeKey === optionKey;
+                    return (
+                      <Pressable
+                        key={`${candidate.label}-${index}`}
+                        onPress={
+                          isLocked ? undefined : () => vm.actions.handleSelectCandidate(candidate)
+                        }
+                        disabled={isLocked}
+                        accessibilityRole="button"
+                        accessibilityLabel={formatUsPlaceLabel(candidate.label)}
+                        accessibilityState={{ selected: isActive, disabled: isLocked }}
+                        focusable={!isLocked}
+                        {...(Platform.OS === "web"
+                          ? ({
+                              role: "option",
+                              id: getWhereOptionId(optionKey),
+                              "aria-selected": isActive ? "true" : "false",
+                              "aria-disabled": isLocked ? "true" : undefined,
+                            } as unknown as Record<string, unknown>)
+                          : {})}
+                        style={[
+                          styles.item,
+                          styles.theatreRow,
+                          isActive && styles.itemActive,
+                          isLocked && styles.itemDisabled,
+                        ]}
+                      >
+                        <View style={styles.theatreRowLeft}>
+                          <View
+                            accessible={false}
+                            importantForAccessibility="no"
+                            style={[styles.checkbox, styles.pinSlot]}
+                          >
+                            <AppText weight="800" style={styles.pinGlyph}>
+                              📍
+                            </AppText>
+                          </View>
+                          <AppText style={styles.itemLabel}>
+                            {formatUsPlaceLabel(candidate.label)}
+                          </AppText>
+                        </View>
+                      </Pressable>
+                    );
+                  })}
+                </View>
+              ) : null}
 
               {vm.whereFieldMode === "theatres" && vm.showPlaceSignpost ? (
                 <Pressable
