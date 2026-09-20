@@ -194,7 +194,11 @@ export function ResultScreen({
               {vm.etaLabel}
             </AppText>
           ) : null}
-          <ProgressBar resolved={vm.checkedCount} total={vm.totalShowtimes} />
+          <ProgressBar
+            resolved={vm.checkedCount}
+            total={vm.totalShowtimes}
+            isTerminal={vm.isTerminal}
+          />
           {vm.phaseDetail ? (
             <AppText weight="400" style={styles.phaseDetail}>
               {vm.phaseDetail}

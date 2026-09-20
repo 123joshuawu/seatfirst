@@ -7,7 +7,8 @@ import { useWhenCustomSheetViewModel } from "@/hooks/viewModels/useWhenCustomShe
 import { ChipRow } from "./ChipRow";
 import { MOVIE_BROWSE_SPAN_DAYS } from "@/lib/dates";
 
-export function WhenCustomSheet(): ReactElement | null {
+export function WhenCustomSheet({ isMobile }: { isMobile?: boolean } = {}): ReactElement | null {
+  const desktop = isMobile === false;
   const vm = useWhenCustomSheetViewModel();
   const [scrollLayoutHeight, setScrollLayoutHeight] = useState(0);
   const [scrollContentHeight, setScrollContentHeight] = useState(0);
@@ -162,12 +163,19 @@ export function WhenCustomSheet(): ReactElement | null {
         </View>
 
         <ChipRow label="Time of day" chips={vm.bandChips} marginBottom={0} />
-
         <View
+          testID="custom-sheet-footer"
           style={{
             flexDirection: "row",
             alignItems: "center",
             justifyContent: "space-between",
+            // Mobile 390px: 'Clear dates' plus the Cancel/Apply pair can exceed
+            // the panel content width (e.g. under text scaling), so the row
+            // wraps instead of clipping Cancel/Apply off-screen. Desktop keeps
+            // the single-line layout (`undefined` keeps mobile values, matching
+            // the `isMobile` tri-state convention elsewhere in the form).
+            flexWrap: desktop ? "nowrap" : "wrap",
+            gap: 8,
             // UX-01: was marginTop 12 + paddingBottom 8; trims 12px more of
             // fixed chrome for the calendar ScrollView above.
             marginTop: 8,
@@ -191,7 +199,8 @@ export function WhenCustomSheet(): ReactElement | null {
               Clear dates
             </AppText>
           </Pressable>
-          <View style={{ flexDirection: "row", gap: 8 }}>
+          {/* flexShrink 0 keeps Cancel/Apply together as one wrap unit. */}
+          <View style={{ flexDirection: "row", gap: 8, flexShrink: 0 }}>
             <Pressable
               onPress={vm.actions.handleCancel}
               style={{

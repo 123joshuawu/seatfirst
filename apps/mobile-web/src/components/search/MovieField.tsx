@@ -224,12 +224,11 @@ export function MovieField({
       </Pressable>
     </View>
   ) : null;
-  // UI42.6 — failure line for the on-demand refresh; rendered directly above
-  // the footer CTA (adjacent to the trigger button) so a FAILED resolve or
-  // rejected mutation is visible without scrolling when tapped. Below the
-  // footer it sat at the bottom of the 326px-capped scroll region — scrolled
-  // out of view with zero visible feedback. Independent of the footer-flag
-  // gate so the message survives even if the CTA handler is momentarily unwired.
+  // UI42.6 — failure line for the on-demand refresh; rendered unconditionally
+  // outside the `movieFocused`-gated dropdown (alongside `movieClearedNotice`)
+  // so a FAILED resolve or rejected mutation stays visible after the dropdown
+  // closes on input blur. Independent of the footer-flag gate so the message
+  // survives even if the CTA handler is momentarily unwired.
   const liveScheduleErrorRow =
     liveScheduleError != null && liveScheduleError !== "" ? (
       <View style={styles.footerErrorWrap}>
@@ -434,7 +433,6 @@ export function MovieField({
                   })}
                   {customEventRow}
                 </View>
-                {liveScheduleErrorRow}
                 {liveScheduleFooter}
               </AutocompletePopover>
             ) : (
@@ -486,7 +484,6 @@ export function MovieField({
                   })}
                   {customEventRow}
                 </View>
-                {liveScheduleErrorRow}
                 {liveScheduleFooter}
               </AutocompletePopover>
             )
@@ -501,11 +498,11 @@ export function MovieField({
                 <AppText style={styles.itemLabelMuted}>No movies found</AppText>
               </View>
               {showCustomEventRow ? <View style={styles.moviesGrid}>{customEventRow}</View> : null}
-              {liveScheduleErrorRow}
               {liveScheduleFooter}
             </AutocompletePopover>
           )
         ) : null}
+        {liveScheduleErrorRow}
         {movieClearedNotice ? (
           <AppText
             weight="400"

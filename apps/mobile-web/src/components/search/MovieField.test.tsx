@@ -589,7 +589,7 @@ describe("MovieField UI42.6 live schedule footer", () => {
 });
 
 describe("MovieField UI42.6 live schedule error", () => {
-  it("renders the failure line above the footer CTA when liveScheduleError is set", () => {
+  it("renders the failure line when liveScheduleError is set", () => {
     const renderer = createRenderer(
       React.createElement(
         MovieField,
@@ -604,11 +604,29 @@ describe("MovieField UI42.6 live schedule error", () => {
     const jsonStr = JSON.stringify(renderer.toJSON());
     expect(jsonStr).toContain("Couldn't check the live schedule. Please try again.");
     expect(jsonStr).toContain("Check today's live schedule");
-    // Adjacent to the trigger button, not below the fold: the alert precedes
-    // the footer CTA in tree order so it is visible without scrolling.
-    expect(jsonStr.indexOf("Couldn't check the live schedule. Please try again.")).toBeLessThan(
-      jsonStr.indexOf("Check today's live schedule"),
+    const alert = renderer.root.find((node) => node.props.accessibilityRole === "alert");
+    expect(alert).toBeTruthy();
+    renderer.unmount();
+  });
+
+  it("keeps the failure line visible after the dropdown closes (movieFocused: false)", () => {
+    const renderer = createRenderer(
+      React.createElement(
+        MovieField,
+        ui42Props({
+          movieFocused: false,
+          movieValue: "Dun",
+          movieSuggestions: [{ label: "Dune: Part Three", onPress: vi.fn(), posterUrl: null }],
+          onCheckLiveSchedule: vi.fn(),
+          liveScheduleError: "Couldn't check the live schedule. Please try again.",
+        }),
+      ),
     );
+    const jsonStr = JSON.stringify(renderer.toJSON());
+    // The dropdown (and its footer CTA) unmounts on blur, but the failure
+    // banner is rendered unconditionally outside it so the error survives.
+    expect(jsonStr).not.toContain("Check today's live schedule");
+    expect(jsonStr).toContain("Couldn't check the live schedule. Please try again.");
     const alert = renderer.root.find((node) => node.props.accessibilityRole === "alert");
     expect(alert).toBeTruthy();
     renderer.unmount();

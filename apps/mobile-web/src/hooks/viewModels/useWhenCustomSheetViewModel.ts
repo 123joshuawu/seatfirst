@@ -59,7 +59,7 @@ export interface WhenCustomSheetViewModel {
     onToggleBand: (band: string) => void;
     handleApply: () => void;
     handleCancel: () => void;
-    /** P2-11: reset the in-progress draft back to the sheet default (3-day window). */
+    /** Clear the in-progress draft to an empty selection (matches the button label). */
     handleClearDates: () => void;
   };
 }
@@ -156,7 +156,12 @@ export function useWhenCustomSheetViewModel(): WhenCustomSheetViewModel {
   };
 
   const handleClearDates = () => {
-    setDraftDates(defaultDraftDates());
+    // The button reads "Clear dates", so it empties the draft. An empty draft
+    // is safe everywhere downstream: Apply is guarded with a "Pick at least
+    // one date" error, the summary line shows that same empty-state string,
+    // spanDays/readout degrade to 0/"", and the deprecated draftFrom/draftTo
+    // fall back to today.
+    setDraftDates([]);
     setError(null);
   };
 

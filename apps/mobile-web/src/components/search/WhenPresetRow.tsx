@@ -90,9 +90,18 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     gap: 8,
   },
-  // UX-04: mobile 2-up grid cell for the WHEN preset pills.
+  // UX-04: mobile 2-up grid cell for the WHEN preset pills. The basis is
+  // deliberately under half the row (two 48%-basis cells plus the row's 8px
+  // `gap` exceed 100% of the content box on narrow viewports, pushing the
+  // card past 390px and under the sticky CTA): 2 x 47% leaves 6% of slack,
+  // which covers the fixed 8px gap for row widths down to ~134px, while
+  // `flexGrow` still splits leftover space evenly so the visual halves are
+  // unchanged. `flexShrink: 1` + `minWidth: 0` let a cell compress instead
+  // of overflowing when its chip content runs wide.
   gridCell: {
-    flexBasis: "48%",
+    flexBasis: "47%",
     flexGrow: 1,
+    flexShrink: 1,
+    minWidth: 0,
   },
 });

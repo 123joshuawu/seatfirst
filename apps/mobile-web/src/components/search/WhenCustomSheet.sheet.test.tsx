@@ -102,7 +102,7 @@ describe("mobile sheet full-height layout (P0-3)", () => {
     expect(monthHeadings.length).toBeGreaterThan(0);
   });
 
-  it("Clear dates resets the draft to the default 3-day window (P2-11)", () => {
+  it("Clear dates empties the draft instead of resetting to a default window", () => {
     act(() => {
       renderer = TestRenderer.create(<WhenCustomSheet />);
     });
@@ -119,7 +119,43 @@ describe("mobile sheet full-height layout (P0-3)", () => {
     });
     expect(spanText(root)).not.toContain("3 days selected");
     pressByLabel(root, "Clear dates");
-    expect(spanText(root)).toContain("3 days selected");
+    // The button's literal label wins: the draft is empty, surfaced through
+    // the existing empty-state summary string (not a silent 3-day reseed).
+    expect(spanText(root)).toContain("pick at least one date");
+    // And the empty draft is inert downstream: Apply surfaces the existing
+    // validation error instead of submitting, leaving the sheet open.
+    pressByLabel(root, "Apply");
+    expect(textContent(renderer!.toJSON())).toContain("Pick at least one date");
+    expect(renderer!.toJSON()).not.toBeNull();
+  });
+
+  it("footer action row wraps on mobile so Cancel/Apply are never clipped at 390px", () => {
+    act(() => {
+      renderer = TestRenderer.create(<WhenCustomSheet />);
+    });
+    const footer = renderer!.root.find(
+      (node) => (node.props as { testID?: string })?.testID === "custom-sheet-footer",
+    );
+    const mobileStyle = footer.props.style as { flexWrap?: string };
+    // Default (no isMobile override) keeps the long-standing mobile values.
+    expect(mobileStyle.flexWrap).toBe("wrap");
+    // Cancel/Apply stay paired as one wrap unit instead of splitting apart.
+    const cancel = footer
+      .findAllByType(Pressable)
+      .find((n) => (n.props as { accessibilityLabel?: string }).accessibilityLabel === "Cancel");
+    expect(cancel).toBeDefined();
+    expect((cancel!.parent!.props as { style: Record<string, unknown> }).style).toMatchObject({
+      flexDirection: "row",
+      flexShrink: 0,
+    });
+    renderer!.unmount();
+    act(() => {
+      renderer = TestRenderer.create(<WhenCustomSheet isMobile={false} />);
+    });
+    const desktopFooter = renderer!.root.find(
+      (node) => (node.props as { testID?: string })?.testID === "custom-sheet-footer",
+    );
+    expect((desktopFooter.props.style as { flexWrap?: string }).flexWrap).toBe("nowrap");
   });
 
   it("HowItWorksSheet panel sizes to content with the close action outside (UX-03)", () => {

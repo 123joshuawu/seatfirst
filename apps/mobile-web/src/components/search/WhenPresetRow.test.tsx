@@ -1,6 +1,7 @@
 import React from "react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import TestRenderer, { act } from "react-test-renderer";
+import { View } from "react-native";
 import { WhenPresetRow } from "./WhenPresetRow";
 import { searchFormInitialState } from "@/store/searchFormSlice";
 import { useSeatfirstStore } from "@/store/seatfirstStore";
@@ -174,5 +175,53 @@ describe("WhenPresetRow hideResolvedReadout (ADR 0044 amendment 2026-09-05)", ()
     // The preset row itself is untouched — only the read-out slot is hidden.
     expect(text).toContain("Tonight");
     expect(text).toContain("Custom");
+  });
+});
+
+describe("WhenPresetRow mobile 2-up grid fits the row gap (390px overflow)", () => {
+  let renderer: TestRenderer.ReactTestRenderer | undefined;
+
+  afterEach(() => {
+    renderer?.unmount();
+    renderer = undefined;
+    vi.useRealTimers();
+  });
+
+  it("two cells plus the 8px gap never exceed the row content box", () => {
+    // Friday keeps all four presets (nothing deduped), so the row holds two
+    // full 2-up lines — the shape that overflowed at 390px viewports.
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date(2026, 7, 28, 12, 0));
+    useSeatfirstStore.setState({ ...searchFormInitialState });
+    act(() => {
+      renderer = TestRenderer.create(React.createElement(WhenPresetRow));
+    });
+    const cells = renderer!.root
+      .findAllByType(View)
+      .filter(
+        (n) =>
+          !!n.props.style &&
+          typeof n.props.style === "object" &&
+          typeof (n.props.style as { flexBasis?: unknown }).flexBasis === "string",
+      );
+    // Mobile default (no isMobile override) wraps every preset in a cell.
+    expect(cells).toHaveLength(4);
+    for (const cell of cells) {
+      const style = cell.props.style as {
+        flexBasis: string;
+        flexGrow?: number;
+        flexShrink?: number;
+      };
+      const match = /^([\d.]+)%$/.exec(style.flexBasis);
+      expect(match, `cell basis is a row-relative percentage (${style.flexBasis})`).not.toBeNull();
+      const basis = Number(match![1]);
+      // Two cells share one row with an 8px gap: at a 280px reference content
+      // width (below what any 320px+ phone leaves the card) the leftover
+      // slack must strictly cover the gap, or the row overflows the card and
+      // slides under the sticky CTA.
+      expect((1 - basis / 50) * 280).toBeGreaterThan(8);
+      // And content pressure compresses the cell instead of overflowing it.
+      expect(style.flexShrink).toBe(1);
+    }
   });
 });

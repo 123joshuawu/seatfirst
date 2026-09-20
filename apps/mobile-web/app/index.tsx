@@ -11,13 +11,21 @@ import { ResultScreen } from "@/components/result/ResultScreen";
 import { useSearchSubscription } from "@/hooks/useSearchSubscription";
 
 const MOBILE_BREAKPOINT = 680;
+// QA audit: the two-column desktop row needs at least 560 (results left-column
+// minWidth) + 32 (column gap) + 400 (right-column minWidth) = 992px of content
+// width, plus the 24px page gutter on each side = 1040px of viewport width. The
+// non-results narrow variant (420 + 32 + 400 = 852 nominal) fits inside that same
+// budget. Below 1040px the desktop row overflows and clips right-edge controls
+// (repro: 768px iPad portrait), so collapse to the stacked single-column layout.
+const TWO_COLUMN_BREAKPOINT = 1040;
 export default function SeatfirstScreen() {
   const { width } = useWindowDimensions();
   const isMobile = width < MOBILE_BREAKPOINT;
+  const isStackedLayout = width < TWO_COLUMN_BREAKPOINT;
 
   const screen = useSeatfirstStore((s) => s.screen);
   const storedCollapsed = useSeatfirstStore((s) => s.isFormCollapsed);
-  const isFormCollapsed = isMobile ? storedCollapsed : false;
+  const isFormCollapsed = isStackedLayout ? storedCollapsed : false;
   const recovery = useSeatfirstStore((s) => {
     const result = s.recheckResult;
     return result !== null && result.status === "GONE" ? result.recovery : null;
@@ -46,13 +54,19 @@ export default function SeatfirstScreen() {
 
   return (
     <ScrollView
+      // QA audit: landmark for the app's primary content region. In this
+      // react-native-web version `role="main"` on a View/ScrollView emits a true
+      // `<main>` element (see propsToAccessibilityComponent), not a div with an
+      // ARIA attribute. This screen is a single-purpose search form with no site
+      // header/nav/footer chrome, so `main` is the only landmark to add.
+      role="main"
       style={{ flex: 1, backgroundColor: colors.pageBg }}
       contentContainerStyle={[
         styles.pageWrap,
         { padding: isMobile ? 20 : 48, paddingHorizontal: isMobile ? 16 : 24 },
       ]}
     >
-      {isMobile ? (
+      {isStackedLayout ? (
         showResults ? (
           <View style={{ width: "100%" as const, maxWidth: 920, gap: 16 }}>
             {isFormCollapsed ? <CollapsedFormBar /> : null}

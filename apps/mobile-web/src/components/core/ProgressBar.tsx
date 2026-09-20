@@ -7,10 +7,21 @@ export interface ProgressBarProps {
   resolved: number;
   total: number;
   testID?: string;
+  /**
+   * Terminal halted/complete state with zero showtimes carries known progress
+   * (zero, complete) — render the flat determinate 0% bar, not the pulsing
+   * indeterminate one (which is only correct while actively running).
+   */
+  isTerminal?: boolean;
 }
 
-export function ProgressBar({ resolved, total, testID }: ProgressBarProps): ReactElement {
-  const isIndeterminate = total === 0;
+export function ProgressBar({
+  resolved,
+  total,
+  testID,
+  isTerminal,
+}: ProgressBarProps): ReactElement {
+  const isIndeterminate = total === 0 && !isTerminal;
   const pulse = usePulseOpacity(2000);
   const fraction = total > 0 ? Math.max(0, Math.min(1, resolved / total)) : 0;
 

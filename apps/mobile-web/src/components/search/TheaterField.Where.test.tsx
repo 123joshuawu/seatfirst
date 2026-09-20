@@ -1561,3 +1561,64 @@ describe("TheaterField Where — long chip label keeps input usable (chip-overfl
     }
   });
 });
+
+describe("TheaterField Where — Tab skips the open dropdown (QA finding 6)", () => {
+  function renderWhere(open: boolean): TestRenderer.ReactTestRenderer {
+    useSeatfirstStore.setState({ whereQuery: "", whereFocused: open });
+    let renderer!: TestRenderer.ReactTestRenderer;
+    act(() => {
+      renderer = TestRenderer.create(React.createElement(TheaterField, { isLocked: false }));
+    });
+    return renderer;
+  }
+  function pressTab(
+    renderer: TestRenderer.ReactTestRenderer,
+    shiftKey: boolean,
+  ): ReturnType<typeof vi.fn> {
+    const input = renderer.root.find(
+      (node) => node.props.accessibilityLabel === "Where — place or theatre",
+    );
+    const onKeyPress = (input.props as unknown as { onKeyPress: (event: unknown) => void })
+      .onKeyPress;
+    const preventDefault = vi.fn();
+    act(() => {
+      onKeyPress({ key: "Tab", shiftKey, preventDefault });
+    });
+    return preventDefault;
+  }
+
+  it("Tab with the dropdown open moves focus to the Movie title input", () => {
+    const renderer = renderWhere(true);
+    const movieFocus = vi.fn();
+    const getById = vi
+      .spyOn(document, "getElementById")
+      .mockImplementation((id: string) =>
+        id === "seatfirst-movie" ? ({ focus: movieFocus } as unknown as HTMLElement) : null,
+      );
+    try {
+      expect(pressTab(renderer, false)).toHaveBeenCalledOnce();
+      expect(getById).toHaveBeenCalledWith("seatfirst-movie");
+      expect(movieFocus).toHaveBeenCalledOnce();
+    } finally {
+      renderer.unmount();
+    }
+  });
+
+  it("Shift+Tab keeps native backward traversal", () => {
+    const renderer = renderWhere(true);
+    try {
+      expect(pressTab(renderer, true)).not.toHaveBeenCalled();
+    } finally {
+      renderer.unmount();
+    }
+  });
+
+  it("Tab with the dropdown closed keeps native traversal", () => {
+    const renderer = renderWhere(false);
+    try {
+      expect(pressTab(renderer, false)).not.toHaveBeenCalled();
+    } finally {
+      renderer.unmount();
+    }
+  });
+});

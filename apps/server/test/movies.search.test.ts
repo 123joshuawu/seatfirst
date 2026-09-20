@@ -470,6 +470,26 @@ describe("movies.search typed query (S63.4 live union + lazy upsert)", () => {
     expect(count.rows[0]?.n).toBe(0);
   });
 
+  it("dedupes AMC-only rows sharing one normalized title (first catalogue row wins)", async () => {
+    await seedAmc(pool, "amc:movie:odyssey1", "The Odyssey (2026)");
+    await seedAmc(pool, "amc:movie:odyssey2", "The Odyssey (2026)");
+
+    const client = makeClient(server.baseUrl);
+    const res = await client.movies.search.query({ query: "odyssey" });
+
+    expect(res.movies).toEqual([
+      {
+        id: "amc:movie:odyssey1",
+        title: "The Odyssey (2026)",
+        releaseYear: null,
+        posterPath: null,
+        confidence: "VERIFIED_AMC",
+        badge: "AMC Event",
+        seenAtAmc: true,
+      },
+    ]);
+  });
+
   it("fails closed on a typed query when no TMDB client is wired", async () => {
     await seedSlate(pool, { tmdbId: 401, normalizedTitle: "wired?", isNowPlaying: true });
     // An assembly without the client: slate browse works, typed queries cannot.

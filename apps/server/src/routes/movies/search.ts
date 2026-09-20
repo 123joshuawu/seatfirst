@@ -225,13 +225,19 @@ async function searchLive(
   // AMC-only extras: catalogue titles no live TMDB hit covered, in catalogue
   // order (`MOVIE_TITLE_SEARCH`'s `ORDER BY title, movie_id`). They are observed
   // AMC programming, so `VERIFIED_AMC` — and non-TMDB, so the `"AMC Event"` badge.
+  // The AMC catalogue search can return multiple distinct `movie_id` rows
+  // sharing the exact same title; dedupe by normalized title (first,
+  // catalogue-order occurrence wins), seeded with the live-hit titles above.
+  const seenAmcTitles = new Set<string>(liveKeys);
   for (const row of amcRows) {
     if (hits.length >= limit) {
       break;
     }
-    if (liveKeys.has(normalizeTitle(row.title))) {
+    const amcKey = normalizeTitle(row.title);
+    if (seenAmcTitles.has(amcKey)) {
       continue;
     }
+    seenAmcTitles.add(amcKey);
     hits.push({
       id: row.movie_id,
       title: row.title,

@@ -620,6 +620,7 @@ export function useWhereFieldViewModel({
       if (refs.length > 0) setSelectedTheatres(refs);
     }
   }, [deviceCenter, theatres, bootstrapReady, setSelectedTheatres]);
+  const showDropdown = effectiveWhereFocused && !isLocked;
 
   const handleKeyDown = useCallback(
     (e: unknown, inputRef: React.RefObject<TextInput | null>) => {
@@ -654,6 +655,21 @@ export function useWhereFieldViewModel({
           (e as { preventDefault?: () => void }).preventDefault?.();
           void handleResolvePlace();
         }
+        return;
+      }
+      // Tab-forward while the dropdown is open skips the option rows and lands on
+      // the Movie title input. Without this, native tab order stops on the first
+      // option row (a tabbable option div between this input and Movie), and the
+      // deferred where-blur then unmounts the popover out from under the focused
+      // row — dropping focus to <body>. (RNW synthesizes onKeyPress from keydown,
+      // so this fires for Tab on web.) Shift+Tab keeps native backward traversal;
+      // dropdown-closed Tab is already Where-to-Movie natively.
+      if (key === "Tab" && !(e as { shiftKey?: boolean }).shiftKey && showDropdown) {
+        (e as { preventDefault?: () => void }).preventDefault?.();
+        const movie =
+          typeof document !== "undefined" ? document.getElementById("seatfirst-movie") : null;
+        if (movie) movie.focus();
+        else inputRef.current?.blur();
         return;
       }
       if (key === "ArrowDown") {
@@ -691,10 +707,9 @@ export function useWhereFieldViewModel({
       handleResolvePlace,
       handleBackspaceRemoveLast,
       setWhereFocused,
+      showDropdown,
     ],
   );
-
-  const showDropdown = effectiveWhereFocused && !isLocked;
 
   const shouldShowLegacyConfirmed =
     theaterConfirmed &&

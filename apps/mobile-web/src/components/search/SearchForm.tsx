@@ -3,7 +3,7 @@ import {
   type SubmitSearchStart,
 } from "@/hooks/viewModels/useSubmitSearchViewModel";
 import { useState, type ReactElement } from "react";
-import { StyleSheet, Pressable, View } from "react-native";
+import { StyleSheet, Platform, Pressable, View } from "react-native";
 import { colors } from "@/theme/colors";
 import { AppText } from "@/components/core/AppText";
 import { FadeInView } from "@/components/core/FadeInView";
@@ -44,6 +44,13 @@ export function SearchForm({ startSearch }: SearchFormProps = {}): ReactElement 
       <AppText
         family="display"
         weight="800"
+        accessibilityRole="header"
+        // Page top-level heading: explicit web role/level override follows the
+        // established `Platform.OS === "web"` spread convention (Autocomplete,
+        // TheaterField) so AT sees a level-1 heading.
+        {...(Platform.OS === "web"
+          ? ({ role: "heading", "aria-level": 1 } as unknown as Record<string, unknown>)
+          : {})}
         style={[styles.title, !vm.isMobile && styles.titleDesktop]}
       >
         Find your seats
@@ -128,14 +135,13 @@ export function SearchForm({ startSearch }: SearchFormProps = {}): ReactElement 
       <AppText weight="400" style={[styles.helperText, { marginBottom: vm.isMobile ? 20 : 10 }]}>
         We&apos;ll keep your group together.
       </AppText>
-
       <WhenPresetRow
         isLocked={isLocked}
         isMobile={vm.isMobile}
         hideResolvedReadout={!vm.isMobile}
       />
 
-      <WhenCustomSheet />
+      <WhenCustomSheet isMobile={vm.isMobile} />
 
       {vm.admissionRejected && vm.admissionRejectedLabel ? (
         <View style={styles.admissionBanner}>
