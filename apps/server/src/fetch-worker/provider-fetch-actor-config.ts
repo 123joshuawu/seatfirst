@@ -18,6 +18,10 @@
  * - `RUN_LEASE_TTL`                    — Postgres interval literal for `B3_HEARTBEAT_RUN`.
  * - `RUN_MAX_ATTEMPTS`                 — attempt budget handed to `failRun`.
  * - `RATE_LIMIT_CONFIG_JSON`           — the same shape the API reads (ADR 0006 §A.6).
+ * - `DIAGNOSTIC_CAPTURE_BUCKET_NAME`    — dedicated raw-capture S3 bucket.
+ * - `DIAGNOSTIC_AWS_ACCESS_KEY_ID`      — least-privilege capture IAM key.
+ * - `DIAGNOSTIC_AWS_SECRET_ACCESS_KEY`  — least-privilege capture IAM secret.
+ * - `AWS_REGION`                        — capture bucket region.
  *
  * The pool is a third, actor-owned pool (`startDispatchWorker` opens the dispatch pool from
  * the `DISPATCH_PG_POOL_*` family, and the assembler owns its own from `AGGREGATE_PG_POOL_*`),
@@ -28,7 +32,7 @@ import IORedis from "ioredis";
 import type { Pool } from "pg";
 
 import type { NavigationLimits } from "@seatfirst/browser-runtime";
-import { createPool } from "@seatfirst/durability";
+import { createPool, diagnosticCaptureStorageConfig } from "@seatfirst/durability";
 import type {
   ProviderStateSource,
   RedisHashCache,
@@ -61,6 +65,7 @@ export interface ProviderFetchActorEnvDeps {
 export function providerFetchActorDepsFromEnv(
   env: NodeJS.ProcessEnv = process.env,
 ): ProviderFetchActorEnvDeps {
+  diagnosticCaptureStorageConfig(env);
   const postgres = {
     connectionString: requiredString(env, "DATABASE_URL"),
     max: positiveInteger(env, "RUN_PG_MAX"),

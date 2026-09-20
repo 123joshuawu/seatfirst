@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
 
+import { diagnosticCaptureStorageConfig } from "../src/blob-store.js";
+
 import { insertDiagnosticCapture, sweepExpiredDiagnosticCaptures } from "../src/repository.js";
 
 import { useDatabase } from "./support/pg.js";
@@ -12,6 +14,28 @@ import { useDatabase } from "./support/pg.js";
  * catches each bug (the insert is a guarded multi-column write with a jsonb
  * param; the sweep is a conditional DELETE whose RETURNING drives S3 cleanup).
  */
+describe("diagnostic capture S3 configuration", () => {
+  it("uses the dedicated capture identity instead of the standard AWS identity", () => {
+    expect(
+      diagnosticCaptureStorageConfig({
+        DIAGNOSTIC_CAPTURE_BUCKET_NAME: "seatfirst-diagnostic-captures",
+        DIAGNOSTIC_AWS_ACCESS_KEY_ID: "capture-access-key",
+        DIAGNOSTIC_AWS_SECRET_ACCESS_KEY: "capture-secret-key",
+        AWS_ACCESS_KEY_ID: "backup-access-key",
+        AWS_SECRET_ACCESS_KEY: "backup-secret-key",
+        AWS_REGION: "us-east-1",
+      }),
+    ).toEqual({
+      bucketName: "seatfirst-diagnostic-captures",
+      region: "us-east-1",
+      credentials: {
+        accessKeyId: "capture-access-key",
+        secretAccessKey: "capture-secret-key",
+      },
+    });
+  });
+});
+
 describe("tier 2 — diagnostic capture insert and expiry sweep", () => {
   const db = useDatabase();
 

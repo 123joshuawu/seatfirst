@@ -32,6 +32,10 @@ function env(redisUrl: string): NodeJS.ProcessEnv {
     RUN_LEASE_TTL: "1 minute",
     RUN_MAX_ATTEMPTS: "1",
     RATE_LIMIT_CONFIG_JSON,
+    DIAGNOSTIC_CAPTURE_BUCKET_NAME: "seatfirst-test-diagnostics",
+    DIAGNOSTIC_AWS_ACCESS_KEY_ID: "diagnostic-access-key",
+    DIAGNOSTIC_AWS_SECRET_ACCESS_KEY: "diagnostic-secret-key",
+    AWS_REGION: "us-east-1",
   };
 }
 
@@ -54,6 +58,14 @@ describe("providerFetchActorDepsFromEnv (S31.7/S31.10)", () => {
     delete missingRunPoolMax.RUN_PG_MAX;
     expect(() => providerFetchActorDepsFromEnv(missingRunPoolMax)).toThrow(
       /RUN_PG_MAX is required and has no default/,
+    );
+  });
+
+  it("rejects missing dedicated diagnostic credentials before opening worker resources", () => {
+    const missingDiagnosticSecret = env("redis://127.0.0.1:1");
+    delete missingDiagnosticSecret.DIAGNOSTIC_AWS_SECRET_ACCESS_KEY;
+    expect(() => providerFetchActorDepsFromEnv(missingDiagnosticSecret)).toThrow(
+      /DIAGNOSTIC_AWS_SECRET_ACCESS_KEY is required for diagnostic capture/,
     );
   });
 

@@ -46,13 +46,6 @@ import {
   type TaggedFreshPerformance,
 } from "@seatfirst/core";
 import type { Performance } from "@seatfirst/providers";
-// TODO(diagnostic-capture): uploadDiagnosticBlob is the exact name from this batch's
-// shared contract but no sibling owns it yet (InfraS3AndOps is infra-repo only and
-// declined it; no AWS SDK usage exists in the app repo to reuse — assumed home is
-// @seatfirst/durability next to DIAGNOSTIC_CAPTURE_INSERT). DIAGNOSTIC_CAPTURE_INSERT
-// itself has landed (packages/durability/src/boundaries.ts, params in contract order)
-// and IS exported from the package index. Confirm the helper's home module once it
-// lands and fix this import if it differs.
 import {
   B3_HEARTBEAT_RUN,
   B4_PREDISPATCH,

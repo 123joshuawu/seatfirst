@@ -6,34 +6,59 @@ import { DeleteObjectCommand, PutObjectCommand, S3Client } from "@aws-sdk/client
  * Only the small fields (url, headers) live in Postgres; the body and
  * screenshot bytes live here, referenced by key
  * (`<outcome_kind>/<run_id>/<capture_id>-body`, screenshots same with a
- * `-screenshot` suffix). The bucket name is read from
- * `DIAGNOSTIC_CAPTURE_BUCKET_NAME` at call time, never captured at import —
- * the fetch worker sets it from its environment alongside `DATABASE_URL`, and
- * reading it late keeps test/process setup order irrelevant.
+ * `-screenshot` suffix).
  *
- * Credentials and region come from the SDK's default chain (the long-lived IAM
- * user from `infra/src/backup-stack.ts` via standard `AWS_*` env vars), the
- * same posture as the WAL-backup access: no credential plumbing in this
- * package. Errors propagate unwrapped — the actor caller try/catches and never
- * fails a run on a capture error.
+ * The capture bucket uses its own least-privilege IAM identity. It must never
+ * fall through to the SDK's default credential chain, which would either use
+ * the backup identity or fail because no standard `AWS_*` credentials exist in
+ * the fetch worker.
  */
 
-let client: S3Client | undefined;
+export interface DiagnosticCaptureStorageConfig {
+  readonly bucketName: string;
+  readonly region: string;
+  readonly credentials: {
+    readonly accessKeyId: string;
+    readonly secretAccessKey: string;
+  };
+}
 
-function s3(): S3Client {
-  client ??= new S3Client({});
-  return client;
+let storage: { readonly bucketName: string; readonly client: S3Client } | undefined;
+
+function requiredEnv(env: NodeJS.ProcessEnv, name: string): string {
+  const value = env[name];
+  if (value === undefined || value === "") {
+    throw new Error(`${name} is required for diagnostic capture`);
+  }
+  return value;
+}
+
+export function diagnosticCaptureStorageConfig(
+  env: NodeJS.ProcessEnv = process.env,
+): DiagnosticCaptureStorageConfig {
+  return {
+    bucketName: diagnosticBucketName(env),
+    region: requiredEnv(env, "AWS_REGION"),
+    credentials: {
+      accessKeyId: requiredEnv(env, "DIAGNOSTIC_AWS_ACCESS_KEY_ID"),
+      secretAccessKey: requiredEnv(env, "DIAGNOSTIC_AWS_SECRET_ACCESS_KEY"),
+    },
+  };
+}
+
+function diagnosticStorage(): { readonly bucketName: string; readonly client: S3Client } {
+  if (storage !== undefined) return storage;
+  const config = diagnosticCaptureStorageConfig();
+  storage = {
+    bucketName: config.bucketName,
+    client: new S3Client({ region: config.region, credentials: config.credentials }),
+  };
+  return storage;
 }
 
 /** Resolves the capture bucket or throws a fail-loud error naming the env var. */
 export function diagnosticBucketName(env: NodeJS.ProcessEnv = process.env): string {
-  const name = env["DIAGNOSTIC_CAPTURE_BUCKET_NAME"];
-  if (name === undefined || name === "") {
-    throw new Error(
-      "DIAGNOSTIC_CAPTURE_BUCKET_NAME is required — the fetch worker's environment must name the diagnostic-capture S3 bucket",
-    );
-  }
-  return name;
+  return requiredEnv(env, "DIAGNOSTIC_CAPTURE_BUCKET_NAME");
 }
 
 /** Uploads one capture blob (body or screenshot) under `key`. Overwrites. */
@@ -42,9 +67,10 @@ export async function uploadDiagnosticBlob(
   body: Buffer | string,
   contentType: string,
 ): Promise<void> {
-  await s3().send(
+  const { bucketName, client } = diagnosticStorage();
+  await client.send(
     new PutObjectCommand({
-      Bucket: diagnosticBucketName(),
+      Bucket: bucketName,
       Key: key,
       Body: body,
       ContentType: contentType,
@@ -57,9 +83,10 @@ export async function uploadDiagnosticBlob(
  * key), so a retry after a half-finished sweep is a no-op, never a failure.
  */
 export async function deleteDiagnosticBlob(key: string): Promise<void> {
-  await s3().send(
+  const { bucketName, client } = diagnosticStorage();
+  await client.send(
     new DeleteObjectCommand({
-      Bucket: diagnosticBucketName(),
+      Bucket: bucketName,
       Key: key,
     }),
   );
