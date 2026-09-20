@@ -66,10 +66,13 @@ describe("HowItWorksSheet dismiss + size-to-content (BUG-02 / UX-03)", () => {
     // The panel is a sibling rendered above the scrim, not inside it: its
     // subtree contains no scrim press handler, so interacting with panel
     // content cannot dismiss the sheet.
-    const panel = root.findAllByType(Pressable).filter(
-      (n) => (n.props as { accessibilityLabel?: string }).accessibilityLabel !==
-        "Close how it works dialog",
-    );
+    const panel = root
+      .findAllByType(Pressable)
+      .filter(
+        (n) =>
+          (n.props as { accessibilityLabel?: string }).accessibilityLabel !==
+          "Close how it works dialog",
+      );
     expect(panel.length).toBeGreaterThan(0);
     for (const node of panel) {
       const label = (node.props as { accessibilityLabel?: string }).accessibilityLabel;
@@ -82,7 +85,10 @@ describe("HowItWorksSheet dismiss + size-to-content (BUG-02 / UX-03)", () => {
     const root = renderSheet(vi.fn());
     const btn = root
       .findAllByType(Pressable)
-      .find((n) => (n.props as { accessibilityLabel?: string }).accessibilityLabel === "Close how it works");
+      .find(
+        (n) =>
+          (n.props as { accessibilityLabel?: string }).accessibilityLabel === "Close how it works",
+      );
     expect(btn).toBeDefined();
     const style = btn!.props.style as {
       minWidth?: number;
@@ -91,8 +97,7 @@ describe("HowItWorksSheet dismiss + size-to-content (BUG-02 / UX-03)", () => {
       paddingHorizontal?: number;
     };
     const hitSlop = btn!.props.hitSlop as
-      | { top?: number; bottom?: number; left?: number; right?: number }
-      | undefined;
+      { top?: number; bottom?: number; left?: number; right?: number } | undefined;
     const width = (style.minWidth ?? 0) + (hitSlop?.left ?? 0) + (hitSlop?.right ?? 0);
     const height = (style.minHeight ?? 0) + (hitSlop?.top ?? 0) + (hitSlop?.bottom ?? 0);
     expect(width).toBeGreaterThanOrEqual(44);
