@@ -224,10 +224,12 @@ export function MovieField({
       </Pressable>
     </View>
   ) : null;
-  // UI42.6 — failure line for the on-demand refresh; rendered below the footer
-  // CTA so a FAILED resolve or rejected mutation is visible without closing
-  // the dropdown. Independent of the footer-flag gate so the message survives
-  // even if the CTA handler is momentarily unwired.
+  // UI42.6 — failure line for the on-demand refresh; rendered directly above
+  // the footer CTA (adjacent to the trigger button) so a FAILED resolve or
+  // rejected mutation is visible without scrolling when tapped. Below the
+  // footer it sat at the bottom of the 326px-capped scroll region — scrolled
+  // out of view with zero visible feedback. Independent of the footer-flag
+  // gate so the message survives even if the CTA handler is momentarily unwired.
   const liveScheduleErrorRow =
     liveScheduleError != null && liveScheduleError !== "" ? (
       <View style={styles.footerErrorWrap}>
@@ -279,6 +281,10 @@ export function MovieField({
                     "aria-haspopup": "listbox",
                     "aria-controls": "movie-listbox",
                     "aria-autocomplete": "list",
+                    // Screen-reader/autofill hook for the HTML input; distinct
+                    // from the "movie-listbox" popover id above.
+                    id: "seatfirst-movie",
+                    name: "movie",
                   } as unknown as Record<string, unknown>)
                 : {})}
             />
@@ -428,8 +434,8 @@ export function MovieField({
                   })}
                   {customEventRow}
                 </View>
-                {liveScheduleFooter}
                 {liveScheduleErrorRow}
+                {liveScheduleFooter}
               </AutocompletePopover>
             ) : (
               <AutocompletePopover
@@ -480,8 +486,8 @@ export function MovieField({
                   })}
                   {customEventRow}
                 </View>
-                {liveScheduleFooter}
                 {liveScheduleErrorRow}
+                {liveScheduleFooter}
               </AutocompletePopover>
             )
           ) : (
@@ -495,8 +501,8 @@ export function MovieField({
                 <AppText style={styles.itemLabelMuted}>No movies found</AppText>
               </View>
               {showCustomEventRow ? <View style={styles.moviesGrid}>{customEventRow}</View> : null}
-              {liveScheduleFooter}
               {liveScheduleErrorRow}
+              {liveScheduleFooter}
             </AutocompletePopover>
           )
         ) : null}

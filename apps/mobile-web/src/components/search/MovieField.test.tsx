@@ -1,6 +1,6 @@
 import React from "react";
 import TestRenderer from "react-test-renderer";
-import { Image } from "react-native";
+import { Image, TextInput } from "react-native";
 import { describe, expect, it, vi } from "vitest";
 import { MovieField } from "./MovieField";
 import { AppText } from "@/components/core/AppText";
@@ -589,7 +589,7 @@ describe("MovieField UI42.6 live schedule footer", () => {
 });
 
 describe("MovieField UI42.6 live schedule error", () => {
-  it("renders the failure line below the footer when liveScheduleError is set", () => {
+  it("renders the failure line above the footer CTA when liveScheduleError is set", () => {
     const renderer = createRenderer(
       React.createElement(
         MovieField,
@@ -604,6 +604,11 @@ describe("MovieField UI42.6 live schedule error", () => {
     const jsonStr = JSON.stringify(renderer.toJSON());
     expect(jsonStr).toContain("Couldn't check the live schedule. Please try again.");
     expect(jsonStr).toContain("Check today's live schedule");
+    // Adjacent to the trigger button, not below the fold: the alert precedes
+    // the footer CTA in tree order so it is visible without scrolling.
+    expect(jsonStr.indexOf("Couldn't check the live schedule. Please try again.")).toBeLessThan(
+      jsonStr.indexOf("Check today's live schedule"),
+    );
     const alert = renderer.root.find((node) => node.props.accessibilityRole === "alert");
     expect(alert).toBeTruthy();
     renderer.unmount();
@@ -623,6 +628,18 @@ describe("MovieField UI42.6 live schedule error", () => {
     );
     const jsonStr = JSON.stringify(renderer.toJSON());
     expect(jsonStr).not.toContain("Couldn't check the live schedule");
+    renderer.unmount();
+  });
+});
+
+describe("MovieField movie input identity (audit finding 10)", () => {
+  it("exposes id and name on the search input without colliding with the listbox id", () => {
+    const renderer = createRenderer(React.createElement(MovieField, ui42Props()));
+    const input = renderer.root.findByType(TextInput);
+    expect(input.props.id).toBe("seatfirst-movie");
+    expect(input.props.name).toBe("movie");
+    expect(input.props["aria-controls"]).toBe("movie-listbox");
+    expect(input.props.id).not.toBe("movie-listbox");
     renderer.unmount();
   });
 });

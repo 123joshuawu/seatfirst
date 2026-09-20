@@ -33,7 +33,7 @@ vi.mock("@/lib/trpc", () => ({
   getTrpcUrl: () => "http://localhost:3000/trpc",
 }));
 
-import { useMovieSearch } from "./useMovieSearch";
+import { resetMovieSearchCachesForTests, useMovieSearch } from "./useMovieSearch";
 
 function HookProbe(props: Parameters<typeof useMovieSearch>[0]) {
   useMovieSearch(props);
@@ -51,6 +51,7 @@ function SuggestionProbe(
 let activeRenderers: TestRenderer.ReactTestRenderer[] = [];
 
 beforeEach(() => {
+  resetMovieSearchCachesForTests();
   mockQuery.mockClear();
   state.calls = [];
   state.impl = null;
@@ -63,6 +64,7 @@ afterEach(() => {
     r.unmount();
   }
   activeRenderers = [];
+  resetMovieSearchCachesForTests();
   vi.clearAllTimers();
   vi.useRealTimers();
   mockQuery.mockClear();
@@ -279,5 +281,81 @@ describe("useMovieSearch suggestion mapping (UI42.3/4)", () => {
     expect(s.movie).toBe("Nosferatu");
     expect(s.selectedMovieId).toBe("tmdb:movie:917496");
     expect(s.movieSelectionSource).toBe("custom");
+  });
+});
+
+describe("useMovieSearch request de-duplication (audit finding 8)", () => {
+  function holdInFlight(): Array<(value: unknown) => void> {
+    const releases: Array<(value: unknown) => void> = [];
+    state.impl = () => new Promise((resolve) => void releases.push(resolve));
+    return releases;
+  }
+
+  async function settle(releases: Array<(value: unknown) => void>): Promise<void> {
+    await act(async () => {
+      for (const release of releases) release({ movies: [] });
+    });
+    await flush();
+  }
+
+  it("coalesces identical concurrent requests across mounted instances to one call", async () => {
+    // Audit repro: every useSubmitSearchViewModel owner (SearchForm, LeftPanel,
+    // CollapsedFormBar) mounts its own hook instance with the same store query.
+    // Holding the response keeps all five mounts overlapping while in flight.
+    const releases = holdInFlight();
+    for (let i = 0; i < 5; i++) createProbe({ query: "nosferatu-audit-5x", browse: false });
+    await flush();
+    expect(mockQuery).toHaveBeenCalledTimes(1);
+    expect(lastInput().query).toBe("nosferatu-audit-5x");
+    await settle(releases);
+    expect(mockQuery).toHaveBeenCalledTimes(1);
+  });
+
+  it("rapid refetches while a request is pending join it instead of re-issuing", async () => {
+    const releases = holdInFlight();
+    let latestRefetch: () => void = () => {};
+    function RefetchProbe(props: Parameters<typeof useMovieSearch>[0]) {
+      const { refetch } = useMovieSearch(props);
+      latestRefetch = refetch;
+      return null;
+    }
+    act(() => {
+      activeRenderers.push(
+        TestRenderer.create(
+          React.createElement(RefetchProbe, { query: "refetch-race", browse: false }),
+        ),
+      );
+    });
+    await flush();
+    expect(mockQuery).toHaveBeenCalledTimes(1);
+    for (let i = 0; i < 3; i++) {
+      act(() => {
+        latestRefetch();
+      });
+      await flush();
+    }
+    expect(mockQuery).toHaveBeenCalledTimes(1);
+    await settle(releases);
+    expect(mockQuery).toHaveBeenCalledTimes(1);
+  });
+
+  it("serves freshly-resolved inputs from cache on remount without a new call", async () => {
+    createProbe({ query: "cache-hit-remount", browse: false });
+    await flush();
+    expect(mockQuery).toHaveBeenCalledTimes(1);
+    activeRenderers.splice(0).forEach((r) => r.unmount());
+    createProbe({ query: "cache-hit-remount", browse: false });
+    await flush();
+    expect(mockQuery).toHaveBeenCalledTimes(1);
+  });
+
+  it("still issues a separate request for a different query", async () => {
+    createProbe({ query: "dune-part-three", browse: false });
+    await flush();
+    expect(mockQuery).toHaveBeenCalledTimes(1);
+    createProbe({ query: "nosferatu-2024", browse: false });
+    await flush();
+    expect(mockQuery).toHaveBeenCalledTimes(2);
+    expect(lastInput().query).toBe("nosferatu-2024");
   });
 });

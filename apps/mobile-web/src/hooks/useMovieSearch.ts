@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { trpcClient } from "@/lib/trpc";
 import { tmdbPosterUrl } from "@/lib/presentation";
@@ -34,6 +34,27 @@ export interface UseMovieSearchResult {
   isFetching: boolean;
   refetch: () => void;
   suggestions: MovieSuggestion[];
+}
+
+// BATCH-414 pattern (useTheatreMovieSet): imperative `movies.search` calls run
+// outside React Query, so — unlike `useTheatreSearch` (deduped by its
+// `useQuery` + `staleTime: 30_000`) — nothing coalesced identical inputs.
+// Every effect re-run, and every mounted instance (`SearchForm`, `LeftPanel`,
+// `CollapsedFormBar` each own one via `useSubmitSearchViewModel`), fired its
+// own identical network request. In-flight requests are tracked by input and
+// shared until they settle; freshly-resolved inputs are served from a short
+// TTL cache instead of re-issued. The per-run `cancelled` flag below stays as
+// the ignore-stale-response guard; requests are coalesced rather than
+// aborted because aborting shared cross-instance work would fail siblings.
+const inflightMovieSearches = new Map<string, Promise<MovieSearchResponseView>>();
+const movieSearchCache = new Map<string, { at: number; data: MovieSearchResponseView }>();
+/** Mirrors `useTheatreSearch`'s `staleTime: 30_000` for identical inputs. */
+const MOVIE_SEARCH_CACHE_TTL_MS = 30_000;
+
+/** Test-only reset for the module-level dedup/cache maps between cases. */
+export function resetMovieSearchCachesForTests(): void {
+  inflightMovieSearches.clear();
+  movieSearchCache.clear();
 }
 
 /**
@@ -87,7 +108,13 @@ export function useMovieSearch(options: UseMovieSearchOptions = {}): UseMovieSea
   const [error, setError] = useState<unknown>(null);
   const [isFetching, setIsFetching] = useState(false);
   const [refetchNonce, setRefetchNonce] = useState(0);
-  const refetch = useCallback(() => setRefetchNonce((n) => n + 1), []);
+  // Explicit refresh bypasses the resolved-result cache below (but still
+  // joins identical in-flight work instead of duplicating it).
+  const forceRef = useRef(false);
+  const refetch = useCallback(() => {
+    forceRef.current = true;
+    setRefetchNonce((n) => n + 1);
+  }, []);
 
   useEffect(() => {
     if (!enabled) {
@@ -113,10 +140,36 @@ export function useMovieSearch(options: UseMovieSearchOptions = {}): UseMovieSea
     const input: { query?: string; limit?: number } = {};
     if (effectiveQuery !== undefined) input.query = effectiveQuery;
     if (limit !== undefined) input.limit = limit;
+    const key = JSON.stringify([input.query ?? null, input.limit ?? null]);
+    const forced = forceRef.current;
+    forceRef.current = false;
+    if (!forced) {
+      const cached = movieSearchCache.get(key);
+      if (cached !== undefined && Date.now() - cached.at < MOVIE_SEARCH_CACHE_TTL_MS) {
+        setData(cached.data);
+        setError(null);
+        setIsFetching(false);
+        return;
+      }
+    }
     let cancelled = false;
     setIsFetching(true);
     setError(null);
-    void searchQuery(input).then(
+    const pending = inflightMovieSearches.get(key);
+    const request = pending ?? searchQuery(input);
+    if (pending === undefined) {
+      inflightMovieSearches.set(key, request);
+      void request.then(
+        (result) => {
+          inflightMovieSearches.delete(key);
+          movieSearchCache.set(key, { at: Date.now(), data: result });
+        },
+        () => {
+          inflightMovieSearches.delete(key);
+        },
+      );
+    }
+    void request.then(
       (result) => {
         if (cancelled) return;
         setData(result);
