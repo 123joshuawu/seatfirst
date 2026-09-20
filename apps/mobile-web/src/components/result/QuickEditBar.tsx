@@ -44,7 +44,7 @@ export function QuickEditBar({
         />
       ) : null}
       <AppText family="display" weight="700" style={styles.title}>
-        {movieTitle} · {theaterName}
+        {[movieTitle, theaterName].filter(Boolean).join(" · ")}
       </AppText>
       <AppText weight="400" style={styles.breadcrumb}>
         {breadcrumb}
