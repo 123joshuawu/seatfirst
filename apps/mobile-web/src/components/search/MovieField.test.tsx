@@ -750,6 +750,82 @@ describe("MovieField ADR-0100 two-group split", () => {
     renderer.unmount();
   });
 
+  it("renders the guess header exactly once when only the guess group is populated (shell only, no inline duplicate)", () => {
+    const renderer = createRenderer(
+      React.createElement(
+        MovieField,
+        splitProps({
+          movieValue: "",
+          liveScheduleMovies: [],
+          nowPlayingSuggestions: [{ label: "Dune: Part Three", onPress: vi.fn(), posterUrl: null }],
+        }),
+      ),
+    );
+    // The popover shell header already conveys the single visible group, so
+    // no inline per-group section header should render alongside it.
+    const headerNodes = renderer.root
+      .findAllByType(AppText)
+      .filter((n) => n.props.children === guessHeader);
+    expect(headerNodes.length).toBe(1);
+    const inlineSectionHeaders = renderer.root
+      .findAllByType(AppText)
+      .filter((n) => n.props.accessibilityRole === "header");
+    expect(inlineSectionHeaders.length).toBe(0);
+    renderer.unmount();
+  });
+
+  it("renders the live header exactly once when only the live group is populated (shell only, no inline duplicate)", () => {
+    const renderer = createRenderer(
+      React.createElement(
+        MovieField,
+        splitProps({
+          movieValue: "",
+          liveScheduleMovies: [{ label: "Dune: Part Three", onPress: vi.fn(), posterUrl: null }],
+          nowPlayingSuggestions: [],
+        }),
+      ),
+    );
+    const headerNodes = renderer.root
+      .findAllByType(AppText)
+      .filter((n) => n.props.children === liveHeader);
+    expect(headerNodes.length).toBe(1);
+    const inlineSectionHeaders = renderer.root
+      .findAllByType(AppText)
+      .filter((n) => n.props.accessibilityRole === "header");
+    expect(inlineSectionHeaders.length).toBe(0);
+    renderer.unmount();
+  });
+
+  it("keeps both inline per-group section headers when both groups are populated", () => {
+    const renderer = createRenderer(
+      React.createElement(
+        MovieField,
+        splitProps({
+          movieValue: "Dune",
+          liveScheduleMovies: [{ label: "Dune: Part Three", onPress: vi.fn(), posterUrl: null }],
+          nowPlayingSuggestions: [
+            { label: "Dune: Part Four (general)", onPress: vi.fn(), posterUrl: null },
+          ],
+        }),
+      ),
+    );
+    // Both inline section headers render for disambiguation; the live header
+    // additionally appears as the shell header (which follows the first group).
+    const inlineSectionHeaders = renderer.root
+      .findAllByType(AppText)
+      .filter((n) => n.props.accessibilityRole === "header");
+    expect(inlineSectionHeaders.map((n) => String(n.props.children)).sort()).toEqual(
+      [guessHeader, liveHeader].sort(),
+    );
+    expect(
+      renderer.root.findAllByType(AppText).filter((n) => n.props.children === liveHeader).length,
+    ).toBe(2);
+    expect(
+      renderer.root.findAllByType(AppText).filter((n) => n.props.children === guessHeader).length,
+    ).toBe(1);
+    renderer.unmount();
+  });
+
   it("keeps the empty state when both groups are empty", () => {
     const renderer = createRenderer(
       React.createElement(

@@ -521,9 +521,11 @@ export function MovieField({
               {showCustomEventRow ? <View style={styles.moviesGrid}>{customEventRow}</View> : null}
               {hasLiveGroup ? (
                 <View>
-                  <AppText weight="700" style={styles.sectionHeader} accessibilityRole="header">
-                    {liveScheduleHeader}
-                  </AppText>
+                  {hasLiveGroup && hasNowPlayingGroup ? (
+                    <AppText weight="700" style={styles.sectionHeader} accessibilityRole="header">
+                      {liveScheduleHeader}
+                    </AppText>
+                  ) : null}
                   <View style={styles.moviesGrid}>
                     {liveScheduleMovies.map((item, i) => renderCountedCard(item, i))}
                   </View>
@@ -531,9 +533,11 @@ export function MovieField({
               ) : null}
               {hasNowPlayingGroup ? (
                 <View style={hasLiveGroup ? styles.sectionDivider : undefined}>
-                  <AppText weight="700" style={styles.sectionHeader} accessibilityRole="header">
-                    {nowPlayingHeader}
-                  </AppText>
+                  {hasLiveGroup && hasNowPlayingGroup ? (
+                    <AppText weight="700" style={styles.sectionHeader} accessibilityRole="header">
+                      {nowPlayingHeader}
+                    </AppText>
+                  ) : null}
                   <View style={styles.moviesGrid}>
                     {nowPlayingSuggestions.map((item, i) => renderPlainCard(item, i))}
                   </View>
