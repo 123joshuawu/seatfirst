@@ -119,13 +119,158 @@ describe("AMC Parsers (P5)", () => {
   });
 
   describe("Movies", () => {
-    it("parses synthetic movies correctly", () => {
+    it("extracts and deduplicates RSC movie cards, preserving card metadata", () => {
+      const practicalMagicCard = [
+        "$",
+        "li",
+        "practical-magic-2-77331",
+        {
+          children: [
+            "$",
+            "div",
+            null,
+            {
+              role: "group",
+              "aria-label": "Practical Magic 2",
+              children: [
+                [
+                  "$",
+                  "$L38",
+                  null,
+                  {
+                    href: "/movies/practical-magic-2-77331",
+                    children: [
+                      "$",
+                      "$L4c",
+                      null,
+                      {
+                        src: "https://images.example/practical-magic-2.jpg",
+                        fallbackSrc: "amc-cdn/static/images/fallback.jpg",
+                        alt: "Practical Magic 2",
+                      },
+                    ],
+                  },
+                ],
+                [
+                  "$",
+                  "h3",
+                  null,
+                  {
+                    children: [
+                      "$",
+                      "$L38",
+                      null,
+                      {
+                        href: "/movies/practical-magic-2-77331",
+                        "aria-label": "Practical Magic 2 details",
+                        children: ["Practical Magic 2", "$undefined"],
+                      },
+                    ],
+                  },
+                ],
+                [
+                  "$",
+                  "div",
+                  null,
+                  {
+                    children: [
+                      "$",
+                      "$Le2",
+                      "runtime",
+                      { children: ["$", "span", null, { children: "2 HR 10 MIN" }] },
+                    ],
+                  },
+                ],
+                ["$", "span", "rating", { "aria-label": "MPAA Rating: PG13", children: "PG13" }],
+                ["$", "p", null, { children: ["Opening ", "October 2, 2026"] }],
+                [
+                  "$",
+                  "$L38",
+                  null,
+                  {
+                    href: "/movies/practical-magic-2-77331/showtimes",
+                    children: ["Get Tickets", false],
+                  },
+                ],
+              ],
+            },
+          ],
+        },
+      ];
+      const transformerPosterLink = [
+        "$",
+        "$L38",
+        null,
+        {
+          href: "/movies/the-transformers-the-movie-40th-anniversary-84517",
+          children: [
+            "$",
+            "$L4c",
+            null,
+            {
+              src: "https://images.example/transformers.jpg",
+              alt: "The Transformers: The Movie 40th Anniversary",
+            },
+          ],
+        },
+      ];
+      const transformerTitleLink = [
+        "$",
+        "h3",
+        null,
+        {
+          children: [
+            "$",
+            "$L38",
+            null,
+            {
+              href: "/movies/the-transformers-the-movie-40th-anniversary-84517",
+              "aria-label": "The Transformers: The Movie 40th Anniversary details",
+              children: ["The Transformers: The Movie 40th Anniversary", "$undefined"],
+            },
+          ],
+        },
+      ];
+      const noiseLink = ["$", "$L38", null, { href: "/movies/uxrow", children: "Noise" }];
       const html = makeHtml(
-        `[{"movieId":456,"name":"Dune Part 3","slug":"dune-3","detailsPath":"/dune","showtimesPath":"/dune/showtimes"}]`,
+        JSON.stringify(practicalMagicCard),
+        JSON.stringify(transformerPosterLink),
+        JSON.stringify(transformerTitleLink),
+        JSON.stringify(noiseLink),
       );
-      const res = parseMovies(html, observationTime, "http://test");
-      expect(res).toHaveLength(1);
-      expect(res[0]!.movieId).toBe(456);
+
+      const movies = parseMovies(html, observationTime, "http://test");
+
+      expect(movies).toHaveLength(2);
+      expect(movies.find((movie) => movie.movieId === 77331)).toMatchObject({
+        name: "Practical Magic 2",
+        slug: "practical-magic-2-77331",
+        movieId: 77331,
+        detailsPath: "/movies/practical-magic-2-77331",
+        showtimesPath: "/movies/practical-magic-2-77331/showtimes",
+        mpaaRating: "PG13",
+        runTimeMinutes: 130,
+        releaseDate: "2026-10-02",
+        imageUrl: "https://images.example/practical-magic-2.jpg",
+      });
+      expect(movies.find((movie) => movie.movieId === 84517)).toMatchObject({
+        name: "The Transformers: The Movie 40th Anniversary",
+        slug: "the-transformers-the-movie-40th-anniversary-84517",
+        movieId: 84517,
+        detailsPath: "/movies/the-transformers-the-movie-40th-anniversary-84517",
+        showtimesPath: "/movies/the-transformers-the-movie-40th-anniversary-84517/showtimes",
+        imageUrl: "https://images.example/transformers.jpg",
+      });
+    });
+
+    it("fails loudly when the RSC tree has no movie cards", () => {
+      const html = makeHtml(
+        JSON.stringify(["$", "$L38", null, { href: "/movies/uxrow", children: "Noise" }]),
+      );
+
+      expect(() => parseMovies(html, observationTime, "http://test")).toThrow(
+        /could not locate movie cards/,
+      );
     });
   });
 

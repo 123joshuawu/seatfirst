@@ -22,47 +22,278 @@ const PublicMovieSummarySchema = z
 
 export type PublicMovieSummary = z.infer<typeof PublicMovieSummarySchema>;
 
+type RscProps = Record<string, unknown>;
+
+interface MovieFields {
+  name?: string;
+  mpaaRating?: string;
+  runTimeMinutes?: number;
+  releaseDate?: string;
+  imageUrl?: string;
+}
+
+interface MovieLink {
+  slug: string;
+  movieId: number;
+  isShowtimes: boolean;
+}
+
+const MOVIE_HREF = /^\/movies\/([a-z0-9][a-z0-9-]*-(\d+))(\/showtimes)?$/i;
+const RUNTIME = /^(?:(\d+)\s*HR(?:S)?\s*)?(?:(\d+)\s*MIN(?:S)?)?$/i;
+const MONTHS: Readonly<Record<string, string>> = {
+  january: "01",
+  february: "02",
+  march: "03",
+  april: "04",
+  may: "05",
+  june: "06",
+  july: "07",
+  august: "08",
+  september: "09",
+  october: "10",
+  november: "11",
+  december: "12",
+};
+
+function isRecord(value: unknown): value is RscProps {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+function isRscElement(value: unknown): value is [string, string, unknown, RscProps] {
+  return (
+    Array.isArray(value) &&
+    value.length === 4 &&
+    value[0] === "$" &&
+    typeof value[1] === "string" &&
+    isRecord(value[3])
+  );
+}
+
+function movieLink(href: unknown): MovieLink | null {
+  if (typeof href !== "string") return null;
+
+  const match = MOVIE_HREF.exec(href);
+  if (!match) return null;
+
+  const movieId = Number(match[2]);
+  if (!Number.isSafeInteger(movieId)) return null;
+
+  return {
+    slug: match[1]!,
+    movieId,
+    isShowtimes: match[3] !== undefined,
+  };
+}
+
+function titleFromAriaLabel(value: unknown): string | undefined {
+  if (typeof value !== "string") return undefined;
+  const title = value.replace(/\s+details$/i, "").trim();
+  return title.length > 0 && !/^MPAA Rating:/i.test(title) ? title : undefined;
+}
+
+function parseRuntime(value: string): number | undefined {
+  const match = RUNTIME.exec(value.trim());
+  if (!match || (!match[1] && !match[2])) return undefined;
+  return Number(match[1] ?? 0) * 60 + Number(match[2] ?? 0);
+}
+
+function parseReleaseDate(value: string): string | undefined {
+  const match = /^([A-Za-z]+)\s+(\d{1,2}),\s+(\d{4})$/.exec(value.trim());
+  if (!match) return undefined;
+
+  const month = MONTHS[match[1]!.toLowerCase()];
+  const day = Number(match[2]);
+  if (!month || day < 1 || day > 31) return undefined;
+
+  return `${match[3]}-${month}-${String(day).padStart(2, "0")}`;
+}
+
+function collectCardFields(node: unknown): MovieFields {
+  const fields: MovieFields = {};
+  const text: string[] = [];
+  const seen = new Set<unknown>();
+
+  function walk(value: unknown) {
+    if (typeof value === "string") {
+      text.push(value);
+      return;
+    }
+    if (!value || typeof value !== "object" || seen.has(value)) return;
+    seen.add(value);
+
+    if (isRscElement(value)) {
+      const props = value[3];
+      const ariaLabel = props["aria-label"];
+      const title = titleFromAriaLabel(ariaLabel);
+      if (
+        !fields.name &&
+        title &&
+        (props.role === "group" || /\s+details$/i.test(String(ariaLabel)))
+      ) {
+        fields.name = title;
+      }
+      if (!fields.mpaaRating && typeof ariaLabel === "string") {
+        const rating = /^MPAA Rating:\s*(.+)$/i.exec(ariaLabel);
+        if (rating?.[1]) fields.mpaaRating = rating[1].trim();
+      }
+      if (!fields.name && typeof props.alt === "string" && props.alt.trim()) {
+        fields.name = props.alt.trim();
+      }
+      if (!fields.imageUrl && typeof props.alt === "string") {
+        const imageUrl =
+          typeof props.src === "string"
+            ? props.src
+            : typeof props.fallbackSrc === "string"
+              ? props.fallbackSrc
+              : undefined;
+        if (imageUrl) fields.imageUrl = imageUrl;
+      }
+      walk(props.children);
+      return;
+    }
+
+    if (Array.isArray(value)) {
+      for (const item of value) walk(item);
+      return;
+    }
+
+    for (const child of Object.values(value)) walk(child);
+  }
+
+  walk(node);
+
+  for (const value of text) {
+    if (fields.runTimeMinutes === undefined) {
+      const runtime = parseRuntime(value);
+      if (runtime !== undefined) fields.runTimeMinutes = runtime;
+    }
+  }
+  for (let index = 0; index < text.length - 1; index += 1) {
+    if (
+      fields.releaseDate === undefined &&
+      /^(Released|Opening)\s*$/i.test(text[index]!) &&
+      typeof text[index + 1] === "string"
+    ) {
+      const releaseDate = parseReleaseDate(text[index + 1]!);
+      if (releaseDate) fields.releaseDate = releaseDate;
+    }
+  }
+
+  return fields;
+}
+
+function mergeMovieFields(target: MovieFields, source: MovieFields): void {
+  if (target.name === undefined && source.name !== undefined) target.name = source.name;
+  if (target.mpaaRating === undefined && source.mpaaRating !== undefined) {
+    target.mpaaRating = source.mpaaRating;
+  }
+  if (target.runTimeMinutes === undefined && source.runTimeMinutes !== undefined) {
+    target.runTimeMinutes = source.runTimeMinutes;
+  }
+  if (target.releaseDate === undefined && source.releaseDate !== undefined) {
+    target.releaseDate = source.releaseDate;
+  }
+  if (target.imageUrl === undefined && source.imageUrl !== undefined) {
+    target.imageUrl = source.imageUrl;
+  }
+}
+
 function parseMoviesImpl(
   html: string,
   observationTime: Date,
   requestUrl: string,
 ): PublicMovieSummary[] {
-  const chunks = extractFlightJSON(html);
-  let movieArray: unknown[] | null = null;
+  const movieById = new Map<number, { slug: string; fields: MovieFields }>();
+  const seen = new Set<unknown>();
 
-  function search(node: unknown) {
-    if (movieArray) return;
-    if (!node || typeof node !== "object") return;
-    if (Array.isArray(node)) {
-      if (
-        node.length > 0 &&
-        typeof node[0] === "object" &&
-        node[0] !== null &&
-        "movieId" in node[0] &&
-        typeof (node[0] as Record<string, unknown>).movieId === "number"
-      ) {
-        movieArray = node;
+  function capture(link: MovieLink, fields: MovieFields): void {
+    const existing = movieById.get(link.movieId);
+    if (existing) {
+      mergeMovieFields(existing.fields, fields);
+      return;
+    }
+    movieById.set(link.movieId, { slug: link.slug, fields: { ...fields } });
+  }
+
+  function linksIn(node: unknown): MovieLink[] {
+    const links = new Map<number, MovieLink>();
+    const cardSeen = new Set<unknown>();
+
+    function search(value: unknown): void {
+      if (!value || typeof value !== "object" || cardSeen.has(value)) return;
+      cardSeen.add(value);
+
+      if (isRscElement(value)) {
+        const link = movieLink(value[3].href);
+        if (link) links.set(link.movieId, link);
+        search(value[3].children);
         return;
       }
-      for (const item of node) search(item);
-    } else {
-      for (const key of Object.keys(node)) {
-        search((node as Record<string, unknown>)[key]);
+      if (Array.isArray(value)) {
+        for (const item of value) search(item);
+        return;
       }
+      for (const child of Object.values(value)) search(child);
     }
-  }
-  search(chunks);
 
-  if (!movieArray) {
+    search(node);
+    return [...links.values()];
+  }
+
+  function search(node: unknown): void {
+    if (!node || typeof node !== "object" || seen.has(node)) return;
+    seen.add(node);
+
+    if (isRscElement(node)) {
+      const props = node[3];
+      const link = movieLink(props.href);
+      if (link) capture(link, collectCardFields(node));
+
+      // AMC's catalogue tiles are cards rooted at list items. A featured movie uses an
+      // equivalent aside card. Their metadata lives beside, not inside, the detail link.
+      if (node[1] === "li" || node[1] === "aside") {
+        const fields = collectCardFields(node);
+        for (const cardLink of linksIn(node)) capture(cardLink, fields);
+      }
+      search(props.children);
+      return;
+    }
+    if (Array.isArray(node)) {
+      for (const item of node) search(item);
+      return;
+    }
+    for (const child of Object.values(node)) search(child);
+  }
+
+  search(extractFlightJSON(html));
+
+  const movieArray = [...movieById.entries()].flatMap(([movieId, { slug, fields }]) =>
+    fields.name
+      ? [
+          {
+            name: fields.name,
+            slug,
+            movieId,
+            detailsPath: `/movies/${slug}`,
+            showtimesPath: `/movies/${slug}/showtimes`,
+            mpaaRating: fields.mpaaRating,
+            runTimeMinutes: fields.runTimeMinutes,
+            releaseDate: fields.releaseDate,
+            imageUrl: fields.imageUrl,
+          },
+        ]
+      : [],
+  );
+
+  if (movieArray.length === 0) {
     throw new ProviderError(
       "UPSTREAM_CHANGED",
-      "Movie validation failed: could not locate movie collection",
+      "Movie validation failed: could not locate movie cards",
       { providerMeta: { requestUrl, observationTime } },
     );
   }
 
-  const PublicMovieListSchema = z.array(PublicMovieSummarySchema);
-  const parsed = PublicMovieListSchema.safeParse(movieArray);
+  const parsed = z.array(PublicMovieSummarySchema).safeParse(movieArray);
   if (!parsed.success) {
     const err = parsed.error.issues[0];
     throw new ProviderError("UPSTREAM_CHANGED", `Movie validation failed: ${err?.message}`, {
