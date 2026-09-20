@@ -4,10 +4,10 @@ import type { RecheckResult, ResultGroup, ScheduleSkeletonEntry } from "@seatfir
 import type { RowProvenance } from "@/hooks/viewModels/useSearchResultsViewModel";
 import { colors } from "@/theme/colors";
 import { AppText } from "@/components/core/AppText";
+import { SecondaryButton } from "@/components/core/Button";
 import { ShowtimeRow } from "./ShowtimeRow";
 import { applyPreferOrder, NO_PREFERENCE, type PreferToggles } from "@/lib/preferSort";
 import { SeatDot } from "@/components/core/SeatDot";
-
 export const BATCH_SIZE = 20;
 
 export interface ShowtimeListProps {
@@ -21,6 +21,8 @@ export interface ShowtimeListProps {
   /** Finding #10: search reached any terminal outcome — threaded to rows so unresolved admitted rows stop pulsing. */
   isTerminal?: boolean;
   onCheckMore?: (() => void) | undefined;
+  /** Terminal zero-result empty state: surfaces the screen's existing edit affordance (backToSearch). */
+  onEditSearch?: (() => void) | undefined;
   handoffEligible?: string[] | undefined;
   onHandoff?: ((showtimeId: string) => void) | undefined;
   /** UI30 (ADR 0063 §3): showtime with a recheck in flight — other rows disable. */
@@ -72,6 +74,7 @@ export function ShowtimeList({
   terminalCause,
   isTerminal = false,
   onCheckMore,
+  onEditSearch,
   handoffEligible,
   onHandoff,
   recheckingShowtimeId = null,
@@ -94,10 +97,30 @@ export function ShowtimeList({
   }, [firstShowtimeId]);
   const hitCount = skeleton.filter((e) => isHit(e, groups)).length;
   const missCount = skeleton.filter((e) => isResolvedMiss(e, groups)).length;
-
   // Generic non-authoritative placeholders while preview is in flight and before
   // server-authoritative skeleton arrives. Never fabricate ScheduleSkeletonEntry.
   if (skeleton.length === 0) {
+    // Terminal with zero rows (e.g. HALTED with no showtimes): the search will
+    // never produce rows, so skeletons must stop — render an actionable empty
+    // state instead of pulsing "Checking seats…" forever with no way to retry.
+    if (isTerminal || searchStatus === "HALTED") {
+      return (
+        <View style={styles.container} testID="empty-search-state">
+          <View style={styles.banner}>
+            <AppText weight="400" style={styles.bannerText}>
+              No showtimes found for these dates/format. Try adjusting your window or format.
+            </AppText>
+            {onEditSearch ? (
+              <SecondaryButton
+                label="Edit search"
+                onPress={onEditSearch}
+                accessibilityHint="Returns to search form"
+              />
+            ) : null}
+          </View>
+        </View>
+      );
+    }
     if (placeholderCount !== null && placeholderCount > 0) {
       return (
         <View style={styles.container} testID="placeholder-skeleton">

@@ -486,3 +486,67 @@ describe("ShowtimeList fallback placeholders (UI27 / Rec 2.2)", () => {
     expect(str.match(/placeholder-row/g) ?? []).toHaveLength(3);
   });
 });
+
+describe("ShowtimeList halted/terminal zero-result empty state (critical fix)", () => {
+  it("renders no skeletons and an enabled Edit search action when HALTED with zero rows", () => {
+    const onEditSearch = vi.fn();
+    const renderer = renderList({
+      skeleton: [],
+      groups: [],
+      partySize: 2,
+      resolved: 0,
+      total: 0,
+      searchStatus: "HALTED",
+      terminalCause: "CAPACITY",
+      isTerminal: true,
+      placeholderCount: 3,
+      onEditSearch,
+    });
+    const str = JSON.stringify(renderer.toJSON());
+    expect(str).not.toContain("Checking seats");
+    expect(str).not.toContain("placeholder-row");
+    expect(str).not.toContain("placeholder-skeleton");
+    expect(str).toContain("No showtimes found for these dates/format");
+    const actions = renderer.root.findAll(
+      (node) => node.props?.accessibilityLabel === "Edit search",
+    );
+    expect(actions.length).toBeGreaterThan(0);
+    for (const action of actions) {
+      expect(action.props.disabled).toBe(false);
+      expect(action.props.accessibilityState).toMatchObject({ disabled: false });
+    }
+    renderer.unmount();
+  });
+
+  it("suppresses the null-placeholder fallback rows once terminal", () => {
+    const renderer = renderList({
+      skeleton: [],
+      groups: [],
+      partySize: 2,
+      resolved: 0,
+      total: 0,
+      searchStatus: "HALTED",
+      isTerminal: true,
+      placeholderCount: null,
+      onEditSearch: vi.fn(),
+    });
+    const str = JSON.stringify(renderer.toJSON());
+    expect(str).not.toContain("Checking seats");
+    expect(str).toContain("No showtimes found for these dates/format");
+    renderer.unmount();
+  });
+
+  it("keeps skeletons while non-terminal with zero rows", () => {
+    const str = renderToString({
+      skeleton: [],
+      groups: [],
+      partySize: 2,
+      resolved: 0,
+      total: 0,
+      searchStatus: "RUNNING",
+      isTerminal: false,
+      placeholderCount: 2,
+    });
+    expect(str).toContain("Checking seats");
+  });
+});

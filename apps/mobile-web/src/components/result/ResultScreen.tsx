@@ -218,6 +218,7 @@ export function ResultScreen({
         searchStatus={vm.searchStatus}
         isTerminal={vm.isTerminal}
         onCheckMore={vm.canCheckMore ? vm.actions.checkMore : undefined}
+        onEditSearch={vm.actions.backToSearch}
         onHandoff={vm.actions.startHandoff}
         handoffEligible={vm.handoffEligibleShowtimeIds}
         provenanceByShowtimeId={vm.provenanceByShowtimeId}
