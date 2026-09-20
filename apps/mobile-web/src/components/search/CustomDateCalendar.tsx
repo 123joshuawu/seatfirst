@@ -197,8 +197,21 @@ export function CustomDateCalendar(props: CustomDateCalendarProps): ReactElement
 
   return (
     <View>
-      {/* Weekday header — Sunday-first, non-interactive */}
-      <View style={{ flexDirection: "row" }}>
+      {/* Weekday header — Sunday-first, non-interactive. Sticky within the
+          sheet's ScrollView so the S M T W T F S row stays pinned while the
+          user scrolls through months (same `position: sticky` convention as
+          SearchForm's mobile CTA bar / LeftPanel). Opaque background + zIndex
+          so month headings/cells scrolling underneath never bleed through. */}
+      <View
+        testID="calendar-weekday-header"
+        style={{
+          flexDirection: "row",
+          position: "sticky",
+          top: 0,
+          zIndex: 1,
+          backgroundColor: "#fff",
+        }}
+      >
         {WEEKDAY_LABELS.map((label, idx) => (
           <View
             key={`dow-${idx}-${label}`}

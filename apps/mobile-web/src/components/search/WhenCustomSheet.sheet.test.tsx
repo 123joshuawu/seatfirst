@@ -68,6 +68,40 @@ describe("mobile sheet full-height layout (P0-3)", () => {
     expect(insideText).not.toContain("Custom window");
   });
 
+  it("weekday header stays pinned (sticky) at the top of the scrolling calendar", () => {
+    act(() => {
+      renderer = TestRenderer.create(<WhenCustomSheet />);
+    });
+    const root = renderer!.root;
+    const body = root.findByType(ScrollView);
+    // Sticky only takes effect inside the scroll container: the header must
+    // live inside the ScrollView (not in the pinned footer).
+    const header = body.find(
+      (node) => (node.props as { testID?: string })?.testID === "calendar-weekday-header",
+    );
+    const style = header.props.style as {
+      position?: string;
+      top?: number;
+      backgroundColor?: string;
+      zIndex?: number;
+    };
+    expect(style.position).toBe("sticky");
+    expect(style.top).toBe(0);
+    // Opaque background + stacking so month headings/cells scrolling
+    // underneath never bleed through the pinned row.
+    expect(style.backgroundColor).toBeDefined();
+    expect(style.zIndex).toBeDefined();
+    // Sunday-first weekday labels render in order inside the pinned row.
+    const labels = header.findAllByType(AppText).map(textContent);
+    expect(labels).toEqual(["S", "M", "T", "W", "T", "F", "S"]);
+    // Month sections still render below the header inside the same ScrollView.
+    const monthHeadings = body
+      .findAllByType(AppText)
+      .map(textContent)
+      .filter((t) => /20\d\d/.test(t));
+    expect(monthHeadings.length).toBeGreaterThan(0);
+  });
+
   it("Clear dates resets the draft to the default 3-day window (P2-11)", () => {
     act(() => {
       renderer = TestRenderer.create(<WhenCustomSheet />);

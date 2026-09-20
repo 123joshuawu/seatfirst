@@ -5,9 +5,14 @@ exports[`CustomDateCalendar facet badges (UI23.4) > renders the pre-existing cel
   <View
     style={
       {
+        "backgroundColor": "#fff",
         "flexDirection": "row",
+        "position": "sticky",
+        "top": 0,
+        "zIndex": 1,
       }
     }
+    testID="calendar-weekday-header"
   >
     <View
       style={
