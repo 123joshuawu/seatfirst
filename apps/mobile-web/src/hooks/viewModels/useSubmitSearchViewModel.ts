@@ -272,13 +272,12 @@ export function useSubmitSearchViewModel(
   // cached set holds ≥1 movie group; zero groups (uncached, stale, or fresh
   // negative-cache) is Cold Mode with universal movie/event discovery.
   const isWarm = theatreMovieSet.movies.length > 0;
-  // UI42.3: universal discovery backing Cold Mode suggestions. Browse (empty
-  // query) fires immediately on focus; typed queries debounce in the hook.
+  // Universal discovery backing suggestions. The generic general-release slate
+  // must not show by default: the hook's own debounced-query threshold (≥2
+  // trimmed chars) decides when a typed query fires, so no `browse` option is
+  // passed (defaults to false) and nothing fetches on mere focus.
   const movieSearch = useMovieSearch({
     query: movie,
-    // Focused with fewer than 2 chars is still slate-browse (instant); the
-    // hook debounces only once a typed query (≥2 chars) exists.
-    browse: movieFocused && movie.trim().length < 2,
   });
   // Both suggestion groups are now always shown, so loading/error can no
   // longer branch on isWarm to pick one source. Loading reflects either
@@ -456,6 +455,19 @@ export function useSubmitSearchViewModel(
     () => selectedDates.filter((date) => warmDateSet.has(date)),
     [selectedDates, warmDateSet],
   );
+  // Cold-search fix: per-date confirmation for the zero-match gate. `isWarm`
+  // above is whole-window (any movie group cached anywhere in 30 days, e.g.
+  // from the single-theatre auto D+0 check) and cannot tell a confirmed zero
+  // from a cold/uncrawled scope. A date is confirmed iff ≥1 cached showtime
+  // for ANY movie falls on it (same warmth signal as facetDateScope above).
+  const dateScopeConfirmed =
+    selectedDates.length > 0 && selectedDates.every((date) => warmDateSet.has(date));
+  // An unconfirmed `0` (no crawled data for the requested window) is unknown,
+  // not a genuine zero — treat it as null for display/gating. Positive counts
+  // are always trustworthy and pass through untouched. The raw
+  // `matchingShowtimeCount` field on the returned view model stays unmodified.
+  const confirmedMatchingShowtimeCount =
+    matchingShowtimeCount === 0 && !dateScopeConfirmed ? null : matchingShowtimeCount;
   const facetDateScope =
     warmSelectedDates.length > 0
       ? resolveActiveDateScope({ selectedDates: warmSelectedDates, whenPreset, now: facetNow })
@@ -602,10 +614,12 @@ export function useSubmitSearchViewModel(
     admissionRejected !== null ||
     // In Cold Mode client-side window counting is meaningless (no cached
     // schedule), so the zero-match gate is bypassed once Theatre + Movie/Event
-    // + Date Scope are present. Hot Mode keeps the existing behavior.
-    (isWarm && matchingShowtimeCount !== null && matchingShowtimeCount === 0) ||
+    // + Date Scope are present. Hot Mode keeps the existing behavior — but only
+    // for a CONFIRMED zero: `confirmedMatchingShowtimeCount` already folds the
+    // per-date crawl confirmation in, so an unconfirmed (cold-scope) `0` reads
+    // as null here and never blocks the CTA.
+    confirmedMatchingShowtimeCount === 0 ||
     (store.serverCoverageSpec !== null && !isUpdateCandidate);
-
   const hasSelections = !!movie.trim() || theaterConfirmed;
 
   // ADR 0054: capacity state derives reactively from the store — the create-direct
@@ -651,26 +665,28 @@ export function useSubmitSearchViewModel(
   ]);
 
   const warmTheatreCount =
-    matchingShowtimeCount !== null && selectedTheatres.length > 0 ? selectedTheatres.length : null;
+    confirmedMatchingShowtimeCount !== null && selectedTheatres.length > 0
+      ? selectedTheatres.length
+      : null;
   const submitButtonLabel = !theaterConfirmed
     ? "Choose where to look"
     : !movie.trim() || !hasMovieSelection
       ? "Choose a movie"
       : isUpdateCandidate
         ? "Update search"
-        : matchingShowtimeCount !== null && warmTheatreCount !== null
-          ? matchingShowtimeCount === 0
+        : confirmedMatchingShowtimeCount !== null && warmTheatreCount !== null
+          ? confirmedMatchingShowtimeCount === 0
             ? "No showtimes match"
-            : `Search ${matchingShowtimeCount} ${matchingShowtimeCount === 1 ? "showtime" : "showtimes"} across ${warmTheatreCount} ${warmTheatreCount === 1 ? "theatre" : "theatres"}`
-          : matchingShowtimeCount !== null
-            ? matchingShowtimeCount === 0
+            : `Search ${confirmedMatchingShowtimeCount} ${confirmedMatchingShowtimeCount === 1 ? "showtime" : "showtimes"} across ${warmTheatreCount} ${warmTheatreCount === 1 ? "theatre" : "theatres"}`
+          : confirmedMatchingShowtimeCount !== null
+            ? confirmedMatchingShowtimeCount === 0
               ? "No showtimes match"
-              : `Search ${matchingShowtimeCount} ${matchingShowtimeCount === 1 ? "showtime" : "showtimes"}`
+              : `Search ${confirmedMatchingShowtimeCount} ${confirmedMatchingShowtimeCount === 1 ? "showtime" : "showtimes"}`
             : "Find my seats";
   const ctaAdvisoryLabel: string | null =
     capacityBlock === null &&
-    matchingShowtimeCount !== null &&
-    matchingShowtimeCount > DEFAULT_SEARCH_LIMITS.maxResolvedShowtimes
+    confirmedMatchingShowtimeCount !== null &&
+    confirmedMatchingShowtimeCount > DEFAULT_SEARCH_LIMITS.maxResolvedShowtimes
       ? "Broad selection — consider narrowing theatre or time"
       : null;
   // UI24 (ADR 0052 §5): the CTA summary is the resolved-runs absolute-date
@@ -685,7 +701,7 @@ export function useSubmitSearchViewModel(
     ? "Choose a theatre to see how many showtimes match."
     : !movie.trim() || !hasMovieSelection
       ? `${selectedTheatres.length} ${selectedTheatres.length === 1 ? "theatre" : "theatres"} selected · choose a movie to see showtimes`
-      : matchingShowtimeCount !== null
+      : confirmedMatchingShowtimeCount !== null
         ? `Seats for ${partySize} · ${quickWindowLabel}`
         : "";
   // ADR 0044 amendment §A (2026-09-04): one-line zero-match diagnosis naming the
@@ -694,7 +710,7 @@ export function useSubmitSearchViewModel(
   // against each currently-active, non-default axis in fixed priority order
   // Format → Time of day → Date scope. Plain text only — no actions.
   const zeroMatchDiagnosis: string | null = ((): string | null => {
-    if (matchingShowtimeCount !== 0) return null;
+    if (confirmedMatchingShowtimeCount !== 0) return null;
     if (formatPref !== "any") {
       const formatMeta = FORMAT_META.find((m) => m.v === formatPref);
       if (formatMeta && isWarmZero(formatCountsByPref.get(formatPref))) {

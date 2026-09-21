@@ -103,7 +103,7 @@ function laDateOf(utcIso: string): string {
   return `${get("year")}-${get("month")}-${get("day")}`;
 }
 
-function setMovieSet(showtimes: StubShowtime[]): void {
+function setMovieSet(showtimes: StubShowtime[], otherShowtimes: StubShowtime[] = []): void {
   mockMovieSet.mockReturnValue({
     responses: [],
     movies: [
@@ -120,6 +120,23 @@ function setMovieSet(showtimes: StubShowtime[]): void {
           },
         ],
       },
+      ...(otherShowtimes.length > 0
+        ? [
+            {
+              movieId: "mv_other",
+              title: "Other Movie",
+              posterPath: null,
+              showtimeCount: otherShowtimes.length,
+              entries: [
+                {
+                  theatreId: "th_1",
+                  timezone: "America/Los_Angeles",
+                  group: { showtimes: otherShowtimes },
+                },
+              ],
+            },
+          ]
+        : []),
     ],
     isFetching: false,
     isComplete: true,
@@ -174,12 +191,28 @@ describe("useSubmitSearchViewModel CTA label and format chips (UX audit)", () =>
   });
 
   it("zero-match CTA reads 'No showtimes match' and stays disabled (never 'Search 0 showtimes')", () => {
-    setMovieSet([]);
+    // Dune itself has no showtimes, but a second cached movie proves the
+    // selected date was actually crawled (warm) — so Dune's zero is a
+    // genuinely confirmed zero, not a cold-scope unknown.
+    const utc = showtimeInTwoDays();
+    setMovieSet([], [{ showDateTimeUtc: utc, formatCode: null }]);
+    useSeatfirstStore.setState({ selectedDates: [laDateOf(utc)] });
     const vm = captureVm();
     expect(vm.matchingShowtimeCount).toBe(0);
     expect(vm.submitButtonLabel).toBe("No showtimes match");
     expect(vm.submitButtonLabel).not.toContain("Search 0");
     expect(vm.searchDisabled).toBe(true);
+  });
+
+  it("cold/uncrawled date scope never blocks the CTA with a false zero-match", () => {
+    // No cached showtimes anywhere: the selected date was never crawled, so
+    // the raw zero is unconfirmed and must not disable the CTA.
+    setMovieSet([]);
+    const vm = captureVm();
+    expect(vm.matchingShowtimeCount).toBe(0);
+    expect(vm.searchDisabled).toBe(false);
+    expect(vm.submitButtonLabel).not.toBe("No showtimes match");
+    expect(vm.submitButtonLabel).toBe("Find my seats");
   });
 
   it("non-zero CTA branches keep the existing 'Search N showtimes across M theatres' wording", () => {
@@ -718,7 +751,9 @@ describe("useSubmitSearchViewModel Cold/Hot mode (UI42.1/42.2/42.3)", () => {
   });
 
   it("Hot Mode keeps the zero-match gate and filters confirmed schedule movies", () => {
-    setMovieSet([]);
+    // Dune has no showtimes, but a second cached movie on the selected date
+    // proves it was actually crawled — a confirmed zero, so the gate holds.
+    setMovieSet([], [{ showDateTimeUtc: "2026-09-05T19:00:00.000Z", formatCode: null }]);
     setColdForm({ movie: "dUn", selectedMovieId: "mv_dune", movieSelectionSource: "library" });
     mockMovieSearch.mockReturnValue({
       data: undefined,
@@ -776,9 +811,9 @@ describe("useSubmitSearchViewModel Cold/Hot mode (UI42.1/42.2/42.3)", () => {
       "Met Opera Live",
     ]);
     expect(vm.nowPlayingSuggestions[1]?.badge).toBe("AMC Event");
-    expect(mockMovieSearch).toHaveBeenCalledWith(
-      expect.objectContaining({ query: "nos", browse: false }),
-    );
+    // No eager browse-on-focus: the hook is called with the query only (the
+    // `browse` option defaults to false inside `useMovieSearch`).
+    expect(mockMovieSearch).toHaveBeenCalledWith({ query: "nos" });
   });
 
   it("onSelectCustomEvent confirms the free-typed title as a custom selection", () => {
