@@ -40,7 +40,7 @@ function setMetaDescription(content: string): void {
   tag.setAttribute("content", content);
 }
 
-function setFaviconLink(type: string, href: string): void {
+function setFaviconLink(type: string, href: string, sizes?: string): void {
   let link = document.querySelector(`link[rel="icon"][type="${type}"]`);
   if (!link) {
     link = document.createElement("link");
@@ -49,6 +49,9 @@ function setFaviconLink(type: string, href: string): void {
     document.head.appendChild(link);
   }
   link.setAttribute("href", href);
+  if (sizes) {
+    link.setAttribute("sizes", sizes);
+  }
 }
 
 function useDocumentHead(): void {
@@ -58,8 +61,8 @@ function useDocumentHead(): void {
     setMetaDescription(
       "Find the best available seats at a theatre, fast, and hand off to checkout.",
     );
-    setFaviconLink("image/svg+xml", "/favicon.svg");
-    setFaviconLink("image/png", "/favicon.png");
+    setFaviconLink("image/png", "/favicon.png", "32x32");
+    setFaviconLink("image/svg+xml", "/favicon.svg", "any");
   }, []);
 }
 
