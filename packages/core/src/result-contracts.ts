@@ -273,6 +273,7 @@ export const ScheduleSkeletonEntrySchema = z.strictObject({
   rank: nonnegativeInteger,
   admitted: z.boolean(),
   resolved: z.boolean(),
+  attributes: z.array(z.string()).default([]),
   // ADR 0057 Rec 3.1 — terminal fetch-outcome attribution for an unresolved-looking row.
   // `undefined` (every pre-existing entry, and any entry whose `SHOWTIME_FETCH` job hasn't
   // terminalized yet) means "not yet known" — never fabricated, never defaulted to "OK".

@@ -14,6 +14,13 @@ export const GeoPointSchema = z.strictObject({
 });
 export type GeoPoint = z.infer<typeof GeoPointSchema>;
 
+export const TheatreAmenitySchema = z.strictObject({
+  code: nonemptyString,
+  name: nonemptyString,
+  sort: z.number().int().optional(),
+});
+export type TheatreAmenity = z.infer<typeof TheatreAmenitySchema>;
+
 export const TheatreSchema = z.strictObject({
   id: TheatreIdSchema,
   providerId: nonemptyString,
@@ -23,6 +30,7 @@ export const TheatreSchema = z.strictObject({
   city: z.string().nullable(),
   address: z.string().nullable(),
   slugs: z.record(nonemptyString, z.string()).nullable(),
+  amenities: z.array(TheatreAmenitySchema).default([]),
   firstSeenAt: z.date(),
   lastSeenAt: z.date(),
 });

@@ -80,11 +80,13 @@ describe("tier 0 — structural claims", () => {
         "timezone",
         "address",
         "slugs",
+        "amenities",
         "first_seen_at",
         "last_seen_at",
       ]),
     );
     expect(columns.find((column) => column.column_name === "timezone")?.is_nullable).toBe("NO");
+    expect(columns.find((column) => column.column_name === "amenities")?.is_nullable).toBe("NO");
   });
 
   it("uses the declared btree geo index for the catalogue", async () => {
