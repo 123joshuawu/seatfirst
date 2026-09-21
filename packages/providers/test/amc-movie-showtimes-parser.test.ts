@@ -144,6 +144,31 @@ describe("parseMovieShowtimes (S64, ADR 0104)", () => {
     expect(parseMovieShowtimes(html, observationTime, requestUrl)).toEqual([]);
   });
 
+  it("returns [] on a 'temporarily closed' alert without showtimes", () => {
+    const html =
+      makeHtml(JSON.stringify([metreon, movie])) +
+      `<p role="alert">This theatre is temporarily closed. Please check another AMC near you.</p>`;
+    expect(parseMovieShowtimes(html, observationTime, requestUrl)).toEqual([]);
+  });
+
+  it("throws UPSTREAM_CHANGED when a closed-theatre alert appears alongside real showtime evidence", () => {
+    const html =
+      makeHtml(JSON.stringify([metreon, empire, movie, metreonShowtime, empireShowtime])) +
+      multiTheatreMarkup() +
+      `<p role="alert">This theatre is temporarily closed. Please check another AMC near you.</p>`;
+    let caught: unknown;
+    try {
+      parseMovieShowtimes(html, observationTime, requestUrl);
+    } catch (err) {
+      caught = err;
+    }
+    expect(caught).toBeInstanceOf(ProviderError);
+    expect((caught as ProviderError).code).toBe("UPSTREAM_CHANGED");
+    expect((caught as ProviderError).message).toMatch(/contradictory state/);
+    const diagnostic = getUpstreamChangedDiagnostic(caught);
+    expect(diagnostic).toMatchObject({ url: requestUrl, body: html });
+  });
+
   it("throws UPSTREAM_CHANGED with a diagnostic on corrupted Flight JSON", () => {
     const html = `<script>self.__next_f.push([1, "oops"`;
     let caught: unknown;

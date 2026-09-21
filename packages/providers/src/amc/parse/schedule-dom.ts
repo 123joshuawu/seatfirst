@@ -46,6 +46,7 @@ interface TheatreRecord {
   stateCode: string;
   utcOffset: string;
   isSelected: boolean;
+  outageDescription?: string | null;
 }
 
 interface MovieRecord {
@@ -71,7 +72,10 @@ function isTheatreRecord(v: Record<string, unknown>): v is TheatreRecord {
     typeof v.postalCode === "string" &&
     typeof v.stateCode === "string" &&
     typeof v.utcOffset === "string" &&
-    typeof v.isSelected === "boolean"
+    typeof v.isSelected === "boolean" &&
+    (v.outageDescription === undefined ||
+      v.outageDescription === null ||
+      typeof v.outageDescription === "string")
   );
 }
 
@@ -167,23 +171,28 @@ function resolveScheduleFromDomImpl(
 
   // AMC's own page renders a genuine `role="alert"` element with this exact message when a
   // theatre legitimately has no showtimes posted for the requested date — a real, structured
-  // signal (ARIA alert role + literal upstream copy), not a heuristic invented here. Checked
-  // only after collecting real evidence (showtime records, showtime anchors): an alert next to
-  // actual showtime evidence is a contradictory state (e.g. a stale/hidden banner), never
-  // silently trusted over real data.
+  // signal (ARIA alert role + literal upstream copy), not a heuristic invented here. A
+  // temporarily closed theatre instead carries a non-empty `outageDescription` on its theatre
+  // record (AMC's own structured closure field) and/or a "temporarily closed" alert. Checked
+  // only after collecting real evidence (showtime records, showtime anchors): an empty-state
+  // signal next to actual showtime evidence is a contradictory state (e.g. a stale/hidden
+  // banner), never silently trusted over real data.
   const noShowtimesAlert = $('[role="alert"]')
     .toArray()
-    .some((el) => /no showtimes found/i.test($(el).text()));
+    .some((el) => /no showtimes found|temporarily closed/i.test($(el).text()));
+  const hasOutageDescription =
+    typeof theatre.outageDescription === "string" && theatre.outageDescription.trim().length > 0;
+  const emptyState = noShowtimesAlert || hasOutageDescription;
   const hasEvidence = showtimeRecords.length > 0 || anchors.length > 0;
 
-  if (noShowtimesAlert && hasEvidence) {
+  if (emptyState && hasEvidence) {
     upstreamChanged(
-      "Found a 'no showtimes found' alert alongside real showtime evidence (records or anchors) — contradictory state",
+      "Found an empty-schedule signal (no-showtimes/temporarily-closed alert or outageDescription) alongside real showtime evidence (records or anchors) — contradictory state",
       requestUrl,
       observationTime,
     );
   }
-  if (noShowtimesAlert && !hasEvidence) {
+  if (emptyState && !hasEvidence) {
     return {
       theatre: {
         name: theatre.name,

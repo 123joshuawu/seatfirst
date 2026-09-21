@@ -645,6 +645,38 @@ describe("AMC Parsers (P5)", () => {
       expect(res).toEqual([]);
     });
 
+    it("returns an empty performance list when the theatre record carries AMC's outageDescription and no showtimes exist", () => {
+      const closedTheatre = {
+        ...theatreSelected,
+        outageDescription: "This theatre is temporarily closed for maintenance.",
+      };
+      const html = makeHtml(JSON.stringify([closedTheatre, movie]));
+      const res = parseShowtimes(html, observationTime, "http://test/showtimes?date=2026-08-13");
+      expect(res).toEqual([]);
+    });
+
+    it("returns an empty performance list when a 'temporarily closed' ARIA alert is present without showtimes", () => {
+      const html =
+        makeHtml(JSON.stringify([theatreSelected, movie])) +
+        `<p role="alert">This theatre is temporarily closed. Please check another AMC near you.</p>`;
+      const res = parseShowtimes(html, observationTime, "http://test/showtimes?date=2026-08-13");
+      expect(res).toEqual([]);
+    });
+
+    it("fails safe with UPSTREAM_CHANGED when a closed-theatre signal appears alongside real showtime evidence", () => {
+      const closedTheatre = {
+        ...theatreSelected,
+        outageDescription: "This theatre is temporarily closed for maintenance.",
+      };
+      const html =
+        makeHtml(JSON.stringify([theatreNearby, closedTheatre, movie, showtime])) +
+        domMarkup() +
+        `<p role="alert">This theatre is temporarily closed. Please check another AMC near you.</p>`;
+      expect(() =>
+        parseShowtimes(html, observationTime, "http://test/showtimes?date=2026-08-13"),
+      ).toThrowError(/contradictory state/);
+    });
+
     it("fails loudly when a showtime anchor's aria-describedby references an id with no matching element", () => {
       const badHtml = `<a id="${showtime.showtimeId}" href="/showtimes/${showtime.showtimeId}" aria-describedby="no-such-element-id">x</a>`;
       const html = makeHtml(JSON.stringify([theatreSelected, movie, showtime])) + badHtml;

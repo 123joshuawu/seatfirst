@@ -187,7 +187,7 @@ function parseMovieShowtimesImpl(
   // contradictory state, never silently trusted over real data.
   const noShowtimesAlert = $('[role="alert"]')
     .toArray()
-    .some((el) => /no showtimes found|please select a nearby theatre/i.test($(el).text()));
+    .some((el) => /no showtimes found|please select a nearby theatre|temporarily closed/i.test($(el).text()));
   const hasEvidence = showtimeRecords.length > 0 || anchors.length > 0;
 
   if (noShowtimesAlert && hasEvidence) {
