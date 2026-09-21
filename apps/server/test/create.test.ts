@@ -12,7 +12,11 @@ import {
   specHash,
 } from "@seatfirst/core";
 import type { ShowtimeStatus, SearchSpec } from "@seatfirst/core";
-import { resolveScheduleTarget, resolveScheduleWindow } from "../src/routes/searches/create.js";
+import {
+  extractSingleMoviePredicate,
+  resolveScheduleTarget,
+  resolveScheduleWindow,
+} from "../src/routes/searches/create.js";
 import {
   B2_LEASE_RUN,
   B4_PREDISPATCH,
@@ -331,6 +335,32 @@ beforeEach(async () => {
 });
 
 describe("searches.create (S15)", () => {
+  it("uses movie-first admission only for one MOVIE leaf under AND", () => {
+    expect(
+      extractSingleMoviePredicate({
+        kind: "AND",
+        of: [
+          { kind: "MOVIE", ids: [MOVIE] },
+          { kind: "DATE_RANGE", from: LOCAL_DATE, to: LOCAL_DATE },
+        ],
+      }),
+    ).toEqual({ id: MOVIE, titles: [] });
+    expect(
+      extractSingleMoviePredicate({
+        kind: "OR",
+        of: [
+          { kind: "MOVIE", ids: [MOVIE] },
+          { kind: "MOVIE", ids: ["amc:movie:43"] },
+        ],
+      }),
+    ).toBeNull();
+    expect(
+      extractSingleMoviePredicate({
+        kind: "AND",
+        of: [{ kind: "MOVIE", ids: [MOVIE, "amc:movie:43"] }],
+      }),
+    ).toBeNull();
+  });
   it("cold create: 202 PENDING_SCHEDULE, reservation 200, one SCHEDULE_RESOLUTION work set (item 1)", async () => {
     await seedProvider(admin);
     const client = makeClient(server.baseUrl, SESSION);
@@ -402,6 +432,57 @@ describe("searches.create (S15)", () => {
       groups: [],
       answer: null,
     });
+  });
+
+  it("clusters exact-movie cold theatres into one regional movie schedule run (S65)", async () => {
+    await seedProvider(admin);
+    const theatre2 = `${PROVIDER}:theatre:8`;
+    const theatre3 = `${PROVIDER}:theatre:9`;
+    await seedTheatre(admin, theatre2, 40.1, -74.0);
+    await seedTheatre(admin, theatre3, 40.2, -74.0);
+    const theatreIds = [THEATRE, theatre2, theatre3];
+    await admin.query(
+      `UPDATE theatre
+       SET market_slug = 'test-market',
+           slugs = jsonb_build_object('test-market', replace(theatre_id, 'amc:theatre:', 'theatre-'))::jsonb
+       WHERE theatre_id = ANY($1::text[])`,
+      [theatreIds],
+    );
+    await admin.query(
+      `INSERT INTO amc_movie_catalogue (movie_id, slug, name)
+       VALUES (42, 'dune-part-3', 'Dune Part 3')`,
+    );
+    const client = makeClient(server.baseUrl, SESSION);
+
+    const response = await client.searches.create.mutate({
+      spec: makeSpec({
+        theatres: { kind: "LIST", refs: theatreIds.map((id) => ({ id })) },
+      }),
+      idempotencyKey: "s65_movie_cluster",
+    });
+
+    expect(response.status).toBe("PENDING_SCHEDULE");
+    const jobs = await admin.query<{
+      kind: string;
+      route_class: string;
+      movie_slug: string | null;
+      movie_candidate_theatre_ids: string[] | null;
+    }>(
+      `SELECT sj.kind, rk.route_class, rk.movie_slug, rs.movie_candidate_theatre_ids
+       FROM search_job sj
+       JOIN run_key rk ON rk.run_key_id = sj.run_key_id
+       JOIN run_subscription rs ON rs.job_id = sj.job_id
+       WHERE sj.search_id = $1`,
+      [response.searchId],
+    );
+    expect(jobs.rows).toEqual([
+      {
+        kind: "MOVIE_SCHEDULE_RESOLUTION",
+        route_class: "movie-schedule",
+        movie_slug: "dune-part-3",
+        movie_candidate_theatre_ids: theatreIds,
+      },
+    ]);
   });
 
   it("warm create dispatches only performances for the selected movie", async () => {

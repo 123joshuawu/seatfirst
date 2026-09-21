@@ -300,6 +300,26 @@ export const AMC_MOVIE_CATALOGUE_UPSERT = define({
               release_date::text AS release_date, status, image_url, details_path,
               showtimes_path, first_seen_at, updated_at`,
 });
+/**
+ * ADR 0104 / S65 — resolves the AMC route slug for a single movie predicate.  A direct
+ * numeric AMC movie id wins; title lookup is the compatibility path for the independently
+ * observed schedule/movie-page id spaces.
+ */
+export const AMC_MOVIE_CATALOGUE_RESOLVE_SLUG = define({
+  boundary: "catalogue",
+  name: "AMC_MOVIE_CATALOGUE_RESOLVE_SLUG",
+  zeroRowsMeans: "the requested movie has no AMC catalogue slug.",
+  params: ["movie_id", "normalized_titles"],
+  text: `
+    SELECT movie_id, slug, name
+    FROM amc_movie_catalogue
+    WHERE ($1::int IS NOT NULL AND movie_id = $1::int)
+       OR lower(btrim(name)) = ANY($2::text[])
+    ORDER BY CASE WHEN $1::int IS NOT NULL AND movie_id = $1::int THEN 0 ELSE 1 END,
+             movie_id
+    LIMIT 1`,
+});
+
 
 export const AMC_MOVIE_CATALOGUE_STATE_READ = define({
   boundary: "catalogue",
@@ -618,6 +638,27 @@ export const RUN_KEY_UPSERT = define({
     ON CONFLICT (run_key_id) DO UPDATE SET provider_id = run_key.provider_id
     RETURNING run_key_id`,
 });
+/** S65 — movie-first keys have a distinct identity and carry the AMC movie route slug. */
+export const MOVIE_SCHEDULE_RUN_KEY_UPSERT = define({
+  boundary: "B1/B6",
+  name: "MOVIE_SCHEDULE_RUN_KEY_UPSERT",
+  zeroRowsMeans: "",
+  params: [
+    "run_key_id",
+    "provider_id",
+    "movie_slug",
+    "anchor_theatre_id",
+    "local_date",
+  ],
+  text: `
+    INSERT INTO run_key (run_key_id, kind, provider_id, route_class,
+                         showtime_id, theatre_id, local_date, movie_slug)
+    VALUES ($1::text, 'MOVIE_SCHEDULE_RESOLUTION', $2::text, 'movie-schedule',
+            NULL, $4::text, $5::date, $3::text)
+    ON CONFLICT (run_key_id) DO UPDATE SET provider_id = run_key.provider_id
+    RETURNING run_key_id`,
+});
+
 
 export const JOB_CREATE = define({
   boundary: "B1/B6",
@@ -642,6 +683,23 @@ export const SUBSCRIPTION_CREATE = define({
     ON CONFLICT (run_key_id, search_id) DO NOTHING
     RETURNING job_id`,
 });
+/**
+ * S65 — membership is subscriber-local, not key-local: one regional navigation can serve
+ * searches that requested different subsets of the anchor's market cluster.
+ */
+export const MOVIE_SCHEDULE_SUBSCRIPTION_CREATE = define({
+  boundary: "B1/B6",
+  name: "MOVIE_SCHEDULE_SUBSCRIPTION_CREATE",
+  zeroRowsMeans: "this search already subscribes to this movie schedule key.",
+  params: ["run_key_id", "search_id", "job_id", "deadline_at", "candidate_theatre_ids"],
+  text: `
+    INSERT INTO run_subscription
+      (run_key_id, search_id, job_id, deadline_at, movie_candidate_theatre_ids)
+    VALUES ($1::text, $2::text, $3::text, $4::timestamptz, $5::jsonb)
+    ON CONFLICT (run_key_id, search_id) DO NOTHING
+    RETURNING job_id`,
+});
+
 
 /**
  * ADR 0005 §I point 2: the charge for a search that joins a `run_key` whose current
@@ -761,7 +819,7 @@ export const RUN_CREATE = define({
     -- NULL, and a worse rank must not overwrite a better one.
     INSERT INTO provider_run (run_id, run_key_id, observation_id, provider_epoch, priority, dispatch_rank)
     SELECT $1::text, $2::text, $3::text, f.epoch,
-           CASE k.kind WHEN 'RECHECK' THEN 2 WHEN 'SCHEDULE_RESOLUTION' THEN 1 ELSE 0 END,
+           CASE k.kind WHEN 'RECHECK' THEN 2 WHEN 'SCHEDULE_RESOLUTION' THEN 1 WHEN 'MOVIE_SCHEDULE_RESOLUTION' THEN 1 ELSE 0 END,
            $4::smallint
     FROM run_key k JOIN provider_fence f ON f.provider_id = k.provider_id
     WHERE k.run_key_id = $2::text
@@ -1149,8 +1207,13 @@ export const B5C_PERFORMANCE = define({
     -- a later resolution of the same key re-states its showtimes; the newest accepted
     -- observation owns the row
     ON CONFLICT (showtime_id) DO UPDATE
-    SET local_date = EXCLUDED.local_date, starts_at = EXCLUDED.starts_at, observation_id = EXCLUDED.observation_id,
-        attributes = EXCLUDED.attributes, updated_at = now()
+    SET provider_id = EXCLUDED.provider_id,
+        theatre_id = EXCLUDED.theatre_id,
+        local_date = EXCLUDED.local_date,
+        starts_at = EXCLUDED.starts_at,
+        observation_id = EXCLUDED.observation_id,
+        attributes = EXCLUDED.attributes,
+        updated_at = now()
     RETURNING showtime_id`,
 });
 
@@ -1359,7 +1422,7 @@ export const B6_RECONCILE_SEARCH_WIDE = define({
         AND NOT EXISTS (
           SELECT 1 FROM run_subscription rs
           JOIN run_key rk USING (run_key_id)
-          WHERE rs.search_id = $2::text AND rk.kind = 'SCHEDULE_RESOLUTION'
+          WHERE rs.search_id = $2::text AND rk.kind IN ('SCHEDULE_RESOLUTION','MOVIE_SCHEDULE_RESOLUTION')
             AND rs.schedule_match_count IS NULL
         )
         AND d.durable <= 200
@@ -1498,7 +1561,7 @@ export const B5F_EFFECTS = define({
     WITH affected AS (
       UPDATE run_subscription rs
       SET state = 'CANCELLED',
-          schedule_outcome = CASE WHEN $2::text = 'SCHEDULE_RESOLUTION'
+          schedule_outcome = CASE WHEN $2::text IN ('SCHEDULE_RESOLUTION','MOVIE_SCHEDULE_RESOLUTION')
                                   THEN 'FAILED' ELSE rs.schedule_outcome END
       FROM search s
       WHERE rs.run_key_id = $1::text AND rs.state = 'LIVE'
@@ -1821,11 +1884,11 @@ export const B8_TERMINALIZE = define({
           -- cold date is FAILED; derive PARTIAL/COMPLETE via the fetch branch instead.
           WHEN EXISTS (SELECT 1 FROM run_subscription rs
                        JOIN run_key k USING (run_key_id)
-                       WHERE rs.search_id = $1::text AND k.kind = 'SCHEDULE_RESOLUTION')
+                       WHERE rs.search_id = $1::text AND k.kind IN ('SCHEDULE_RESOLUTION','MOVIE_SCHEDULE_RESOLUTION'))
            AND NOT EXISTS (SELECT 1 FROM run_subscription rs
                            JOIN run_key k USING (run_key_id)
                            WHERE rs.search_id = $1::text
-                             AND k.kind = 'SCHEDULE_RESOLUTION'
+                             AND k.kind IN ('SCHEDULE_RESOLUTION','MOVIE_SCHEDULE_RESOLUTION')
                              AND (rs.schedule_outcome IS DISTINCT FROM 'FAILED'))
            AND COALESCE((SELECT fresh_match_seed FROM admission_reservation WHERE search_id = $1::text), 0) = 0
                                                                          THEN 'HALTED'
@@ -1835,11 +1898,11 @@ export const B8_TERMINALIZE = define({
           -- IS DISTINCT FROM rather than naming only the two successful outcomes.
           WHEN EXISTS (SELECT 1 FROM run_subscription rs
                        JOIN run_key k USING (run_key_id)
-                       WHERE rs.search_id = $1::text AND k.kind = 'SCHEDULE_RESOLUTION'
+                       WHERE rs.search_id = $1::text AND k.kind IN ('SCHEDULE_RESOLUTION','MOVIE_SCHEDULE_RESOLUTION')
                          AND rs.schedule_outcome = 'FAILED')
            AND EXISTS (SELECT 1 FROM run_subscription rs
                        JOIN run_key k USING (run_key_id)
-                       WHERE rs.search_id = $1::text AND k.kind = 'SCHEDULE_RESOLUTION'
+                       WHERE rs.search_id = $1::text AND k.kind IN ('SCHEDULE_RESOLUTION','MOVIE_SCHEDULE_RESOLUTION')
                          AND rs.schedule_outcome IS DISTINCT FROM 'FAILED')
                                                                          THEN 'PARTIAL'
           -- Deadline expiry with unfinished work is PARTIAL (ADR 0003 A9), tested BEFORE
@@ -1888,20 +1951,20 @@ export const B8_TERMINALIZE = define({
           WHEN COALESCE((SELECT fresh_match_seed FROM admission_reservation WHERE search_id = $1::text), 0) = 0
            AND EXISTS (SELECT 1 FROM run_subscription rs
                        JOIN run_key k USING (run_key_id)
-                       WHERE rs.search_id = $1::text AND k.kind = 'SCHEDULE_RESOLUTION'
+                       WHERE rs.search_id = $1::text AND k.kind IN ('SCHEDULE_RESOLUTION','MOVIE_SCHEDULE_RESOLUTION')
                          AND rs.schedule_outcome = 'EMPTY_RESOLVED')
            AND NOT EXISTS (SELECT 1 FROM run_subscription rs
                            JOIN run_key k USING (run_key_id)
-                           WHERE rs.search_id = $1::text AND k.kind = 'SCHEDULE_RESOLUTION'
+                           WHERE rs.search_id = $1::text AND k.kind IN ('SCHEDULE_RESOLUTION','MOVIE_SCHEDULE_RESOLUTION')
                              AND rs.schedule_outcome
                                    IS DISTINCT FROM 'EMPTY_RESOLVED') THEN 'TOO_FEW_SHOWTIMES'
           WHEN EXISTS (SELECT 1 FROM run_subscription rs
                        JOIN run_key k USING (run_key_id)
-                       WHERE rs.search_id = $1::text AND k.kind = 'SCHEDULE_RESOLUTION'
+                       WHERE rs.search_id = $1::text AND k.kind IN ('SCHEDULE_RESOLUTION','MOVIE_SCHEDULE_RESOLUTION')
                          AND rs.schedule_outcome = 'FAILED')
            AND EXISTS (SELECT 1 FROM run_subscription rs
                        JOIN run_key k USING (run_key_id)
-                       WHERE rs.search_id = $1::text AND k.kind = 'SCHEDULE_RESOLUTION'
+                       WHERE rs.search_id = $1::text AND k.kind IN ('SCHEDULE_RESOLUTION','MOVIE_SCHEDULE_RESOLUTION')
                          AND rs.schedule_outcome IS DISTINCT FROM 'FAILED')
                                                                     THEN 'PARTIAL_SCHEDULE'
           WHEN s.batch_deferred_count > 0                                       THEN 'BATCH_DEFERRED'
@@ -1922,7 +1985,7 @@ export const B8_TERMINALIZE = define({
             ( NOT EXISTS (SELECT 1 FROM run_subscription rs
                           JOIN run_key k USING (run_key_id)
                           WHERE rs.search_id = $1::text
-                            AND k.kind = 'SCHEDULE_RESOLUTION'
+                            AND k.kind IN ('SCHEDULE_RESOLUTION','MOVIE_SCHEDULE_RESOLUTION')
                             AND rs.schedule_match_count IS NULL)
               AND NOT EXISTS (SELECT 1 FROM search_job j
                               WHERE j.search_id = $1::text AND j.kind = 'SHOWTIME_FETCH'
@@ -2440,7 +2503,7 @@ export const SWEEP_JOB_FAIL_EFFECTS = define({
     WITH affected AS (
       UPDATE run_subscription rs
       SET state = 'CANCELLED',
-          schedule_outcome = CASE WHEN $3::text = 'SCHEDULE_RESOLUTION'
+          schedule_outcome = CASE WHEN $3::text IN ('SCHEDULE_RESOLUTION','MOVIE_SCHEDULE_RESOLUTION')
                                   THEN 'FAILED' ELSE rs.schedule_outcome END
       FROM search s
       WHERE rs.run_key_id = $1::text AND rs.search_id = $2::text AND rs.state = 'LIVE'

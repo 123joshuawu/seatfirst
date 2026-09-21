@@ -12,6 +12,7 @@ import { buildAuditoriumLayout, getBit, parseNamespacedId, popcount } from "@sea
 import {
   parseSeats,
   parseShowtimes,
+  parseMovieShowtimes,
   ProviderError,
   attachUpstreamChangedDiagnostic,
   getUpstreamChangedDiagnostic,
@@ -79,6 +80,28 @@ export const parseObservation: ProviderFetchActorDeps["parseObservation"] = (
           ok: true,
           kind: "SCHEDULE_RESOLUTION",
           performances: performances.map((performance) => ({
+            showtimeId: performance.showtimeId,
+            startsAt: performance.showDateTimeUtc,
+            movieId: performance.movieId,
+            movieTitle: performance.movieTitle,
+            auditorium: performance.auditorium,
+            utcOffset: performance.utcOffset,
+            runtimeMinutes: performance.runtimeMinutes,
+            status: performance.status,
+            attributes: performance.attributes,
+            formatCode: performance.formatCode,
+            deepLinkUrl: performance.deepLinkUrl,
+            providerMeta: performance.providerMeta,
+          })),
+        });
+      }
+      case "MOVIE_SCHEDULE_RESOLUTION": {
+        const performances = parseMovieShowtimes(payload.documentHtml, observationTime, requestUrl);
+        return Promise.resolve({
+          ok: true,
+          kind: "MOVIE_SCHEDULE_RESOLUTION",
+          performances: performances.map((performance) => ({
+            theatreId: performance.theatreId,
             showtimeId: performance.showtimeId,
             startsAt: performance.showDateTimeUtc,
             movieId: performance.movieId,

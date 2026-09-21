@@ -28,14 +28,16 @@ function runKey(
   overrides: Omit<Partial<RunKeyRow>, "kind"> = {},
 ): RunKeyRow {
   const schedule = kind === "SCHEDULE_RESOLUTION";
+  const movieSchedule = kind === "MOVIE_SCHEDULE_RESOLUTION";
   return {
     runKeyId: "run-key",
     kind,
     providerId: "amc",
-    routeClass: schedule ? "schedule" : "seat",
-    showtimeId: schedule ? null : "amc:showtime:100",
-    theatreId: schedule ? "amc:theatre:2325" : null,
-    localDate: schedule ? "2026-08-12" : null,
+    routeClass: movieSchedule ? "movie-schedule" : schedule ? "schedule" : "seat",
+    showtimeId: schedule || movieSchedule ? null : "amc:showtime:100",
+    theatreId: schedule || movieSchedule ? "amc:theatre:2325" : null,
+    localDate: schedule || movieSchedule ? "2026-08-12" : null,
+    movieSlug: movieSchedule ? "dune-part-3" : null,
     acceptedRevision: "0",
     projectedRevision: "0",
     latestObservationId: null,
@@ -256,6 +258,48 @@ describe("parseObservation (S31.3–S31.5)", () => {
         "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes",
       providerMeta: { rawStatus: "Sellable" },
     });
+  });
+
+  it("maps multi-theatre movie-first schedules with each performance's theatre id", async () => {
+    const result = await parseObservation(
+      payload(
+        makeHtml([
+          {
+            theatreId: 2325,
+            name: "AMC Metreon 16",
+            slug: "amc-metreon-16",
+            postalCode: "94103",
+            stateCode: "CA",
+            utcOffset: "-07:00",
+          },
+          {
+            theatreId: 552,
+            name: "AMC Empire 25",
+            slug: "amc-empire-25",
+            postalCode: "10036",
+            stateCode: "NY",
+            utcOffset: "-04:00",
+          },
+          { movieId: 987, name: "Dune Part 3", slug: "dune-part-3", runTimeMinutes: 155 },
+          { showtimeId: 144239197, status: "Sellable", showDateTimeUtc: "2026-08-13T02:00:00.000Z" },
+          { showtimeId: 145866536, status: "Sellable", showDateTimeUtc: "2026-08-13T02:00:00.000Z" },
+        ]) +
+          `<div id="dune-part-3">Dune Part 3</div>` +
+          `<div role="group" aria-label="Showtimes at AMC Metreon 16"><div id="dune-part-3-amc-metreon-16"></div><h3 id="dune-part-3-amc-metreon-16-imax"><span>IMAX</span></h3><a id="144239197" href="/showtimes/144239197" aria-describedby="dune-part-3 dune-part-3-amc-metreon-16 dune-part-3-amc-metreon-16-imax">10:00pm</a></div>` +
+          `<div>NEARBY THEATRES</div>` +
+          `<div role="group" aria-label="Showtimes at AMC Empire 25"><div id="dune-part-3-amc-empire-25"></div><h3 id="dune-part-3-amc-empire-25-imax"><span>IMAX</span></h3><a id="145866536" href="/showtimes/145866536" aria-describedby="dune-part-3 dune-part-3-amc-empire-25 dune-part-3-amc-empire-25-imax">10:00pm</a></div>`,
+        "/movies/dune-part-3/showtimes",
+      ),
+      runKey("MOVIE_SCHEDULE_RESOLUTION"),
+    );
+
+    if (!result.ok || result.kind !== "MOVIE_SCHEDULE_RESOLUTION") {
+      throw new Error(`expected MOVIE_SCHEDULE_RESOLUTION result, got ${JSON.stringify(result)}`);
+    }
+    expect(result.performances.map((performance) => performance.theatreId)).toEqual([
+      "amc:theatre:2325",
+      "amc:theatre:552",
+    ]);
   });
 
   it("computes a RECHECK verdict from the persisted geometry and fresh bitmap only", async () => {

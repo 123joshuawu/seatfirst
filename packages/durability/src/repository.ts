@@ -295,6 +295,23 @@ export function readAmcMovieCatalogueByNormalizedTitles(
   return runStatement(db, B.AMC_MOVIE_CATALOGUE_READ_BY_NORMALIZED_TITLES, [[...normalizedTitles]]);
 }
 
+/** ADR 0104 / S65 — resolves the movie-first AMC route slug without guessing an upstream URL. */
+export interface AmcMovieCatalogueSlugRow {
+  readonly movie_id: number;
+  readonly slug: string;
+  readonly name: string;
+}
+
+export function resolveAmcMovieCatalogueSlug(
+  db: SqlClient,
+  input: { readonly movieId: number | null; readonly normalizedTitles: readonly string[] },
+): Promise<AmcMovieCatalogueSlugRow[]> {
+  return runStatement(db, B.AMC_MOVIE_CATALOGUE_RESOLVE_SLUG, [
+    input.movieId,
+    [...input.normalizedTitles],
+  ]);
+}
+
 /**
  * S63.4 AMC special-event lookup (`MOVIE_TITLE_SEARCH`): substring match over the
  * AMC-observed catalogue. `query` is escaped caller-side so LIKE metacharacters

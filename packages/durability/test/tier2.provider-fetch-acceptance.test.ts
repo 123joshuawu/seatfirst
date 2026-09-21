@@ -1,14 +1,21 @@
 import { describe, expect, it } from "vitest";
 
-import { acceptFetch, acceptSchedule, stageScheduleAcceptance } from "../src/transactions.js";
+import {
+  acceptFetch,
+  acceptSchedule,
+  stageMovieScheduleAcceptance,
+  stageScheduleAcceptance,
+} from "../src/transactions.js";
 
 import {
   createSearch,
   dispatchRun,
   fetchKey,
+  movieScheduleKey,
   scheduleKey,
   seedProvider,
   subscribe,
+  subscribeMovieSchedule,
 } from "./support/fixtures.js";
 import { useDatabase } from "./support/pg.js";
 
@@ -93,6 +100,67 @@ describe("tier 2 — S8 provider-fetch acceptance seams", () => {
         { showtime_id: "st_s8_a", theatre_id: "theatre_s8" },
         { showtime_id: "st_s8_b", theatre_id: "theatre_s8" },
         { showtime_id: "st_s8_c", theatre_id: "theatre_s8" },
+      ]);
+    });
+
+    it("persists multi-theatre movie observations without warming theatre schedules and falls back for an omitted candidate (S65)", async () => {
+      await seedProvider(db());
+      const theatreA = "amc:theatre:movie_a";
+      const theatreB = "amc:theatre:movie_b";
+      await db().query(
+        `INSERT INTO theatre (theatre_id, provider_id, name, lat, lng, timezone, first_seen_at, last_seen_at)
+         VALUES
+           ($1, 'amc', 'Movie A', 0, 0, 'UTC', now(), now()),
+           ($2, 'amc', 'Movie B', 0, 0, 'UTC', now(), now())`,
+        [theatreA, theatreB],
+      );
+      const key = await movieScheduleKey(db(), "dune-part-3", theatreA, "2026-08-02");
+      const search = await createSearch(db(), 1, { reserve: 2 });
+      await subscribeMovieSchedule(db(), search, key, [theatreA, theatreB]);
+      const run = await dispatchRun(db(), key);
+
+      const result = await stageMovieScheduleAcceptance(db(), run, [
+        {
+          theatreId: theatreA,
+          showtimeId: "st_movie_a",
+          movieId: "amc:movie:42",
+          movieTitle: "Dune Part 3",
+          startsAt: new Date("2026-08-02T19:00:00.000Z"),
+          skipFetch: false,
+          formatCode: "IMAX",
+          auditorium: null,
+          utcOffset: "+00:00",
+          runtimeMinutes: 155,
+          status: "OPEN",
+          deepLinkUrl: "https://example.test/showtimes/st_movie_a/seats",
+          providerMeta: { rawStatus: "Sellable" },
+        },
+      ]);
+
+      expect(result.expandedFor).toEqual([search.searchId]);
+      expect(
+        await db().rows<{ theatre_id: string; movie_id: string }>(
+          `SELECT theatre_id, movie_id FROM performance ORDER BY showtime_id`,
+        ),
+      ).toEqual([{ theatre_id: theatreA, movie_id: "amc:movie:42" }]);
+      expect(
+        await db().one<{ n: string }>(
+          `SELECT count(*) AS n FROM run_key
+           WHERE kind = 'SCHEDULE_RESOLUTION' AND theatre_id = $1 AND local_date = $2`,
+          [theatreA, "2026-08-02"],
+        ),
+      ).toEqual({ n: "0" });
+      expect(
+        await db().rows<{ kind: string; theatre_id: string | null }>(
+          `SELECT rk.kind, rk.theatre_id
+           FROM search_job sj JOIN run_key rk ON rk.run_key_id = sj.run_key_id
+           WHERE sj.search_id = $1 ORDER BY rk.kind`,
+          [search.searchId],
+        ),
+      ).toEqual([
+        { kind: "MOVIE_SCHEDULE_RESOLUTION", theatre_id: theatreA },
+        { kind: "SCHEDULE_RESOLUTION", theatre_id: theatreB },
+        { kind: "SHOWTIME_FETCH", theatre_id: null },
       ]);
     });
 

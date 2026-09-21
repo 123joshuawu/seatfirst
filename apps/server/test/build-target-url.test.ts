@@ -7,14 +7,16 @@ import type { RunKeyRow } from "../src/dispatch/queries.js";
 
 function runKey(kind: RunKeyRow["kind"]): RunKeyRow {
   const schedule = kind === "SCHEDULE_RESOLUTION";
+  const movieSchedule = kind === "MOVIE_SCHEDULE_RESOLUTION";
   return {
     runKeyId: "run-key",
     kind,
     providerId: "amc",
-    routeClass: schedule ? "schedule" : "seat",
-    showtimeId: schedule ? null : "amc:showtime:100",
-    theatreId: schedule ? "amc:theatre:2325" : null,
-    localDate: schedule ? "2026-08-12" : null,
+    routeClass: movieSchedule ? "movie-schedule" : schedule ? "schedule" : "seat",
+    showtimeId: schedule || movieSchedule ? null : "amc:showtime:100",
+    theatreId: schedule || movieSchedule ? "amc:theatre:2325" : null,
+    localDate: schedule || movieSchedule ? "2026-08-12" : null,
+    movieSlug: movieSchedule ? "the-movie-12345" : null,
     acceptedRevision: "0",
     projectedRevision: "0",
     latestObservationId: null,
@@ -62,5 +64,32 @@ describe("createBuildTargetUrl (S31.2)", () => {
       "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes?date=2026-08-12",
     );
     expect(query).toHaveBeenCalledOnce();
+  });
+
+  it("builds a movie schedule URL from the run key movie slug and anchor theatre", async () => {
+    const query = vi.fn(() =>
+      Promise.resolve({
+        rows: [
+          {
+            theatre_id: "amc:theatre:2325",
+            provider_id: "amc",
+            name: "AMC Metreon 16",
+            lat: 37.784,
+            lng: -122.401,
+            market_slug: "san-francisco",
+            timezone: "America/Los_Angeles",
+            address: null,
+            slugs: { "san-francisco": "amc-metreon-16" },
+            first_seen_at: new Date(),
+            last_seen_at: new Date(),
+          },
+        ],
+      }),
+    );
+    const buildTargetUrl = createBuildTargetUrl({ query } as unknown as Pool);
+
+    await expect(buildTargetUrl(runKey("MOVIE_SCHEDULE_RESOLUTION"))).resolves.toBe(
+      "https://www.amctheatres.com/movies/the-movie-12345/showtimes?date=2026-08-12&theatre=amc-metreon-16",
+    );
   });
 });

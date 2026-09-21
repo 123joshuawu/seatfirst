@@ -17,8 +17,12 @@ import { rowBuffer, rowNullableString, rowNumber, rowString } from "../pg-row.js
 export interface Queryable {
   query(text: string, values?: readonly unknown[]): Promise<{ rows: unknown[] }>;
 }
-export type JobKind = "SHOWTIME_FETCH" | "SCHEDULE_RESOLUTION";
-export type RunKeyKind = "SHOWTIME_FETCH" | "SCHEDULE_RESOLUTION" | "RECHECK";
+export type JobKind = "SHOWTIME_FETCH" | "SCHEDULE_RESOLUTION" | "MOVIE_SCHEDULE_RESOLUTION";
+export type RunKeyKind =
+  | "SHOWTIME_FETCH"
+  | "SCHEDULE_RESOLUTION"
+  | "MOVIE_SCHEDULE_RESOLUTION"
+  | "RECHECK";
 
 export interface RunKeyRow {
   readonly runKeyId: string;
@@ -28,6 +32,7 @@ export interface RunKeyRow {
   readonly showtimeId: string | null;
   readonly theatreId: string | null;
   readonly localDate: string | null;
+  readonly movieSlug: string | null;
   readonly acceptedRevision: string;
   readonly projectedRevision: string;
   readonly latestObservationId: string | null;
@@ -151,7 +156,11 @@ function requireRow(value: unknown): Record<string, unknown> {
 /* S40: the two enum-ish columns narrow through explicit membership guards, so a
  * drifted state-machine value throws here instead of masquerading as its TS union. */
 function isJobKind(value: string): value is JobKind {
-  return value === "SHOWTIME_FETCH" || value === "SCHEDULE_RESOLUTION";
+  return (
+    value === "SHOWTIME_FETCH" ||
+    value === "SCHEDULE_RESOLUTION" ||
+    value === "MOVIE_SCHEDULE_RESOLUTION"
+  );
 }
 
 function requireJobKind(row: Record<string, unknown>): JobKind {
@@ -165,7 +174,12 @@ function requireJobKind(row: Record<string, unknown>): JobKind {
 }
 
 function isRunKeyKind(value: string): value is RunKeyKind {
-  return value === "SHOWTIME_FETCH" || value === "SCHEDULE_RESOLUTION" || value === "RECHECK";
+  return (
+    value === "SHOWTIME_FETCH" ||
+    value === "SCHEDULE_RESOLUTION" ||
+    value === "MOVIE_SCHEDULE_RESOLUTION" ||
+    value === "RECHECK"
+  );
 }
 
 function requireRunKeyKind(row: Record<string, unknown>): RunKeyKind {
@@ -187,6 +201,7 @@ function mapRunKeyRow(row: Record<string, unknown>): RunKeyRow {
     showtimeId: rowNullableString(row, "showtime_id"),
     theatreId: rowNullableString(row, "theatre_id"),
     localDate: toDateOnlyOrNull(row["local_date"]),
+    movieSlug: rowNullableString(row, "movie_slug"),
     acceptedRevision: rowString(row, "accepted_revision"),
     projectedRevision: rowString(row, "projected_revision"),
     latestObservationId: rowNullableString(row, "latest_observation_id"),
@@ -230,7 +245,7 @@ export async function findJobContext(db: Queryable, jobId: string): Promise<JobC
        j.job_id, j.search_id, j.kind AS job_kind, j.run_key_id, j.generation, j.state,
        j.lease_expires_at, j.attempt, j.deadline_at, j.fail_cause, j.created_at,
        k.kind AS key_kind, k.provider_id, k.route_class, k.showtime_id, k.theatre_id,
-       k.local_date, k.accepted_revision, k.projected_revision, k.latest_observation_id,
+       k.local_date, k.movie_slug, k.accepted_revision, k.projected_revision, k.latest_observation_id,
        k.latest_captured_at, k.recheck_placement,
        s.session_id, s.idempotency_key, s.spec, s.spec_hash, s.status, s.terminal_cause,
        s.capacity_denied_at, s.deadline_at AS search_deadline_at, s.projected_through,
@@ -280,7 +295,7 @@ export async function findRunContext(db: Queryable, runId: string): Promise<RunC
        r.run_id, r.run_key_id, r.observation_id, r.state, r.generation, r.lease_expires_at,
        r.attempt, r.provider_epoch, r.fail_cause, r.created_at,
        k.kind AS key_kind, k.provider_id, k.route_class, k.showtime_id, k.theatre_id,
-       k.local_date, k.accepted_revision, k.projected_revision, k.latest_observation_id,
+       k.local_date, k.movie_slug, k.accepted_revision, k.projected_revision, k.latest_observation_id,
        k.latest_captured_at, k.recheck_placement,
        s.search_id, s.session_id, s.idempotency_key, s.spec, s.spec_hash, s.status,
        s.terminal_cause, s.capacity_denied_at, s.deadline_at, s.projected_through,
@@ -477,7 +492,7 @@ export async function readAggregatePerformances(
      JOIN observation o ON o.observation_id = pr.observation_id
      JOIN performance p ON p.observation_id = o.observation_id
      JOIN theatre t ON t.theatre_id = p.theatre_id
-     WHERE rs.search_id = $1 AND k.kind = 'SCHEDULE_RESOLUTION'
+     WHERE rs.search_id = $1 AND k.kind IN ('SCHEDULE_RESOLUTION','MOVIE_SCHEDULE_RESOLUTION')
      UNION
      SELECT
        p.showtime_id, p.provider_id, p.theatre_id, p.local_date, p.starts_at,
@@ -580,7 +595,7 @@ export async function readAggregateScheduleOutcome(
     `SELECT rs.schedule_outcome
      FROM run_subscription rs
      JOIN run_key k USING (run_key_id)
-     WHERE rs.search_id = $1 AND k.kind = 'SCHEDULE_RESOLUTION'`,
+     WHERE rs.search_id = $1 AND k.kind IN ('SCHEDULE_RESOLUTION','MOVIE_SCHEDULE_RESOLUTION')`,
     [searchId],
   );
   const outcomes = result.rows.map((value) =>

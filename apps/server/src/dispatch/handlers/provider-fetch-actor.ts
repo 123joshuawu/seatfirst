@@ -62,6 +62,7 @@ import {
   stageRecheckComplete,
   stageRecheckFail,
   stageScheduleAcceptance,
+  stageMovieScheduleAcceptance,
   updatePerformanceProduct,
   uploadDiagnosticBlob,
   upsertMovie,
@@ -88,6 +89,23 @@ import type { RunHandlerContext } from "../types.js";
  * cause or any other parse failure. There is no default implementation — S8 ships the
  * seam, P5 supplies the real parser.
  */
+type ParsedSchedulePerformance = Pick<
+  Performance,
+  | "auditorium"
+  | "utcOffset"
+  | "runtimeMinutes"
+  | "status"
+  | "attributes"
+  | "formatCode"
+  | "deepLinkUrl"
+  | "providerMeta"
+  | "movieTitle"
+> & {
+  readonly showtimeId: string;
+  readonly startsAt: Date;
+  readonly movieId: string;
+};
+
 export type ParseResult =
   | Readonly<{
       ok: true;
@@ -115,22 +133,12 @@ export type ParseResult =
        * literal `null`, never from the seam. S24.5 adds `movieTitle` — picked so the same
        * acceptance can populate the movie catalogue (S24.5b).
        */
-      performances: readonly (Pick<
-        Performance,
-        | "auditorium"
-        | "utcOffset"
-        | "runtimeMinutes"
-        | "status"
-        | "attributes"
-        | "formatCode"
-        | "deepLinkUrl"
-        | "providerMeta"
-        | "movieTitle"
-      > & {
-        readonly showtimeId: string;
-        readonly startsAt: Date;
-        readonly movieId: string;
-      })[];
+      performances: readonly ParsedSchedulePerformance[];
+    }>
+  | Readonly<{
+      ok: true;
+      kind: "MOVIE_SCHEDULE_RESOLUTION";
+      performances: readonly (ParsedSchedulePerformance & { readonly theatreId: string })[];
     }>
   | Readonly<{ ok: true; kind: "RECHECK"; placementAvailable: boolean }>
   | Readonly<{
@@ -876,6 +884,39 @@ async function mapNavigationOutcome(
         );
         // S16.14 — charge only AFTER the transaction committed, and only the
         // subscribers that actually transitioned (exactly-once, see the helper).
+        await chargeFannedInSubscribers(deps, ctx.logger, handle, kind, accepted.fannedIn);
+        recordFetchDuration(deps.metrics, startedAt, "FULL");
+        return;
+      }
+      if (parsed.kind === "MOVIE_SCHEDULE_RESOLUTION") {
+        const capturedAt = new Date();
+        const accepted = await withTransaction(deps.pool, (tx) =>
+          stageMovieScheduleAcceptance(
+            tx,
+            handle,
+            parsed.performances.map((performance) => ({
+              theatreId: performance.theatreId,
+              showtimeId: performance.showtimeId,
+              movieId: performance.movieId,
+              movieTitle: performance.movieTitle,
+              startsAt: performance.startsAt,
+              skipFetch: performancePolicy(performance.status) === "SKIP_SOLD_OUT",
+              formatCode: performance.formatCode,
+              auditorium: performance.auditorium == null ? null : String(performance.auditorium),
+              utcOffset: performance.utcOffset,
+              runtimeMinutes: performance.runtimeMinutes,
+              status: performance.status,
+              deepLinkUrl: performance.deepLinkUrl,
+              providerMeta: performance.providerMeta,
+            })),
+            {
+              capturedAt,
+              ...(deps.scheduleSubscriberFilter !== undefined
+                ? { filter: deps.scheduleSubscriberFilter }
+                : {}),
+            },
+          ),
+        );
         await chargeFannedInSubscribers(deps, ctx.logger, handle, kind, accepted.fannedIn);
         recordFetchDuration(deps.metrics, startedAt, "FULL");
         return;

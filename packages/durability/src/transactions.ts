@@ -622,7 +622,7 @@ export async function stageScheduleAcceptance(
       // Check terminality to decide whether to deny.
       const pendingCheck = (
         await db.query(
-          `SELECT 1 FROM run_subscription rs JOIN run_key rk USING (run_key_id) WHERE rs.search_id = $1 AND rk.kind='SCHEDULE_RESOLUTION' AND rs.schedule_match_count IS NULL LIMIT 1`,
+          `SELECT 1 FROM run_subscription rs JOIN run_key rk USING (run_key_id) WHERE rs.search_id = $1 AND rk.kind IN ('SCHEDULE_RESOLUTION','MOVIE_SCHEDULE_RESOLUTION') AND rs.schedule_match_count IS NULL LIMIT 1`,
           [searchId],
         )
       ).rows;
@@ -640,6 +640,349 @@ export async function stageScheduleAcceptance(
     await mustWin(db, B.B6_SUBSCRIPTION_OUTCOME, [fenced.run_key_id, searchId, outcome]);
     await mustWin(db, B.B6_SEARCH_RUNNING, [searchId, outcome]);
     expandedFor.push(searchId);
+  }
+
+  return { acceptedRevision: rev.accepted_revision, fannedIn: fanIn, expandedFor };
+}
+
+/**
+ * A movie-first payload spans theatre schedules, but is deliberately sparse: accepting it
+ * must write its observed performances without creating a theatre-day cache entry.  Product
+ * columns travel with the same atomic acceptance so aggregate readers never observe a
+ * base performance without its catalogue data.
+ */
+export interface MovieScheduleShowtime extends ScheduleShowtime {
+  readonly theatreId: string;
+  readonly movieTitle: string;
+  readonly auditorium: string | null;
+  readonly utcOffset: string | null;
+  readonly runtimeMinutes: number | null;
+  readonly status: string;
+  readonly deepLinkUrl: string | null;
+  readonly providerMeta: unknown;
+}
+
+/**
+ * S65 / ADR 0104 movie-first acceptance.  It mirrors the B5/B6 effects of a normal
+ * schedule acceptance while using each payload performance's theatre id and intentionally
+ * never deriving a `(theatre_id, local_date)` complete schedule cache row.
+ */
+export async function stageMovieScheduleAcceptance(
+  db: SqlClient,
+  run: RunHandle,
+  showtimes: readonly MovieScheduleShowtime[],
+  opts: { readonly capturedAt?: Date; readonly filter?: ScheduleSubscriberFilter } = {},
+): Promise<AcceptResult & { readonly expandedFor: string[] }> {
+  const capturedAt = (opts.capturedAt ?? new Date()).toISOString();
+  const outcome = showtimes.length > 0 ? "RESOLVED" : "EMPTY_RESOLVED";
+  const fenced = await mustWin<{
+    run_key_id: string;
+    observation_id: string;
+    provider_epoch: string;
+  }>(db, B.B5A_FENCE, [run.runId, run.generation]);
+  const key = await mustWin<{
+    kind: string;
+    provider_id: string;
+    route_class: string;
+  }>(db, B.B5A_DERIVE_KEY, [fenced.run_key_id]);
+  if (key.kind !== "MOVIE_SCHEDULE_RESOLUTION") {
+    throw new Error(`stageMovieScheduleAcceptance expected MOVIE_SCHEDULE_RESOLUTION, got ${key.kind}`);
+  }
+  await mustWin(db, B.B5B_EPOCH_FENCE, [key.provider_id, fenced.provider_epoch, key.route_class]);
+  await mustWin(db, B.B5C_OBSERVATION, [
+    fenced.observation_id,
+    fenced.run_key_id,
+    run.runId,
+    capturedAt,
+  ]);
+
+  const keyRow = firstRow(
+    (await db.query(`SELECT local_date FROM run_key WHERE run_key_id = $1`, [fenced.run_key_id]))
+      .rows,
+    "stageMovieScheduleAcceptance",
+  );
+  requireFields(keyRow, "stageMovieScheduleAcceptance", { local_date: "date" });
+  const localDate = keyRow["local_date"] as Date;
+  const movies = new Map<string, string>();
+  for (const st of showtimes) {
+    await mustWin(db, B.B5C_PERFORMANCE, [
+      st.showtimeId,
+      key.provider_id,
+      st.theatreId,
+      localDate,
+      st.startsAt.toISOString(),
+      fenced.observation_id,
+      JSON.stringify({}),
+    ]);
+    movies.set(st.movieId, st.movieTitle);
+  }
+  for (const [movieId, title] of movies) {
+    await mustWin(db, B.MOVIE_UPSERT, [movieId, key.provider_id, title, capturedAt, capturedAt]);
+  }
+  for (const st of showtimes) {
+    await mustWin(db, B.PERFORMANCE_UPDATE_PRODUCT, [
+      st.showtimeId,
+      st.movieId,
+      st.auditorium,
+      st.utcOffset,
+      st.runtimeMinutes,
+      st.status,
+      st.formatCode ?? null,
+      null,
+      st.deepLinkUrl,
+      JSON.stringify(st.providerMeta) ?? "{}",
+      null,
+      capturedAt,
+    ]);
+  }
+
+  const rev = await mustWin<{ accepted_revision: string }>(db, B.B5D_ACCEPTED_REVISION, [
+    fenced.run_key_id,
+    fenced.observation_id,
+    capturedAt,
+  ]);
+  const fanIn = await runRows<{ search_id: string; seq: string }>(db, B.B5_FANIN, [
+    fenced.run_key_id,
+    run.runId,
+    key.provider_id,
+    key.kind,
+    JSON.stringify({ observationId: fenced.observation_id, outcome }),
+  ]);
+
+  const observedTheatreIds = new Set(showtimes.map((showtime) => showtime.theatreId));
+  const expandedFor: string[] = [];
+  for (const row of fanIn) {
+    const subscription = firstRow(
+      (
+        await db.query(
+          `SELECT rs.deadline_at, rs.movie_candidate_theatre_ids, s.spec
+           FROM run_subscription rs
+           JOIN search s ON s.search_id = rs.search_id
+           WHERE rs.run_key_id = $1 AND rs.search_id = $2`,
+          [fenced.run_key_id, row.search_id],
+        )
+      ).rows,
+      "stageMovieScheduleAcceptance",
+    );
+    requireFields(subscription, "stageMovieScheduleAcceptance", { deadline_at: "date" });
+    const encodedCandidates = subscription["movie_candidate_theatre_ids"];
+    if (
+      !Array.isArray(encodedCandidates) ||
+      encodedCandidates.length === 0 ||
+      encodedCandidates.some((candidate) => typeof candidate !== "string")
+    ) {
+      throw new Error("stageMovieScheduleAcceptance requires a non-empty movie candidate theatre array");
+    }
+    const candidateTheatreIds = [...new Set(encodedCandidates as string[])];
+    const theatreRows = (
+      await db.query(
+        `SELECT theatre_id, timezone FROM theatre WHERE theatre_id = ANY($1::text[])`,
+        [candidateTheatreIds],
+      )
+    ).rows;
+    const timezoneByTheatre = new Map<string, string>();
+    for (const theatre of theatreRows) {
+      if (
+        typeof theatre !== "object" ||
+        theatre === null ||
+        typeof (theatre as Record<string, unknown>)["theatre_id"] !== "string" ||
+        typeof (theatre as Record<string, unknown>)["timezone"] !== "string"
+      ) {
+        throw new Error("stageMovieScheduleAcceptance received an invalid theatre row");
+      }
+      const values = theatre as Record<string, unknown>;
+      timezoneByTheatre.set(values["theatre_id"] as string, values["timezone"] as string);
+    }
+    if (timezoneByTheatre.size !== candidateTheatreIds.length) {
+      throw new Error("stageMovieScheduleAcceptance candidate theatre has no catalogue row");
+    }
+
+    const candidateSet = new Set(candidateTheatreIds);
+    const filteredShowtimes: ScheduleShowtime[] = [];
+    for (const theatreId of candidateTheatreIds) {
+      const forTheatre = showtimes.filter(
+        (showtime) => showtime.theatreId === theatreId && candidateSet.has(showtime.theatreId),
+      );
+      const timezone = timezoneByTheatre.get(theatreId)!;
+      const filtered = opts.filter
+        ? opts.filter({
+            searchId: row.search_id,
+            spec: subscription["spec"] ?? null,
+            timezone,
+            showtimes: forTheatre,
+          })
+        : forTheatre;
+      filteredShowtimes.push(...filtered);
+    }
+    const filteredCount = filteredShowtimes.filter((showtime) => !showtime.skipFetch).length;
+
+    const reservationLock = (
+      await db.query(
+        `SELECT fresh_match_seed, reserved_total, schedule_slot_held, schedule_reconciled
+         FROM admission_reservation WHERE search_id = $1 FOR UPDATE`,
+        [row.search_id],
+      )
+    ).rows[0] as
+      | {
+          fresh_match_seed: number;
+          reserved_total: string;
+          schedule_slot_held: boolean;
+          schedule_reconciled: boolean;
+        }
+      | undefined;
+    let shouldDeny = false;
+    if (reservationLock !== undefined) {
+      const existingSumRow = firstRow(
+        (
+          await db.query(
+            `SELECT COALESCE(SUM(schedule_match_count),0)::integer AS sum
+             FROM run_subscription
+             WHERE search_id = $1 AND schedule_match_count IS NOT NULL`,
+            [row.search_id],
+          )
+        ).rows,
+        "stageMovieScheduleAcceptance",
+      );
+      requireFields(existingSumRow, "stageMovieScheduleAcceptance", { sum: "number" });
+      const paLock = (
+        await db.query(
+          `SELECT pending_cost, pending_cost_limit
+           FROM provider_admission WHERE provider_id = $1 FOR UPDATE`,
+          [key.provider_id],
+        )
+      ).rows[0] as { pending_cost: string; pending_cost_limit: string } | undefined;
+      const cumulative =
+        reservationLock.fresh_match_seed + (existingSumRow["sum"] as number) + filteredCount;
+      const durableDelta = cumulative - Number(reservationLock.reserved_total);
+      if (
+        cumulative > 200 ||
+        (paLock !== undefined &&
+          Number(paLock.pending_cost) + durableDelta > Number(paLock.pending_cost_limit))
+      ) {
+        shouldDeny = true;
+      }
+    }
+
+    if (shouldDeny) {
+      await runRows(db, B.B6_SET_SCHEDULE_MATCH_COUNT, [
+        fenced.run_key_id,
+        row.search_id,
+        filteredCount,
+      ]);
+      const denied = await runRows(db, B.B6_DENY_CAPACITY, [row.search_id]);
+      if (denied.length > 0) await cancelOrphanedWorkOnDenial(db, row.search_id);
+      await mustWin(db, B.B6_SUBSCRIPTION_OUTCOME, [fenced.run_key_id, row.search_id, outcome]);
+      await mustWin(db, B.B6_SEARCH_RUNNING, [row.search_id, outcome]);
+      expandedFor.push(row.search_id);
+      continue;
+    }
+
+    const deadline = (subscription["deadline_at"] as Date).toISOString();
+    for (const st of filteredShowtimes) {
+      if (st.skipFetch) continue;
+      const fetchRunKeyId = `k_fetch_${key.provider_id}_${st.showtimeId}`;
+      await mustWin(db, B.RUN_KEY_UPSERT, [
+        fetchRunKeyId,
+        "SHOWTIME_FETCH",
+        key.provider_id,
+        "seat",
+        st.showtimeId,
+        null,
+        null,
+      ]);
+      const alreadySubscribed = (
+        await db.query(`SELECT 1 FROM run_subscription WHERE run_key_id = $1 AND search_id = $2`, [
+          fetchRunKeyId,
+          row.search_id,
+        ])
+      ).rows;
+      if (alreadySubscribed.length > 0) continue;
+      const jobId = randomUUID();
+      await mustWin(db, B.JOB_CREATE, [
+        jobId,
+        row.search_id,
+        "SHOWTIME_FETCH",
+        fetchRunKeyId,
+        deadline,
+      ]);
+      await mustWin(db, B.SUBSCRIPTION_CREATE, [fetchRunKeyId, row.search_id, jobId, deadline]);
+      await runRows(db, B.COST_ABUSE_JOIN, [fetchRunKeyId, row.search_id]);
+      await mustWin(db, B.OUTBOX_CREATE_JOB, [jobId, null]);
+    }
+
+    // AMC's nearby payload can omit outlier theatres.  Only absent theatres fall back;
+    // a theatre represented by an empty group is a successful zero-showtime observation.
+    for (const theatreId of candidateTheatreIds) {
+      if (observedTheatreIds.has(theatreId)) continue;
+      const fallbackRunKeyId = `k_sched_${key.provider_id}_${theatreId}_${localDate
+        .toISOString()
+        .slice(0, 10)}`;
+      await mustWin(db, B.RUN_KEY_UPSERT, [
+        fallbackRunKeyId,
+        "SCHEDULE_RESOLUTION",
+        key.provider_id,
+        "schedule",
+        null,
+        theatreId,
+        localDate,
+      ]);
+      const alreadySubscribed = (
+        await db.query(`SELECT 1 FROM run_subscription WHERE run_key_id = $1 AND search_id = $2`, [
+          fallbackRunKeyId,
+          row.search_id,
+        ])
+      ).rows;
+      if (alreadySubscribed.length > 0) continue;
+      const jobId = randomUUID();
+      await mustWin(db, B.JOB_CREATE, [
+        jobId,
+        row.search_id,
+        "SCHEDULE_RESOLUTION",
+        fallbackRunKeyId,
+        deadline,
+      ]);
+      await mustWin(db, B.SUBSCRIPTION_CREATE, [
+        fallbackRunKeyId,
+        row.search_id,
+        jobId,
+        deadline,
+      ]);
+      await runRows(db, B.COST_ABUSE_JOIN, [fallbackRunKeyId, row.search_id]);
+      await mustWin(db, B.OUTBOX_CREATE_JOB, [jobId, null]);
+    }
+
+    await runRows(db, B.B6_SET_SCHEDULE_MATCH_COUNT, [
+      fenced.run_key_id,
+      row.search_id,
+      filteredCount,
+    ]);
+    const reconciled = await runRows(db, B.B6_RECONCILE_SEARCH_WIDE, [
+      key.provider_id,
+      row.search_id,
+    ]);
+    if (reconciled.length === 0) {
+      const pendingSchedule = (
+        await db.query(
+          `SELECT 1 FROM run_subscription rs
+           JOIN run_key rk USING (run_key_id)
+           WHERE rs.search_id = $1
+             AND rk.kind IN ('SCHEDULE_RESOLUTION','MOVIE_SCHEDULE_RESOLUTION')
+             AND rs.schedule_match_count IS NULL
+           LIMIT 1`,
+          [row.search_id],
+        )
+      ).rows;
+      if (pendingSchedule.length === 0) {
+        const postCheck = await readReconciliationPostCheck(db, row.search_id);
+        if (postCheck && !postCheck.schedule_reconciled && postCheck.schedule_slot_held) {
+          const denied = await runRows(db, B.B6_DENY_CAPACITY, [row.search_id]);
+          if (denied.length > 0) await cancelOrphanedWorkOnDenial(db, row.search_id);
+        }
+      }
+    }
+    await mustWin(db, B.B6_SUBSCRIPTION_OUTCOME, [fenced.run_key_id, row.search_id, outcome]);
+    await mustWin(db, B.B6_SEARCH_RUNNING, [row.search_id, outcome]);
+    expandedFor.push(row.search_id);
   }
 
   return { acceptedRevision: rev.accepted_revision, fannedIn: fanIn, expandedFor };
@@ -711,7 +1054,7 @@ export async function failRun(
     ]);
     // S36: every affected schedule subscription must durably record its zero count and
     // participate in the search-wide all-terminal check, exactly as the accepted path does.
-    if (key.kind === "SCHEDULE_RESOLUTION") {
+    if (key.kind === "SCHEDULE_RESOLUTION" || key.kind === "MOVIE_SCHEDULE_RESOLUTION") {
       for (const a of effects) {
         await runRows(db, B.B6_SET_SCHEDULE_MATCH_COUNT, [runKeyId, a.search_id, 0]);
         const reconciled = await runRows(db, B.B6_RECONCILE_SEARCH_WIDE, [
@@ -721,7 +1064,7 @@ export async function failRun(
         if (reconciled.length === 0) {
           const pendingCheck = (
             await db.query(
-              `SELECT 1 FROM run_subscription rs JOIN run_key rk USING (run_key_id) WHERE rs.search_id = $1 AND rk.kind='SCHEDULE_RESOLUTION' AND rs.schedule_match_count IS NULL LIMIT 1`,
+              `SELECT 1 FROM run_subscription rs JOIN run_key rk USING (run_key_id) WHERE rs.search_id = $1 AND rk.kind IN ('SCHEDULE_RESOLUTION','MOVIE_SCHEDULE_RESOLUTION') AND rs.schedule_match_count IS NULL LIMIT 1`,
               [a.search_id],
             )
           ).rows;
@@ -1139,6 +1482,7 @@ export interface FailedExhaustedRun {
   readonly affected: { search_id: string; seq: string }[];
 }
 
+
 /**
  * Defect-1 remediation: discovers `LEASED` runs whose lease has expired AND whose
  * attempts are exhausted (`SWEEP_RECLAIM_RUNS` deliberately excludes these — see its
@@ -1226,7 +1570,7 @@ export async function sweepFailExhaustedJobs(
         [runKeyId, searchId, key.kind, key.provider_id, JSON.stringify({ cause })],
       );
       // S36: failed schedule job contributes zero to durable aggregate, same as direct failRun.
-      if (key.kind === "SCHEDULE_RESOLUTION") {
+      if (key.kind === "SCHEDULE_RESOLUTION" || key.kind === "MOVIE_SCHEDULE_RESOLUTION") {
         await runRows(db, B.B6_SET_SCHEDULE_MATCH_COUNT, [runKeyId, searchId, 0]);
         const reconciled = await runRows(db, B.B6_RECONCILE_SEARCH_WIDE, [
           key.provider_id,
@@ -1235,7 +1579,7 @@ export async function sweepFailExhaustedJobs(
         if (reconciled.length === 0) {
           const pendingCheck = (
             await db.query(
-              `SELECT 1 FROM run_subscription rs JOIN run_key rk USING (run_key_id) WHERE rs.search_id = $1 AND rk.kind='SCHEDULE_RESOLUTION' AND rs.schedule_match_count IS NULL LIMIT 1`,
+              `SELECT 1 FROM run_subscription rs JOIN run_key rk USING (run_key_id) WHERE rs.search_id = $1 AND rk.kind IN ('SCHEDULE_RESOLUTION','MOVIE_SCHEDULE_RESOLUTION') AND rs.schedule_match_count IS NULL LIMIT 1`,
               [searchId],
             )
           ).rows;
@@ -1330,8 +1674,6 @@ function deriveControlTransition(trigger: ProviderControlTrigger): DerivedContro
 
 /**
  * B9's halt/pause body without BEGIN/COMMIT — exposed separately so crash tests can kill
- * the backend after every effect has executed but before any is durable.
- *
  * Order is load-bearing: the fence bump precedes the status write. If the status write
  * went first, a crash between the two would persist the new status under the OLD epoch,
  * and an acceptance that already passed B5(b) with that epoch could commit against a
@@ -1425,6 +1767,7 @@ export async function stageReopenProviderScope(
  * REQUIRES a single-connection `db` — see `acceptFetch`'s doc comment above.
  */
 export async function reopenProviderScope(
+
   db: TransactionClient,
   providerId: string,
   routeClass: string,
@@ -1460,6 +1803,14 @@ export interface SearchCreationScheduleKey {
   readonly localDate: string;
 }
 
+/** S65: one movie-first cluster run per AMC market and local date. */
+export interface SearchCreationMovieScheduleKey {
+  readonly movieSlug: string;
+  readonly anchorTheatreId: string;
+  readonly candidateTheatreIds: readonly string[];
+  readonly localDate: string;
+}
+
 export interface StageSearchCreationInput {
   readonly searchId: string;
   readonly sessionId: string;
@@ -1478,6 +1829,8 @@ export interface StageSearchCreationInput {
   readonly reserve: number;
   /** S36: one entry per planned cold date; empty means all-fresh. Replaces the old single scheduleKey. */
   readonly scheduleKeys: readonly SearchCreationScheduleKey[];
+  /** S65: movie-first cluster work replacing per-theatre schedule keys for an eligible search. */
+  readonly movieScheduleKeys?: readonly SearchCreationMovieScheduleKey[];
   /** The warm/mixed path's policy-eligible, window-matching showtimes; may be empty on all-cold. */
   readonly showtimes: readonly SearchCreationShowtime[];
   /** S36: count of policy-eligible, window-matching fresh performances for which this transaction creates SHOWTIME_FETCH work. Durably persisted as fresh_match_seed. Must be 0..200. */
@@ -1593,7 +1946,9 @@ export async function stageSearchCreation(
       `stageSearchCreation: freshMatchCount ${input.freshMatchCount} must be >= showtimes.length ${input.showtimes.length}`,
     );
   }
-  const coldDelta = input.scheduleKeys.length > 0 ? 1 : 0;
+  const movieScheduleKeys = input.movieScheduleKeys ?? [];
+  const hasScheduleWork = input.scheduleKeys.length > 0 || movieScheduleKeys.length > 0;
+  const coldDelta = hasScheduleWork ? 1 : 0;
   const inserted = await runRows<{ search_id: string }>(db, B.B1_CREATE_SEARCH, [
     input.searchId,
     input.sessionId,
@@ -1650,8 +2005,7 @@ export async function stageSearchCreation(
     throw new AdmissionRejectedError(input.providerId);
   }
 
-  const status: "PENDING_SCHEDULE" | "RUNNING" =
-    input.scheduleKeys.length === 0 ? "RUNNING" : "PENDING_SCHEDULE";
+  const status: "PENDING_SCHEDULE" | "RUNNING" = hasScheduleWork ? "PENDING_SCHEDULE" : "RUNNING";
 
   await mustWin(db, B.B7_UPSERT_AGGREGATE, [
     input.searchId,
@@ -1742,6 +2096,38 @@ export async function stageSearchCreation(
       deadline,
     ]);
     await mustWin(db, B.SUBSCRIPTION_CREATE, [runKeyId, input.searchId, jobId, deadline]);
+    await runRows(db, B.COST_ABUSE_JOIN, [runKeyId, input.searchId]);
+    await mustWin(db, B.OUTBOX_CREATE_JOB, [jobId, input.traceparent]);
+  }
+
+  for (const key of movieScheduleKeys) {
+    if (key.candidateTheatreIds.length === 0) {
+      throw new Error("stageSearchCreation: movie schedule key requires a candidate theatre");
+    }
+    const runKeyId =
+      `k_movie_sched_${input.providerId}_${key.movieSlug}_${key.anchorTheatreId}_${key.localDate}`;
+    await mustWin(db, B.MOVIE_SCHEDULE_RUN_KEY_UPSERT, [
+      runKeyId,
+      input.providerId,
+      key.movieSlug,
+      key.anchorTheatreId,
+      key.localDate,
+    ]);
+    const jobId = randomUUID();
+    await mustWin(db, B.JOB_CREATE, [
+      jobId,
+      input.searchId,
+      "MOVIE_SCHEDULE_RESOLUTION",
+      runKeyId,
+      deadline,
+    ]);
+    await mustWin(db, B.MOVIE_SCHEDULE_SUBSCRIPTION_CREATE, [
+      runKeyId,
+      input.searchId,
+      jobId,
+      deadline,
+      JSON.stringify(key.candidateTheatreIds),
+    ]);
     await runRows(db, B.COST_ABUSE_JOIN, [runKeyId, input.searchId]);
     await mustWin(db, B.OUTBOX_CREATE_JOB, [jobId, input.traceparent]);
   }

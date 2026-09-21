@@ -116,7 +116,7 @@ export async function createSearch(
 
 export interface KeyFixture {
   readonly runKeyId: string;
-  readonly kind: "SHOWTIME_FETCH" | "SCHEDULE_RESOLUTION";
+  readonly kind: "SHOWTIME_FETCH" | "SCHEDULE_RESOLUTION" | "MOVIE_SCHEDULE_RESOLUTION";
   readonly showtimeId: string | null;
   readonly theatreId: string | null;
   readonly localDate: string | null;
@@ -163,6 +163,30 @@ export async function scheduleKey(
   return { runKeyId, kind: "SCHEDULE_RESOLUTION", showtimeId: null, theatreId, localDate };
 }
 
+export async function movieScheduleKey(
+  db: Db,
+  movieSlug: string,
+  anchorTheatreId: string,
+  localDate: string,
+  providerId = PROVIDER,
+): Promise<KeyFixture> {
+  const runKeyId = `k_movie_sched_${providerId}_${movieSlug}_${anchorTheatreId}_${localDate}`;
+  await mustWin(db, B.MOVIE_SCHEDULE_RUN_KEY_UPSERT, [
+    runKeyId,
+    providerId,
+    movieSlug,
+    anchorTheatreId,
+    localDate,
+  ]);
+  return {
+    runKeyId,
+    kind: "MOVIE_SCHEDULE_RESOLUTION",
+    showtimeId: null,
+    theatreId: anchorTheatreId,
+    localDate,
+  };
+}
+
 export interface SubscriptionFixture {
   readonly jobId: string;
   readonly runKeyId: string;
@@ -182,6 +206,29 @@ export async function subscribe(
   // S36 clean cutover: SUBSCRIPTION_CREATE now 4 args (no admission_counted); slot is search-level.
   // opts.admissionCounted retained for call-site compat but ignored — S36 keeps one slot per search.
   await mustWin(db, B.SUBSCRIPTION_CREATE, [key.runKeyId, search.searchId, jobId, deadline]);
+  await mustWin(db, B.OUTBOX_CREATE_JOB, [jobId, null]);
+  return { jobId, runKeyId: key.runKeyId, searchId: search.searchId };
+}
+
+export async function subscribeMovieSchedule(
+  db: Db,
+  search: SearchFixture,
+  key: KeyFixture,
+  candidateTheatreIds: readonly string[],
+): Promise<SubscriptionFixture> {
+  if (key.kind !== "MOVIE_SCHEDULE_RESOLUTION") {
+    throw new Error("subscribeMovieSchedule requires a movie schedule key");
+  }
+  const jobId = id("job");
+  const deadline = search.deadlineAt.toISOString();
+  await mustWin(db, B.JOB_CREATE, [jobId, search.searchId, key.kind, key.runKeyId, deadline]);
+  await mustWin(db, B.MOVIE_SCHEDULE_SUBSCRIPTION_CREATE, [
+    key.runKeyId,
+    search.searchId,
+    jobId,
+    deadline,
+    JSON.stringify(candidateTheatreIds),
+  ]);
   await mustWin(db, B.OUTBOX_CREATE_JOB, [jobId, null]);
   return { jobId, runKeyId: key.runKeyId, searchId: search.searchId };
 }

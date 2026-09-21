@@ -39,6 +39,7 @@ import {
 import type {
   CreateResultGroup,
   CreateSearchResponse,
+  PerformancePredicate,
   ScheduleWindowPlan,
   SearchSpec,
   ShowtimeStatus,
@@ -51,6 +52,7 @@ import {
   poolClient,
   readScheduleRange,
   readTheatreById,
+  resolveAmcMovieCatalogueSlug,
   stageSearchCreation,
   THEATRE_READ_BY_ID,
   withTransaction,
@@ -144,6 +146,53 @@ export function resolveScheduleWindow(
     }
     throw error;
   }
+}
+
+/**
+ * Returns the sole movie constraint only when the predicate is a MOVIE leaf, optionally
+ * wrapped by AND predicates that add non-movie constraints.  OR/NOT and multiple movie
+ * leaves are deliberately not reducible to one AMC catalogue movie.
+ */
+export function extractSingleMoviePredicate(
+  predicate: PerformancePredicate,
+): { readonly id: string; readonly titles: readonly string[] } | null {
+  let movie: { readonly id: string; readonly titles: readonly string[] } | null = null;
+  let invalid = false;
+  const visit = (node: PerformancePredicate): void => {
+    if (invalid) return;
+    if (node.kind === "MOVIE") {
+      if (node.ids.length !== 1 || movie !== null) {
+        invalid = true;
+        return;
+      }
+      movie = { id: node.ids[0]!, titles: node.titles ?? [] };
+      return;
+    }
+    if (node.kind === "AND") {
+      for (const child of node.of) visit(child);
+      return;
+    }
+    if (node.kind === "OR" || node.kind === "NOT") {
+      invalid = true;
+    }
+  };
+  visit(predicate);
+  return invalid ? null : movie;
+}
+
+function amcCatalogueMovieId(value: string, providerId: string): number | null {
+  if (providerId !== "amc") return null;
+  const parsed = parseNamespacedId(value);
+  if (
+    !parsed.ok ||
+    parsed.value.providerId !== providerId ||
+    parsed.value.kind !== "movie" ||
+    !/^[0-9]+$/.test(parsed.value.raw)
+  ) {
+    return null;
+  }
+  const movieId = Number(parsed.value.raw);
+  return Number.isSafeInteger(movieId) && movieId > 0 && movieId <= 2_147_483_647 ? movieId : null;
 }
 
 /**
@@ -742,6 +791,7 @@ export const create = t.procedure
     // request if ANY is missing (fail-closed for LIST). For AREA this is structurally
     // unreachable (candidates came from catalogue), but keep defense-in-depth. Skip
     // entirely when resolvedTheatres is empty (AREA zero-radius-matches: nothing to check).
+    const theatreMarketSlugById = new Map<string, string | null>();
     const theatreTimezoneById = new Map<string, string>();
     if (resolvedTheatres.length > 0) {
       const theatreResults = await Promise.all(
@@ -756,6 +806,7 @@ export const create = t.procedure
             message: THEATRE_READ_BY_ID.zeroRowsMeans,
           });
         }
+        theatreMarketSlugById.set(resolvedTheatres[i]!.theatreId, theatre.market_slug);
         theatreTimezoneById.set(resolvedTheatres[i]!.theatreId, theatre.timezone);
       }
     }
@@ -954,7 +1005,50 @@ export const create = t.procedure
         (t) => !excluded.has(t.performance.showtimeId),
       );
     }
-    const scheduleKeys = allScheduleKeys;
+    const singleMovie = extractSingleMoviePredicate(normalizedSpec.where);
+    const movieScheduleKeys: {
+      movieSlug: string;
+      anchorTheatreId: string;
+      candidateTheatreIds: string[];
+      localDate: string;
+    }[] = [];
+    const movieCatalogueId =
+      singleMovie === null ? null : amcCatalogueMovieId(singleMovie.id, providerId);
+    const catalogueRows =
+      singleMovie === null
+        ? []
+        : await resolveAmcMovieCatalogueSlug(poolClient(ctx.db), {
+            movieId: movieCatalogueId,
+            normalizedTitles: singleMovie.titles.map((title) => title.trim().toLowerCase()),
+          });
+    const movieSlug = catalogueRows[0]?.slug;
+    const movieCoveredScheduleKeys = new Set<string>();
+    if (movieSlug !== undefined && movieSlug !== "") {
+      const clusters = new Map<string, { theatreId: string; localDate: string }[]>();
+      for (const scheduleKey of allScheduleKeys) {
+        const marketSlug = theatreMarketSlugById.get(scheduleKey.theatreId);
+        if (marketSlug === undefined || marketSlug === null) continue;
+        const clusterKey = `${marketSlug}\u0000${scheduleKey.localDate}`;
+        const cluster = clusters.get(clusterKey);
+        if (cluster === undefined) clusters.set(clusterKey, [scheduleKey]);
+        else cluster.push(scheduleKey);
+      }
+      for (const cluster of clusters.values()) {
+        const anchor = cluster[0]!;
+        movieScheduleKeys.push({
+          movieSlug,
+          anchorTheatreId: anchor.theatreId,
+          candidateTheatreIds: cluster.map((candidate) => candidate.theatreId),
+          localDate: anchor.localDate,
+        });
+        for (const candidate of cluster) {
+          movieCoveredScheduleKeys.add(`${candidate.theatreId}\u0000${candidate.localDate}`);
+        }
+      }
+    }
+    const scheduleKeys = allScheduleKeys.filter(
+      (key) => !movieCoveredScheduleKeys.has(`${key.theatreId}\u0000${key.localDate}`),
+    );
     const showtimes = filteredRankedForAdmission.map((t) => ({
       showtimeId: t.performance.showtimeId,
       dispatchRank: t.dispatchRank,
@@ -966,7 +1060,11 @@ export const create = t.procedure
     // body — before any durable write and without charging a search unit (the charge
     // only runs when `result.kind === "created"`). Cold/mixed searches keep the S36.5
     // provisional reserve path and are never blocked here.
-    if (scheduleKeys.length === 0 && freshMatchCount > ctx.limits.maxResolvedShowtimes) {
+    if (
+      scheduleKeys.length === 0 &&
+      movieScheduleKeys.length === 0 &&
+      freshMatchCount > ctx.limits.maxResolvedShowtimes
+    ) {
       throw new StructuredHttpError({
         code: "BAD_REQUEST",
         message: `Matched ${freshMatchCount} showtimes, which exceeds the ${ctx.limits.maxResolvedShowtimes} limit`,
@@ -980,7 +1078,10 @@ export const create = t.procedure
     // S36.5: reserve is the provisional 200 for any cold/mixed search (one slot, one 200),
     // and the exact fresh count for all-fresh. This preserves ADR 0028 stage-one: one
     // reservation + one slot per cold search regardless of N.
-    const reserve = scheduleKeys.length > 0 ? ctx.limits.maxResolvedShowtimes : freshMatchCount;
+    const reserve =
+      scheduleKeys.length > 0 || movieScheduleKeys.length > 0
+        ? ctx.limits.maxResolvedShowtimes
+        : freshMatchCount;
 
     // O7.6/ADR 0031 — capture the active request span (O5) as a W3C traceparent and
     // thread it into the outbox rows stageSearchCreation writes. Null when no request
@@ -1011,6 +1112,7 @@ export const create = t.procedure
           providerId,
           reserve,
           scheduleKeys,
+          movieScheduleKeys,
           showtimes,
           freshMatchCount,
           traceparent,

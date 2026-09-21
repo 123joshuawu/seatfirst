@@ -15,6 +15,7 @@ export { dispatchConfigFromEnv, startDispatchWorker } from "./entry.js";
 export type { DispatchConfig, DispatchService } from "./entry.js";
 export {
   AGGREGATE_NOT_IMPLEMENTED,
+  MOVIE_SCHEDULE_RESOLUTION_NOT_IMPLEMENTED,
   SCHEDULE_RESOLUTION_NOT_IMPLEMENTED,
   SHOWTIME_FETCH_NOT_IMPLEMENTED,
   createPlaceholderRegistry,

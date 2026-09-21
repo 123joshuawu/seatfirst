@@ -67,6 +67,7 @@ export function withJobAdmissionDedup(
     job: {
       SHOWTIME_FETCH: implementedHandler(handler),
       SCHEDULE_RESOLUTION: implementedHandler(handler),
+      MOVIE_SCHEDULE_RESOLUTION: implementedHandler(handler),
     },
   };
 }

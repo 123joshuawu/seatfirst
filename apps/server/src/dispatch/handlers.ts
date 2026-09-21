@@ -14,6 +14,7 @@ import type {
 import { createShowtimeFetchRunHandler } from "./handlers/run-showtime-fetch.js";
 import { createRecheckRunHandler } from "./handlers/run-recheck.js";
 import { createScheduleResolutionRunHandler } from "./handlers/run-schedule-resolution.js";
+import { createMovieScheduleResolutionRunHandler } from "./handlers/run-movie-schedule-resolution.js";
 import type { ProviderFetchActorDeps } from "./handlers/provider-fetch-actor.js";
 
 /** Wraps a real, implemented handler for a registry slot. */
@@ -42,6 +43,8 @@ export const SHOWTIME_FETCH_NOT_IMPLEMENTED =
   "SHOWTIME_FETCH handler not yet implemented — blocked on S8 (provider fetch actor)";
 export const SCHEDULE_RESOLUTION_NOT_IMPLEMENTED =
   "SCHEDULE_RESOLUTION handler not yet implemented — blocked on S8 (provider fetch actor)";
+export const MOVIE_SCHEDULE_RESOLUTION_NOT_IMPLEMENTED =
+  "MOVIE_SCHEDULE_RESOLUTION handler not yet implemented — blocked on S8 (provider fetch actor)";
 export const RECHECK_NOT_IMPLEMENTED =
   "RECHECK handler not yet implemented — blocked on S22 (showtimes.recheck)";
 export const AGGREGATE_NOT_IMPLEMENTED =
@@ -59,10 +62,16 @@ export function createPlaceholderRegistry(): DispatchRegistry {
     job: {
       SHOWTIME_FETCH: notImplementedHandler<JobHandlerFn>(SHOWTIME_FETCH_NOT_IMPLEMENTED),
       SCHEDULE_RESOLUTION: notImplementedHandler<JobHandlerFn>(SCHEDULE_RESOLUTION_NOT_IMPLEMENTED),
+      MOVIE_SCHEDULE_RESOLUTION: notImplementedHandler<JobHandlerFn>(
+        MOVIE_SCHEDULE_RESOLUTION_NOT_IMPLEMENTED,
+      ),
     },
     run: {
       SHOWTIME_FETCH: notImplementedHandler<RunHandlerFn>(SHOWTIME_FETCH_NOT_IMPLEMENTED),
       SCHEDULE_RESOLUTION: notImplementedHandler<RunHandlerFn>(SCHEDULE_RESOLUTION_NOT_IMPLEMENTED),
+      MOVIE_SCHEDULE_RESOLUTION: notImplementedHandler<RunHandlerFn>(
+        MOVIE_SCHEDULE_RESOLUTION_NOT_IMPLEMENTED,
+      ),
       RECHECK: notImplementedHandler<RunHandlerFn>(RECHECK_NOT_IMPLEMENTED),
     },
     aggregate: notImplementedHandler<AggregateHandlerFn>(AGGREGATE_NOT_IMPLEMENTED),
@@ -86,6 +95,7 @@ export function withProviderFetchActor(
       ...registry.run,
       SHOWTIME_FETCH: implementedHandler(createShowtimeFetchRunHandler(deps)),
       SCHEDULE_RESOLUTION: implementedHandler(createScheduleResolutionRunHandler(deps)),
+      MOVIE_SCHEDULE_RESOLUTION: implementedHandler(createMovieScheduleResolutionRunHandler(deps)),
       RECHECK: implementedHandler(createRecheckRunHandler(deps)),
     },
   };
