@@ -19,5 +19,6 @@ export * from "./amc/parse/market-slugs.js";
 export * from "./amc/parse/theatres.js";
 export * from "./amc/parse/seats.js";
 export * from "./amc/parse/showtimes.js";
+export * from "./amc/parse/movie-showtimes.js";
 export * from "./amc/parse/movies.js";
 export * from "./dev-fixtures/showtime-id.js";

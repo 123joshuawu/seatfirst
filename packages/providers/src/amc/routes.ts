@@ -27,6 +27,13 @@ export function buildShowtimesUrl(marketSlug: string, theatreSlug: string, date:
   );
 }
 
+export function buildMovieShowtimesUrl(movieSlug: string, theatreSlug: string, date: string): URL {
+  const url = new URL(`${AMC_ORIGIN}/movies/${encodeURIComponent(movieSlug)}/showtimes`);
+  url.searchParams.set("date", date);
+  url.searchParams.set("theatre", theatreSlug);
+  return url;
+}
+
 export function buildSeatsUrl(showtimeId: number, seatNames?: readonly string[]): URL {
   const url = new URL(`${AMC_ORIGIN}/showtimes/${encodeURIComponent(showtimeId)}/seats`);
   // ADR 0002 §3.5 Phase 2 (2026-09-05): carry exact pre-selected seat coordinates as a
@@ -90,6 +97,23 @@ export function isAllowedUrl(url: URL): boolean {
     if (!date || !/^\d{4}-\d{2}-\d{2}$/.test(date)) return false;
     return true;
   }
+
+  const movieShowtimesMatch = pathname.match(/^\/movies\/([^/]+)\/showtimes$/);
+  if (movieShowtimesMatch) {
+    const [, movieSlug] = movieShowtimesMatch;
+    if (!movieSlug) return false;
+    // S64 (ADR 0104): the movie-first showtimes page carries exactly `date` + `theatre` —
+    // any other key, missing key, or duplicated key fails closed.
+    if (params.length !== 2 || !params.includes("date") || !params.includes("theatre")) {
+      return false;
+    }
+    const date = url.searchParams.get("date");
+    if (!date || !/^\d{4}-\d{2}-\d{2}$/.test(date)) return false;
+    const theatre = url.searchParams.get("theatre");
+    if (!theatre || !/^[a-z0-9-]+$/i.test(theatre)) return false;
+    return true;
+  }
+
   const seatsMatch = pathname.match(/^\/showtimes\/([^/]+)\/seats$/);
   if (seatsMatch) {
     const [, showtimeId] = seatsMatch;
