@@ -10,7 +10,7 @@ import type {
 import type { RowProvenance } from "@/hooks/viewModels/useSearchResultsViewModel";
 import { colors } from "@/theme/colors";
 import { AppText } from "@/components/core/AppText";
-import { SecondaryButton } from "@/components/core/Button";
+import { EmptyState } from "@/components/core/EmptyState";
 import { ShowtimeRow } from "./ShowtimeRow";
 import { RecoverySheet } from "./RecoverySheet";
 import { applyPreferOrder, NO_PREFERENCE, type PreferToggles } from "@/lib/preferSort";
@@ -126,20 +126,16 @@ export function ShowtimeList({
     // never produce rows, so skeletons must stop — render an actionable empty
     // state instead of pulsing "Checking seats…" forever with no way to retry.
     if (isTerminal || searchStatus === "HALTED") {
+      // UI38: genuinely zero rows in the corridor/date — standardized empty
+      // state with the screen's existing edit affordance, action optional.
       return (
         <View style={styles.container} testID="empty-search-state">
-          <View style={styles.banner}>
-            <AppText weight="400" style={styles.bannerText}>
-              No showtimes found for these dates/format. Try adjusting your window or format.
-            </AppText>
-            {onEditSearch ? (
-              <SecondaryButton
-                label="Edit search"
-                onPress={onEditSearch}
-                accessibilityHint="Returns to search form"
-              />
-            ) : null}
-          </View>
+          <EmptyState
+            title="No showtimes found"
+            description="No AMC theatres within your selected radius have showtimes for this date."
+            {...(onEditSearch ? { action: { label: "Adjust search", onPress: onEditSearch } } : {})}
+            testID="empty-state-no-results"
+          />
         </View>
       );
     }
@@ -335,9 +331,14 @@ export function ShowtimeList({
       ) : null}
 
       {nothingFitsNothingDeferred ? (
-        <AppText weight="400" style={styles.emptyNote}>
-          {`None of the ${partySize} seat${partySize === 1 ? "" : "s"} together — drop contiguous, or save this search`}
-        </AppText>
+        // UI38: every candidate resolved with admitted showtimes but none fit
+        // the party — same boolean, standardized presentation plus an action.
+        <EmptyState
+          title="No showtimes match your criteria"
+          description="None of the checked showtimes had space for your party. Try adjusting your search or party size."
+          {...(onEditSearch ? { action: { label: "Edit search", onPress: onEditSearch } } : {})}
+          testID="empty-state-filters"
+        />
       ) : null}
     </View>
   );
@@ -433,11 +434,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.mapEmptyEnd,
     backgroundColor: colors.cardBg,
-  },
-  emptyNote: {
-    fontSize: 12,
-    color: colors.textMuted,
-    marginTop: 4,
   },
   placeholderRow: {
     paddingVertical: 10,

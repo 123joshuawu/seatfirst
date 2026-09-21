@@ -6,6 +6,7 @@ import { StyleSheet, Image, Platform, View } from "react-native";
 import { colors } from "@/theme/colors";
 import { AppText } from "@/components/core/AppText";
 import { Badge } from "@/components/core/Badge";
+import { EmptyState } from "@/components/core/EmptyState";
 import { SeatGrid } from "@/components/map/SeatGrid";
 import { SeatLegend } from "@/components/core/SeatLegend";
 import type { RecoveryOption } from "@seatfirst/core";
@@ -235,6 +236,21 @@ export function LeftPanel({
             </AppText>
           </View>
         )
+      ) : null}
+      {/* UI38: companion HUD with zero matching showtimes — none of the
+        ghost/confirmation/auditorium branches match, so the panel falls
+        through to a bare wordmark row. totalShowtimes/isChecking ride the
+        existing progress view-model; no new view-model state. */}
+      {!vm.leftIsGhost &&
+      !vm.leftIsConfirmation &&
+      !(vm.leftIsAuditorium && vm.activePlacement) &&
+      !vm.isChecking &&
+      vm.totalShowtimes === 0 ? (
+        <EmptyState
+          title="No seats to preview"
+          description="Adjust your filters or search criteria to inspect seat availability."
+          testID="empty-state-companion"
+        />
       ) : null}
     </View>
   );

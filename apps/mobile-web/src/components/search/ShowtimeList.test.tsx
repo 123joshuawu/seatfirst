@@ -229,24 +229,56 @@ describe("ShowtimeList (UI14.8-14.14)", () => {
     expect(str).not.toContain("Queued");
   });
 
-  it("nothing fits copy when no hits and nothing deferred (UI14.13)", () => {
+  it("nothing fits renders EmptyState when no hits and nothing deferred (UI14.13 / UI38)", () => {
     const skeleton = [
       mkEntry({ showtimeId: "sh_a", rank: 0, admitted: true, resolved: true }),
       mkEntry({ showtimeId: "sh_b", rank: 1, admitted: true, resolved: true }),
     ];
-    const str = renderToString({
+    const onEditSearch = vi.fn();
+    const renderer = renderList({
       skeleton,
       groups: [] as ResultGroup[],
       partySize: 2,
       resolved: 2,
       total: 2,
       terminalCause: null,
+      onEditSearch,
     });
-    expect(str).toContain("None of the 2 seats together");
-    expect(str).toContain("save this search");
+    const str = JSON.stringify(renderer.toJSON());
+    expect(str).toContain("No showtimes match your criteria");
+    expect(str).toContain("None of the checked showtimes had space for your party");
+    expect(str).toContain("empty-state-filters");
+    const actions = renderer.root.findAll(
+      (node) => node.props?.accessibilityLabel === "Edit search",
+    );
+    expect(actions.length).toBeGreaterThan(0);
+    act(() => {
+      actions[0]!.props.onPress();
+    });
+    expect(onEditSearch).toHaveBeenCalledTimes(1);
+    renderer.unmount();
   });
 
-  it("does not add affordance behind save this search phrase", () => {
+  it("nothing fits renders no action when onEditSearch is absent (UI38)", () => {
+    const skeleton = [mkEntry({ showtimeId: "sh_a", rank: 0, admitted: true, resolved: true })];
+    const renderer = renderList({
+      skeleton,
+      groups: [] as ResultGroup[],
+      partySize: 2,
+      resolved: 1,
+      total: 1,
+      terminalCause: null,
+    });
+    const str = JSON.stringify(renderer.toJSON());
+    expect(str).toContain("No showtimes match your criteria");
+    expect(str).toContain("empty-state-filters");
+    expect(
+      renderer.root.findAll((node) => node.props?.accessibilityRole === "button"),
+    ).toHaveLength(0);
+    renderer.unmount();
+  });
+
+  it("adds no extra affordance beyond the EmptyState action (UI38)", () => {
     const skeleton = [mkEntry({ showtimeId: "sh_a", rank: 0, admitted: true, resolved: true })];
     const str = renderToString({
       skeleton,
@@ -488,7 +520,7 @@ describe("ShowtimeList fallback placeholders (UI27 / Rec 2.2)", () => {
 });
 
 describe("ShowtimeList halted/terminal zero-result empty state (critical fix)", () => {
-  it("renders no skeletons and an enabled Edit search action when HALTED with zero rows", () => {
+  it("renders no skeletons and an enabled Adjust search action when HALTED with zero rows", () => {
     const onEditSearch = vi.fn();
     const renderer = renderList({
       skeleton: [],
@@ -506,15 +538,22 @@ describe("ShowtimeList halted/terminal zero-result empty state (critical fix)", 
     expect(str).not.toContain("Checking seats");
     expect(str).not.toContain("placeholder-row");
     expect(str).not.toContain("placeholder-skeleton");
-    expect(str).toContain("No showtimes found for these dates/format");
+    // UI38: terminal zero-skeleton branch renders EmptyState copy.
+    expect(str).toContain("No showtimes found");
+    expect(str).toContain("No AMC theatres within your selected radius");
+    expect(str).toContain("empty-state-no-results");
     const actions = renderer.root.findAll(
-      (node) => node.props?.accessibilityLabel === "Edit search",
+      (node) => node.props?.accessibilityLabel === "Adjust search",
     );
     expect(actions.length).toBeGreaterThan(0);
     for (const action of actions) {
       expect(action.props.disabled).toBe(false);
       expect(action.props.accessibilityState).toMatchObject({ disabled: false });
     }
+    act(() => {
+      actions[0]!.props.onPress();
+    });
+    expect(onEditSearch).toHaveBeenCalledTimes(1);
     renderer.unmount();
   });
 
@@ -532,7 +571,27 @@ describe("ShowtimeList halted/terminal zero-result empty state (critical fix)", 
     });
     const str = JSON.stringify(renderer.toJSON());
     expect(str).not.toContain("Checking seats");
-    expect(str).toContain("No showtimes found for these dates/format");
+    expect(str).toContain("No showtimes found");
+    expect(str).toContain("empty-state-no-results");
+    renderer.unmount();
+  });
+
+  it("terminal zero-result renders no action when onEditSearch is absent (UI38)", () => {
+    const renderer = renderList({
+      skeleton: [],
+      groups: [],
+      partySize: 2,
+      resolved: 0,
+      total: 0,
+      searchStatus: "HALTED",
+      isTerminal: true,
+      placeholderCount: null,
+    });
+    const str = JSON.stringify(renderer.toJSON());
+    expect(str).toContain("No showtimes found");
+    expect(
+      renderer.root.findAll((node) => node.props?.accessibilityRole === "button"),
+    ).toHaveLength(0);
     renderer.unmount();
   });
 

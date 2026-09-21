@@ -417,3 +417,66 @@ describe("LeftPanel auditorium seat legend (UI39 / ADR 0069)", () => {
     expect(JSON.stringify(renderer.toJSON())).not.toContain("Seating legend");
   });
 });
+
+describe("LeftPanel companion empty state (UI38)", () => {
+  function renderPanel(
+    overrides: Parameters<typeof makeMockVm>[0] = {},
+  ): TestRenderer.ReactTestRenderer {
+    setMockVm(
+      makeMockVm({
+        leftIsGhost: false,
+        leftIsConfirmation: false,
+        leftIsAuditorium: false,
+        activePlacement: null,
+        isChecking: false,
+        totalShowtimes: 0,
+        ...overrides,
+      }),
+    );
+    let renderer!: TestRenderer.ReactTestRenderer;
+    TestRenderer.act(() => {
+      renderer = TestRenderer.create(React.createElement(LeftPanel, null));
+    });
+    return renderer;
+  }
+
+  it("renders the companion empty state when no branch matches and zero showtimes", () => {
+    const renderer = renderPanel();
+    const str = JSON.stringify(renderer.toJSON());
+    expect(str).toContain("No seats to preview");
+    expect(str).toContain("Adjust your filters or search criteria");
+    expect(str).toContain("empty-state-companion");
+    // UI38: the companion carries no recovery action — action is optional.
+    expect(
+      renderer.root.findAll((node) => node.props?.accessibilityRole === "button"),
+    ).toHaveLength(0);
+    renderer.unmount();
+  });
+
+  it("stays on the bare wordmark when results exist but nothing is selected", () => {
+    const renderer = renderPanel({ totalShowtimes: 4 });
+    const str = JSON.stringify(renderer.toJSON());
+    expect(str).toContain("Seatfirst");
+    expect(str).not.toContain("No seats to preview");
+    expect(str).not.toContain("empty-state-companion");
+    renderer.unmount();
+  });
+
+  it("stays hidden while the search is still checking", () => {
+    const renderer = renderPanel({ isChecking: true });
+    expect(JSON.stringify(renderer.toJSON())).not.toContain("empty-state-companion");
+    renderer.unmount();
+  });
+
+  it("stays hidden when the ghost branch matches", () => {
+    const renderer = renderPanel({ leftIsGhost: true });
+    expect(JSON.stringify(renderer.toJSON())).not.toContain("empty-state-companion");
+    renderer.unmount();
+  });
+
+  it("stays hidden when the confirmation branch matches", () => {
+    const renderer = renderPanel({ leftIsConfirmation: true });
+    expect(JSON.stringify(renderer.toJSON())).not.toContain("empty-state-companion");
+    renderer.unmount();
+  });
+});
