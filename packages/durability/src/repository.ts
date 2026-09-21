@@ -1,3 +1,4 @@
+import type { TheatreAmenity } from "@seatfirst/core";
 import * as B from "./boundaries.js";
 import type { Statement } from "./boundaries.js";
 import { firstRow, requireFields } from "./transactions.js";
@@ -115,6 +116,7 @@ export interface UpsertTheatreInput {
   readonly slugs: TheatreSlugs | null;
   readonly firstSeenAt: Date;
   readonly lastSeenAt: Date;
+  readonly amenities?: readonly TheatreAmenity[] | null;
 }
 export interface TheatreRow {
   readonly theatre_id: string;
@@ -129,6 +131,7 @@ export interface TheatreRow {
   readonly slugs: Record<string, string> | null;
   readonly first_seen_at: Date;
   readonly last_seen_at: Date;
+  readonly amenities: readonly TheatreAmenity[] | unknown;
 }
 export function upsertTheatre(db: SqlClient, input: UpsertTheatreInput): Promise<TheatreRow[]> {
   return runStatement(db, B.THEATRE_UPSERT, [
@@ -144,6 +147,7 @@ export function upsertTheatre(db: SqlClient, input: UpsertTheatreInput): Promise
     input.slugs === null ? null : json(input.slugs, "slugs"),
     input.firstSeenAt.toISOString(),
     input.lastSeenAt.toISOString(),
+    json(input.amenities ?? [], "amenities"),
   ]);
 }
 
@@ -806,7 +810,7 @@ export async function readScheduleRange(
         layoutId: row.layout_id,
         // S21.6 wire shape is `z.array(z.string())`; the jsonb column only ever holds
         // `{}` today (see the type doc above), so coerce non-arrays to `[]`.
-        attributes: Array.isArray(row.attributes) ? row.attributes : [],
+        attributes: Array.isArray(row.attributes) ? (row.attributes as string[]) : [],
       });
     }
   }

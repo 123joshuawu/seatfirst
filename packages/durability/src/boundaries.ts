@@ -58,14 +58,16 @@ export const THEATRE_UPSERT = define({
     "slugs",
     "first_seen_at",
     "last_seen_at",
+    "amenities",
   ],
   text: `
     INSERT INTO theatre
       (theatre_id, provider_id, name, lat, lng, market_slug, timezone, city, address, slugs,
-       first_seen_at, last_seen_at)
+       first_seen_at, last_seen_at, amenities)
     VALUES
       ($1::text, $2::text, $3::text, $4::double precision, $5::double precision,
-       $6::text, $7::text, $8::text, $9::text, $10::jsonb, $11::timestamptz, $12::timestamptz)
+       $6::text, $7::text, $8::text, $9::text, $10::jsonb, $11::timestamptz, $12::timestamptz,
+       $13::jsonb)
     ON CONFLICT (theatre_id) DO UPDATE SET
       provider_id = EXCLUDED.provider_id,
       name = EXCLUDED.name,
@@ -76,9 +78,10 @@ export const THEATRE_UPSERT = define({
       city = EXCLUDED.city,
       address = EXCLUDED.address,
       slugs = EXCLUDED.slugs,
+      amenities = EXCLUDED.amenities,
       last_seen_at = greatest(theatre.last_seen_at, EXCLUDED.last_seen_at)
     RETURNING theatre_id, provider_id, name, lat, lng, market_slug, timezone, city, address, slugs,
-              first_seen_at, last_seen_at`,
+              first_seen_at, last_seen_at, amenities`,
 });
 
 export const THEATRE_READ_BY_ID = define({
@@ -88,7 +91,7 @@ export const THEATRE_READ_BY_ID = define({
   params: ["theatre_id"],
   text: `
     SELECT theatre_id, provider_id, name, lat, lng, market_slug, timezone, city, address, slugs,
-           first_seen_at, last_seen_at
+           first_seen_at, last_seen_at, amenities
     FROM theatre
     WHERE theatre_id = $1::text`,
 });
@@ -100,7 +103,7 @@ export const THEATRE_NAME_SEARCH = define({
   params: ["pattern"],
   text: `
     SELECT theatre_id, provider_id, name, lat, lng, market_slug, timezone, city, address, slugs,
-           first_seen_at, last_seen_at
+           first_seen_at, last_seen_at, amenities
     FROM theatre
     WHERE name ILIKE $1::text OR city ILIKE $1::text
     ORDER BY name, theatre_id`,
@@ -113,7 +116,7 @@ export const THEATRE_BROWSE = define({
   params: [],
   text: `
     SELECT theatre_id, provider_id, name, lat, lng, market_slug, timezone, city, address, slugs,
-           first_seen_at, last_seen_at
+           first_seen_at, last_seen_at, amenities
     FROM theatre
     ORDER BY name, theatre_id`,
 });
@@ -353,7 +356,7 @@ export const THEATRE_RADIUS_QUERY = define({
   params: ["origin_lat", "origin_lng", "radius_km"],
   text: `
     SELECT theatre_id, provider_id, name, lat, lng, market_slug, timezone, city, address, slugs,
-           first_seen_at, last_seen_at, distance_km
+           first_seen_at, last_seen_at, amenities, distance_km
     FROM (
       SELECT candidates.*,
              -- 6371.0088 km: mean Earth radius (IUGG), a physical constant, not a product

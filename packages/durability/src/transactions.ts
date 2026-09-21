@@ -314,6 +314,7 @@ export interface ScheduleShowtime {
    * older callers/tests — the emission below skips such entries defensively.
    */
   readonly showDateTimeLocal?: string;
+  readonly attributes?: readonly string[];
 }
 
 /**
@@ -405,7 +406,7 @@ export async function stageScheduleAcceptance(
       localDate,
       st.startsAt.toISOString(),
       fenced.observation_id,
-      JSON.stringify({}),
+      JSON.stringify(st.attributes ?? []),
     ]);
   }
 
@@ -599,6 +600,7 @@ export async function stageScheduleAcceptance(
                 showDateTimeLocal: st.showDateTimeLocal,
                 formatCode: st.formatCode ?? null,
                 distanceKm: st.distanceKm ?? null,
+                attributes: st.attributes ?? [],
                 rank: st.dispatchRank ?? 0,
                 admitted: true,
                 resolved: false,

@@ -231,6 +231,7 @@ describe("tier 2 — S8 provider-fetch acceptance seams", () => {
       showDateTimeLocal: string;
       formatCode: string | null;
       distanceKm: number | null;
+      attributes: readonly string[];
       rank: number;
       admitted: boolean;
       resolved: boolean;
@@ -296,7 +297,6 @@ describe("tier 2 — S8 provider-fetch acceptance seams", () => {
       expect(skeletons).toHaveLength(1);
       expect(skeletons[0]!.type).toBe("skeleton");
       const payload = skeletons[0]!.payload as { scheduleSkeleton: SkeletonEntry[] };
-      // skipFetch entries create no fetch work, so they are not echoed.
       expect(payload.scheduleSkeleton).toEqual([
         {
           showtimeId: "st_s57_a",
@@ -304,6 +304,7 @@ describe("tier 2 — S8 provider-fetch acceptance seams", () => {
           showDateTimeLocal: "2026-08-02T19:00:00",
           formatCode: "STANDARD",
           distanceKm: 2.5,
+          attributes: [],
           rank: 0,
           admitted: true,
           resolved: false,
@@ -314,6 +315,7 @@ describe("tier 2 — S8 provider-fetch acceptance seams", () => {
           showDateTimeLocal: "2026-08-02T20:00:00",
           formatCode: "IMAX",
           distanceKm: null,
+          attributes: [],
           rank: 1,
           admitted: true,
           resolved: false,
