@@ -126,10 +126,19 @@ describe("ShowtimeRow handoff affordance (UI30.1)", () => {
       onHandoff,
       handoffEligible: ["sh_hit"],
     });
-    const backgroundsOf = (style: unknown): unknown[] =>
-      (Array.isArray(style) ? style : [style])
+    // UI35: PrimaryButton's style is now an interaction-state callback; resolve
+    // it in the idle state before reading the normal fill.
+    const backgroundsOf = (style: unknown): unknown[] => {
+      const resolved =
+        typeof style === "function"
+          ? (style as (s: { pressed: boolean; hovered?: boolean }) => unknown)({
+              pressed: false,
+            })
+          : style;
+      return (Array.isArray(resolved) ? resolved : [resolved])
         .filter((s): s is Record<string, unknown> => typeof s === "object" && s !== null)
         .map((s) => s["backgroundColor"]);
+    };
     const buttons = compositeButtons(renderer, { accessibilityLabel: "Go to AMC" });
     expect(buttons.length).toBe(1);
     expect(backgroundsOf(buttons[0]?.props.style)).toContain("#a95e1c");
