@@ -1,6 +1,7 @@
 import { useState, type ReactElement, type ReactNode } from "react";
 import { Platform, Pressable, StyleSheet, View } from "react-native";
 import { colors } from "@/theme/colors";
+import { focusRings } from "@/theme/tokens";
 import { AppText } from "./AppText";
 import { LoadingSpinner } from "./LoadingSpinner";
 
@@ -111,8 +112,8 @@ interface ButtonCoreOptions {
 type PressableState = { pressed: boolean; hovered?: boolean };
 
 /** UI35.3 keyboard focus ring (web only; react-native-web passes raw CSS
- * outline properties through). No focus-ring convention existed in this
- * codebase, so this is the fresh canonical definition. */
+ * outline properties through), sourced from the UI40.2 focusRings.standard
+ * token. Shown on keyboard focus only, never on mouse-click focus. */
 function focusRingStyle(focused: boolean): Record<string, unknown> | null {
   return focused && Platform.OS === "web" ? styles.focusRing : null;
 }
@@ -491,12 +492,10 @@ const styles = StyleSheet.create({
   linkActive: {
     opacity: 0.7,
   },
-  /** UI35.3 keyboard focus ring (web only). */
+  /** UI35.3 keyboard focus ring (web only), sourced from the UI40.2
+   * focusRings.standard token (brandContrast for canvas contrast). */
   focusRing: {
-    outlineColor: colors.brandDark,
-    outlineWidth: 2,
-    outlineStyle: "solid",
-    outlineOffset: 2,
+    ...focusRings.standard,
   },
   /** UI35.1 icon adornment row (new-Button-only; legacy shims never pass
    * icons, so their rendered structure is unchanged). */

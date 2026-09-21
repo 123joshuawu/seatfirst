@@ -1,6 +1,7 @@
-import type { ReactElement } from "react";
-import { StyleSheet, Pressable } from "react-native";
+import { useState, type ReactElement } from "react";
+import { Platform, Pressable, StyleSheet } from "react-native";
 import { colors } from "@/theme/colors";
+import { focusRings } from "@/theme/tokens";
 import { AppText } from "./AppText";
 import { Checkbox } from "./Checkbox";
 
@@ -23,6 +24,7 @@ export function Chip({
   checkbox = false,
   disabled = false,
 }: ChipProps): ReactElement {
+  const [focused, setFocused] = useState(false);
   const isSquare = shape === "square";
   const role: "button" | "checkbox" = checkbox ? "checkbox" : "button";
   const state = checkbox
@@ -36,10 +38,19 @@ export function Chip({
       accessibilityLabel={label}
       accessibilityState={state}
       focusable={!disabled}
+      onFocus={() => {
+        if (Platform.OS === "web") setFocused(true);
+      }}
+      onBlur={() => {
+        if (Platform.OS === "web") setFocused(false);
+      }}
       style={[
         isSquare ? styles.squareBase : styles.pillBase,
         active ? styles.activeBase : styles.inactiveBase,
         disabled && styles.disabled,
+        // UI40.2 keyboard focus ring (web only), mirroring Button.tsx's
+        // onFocus/onBlur-driven focus-visible convention.
+        focused && Platform.OS === "web" ? styles.focusRing : null,
       ]}
     >
       {checkbox ? <Checkbox size="sm" checked={active} standalone={false} /> : null}
@@ -90,5 +101,10 @@ const styles = StyleSheet.create({
   },
   disabled: {
     opacity: 0.5,
+  },
+  /** UI40.2 keyboard focus ring (web only), sourced from
+   * focusRings.standard — identical to Button.tsx's ring. */
+  focusRing: {
+    ...focusRings.standard,
   },
 });

@@ -179,7 +179,8 @@ describe("Button core primitives", () => {
         (btn.props.onFocus as () => void)();
       });
       const focused = pressableStyle(singlePressable(renderer));
-      expect(focused.outlineColor).toBe(colors.brandDark);
+      // UI40.2: ring color corrected from brandDark to the focusRings.standard token (brandContrast).
+      expect(focused.outlineColor).toBe(colors.brandContrast);
       expect(focused.outlineWidth).toBe(2);
       expect(focused.outlineStyle).toBe("solid");
       expect(focused.outlineOffset).toBe(2);
@@ -303,8 +304,11 @@ describe("Button core primitives", () => {
         (btn.props.onFocus as () => void)();
       });
       const focused = pressableStyle(singlePressable(renderer));
-      expect(focused.outlineColor).toBe(colors.brandDark);
+      // UI40.2: ring color corrected from brandDark to the focusRings.standard token (brandContrast).
+      expect(focused.outlineColor).toBe(colors.brandContrast);
       expect(focused.outlineWidth).toBe(2);
+      expect(focused.outlineStyle).toBe("solid");
+      expect(focused.outlineOffset).toBe(2);
     });
 
     it("is not focusable while disabled", () => {
