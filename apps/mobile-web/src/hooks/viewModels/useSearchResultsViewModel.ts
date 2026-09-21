@@ -4,6 +4,7 @@ import type {
   Placement,
   RankedAnswer,
   RecheckResult,
+  RecommendationReason,
   ResultGroup,
   SearchStatus,
   ScheduleSkeletonEntry,
@@ -87,6 +88,19 @@ export interface SearchResultsViewModel {
   partySize: number;
   canCheckMore: boolean;
   handoffEligibleShowtimeIds: string[];
+  /** This fix: canonical answer-level placement per showtimeId for DISPLAY. For
+   *  every showtime covered by the ranked answer this carries the answer's own
+   *  `Recommendation.placement` + `reasons` — the exact placement bound to the
+   *  real nonce/recheck/deep-link — so rows never render a possibly-stale
+   *  retained group's own top `groupHits[0]` pick instead (ADR 0064 in-situ
+   *  merge keeps predecessor groups in `groups` for visual continuity, and
+   *  `findGroupForShowtime` can resolve to one of those for a showtime whose
+   *  own group snapshot is no longer live). Plain object keyed by showtimeId,
+   *  not a Map, for simple prop-passing/serialization down to `ShowtimeRow`. */
+  answerPlacementByShowtimeId: Record<
+    string,
+    { placement: Placement; reasons: RecommendationReason[] }
+  >;
   noValidActions: LabeledAction[];
   /** UI30 (ADR 0063 §2-3): showtime with a recheck in flight, if any. Drives inline row states. */
   recheckingShowtimeId: string | null;
@@ -237,6 +251,50 @@ export function useSearchResultsViewModel(): SearchResultsViewModel {
       return liveAnswer.alternatives?.flatMap((a) => a.showtimes.map((o) => o.showtimeId)) ?? [];
     }
     return [];
+  })();
+  // This fix (client display consistency): the canonical per-showtime placement
+  // for DISPLAY, derived from the ranked answer alone — never from groups. When
+  // `liveAnswer.mode === "CONFIDENT"` every `primary.showtimes[].showtimeId`
+  // maps to the primary's own `placement`/`reasons`; when `"HEDGED"` each
+  // alternative's own showtimes map to that alternative's `placement`/`reasons`
+  // (iterating each alternative separately, so a non-first alternative never
+  // inherits `alternatives[0]`'s seats); `null` or `"EMPTY"` yields `{}`. This
+  // is the placement actually bound to the real nonce/recheck/deep-link, so a
+  // row covered here must display it even when `combinedGroups` below resolves
+  // that showtime to a stale retained predecessor snapshot (ADR 0064 in-situ
+  // merge) whose own top `groupHits[0]` pick disagrees. Rows with no entry here
+  // keep today's `group.groupHits`-derived display (ADR 0041 §6: every resolved
+  // hit row gets the handoff action, not just the primary's showtimes).
+  const answerPlacementByShowtimeId: Record<
+    string,
+    { placement: Placement; reasons: RecommendationReason[] }
+  > = (() => {
+    if (liveAnswer === null) return {};
+    if (liveAnswer.mode === "CONFIDENT") {
+      const out: Record<string, { placement: Placement; reasons: RecommendationReason[] }> = {};
+      const primary = liveAnswer.primary;
+      if (primary === undefined) return out;
+      for (const o of primary.showtimes) {
+        out[o.showtimeId] = {
+          placement: primary.placement,
+          reasons: primary.reasons,
+        };
+      }
+      return out;
+    }
+    if (liveAnswer.mode === "HEDGED") {
+      const out: Record<string, { placement: Placement; reasons: RecommendationReason[] }> = {};
+      for (const alternative of liveAnswer.alternatives) {
+        for (const o of alternative.showtimes) {
+          out[o.showtimeId] = {
+            placement: alternative.placement,
+            reasons: alternative.reasons,
+          };
+        }
+      }
+      return out;
+    }
+    return {};
   })();
 
   const { startSearch: startRealSearch } = useSearchSubscription();
@@ -471,6 +529,7 @@ export function useSearchResultsViewModel(): SearchResultsViewModel {
     partySize,
     canCheckMore: store.terminalCause === "BATCH_DEFERRED",
     handoffEligibleShowtimeIds: filteredHandoffEligibleShowtimeIds,
+    answerPlacementByShowtimeId,
     noValidActions,
     recheckingShowtimeId: store.recheckingShowtimeId,
     recheckTargetShowtimeId: store.recheckSelectedShowtimeId,

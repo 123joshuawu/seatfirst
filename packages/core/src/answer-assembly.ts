@@ -77,6 +77,15 @@ export type AnswerEvidence = {
    * `hedged`: selection, ranking, and pruning below are untouched.
    */
   readonly hitPlacementKeys: ReadonlyArray<ReadonlyArray<string | null>>;
+  /**
+   * This fix — every group hit's FULL placement, in parallel with
+   * `hitPlacementKeys` (same outer/inner alignment, `null` at exactly the same
+   * indices). `buildCandidate` already computes the full `Placement` per hit;
+   * this map retains it instead of discarding it, so the aggregate answer
+   * assembler can persist it onto `groupHits[].placement` and
+   * `findTerminalPlacement` can recheck hits outside the ranked answer.
+   */
+  readonly hitPlacements: ReadonlyArray<ReadonlyArray<Placement | null>>;
 };
 
 /** E7.2 — one entry per layout the caller passes (E5's output shape). */
@@ -355,14 +364,18 @@ function toHedged(candidate: Candidate): AssembledHedgedRecommendation {
 
 export function assembleAnswerEvidence(input: AnswerEvidenceInput): AnswerEvidence {
   // ADR 0017 amendment — placeholder keys for every hit up front, so even the
-  // early (no-evidence) returns below stay aligned with `input.groups`.
+  // early (no-evidence) returns below stay aligned with `input.groups`. This fix
+  // adds the parallel full-placement map, initialized null-for-null the same way.
   const hitPlacementKeys: Array<Array<string | null>> = input.groups.map(({ group }) =>
+    (group.groupHits ?? []).map(() => null),
+  );
+  const hitPlacements: Array<Array<Placement | null>> = input.groups.map(({ group }) =>
     (group.groupHits ?? []).map(() => null),
   );
   const dimensions = groupDimensions(input.spec.group);
   if (dimensions === null) {
     // No group shape, or a shape E5 would have typed-unsupported: no placements to assemble.
-    return { exact: null, hedged: null, hitPlacementKeys };
+    return { exact: null, hedged: null, hitPlacementKeys, hitPlacements };
   }
 
   const candidates: Candidate[] = [];
@@ -378,14 +391,17 @@ export function assembleAnswerEvidence(input: AnswerEvidenceInput): AnswerEviden
       if (candidate !== null) {
         candidates.push(candidate);
         hitPlacementKeys[groupIndex]![hitIndex] = candidate.placementKey;
+        // This fix — retain the full placement in parallel with its key. Without
+        // this, `groupHits[].placement` downstream stays null and
+        // `findTerminalPlacement` cannot recheck hits outside the ranked answer.
+        hitPlacements[groupIndex]![hitIndex] = candidate.recommendation.placement;
       }
       hitIndex += 1;
     }
     groupIndex += 1;
   }
-
   if (candidates.length === 0) {
-    return { exact: null, hedged: null, hitPlacementKeys };
+    return { exact: null, hedged: null, hitPlacementKeys, hitPlacements };
   }
 
   candidates.sort(compareCandidates);
@@ -396,12 +412,12 @@ export function assembleAnswerEvidence(input: AnswerEvidenceInput): AnswerEviden
   // ranking, and pruning below are byte-for-byte the pre-amendment behavior.)
   const exact = candidates.find((candidate) => candidate.recommendation.relaxed.length === 0);
   if (exact !== undefined) {
-    return { exact: toExact(exact), hedged: null, hitPlacementKeys };
+    return { exact: toExact(exact), hedged: null, hitPlacementKeys, hitPlacements };
   }
 
   const hedged = candidates.slice(0, 3);
   if (hedged.length < 2) {
-    return { exact: null, hedged: null, hitPlacementKeys };
+    return { exact: null, hedged: null, hitPlacementKeys, hitPlacements };
   }
   const alternatives = hedged.map(toHedged);
   if (alternatives.length === 3) {
@@ -409,7 +425,13 @@ export function assembleAnswerEvidence(input: AnswerEvidenceInput): AnswerEviden
       exact: null,
       hedged: [alternatives[0]!, alternatives[1]!, alternatives[2]!],
       hitPlacementKeys,
+      hitPlacements,
     };
   }
-  return { exact: null, hedged: [alternatives[0]!, alternatives[1]!], hitPlacementKeys };
+  return {
+    exact: null,
+    hedged: [alternatives[0]!, alternatives[1]!],
+    hitPlacementKeys,
+    hitPlacements,
+  };
 }

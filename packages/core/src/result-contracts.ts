@@ -914,6 +914,16 @@ export function createResultContractSchemas(configInput: ResultContractConfig) {
             // when no candidate exists for the hit (e.g. missing member-cell name).
             // Optional + nullable so pre-amendment persisted payloads still parse.
             placementKey: nonemptyString.nullable().optional(),
+            // This fix — the FULL placement for the same hit, threaded through the
+            // same pipeline as `placementKey` above (`assembleAnswerEvidence`'s
+            // parallel `hitPlacements` map → the aggregate answer assembler). Needed
+            // so `findTerminalPlacement` can resolve a booking-ready placement for a
+            // hit that lives only in `groups[].groupHits[]`, outside
+            // `answer.primary`/`alternatives` (every such hit already holds a valid
+            // `issueHitNonces` nonce per the ADR 0017 amendment). Absent/null exactly
+            // where `placementKey` is absent/null. Optional + nullable so
+            // pre-fix persisted payloads still parse.
+            placement: PlacementSchema.nullable().optional(),
             // ADR 0017 amendment (2026-09-03) — per-covered-showtime recheck nonce,
             // parallel to `showtimeIndices` (same length, same order). Exactly one
             // nonce is ever issued per showtime: the best hit covering it (first hit

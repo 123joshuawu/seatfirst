@@ -16,12 +16,18 @@ export interface TerminalPlacement {
 }
 
 /**
- * S22.12 — find the `placement` whose `placementKey` matches, walking the terminal
- * `SearchResult`'s ranked answer (CONFIDENT `primary`, HEDGED `alternatives`, EMPTY none).
+ * S22.12 — find the `placement` whose `placementKey` matches, walking first the
+ * terminal `SearchResult`'s ranked answer (CONFIDENT `primary`, HEDGED `alternatives`,
+ * EMPTY none) and then, as a fallback, `groups[].groupHits[]` entries carrying a
+ * persisted full `placement`. The fallback covers nonces issued via `issueHitNonces`
+ * (ADR 0017 amendment) for hits outside the ranked answer — every resolved hit row
+ * gets a handoff nonce, not just the primary's showtimes, so a groups-only match is
+ * a legitimate recheck, not an unreachable case.
  * The placement is re-validated against `PlacementSchema` here (Zod at every boundary);
- * `capturedAt` is the matched offer's freshness stamp (`lastKnown.capturedAt`). `null`
- * means the terminal answer carries no such placement — unreachable for a nonce that
- * passed `resultVersion` binding (a placement nonce only exists for a revealed placement).
+ * `capturedAt` is the matched offer's freshness stamp (`lastKnown.capturedAt`) on the
+ * answer path, or the matched resolved group showtime's `capturedAt` on the groups
+ * fallback path. `null` means neither the terminal answer nor any group hit carries
+ * such a placement.
  */
 export function findTerminalPlacement(
   payload: unknown,
@@ -59,6 +65,66 @@ export function findTerminalPlacement(
       return null;
     }
     return { placement, capturedAt };
+  }
+  // This fix — groups fallback for hits outside the ranked answer. A nonce minted by
+  // `issueHitNonces` (ADR 0017 amendment) exists for every resolved `groupHits[]`
+  // entry, not just the ones selected into `answer`, so a placementKey/showtimeId
+  // pair that never appears in `primary`/`alternatives` is still legitimate. Each
+  // such hit now persists its full `placement` alongside `placementKey`; resolve it
+  // here by matching the key, then confirming the showtime is one the hit covers
+  // (`hit.showtimeIndices` → `group.showtimes[index]`) and is resolved (`capturedAt`
+  // present). The hit placement is re-validated via `PlacementSchema.parse`, exactly
+  // like the answer-walk path above (Zod at every boundary).
+  const groups = (payload as { groups?: unknown }).groups;
+  if (!Array.isArray(groups)) {
+    return null;
+  }
+  for (const group of groups) {
+    if (typeof group !== "object" || group === null) {
+      continue;
+    }
+    const record = group as { showtimes?: unknown; groupHits?: unknown };
+    if (!Array.isArray(record.showtimes) || !Array.isArray(record.groupHits)) {
+      continue;
+    }
+    for (const hit of record.groupHits) {
+      if (typeof hit !== "object" || hit === null) {
+        continue;
+      }
+      const candidate = hit as {
+        placementKey?: unknown;
+        placement?: unknown;
+        showtimeIndices?: unknown;
+      };
+      if (candidate.placementKey !== placementKey || candidate.placement == null) {
+        continue;
+      }
+      let placement: Placement;
+      try {
+        placement = PlacementSchema.parse(candidate.placement);
+      } catch {
+        continue;
+      }
+      if (!Array.isArray(candidate.showtimeIndices)) {
+        continue;
+      }
+      for (const index of candidate.showtimeIndices) {
+        if (typeof index !== "number") {
+          continue;
+        }
+        const showtime = (record.showtimes as readonly unknown[])[index];
+        if (typeof showtime !== "object" || showtime === null) {
+          continue;
+        }
+        const matched = showtime as {
+          showtimeId?: unknown;
+          capturedAt?: unknown;
+        };
+        if (matched.showtimeId === showtimeId && typeof matched.capturedAt === "string") {
+          return { placement, capturedAt: matched.capturedAt };
+        }
+      }
+    }
   }
   return null;
 }

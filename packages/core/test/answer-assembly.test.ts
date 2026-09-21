@@ -532,7 +532,13 @@ describe("assembleAnswerEvidence — empty-evidence edges (item 5)", () => {
       spec: spec({}),
     });
     // ADR 0017 amendment — the additive per-hit key map is aligned (one group, no hits).
-    expect(evidence).toEqual({ exact: null, hedged: null, hitPlacementKeys: [[]] });
+    // This fix — the parallel full-placement map is aligned the same way (no hits).
+    expect(evidence).toEqual({
+      exact: null,
+      hedged: null,
+      hitPlacementKeys: [[]],
+      hitPlacements: [[]],
+    });
   });
 
   it("grid whose seatNames is null → every hit excluded, no fabricated names, no throw", () => {
@@ -553,7 +559,57 @@ describe("assembleAnswerEvidence — empty-evidence edges (item 5)", () => {
     });
     // ADR 0017 amendment — 1×3 grid, count 1 → three single-cell hits, every
     // candidate excluded for missing names → aligned nulls, selection untouched.
-    expect(evidence).toEqual({ exact: null, hedged: null, hitPlacementKeys: [[null, null, null]] });
+    // This fix — the parallel placement map is null at exactly the same indices.
+    expect(evidence).toEqual({
+      exact: null,
+      hedged: null,
+      hitPlacementKeys: [[null, null, null]],
+      hitPlacements: [[null, null, null]],
+    });
+  });
+});
+
+describe("assembleAnswerEvidence — hitPlacements parallelism (this fix)", () => {
+  it("hitPlacements is populated in parallel with hitPlacementKeys", () => {
+    // Same 2×6 fixture as the item-1 RUN proof: the only run of 2 is (0,2), offered
+    // by both showtimes, so the evidence is exact and every hit with a candidate
+    // carries both a key and its full placement.
+    const built = buildAuditoriumLayout({
+      rows: 2,
+      columns: 6,
+      cells: [...rowCells(1, [1, 2, 3, 4, 5, 6], true), ...rowCells(2, [1, 2, 3, 4, 5, 6], true)],
+    });
+    const layout = built.layout;
+    const seatScores = new Float64Array([0.5, 0.5, 0.75, 0.75, 0.5, 0.5, 0, 0, 0, 0, 0, 0]);
+    const showtimes: GroupShowtimeInput[] = [
+      resolvedShowtime("amc:showtime:a", bitmapWith(12, [2, 3]), 0),
+      resolvedShowtime("amc:showtime:b", bitmapWith(12, [2, 3]), 1),
+    ];
+    const { group, metrics } = assembleGroup(layout, showtimes, {
+      seatScores,
+      group: { kind: "RUN", count: 2 },
+    });
+    const evidence = assembleAnswerEvidence({
+      groups: [{ group, layout, metrics }],
+      spec: spec({ group: { kind: "RUN", count: 2 } }),
+    });
+    // Outer/inner alignment: one entry per group, one per groupHits entry.
+    expect(evidence.hitPlacements).toHaveLength(evidence.hitPlacementKeys.length);
+    expect(evidence.hitPlacements[0]).toHaveLength(evidence.hitPlacementKeys[0]!.length);
+    expect(evidence.hitPlacements[0]).toHaveLength(group.groupHits!.length);
+    // Null exactly where the key is null, and every retained placement's key
+    // matches its parallel key entry.
+    evidence.hitPlacementKeys[0]!.forEach((key, hitIndex) => {
+      const placement = evidence.hitPlacements[0]![hitIndex]!;
+      expect(placement === null).toBe(key === null);
+      if (key !== null && placement !== null) {
+        expect(placement.placementKey).toBe(key);
+      }
+    });
+    // At least one hit resolved, and the winning exact placement is retained in
+    // the map (not just on `exact`) — the placement `findTerminalPlacement` needs.
+    expect(evidence.exact).not.toBeNull();
+    expect(evidence.hitPlacements[0]).toContainEqual(evidence.exact!.placement);
   });
 });
 

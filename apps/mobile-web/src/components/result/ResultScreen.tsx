@@ -226,6 +226,7 @@ export function ResultScreen({
         onEditSearch={vm.actions.backToSearch}
         onHandoff={vm.actions.startHandoff}
         handoffEligible={vm.handoffEligibleShowtimeIds}
+        answerPlacements={vm.answerPlacementByShowtimeId}
         provenanceByShowtimeId={vm.provenanceByShowtimeId}
         recheckingShowtimeId={vm.recheckingShowtimeId}
         recheckSelectedShowtimeId={vm.recheckTargetShowtimeId}

@@ -439,6 +439,13 @@ export function createAggregateAnswerHandler(deps: AnswerAssemblerDeps): Aggrega
     // `groups[i].groupHits[j]`. Per-covered-showtime nonces stay `null` placeholders
     // here — the serve surface (`searches.get`) signs the best hit's nonce per
     // showtime at terminal serve, mirroring the answer-offer `nonce: null` pattern.
+    // This fix also retains the FULL placement (`hit.placement`, in parallel with
+    // `hit.placementKey`) from `evidence.hitPlacements`, so `findTerminalPlacement`
+    // can recheck a hit that lives only in `groups[].groupHits[]`, outside
+    // `answer.primary`/`alternatives` — every such hit already holds a valid
+    // `issueHitNonces` nonce (ADR 0017 amendment). Null-safe exactly like the
+    // `placementKey`/`hit` lookups: a null placement (no candidate for the hit)
+    // leaves the hit's field null, matching its null key.
     // This mutates only the additive hit fields; `primary`/`alternatives` selection
     // and the persisted answer shape are untouched.
     evidence.hitPlacementKeys.forEach((keys, groupIndex) => {
@@ -455,6 +462,7 @@ export function createAggregateAnswerHandler(deps: AnswerAssemblerDeps): Aggrega
           return;
         }
         hit.placementKey = placementKey;
+        hit.placement = evidence.hitPlacements[groupIndex]?.[hitIndex] ?? null;
         hit.showtimeNonces = hit.showtimeIndices.map(() => null);
       });
     });

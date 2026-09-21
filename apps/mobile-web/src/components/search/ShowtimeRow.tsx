@@ -2,8 +2,10 @@ import { useState, type ReactElement } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 import { Animated } from "react-native";
 import type {
+  Placement,
   RecoveryOption,
   RecheckResult,
+  RecommendationReason,
   ResultGroup,
   ScheduleSkeletonEntry,
 } from "@seatfirst/core";
@@ -37,6 +39,15 @@ export interface ShowtimeRowProps {
   resolvedCount: number;
   onHandoff?: ((showtimeId: string) => void) | undefined;
   handoffEligible?: string[] | undefined;
+  /** This fix: canonical answer-level placement per showtimeId (built in
+   *  `useSearchResultsViewModel` from the ranked answer alone). When this
+   *  row's showtime is covered here, the displayed seat/row text and dot-grid
+   *  highlight come from the answer's own `placement` — the exact placement
+   *  bound to the real nonce/recheck/deep-link — never from the (possibly
+   *  stale, ADR 0064-retained) group's own top `groupHits[0]` pick. Absent
+   *  entries keep today's `group.groupHits`-derived display. */
+  answerPlacements?:
+    Record<string, { placement: Placement; reasons: RecommendationReason[] }> | undefined;
   isTopPick?: boolean;
   theaterName?: string;
   halted?: boolean;
@@ -185,6 +196,7 @@ export function ShowtimeRow({
   resolvedCount,
   onHandoff,
   handoffEligible,
+  answerPlacements,
   isTopPick = false,
   theaterName = "",
   halted = false,
@@ -346,34 +358,86 @@ export function ShowtimeRow({
     } catch {
       grid = null;
     }
-    if (variant === "hit") {
-      const hits = (group.groupHits ?? []).filter((h) => h.showtimeIndices.includes(showtimeIdx));
-      const best = hits[0];
-      if (best) {
-        try {
-          const summary = summarizePlacement(group, best, partySize);
-          placementLine = `${summary.rowSeatLabel} · ${summary.centered ? "centered" : "off-centre"} · ${summary.third} third`;
-        } catch {
-          // Fallback when group lacks full geometry (e.g., minimal test fixtures): derive locally
-          const rowLetter = String.fromCharCode(65 + best.row);
-          const firstSeat = best.startCol + 1;
-          const lastSeat = best.startCol + partySize;
-          const cols = group.columns ?? 20;
-          const rows = (group as unknown as { rows?: number }).rows ?? 10;
-          const centred = Math.abs(best.startCol + partySize / 2 - cols / 2) < 2;
-          const third =
-            best.row < rows / 3 ? "front" : best.row < (2 * rows) / 3 ? "middle" : "back";
-          placementLine = `Row ${rowLetter}, Seats ${firstSeat}-${lastSeat} · ${centred ? "centered" : "off-centre"} · ${third} third`;
-        }
-        highlightRange = {
-          row: best.row,
-          startCol: best.startCol,
-          endCol: best.startCol + partySize - 1,
-        };
+    // This fix: the canonical answer-level placement wins for DISPLAY whenever
+    // this showtime is covered by the ranked answer. `groups` here is the
+    // ADR 0064 `combinedGroups` union (live + retained for in-situ-merge visual
+    // continuity), so `group` above can be a stale retained snapshot whose own
+    // `groupHits[0]` pick no longer matches the placement actually bound to the
+    // real nonce/recheck/deep-link (ADR 0041 §6 renders a working handoff CTA
+    // for every hit, not just the primary's showtimes). The answer's own
+    // `Recommendation.placement` is that canonical placement — display it,
+    // never the group's own top hit. Only rows with no entry here fall back to
+    // the `group.groupHits`-derived computation below, unchanged.
+    const answerEntry = answerPlacements?.[entry.showtimeId];
+    if (variant === "hit" && answerEntry !== undefined) {
+      const canonical = answerEntry.placement;
+      try {
+        const summary = summarizePlacement(
+          group,
+          // summarizePlacement only reads `row`/`startCol` off the hit — the
+          // group argument stays purely visual geometry (columns/rows/seatNames
+          // for the label math), while the seat position itself is canonical.
+          { row: canonical.row, startCol: canonical.startCol } as NonNullable<
+            ResultGroup["groupHits"]
+          >[number],
+          partySize,
+        );
+        placementLine = `${summary.rowSeatLabel} · ${summary.centered ? "centered" : "off-centre"} · ${summary.third} third`;
+      } catch {
+        // Same local fallback as below, driven by the canonical placement.
+        const rowLetter = String.fromCharCode(65 + canonical.row);
+        const firstSeat = canonical.startCol + 1;
+        const lastSeat = canonical.startCol + partySize;
+        const cols = group.columns ?? 20;
+        const rows = (group as unknown as { rows?: number }).rows ?? 10;
+        const centred = Math.abs(canonical.startCol + partySize / 2 - cols / 2) < 2;
+        const third =
+          canonical.row < rows / 3 ? "front" : canonical.row < (2 * rows) / 3 ? "middle" : "back";
+        placementLine = `Row ${rowLetter}, Seats ${firstSeat}-${lastSeat} · ${centred ? "centered" : "off-centre"} · ${third} third`;
       }
-    }
-    if (grid) {
-      dotGrid = <SeatDotGrid grid={grid} highlightedRange={highlightRange} />;
+      highlightRange = {
+        row: canonical.row,
+        startCol: canonical.startCol,
+        endCol: canonical.startCol + partySize - 1,
+      };
+      // The grid is pure auditorium geometry, safe to visualize from whichever
+      // group was found — but only when it actually depicts the canonical
+      // placement's auditorium. A stale retained group from another layout
+      // would highlight the right seats on the wrong map, so render no grid
+      // rather than a mismatched one.
+      if (grid && group.layoutId === canonical.layoutId) {
+        dotGrid = <SeatDotGrid grid={grid} highlightedRange={highlightRange} />;
+      }
+    } else {
+      if (variant === "hit") {
+        const hits = (group.groupHits ?? []).filter((h) => h.showtimeIndices.includes(showtimeIdx));
+        const best = hits[0];
+        if (best) {
+          try {
+            const summary = summarizePlacement(group, best, partySize);
+            placementLine = `${summary.rowSeatLabel} · ${summary.centered ? "centered" : "off-centre"} · ${summary.third} third`;
+          } catch {
+            // Fallback when group lacks full geometry (e.g., minimal test fixtures): derive locally
+            const rowLetter = String.fromCharCode(65 + best.row);
+            const firstSeat = best.startCol + 1;
+            const lastSeat = best.startCol + partySize;
+            const cols = group.columns ?? 20;
+            const rows = (group as unknown as { rows?: number }).rows ?? 10;
+            const centred = Math.abs(best.startCol + partySize / 2 - cols / 2) < 2;
+            const third =
+              best.row < rows / 3 ? "front" : best.row < (2 * rows) / 3 ? "middle" : "back";
+            placementLine = `Row ${rowLetter}, Seats ${firstSeat}-${lastSeat} · ${centred ? "centered" : "off-centre"} · ${third} third`;
+          }
+          highlightRange = {
+            row: best.row,
+            startCol: best.startCol,
+            endCol: best.startCol + partySize - 1,
+          };
+        }
+      }
+      if (grid) {
+        dotGrid = <SeatDotGrid grid={grid} highlightedRange={highlightRange} />;
+      }
     }
   }
 

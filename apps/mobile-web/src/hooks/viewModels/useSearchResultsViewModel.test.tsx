@@ -10,6 +10,7 @@ import {
   devShowtimeId,
   makeConfidentAnswer,
   makeEmptyAnswer,
+  makeHedgedAnswer,
   makePlacement,
   makeRecommendation,
   makeResolvedGroupShowtime,
@@ -395,5 +396,83 @@ describe("useSearchResultsViewModel Show-what's-playing-here discovery (UI42.9)"
     const vm = captureVm();
     expect(clearTheatreMovieCache).not.toHaveBeenCalled();
     expect(vm.noValidActions.map((a) => a.label)).not.toContain("Show what's playing here");
+  });
+});
+
+/**
+ * Client display consistency fix: `answerPlacementByShowtimeId` carries the
+ * canonical answer-level placement per showtimeId for DISPLAY — the exact
+ * placement bound to the real nonce/recheck/deep-link — so rows never render
+ * a possibly-stale retained group's own top `groupHits[0]` pick instead
+ * (ADR 0064 in-situ merge keeps predecessor groups in `groups` for visual
+ * continuity). Derived from the ranked answer alone, never from groups.
+ */
+describe("useSearchResultsViewModel answerPlacementByShowtimeId (this fix)", () => {
+  it("maps every primary showtime to the primary placement for CONFIDENT", () => {
+    const primary = makeRecommendation("a", {
+      placement: makePlacement({ placementKey: "pk-primary", row: 5, startCol: 5 }),
+      showtimes: [
+        makeShowtimeOffer("a", { showtimeId: "sh_a" }),
+        makeShowtimeOffer("b", { showtimeId: "sh_b" }),
+      ],
+    });
+    useSeatfirstStore.setState({
+      searchId: "srch_ans_conf",
+      status: "COMPLETE",
+      answer: makeConfidentAnswer({ primary }),
+      groups: [],
+      scheduleSkeleton: [],
+      resolved: 0,
+      total: 0,
+    });
+    const vm = captureVm();
+    expect(Object.keys(vm.answerPlacementByShowtimeId).sort()).toEqual(["sh_a", "sh_b"]);
+    expect(vm.answerPlacementByShowtimeId["sh_a"]?.placement.placementKey).toBe("pk-primary");
+    expect(vm.answerPlacementByShowtimeId["sh_b"]?.placement.placementKey).toBe("pk-primary");
+    expect(vm.answerPlacementByShowtimeId["sh_a"]?.reasons).toEqual(primary.reasons);
+    expect(vm.answerPlacementByShowtimeId["sh_b"]?.reasons).toEqual(primary.reasons);
+  });
+
+  it("maps each HEDGED alternative's own showtimes to that alternative's placement", () => {
+    // Default hedged fixture: s1 carries dev-placement-1, s2 carries
+    // dev-placement-2 — a non-first alternative must never inherit
+    // alternatives[0]'s seats.
+    useSeatfirstStore.setState({
+      searchId: "srch_ans_hedged",
+      status: "COMPLETE",
+      answer: makeHedgedAnswer(),
+      groups: [],
+      scheduleSkeleton: [],
+      resolved: 0,
+      total: 0,
+    });
+    const vm = captureVm();
+    const map = vm.answerPlacementByShowtimeId;
+    expect(map[devShowtimeId("s1")]?.placement.placementKey).toBe("dev-placement-1");
+    expect(map[devShowtimeId("s2")]?.placement.placementKey).toBe("dev-placement-2");
+  });
+
+  it("is empty for EMPTY answers and null answers", () => {
+    useSeatfirstStore.setState({
+      searchId: "srch_ans_empty",
+      status: "COMPLETE",
+      answer: makeEmptyAnswer("SOLD_OUT", []),
+      groups: [],
+      scheduleSkeleton: [],
+      resolved: 1,
+      total: 1,
+    });
+    expect(captureVm().answerPlacementByShowtimeId).toEqual({});
+
+    useSeatfirstStore.setState({
+      searchId: "srch_ans_null",
+      status: "RUNNING",
+      answer: null,
+      groups: [],
+      scheduleSkeleton: [],
+      resolved: 0,
+      total: 0,
+    });
+    expect(captureVm().answerPlacementByShowtimeId).toEqual({});
   });
 });

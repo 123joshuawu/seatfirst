@@ -131,6 +131,7 @@ function baseVm(): MockViewModel {
     partySize: 2,
     canCheckMore: false,
     handoffEligibleShowtimeIds: [],
+    answerPlacementByShowtimeId: {},
     noValidActions: [],
     recheckingShowtimeId: null,
     recheckTargetShowtimeId: null,

@@ -1,6 +1,12 @@
 import { useEffect, useState, type ReactElement } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
-import type { RecheckResult, ResultGroup, ScheduleSkeletonEntry } from "@seatfirst/core";
+import type {
+  Placement,
+  RecheckResult,
+  RecommendationReason,
+  ResultGroup,
+  ScheduleSkeletonEntry,
+} from "@seatfirst/core";
 import type { RowProvenance } from "@/hooks/viewModels/useSearchResultsViewModel";
 import { colors } from "@/theme/colors";
 import { AppText } from "@/components/core/AppText";
@@ -24,6 +30,16 @@ export interface ShowtimeListProps {
   /** Terminal zero-result empty state: surfaces the screen's existing edit affordance (backToSearch). */
   onEditSearch?: (() => void) | undefined;
   handoffEligible?: string[] | undefined;
+  /** This fix: canonical answer-level placement per showtimeId (built in
+   *  `useSearchResultsViewModel` from the ranked answer alone). Rows covered
+   *  by the answer display the answer's own `placement`/`reasons` — the exact
+   *  placement bound to the real nonce/recheck/deep-link — never a
+   *  possibly-stale retained group's own top `groupHits[0]` pick (ADR 0064
+   *  in-situ merge can leave a predecessor snapshot in `groups`). Forwarded
+   *  untouched to each `ShowtimeRow`; absent entries keep today's
+   *  `group.groupHits`-derived display. */
+  answerPlacements?:
+    Record<string, { placement: Placement; reasons: RecommendationReason[] }> | undefined;
   onHandoff?: ((showtimeId: string) => void) | undefined;
   /** UI30 (ADR 0063 §3): showtime with a recheck in flight — other rows disable. */
   recheckingShowtimeId?: string | null;
@@ -76,6 +92,7 @@ export function ShowtimeList({
   onCheckMore,
   onEditSearch,
   handoffEligible,
+  answerPlacements,
   onHandoff,
   recheckingShowtimeId = null,
   recheckSelectedShowtimeId = null,
@@ -262,6 +279,7 @@ export function ShowtimeList({
               resolvedCount={resolved}
               onHandoff={onHandoff}
               handoffEligible={handoffEligible}
+              answerPlacements={answerPlacements}
               isTopPick={entry.showtimeId === topPickId}
               theaterName={theatreNameById?.get(entry.theatreId) ?? theaterName}
               compact={compact}
