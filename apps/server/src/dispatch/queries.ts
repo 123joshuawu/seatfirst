@@ -19,10 +19,7 @@ export interface Queryable {
 }
 export type JobKind = "SHOWTIME_FETCH" | "SCHEDULE_RESOLUTION" | "MOVIE_SCHEDULE_RESOLUTION";
 export type RunKeyKind =
-  | "SHOWTIME_FETCH"
-  | "SCHEDULE_RESOLUTION"
-  | "MOVIE_SCHEDULE_RESOLUTION"
-  | "RECHECK";
+  "SHOWTIME_FETCH" | "SCHEDULE_RESOLUTION" | "MOVIE_SCHEDULE_RESOLUTION" | "RECHECK";
 
 export interface RunKeyRow {
   readonly runKeyId: string;

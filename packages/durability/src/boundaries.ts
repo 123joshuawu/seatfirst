@@ -320,7 +320,6 @@ export const AMC_MOVIE_CATALOGUE_RESOLVE_SLUG = define({
     LIMIT 1`,
 });
 
-
 export const AMC_MOVIE_CATALOGUE_STATE_READ = define({
   boundary: "catalogue",
   name: "AMC_MOVIE_CATALOGUE_STATE_READ",
@@ -643,13 +642,7 @@ export const MOVIE_SCHEDULE_RUN_KEY_UPSERT = define({
   boundary: "B1/B6",
   name: "MOVIE_SCHEDULE_RUN_KEY_UPSERT",
   zeroRowsMeans: "",
-  params: [
-    "run_key_id",
-    "provider_id",
-    "movie_slug",
-    "anchor_theatre_id",
-    "local_date",
-  ],
+  params: ["run_key_id", "provider_id", "movie_slug", "anchor_theatre_id", "local_date"],
   text: `
     INSERT INTO run_key (run_key_id, kind, provider_id, route_class,
                          showtime_id, theatre_id, local_date, movie_slug)
@@ -658,7 +651,6 @@ export const MOVIE_SCHEDULE_RUN_KEY_UPSERT = define({
     ON CONFLICT (run_key_id) DO UPDATE SET provider_id = run_key.provider_id
     RETURNING run_key_id`,
 });
-
 
 export const JOB_CREATE = define({
   boundary: "B1/B6",
@@ -699,7 +691,6 @@ export const MOVIE_SCHEDULE_SUBSCRIPTION_CREATE = define({
     ON CONFLICT (run_key_id, search_id) DO NOTHING
     RETURNING job_id`,
 });
-
 
 /**
  * ADR 0005 §I point 2: the charge for a search that joins a `run_key` whose current

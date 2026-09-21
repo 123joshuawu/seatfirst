@@ -686,7 +686,9 @@ export async function stageMovieScheduleAcceptance(
     route_class: string;
   }>(db, B.B5A_DERIVE_KEY, [fenced.run_key_id]);
   if (key.kind !== "MOVIE_SCHEDULE_RESOLUTION") {
-    throw new Error(`stageMovieScheduleAcceptance expected MOVIE_SCHEDULE_RESOLUTION, got ${key.kind}`);
+    throw new Error(
+      `stageMovieScheduleAcceptance expected MOVIE_SCHEDULE_RESOLUTION, got ${key.kind}`,
+    );
   }
   await mustWin(db, B.B5B_EPOCH_FENCE, [key.provider_id, fenced.provider_epoch, key.route_class]);
   await mustWin(db, B.B5C_OBSERVATION, [
@@ -771,7 +773,9 @@ export async function stageMovieScheduleAcceptance(
       encodedCandidates.length === 0 ||
       encodedCandidates.some((candidate) => typeof candidate !== "string")
     ) {
-      throw new Error("stageMovieScheduleAcceptance requires a non-empty movie candidate theatre array");
+      throw new Error(
+        "stageMovieScheduleAcceptance requires a non-empty movie candidate theatre array",
+      );
     }
     const candidateTheatreIds = [...new Set(encodedCandidates as string[])];
     const theatreRows = (
@@ -941,12 +945,7 @@ export async function stageMovieScheduleAcceptance(
         fallbackRunKeyId,
         deadline,
       ]);
-      await mustWin(db, B.SUBSCRIPTION_CREATE, [
-        fallbackRunKeyId,
-        row.search_id,
-        jobId,
-        deadline,
-      ]);
+      await mustWin(db, B.SUBSCRIPTION_CREATE, [fallbackRunKeyId, row.search_id, jobId, deadline]);
       await runRows(db, B.COST_ABUSE_JOIN, [fallbackRunKeyId, row.search_id]);
       await mustWin(db, B.OUTBOX_CREATE_JOB, [jobId, null]);
     }
@@ -1482,7 +1481,6 @@ export interface FailedExhaustedRun {
   readonly affected: { search_id: string; seq: string }[];
 }
 
-
 /**
  * Defect-1 remediation: discovers `LEASED` runs whose lease has expired AND whose
  * attempts are exhausted (`SWEEP_RECLAIM_RUNS` deliberately excludes these — see its
@@ -1767,7 +1765,6 @@ export async function stageReopenProviderScope(
  * REQUIRES a single-connection `db` — see `acceptFetch`'s doc comment above.
  */
 export async function reopenProviderScope(
-
   db: TransactionClient,
   providerId: string,
   routeClass: string,
@@ -2104,8 +2101,7 @@ export async function stageSearchCreation(
     if (key.candidateTheatreIds.length === 0) {
       throw new Error("stageSearchCreation: movie schedule key requires a candidate theatre");
     }
-    const runKeyId =
-      `k_movie_sched_${input.providerId}_${key.movieSlug}_${key.anchorTheatreId}_${key.localDate}`;
+    const runKeyId = `k_movie_sched_${input.providerId}_${key.movieSlug}_${key.anchorTheatreId}_${key.localDate}`;
     await mustWin(db, B.MOVIE_SCHEDULE_RUN_KEY_UPSERT, [
       runKeyId,
       input.providerId,

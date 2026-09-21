@@ -187,8 +187,7 @@ describe("parseMovieShowtimes (S64, ADR 0104)", () => {
     const badMarkup =
       `<div id="dune-part-3">Dune Part 3</div>` +
       `<a id="144239197" href="/showtimes/144239197" aria-describedby="dune-part-3 no-such-theatre-section">10:00pm</a>`;
-    const html =
-      makeHtml(JSON.stringify([metreon, movie, metreonShowtime])) + badMarkup;
+    const html = makeHtml(JSON.stringify([metreon, movie, metreonShowtime])) + badMarkup;
     let caught: unknown;
     try {
       parseMovieShowtimes(html, observationTime, requestUrl);

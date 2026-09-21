@@ -148,46 +148,45 @@ describe("movie schedule admission (S65)", () => {
     await withTransaction(pool, async (tx) => {
       await runStatement(tx, RUN_CREATE, [runId, runKeyId, observationId, null]);
       await runStatement(tx, OUTBOX_CREATE_RUN, [runId, null]);
-      const lease = await runStatement<{ generation: number }>(tx, B2_LEASE_RUN, [runId, "5 minutes"]);
+      const lease = await runStatement<{ generation: number }>(tx, B2_LEASE_RUN, [
+        runId,
+        "5 minutes",
+      ]);
       const generation = lease[0]?.generation;
       if (generation === undefined) throw new Error("movie run was not leased");
       await runStatement(tx, B4_PREDISPATCH, [runId, generation]);
-      await stageMovieScheduleAcceptance(
-        tx,
-        { runId, generation },
-        [
-          {
-            theatreId: theatreA,
-            showtimeId: "amc:showtime:rank-a",
-            movieId: "amc:movie:42",
-            movieTitle: "Dune Part 3",
-            startsAt: new Date("2026-08-12T19:00:00.000Z"),
-            skipFetch: true,
-            formatCode: "IMAX",
-            auditorium: null,
-            utcOffset: "+00:00",
-            runtimeMinutes: 155,
-            status: "OPEN",
-            deepLinkUrl: "https://example.test/showtimes/rank-a/seats",
-            providerMeta: {},
-          },
-          {
-            theatreId: theatreB,
-            showtimeId: "amc:showtime:rank-b",
-            movieId: "amc:movie:42",
-            movieTitle: "Dune Part 3",
-            startsAt: new Date("2026-08-12T21:00:00.000Z"),
-            skipFetch: true,
-            formatCode: "IMAX",
-            auditorium: null,
-            utcOffset: "+00:00",
-            runtimeMinutes: 155,
-            status: "OPEN",
-            deepLinkUrl: "https://example.test/showtimes/rank-b/seats",
-            providerMeta: {},
-          },
-        ],
-      );
+      await stageMovieScheduleAcceptance(tx, { runId, generation }, [
+        {
+          theatreId: theatreA,
+          showtimeId: "amc:showtime:rank-a",
+          movieId: "amc:movie:42",
+          movieTitle: "Dune Part 3",
+          startsAt: new Date("2026-08-12T19:00:00.000Z"),
+          skipFetch: true,
+          formatCode: "IMAX",
+          auditorium: null,
+          utcOffset: "+00:00",
+          runtimeMinutes: 155,
+          status: "OPEN",
+          deepLinkUrl: "https://example.test/showtimes/rank-a/seats",
+          providerMeta: {},
+        },
+        {
+          theatreId: theatreB,
+          showtimeId: "amc:showtime:rank-b",
+          movieId: "amc:movie:42",
+          movieTitle: "Dune Part 3",
+          startsAt: new Date("2026-08-12T21:00:00.000Z"),
+          skipFetch: true,
+          formatCode: "IMAX",
+          auditorium: null,
+          utcOffset: "+00:00",
+          runtimeMinutes: 155,
+          status: "OPEN",
+          deepLinkUrl: "https://example.test/showtimes/rank-b/seats",
+          providerMeta: {},
+        },
+      ]);
     });
 
     const performances = await readAggregatePerformances(poolClient(pool), searchId);

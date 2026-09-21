@@ -66,21 +66,21 @@ async function createEmptyDatabase(): Promise<{ name: string; url: string; clien
 }
 
 describe("tier 0 — ledger: first apply records all", () => {
-  it("first apply on empty DB applies all 27 and records 27 ledger rows", async () => {
+  it("first apply on empty DB applies all 28 and records 28 ledger rows", async () => {
     const { client } = await createEmptyDatabase();
     try {
       const applied = await applyMigrations(client);
       expect(applied).toEqual([...MIGRATIONS]);
-      expect(applied).toHaveLength(27);
+      expect(applied).toHaveLength(28);
 
       const ledger = await appliedMigrations(client);
-      expect(ledger).toHaveLength(27);
+      expect(ledger).toHaveLength(28);
       expect(new Set(ledger)).toEqual(new Set(MIGRATIONS));
 
       const { rows } = await client.query(
         `SELECT count(*)::int AS n FROM ${SCHEMA_MIGRATION_TABLE}`,
       );
-      expect(rows[0].n).toBe(27);
+      expect(rows[0].n).toBe(28);
     } finally {
       await client.end();
     }
@@ -90,7 +90,7 @@ describe("tier 0 — ledger: first apply records all", () => {
     const { client } = await createEmptyDatabase();
     try {
       const first = await applyMigrations(client);
-      expect(first).toHaveLength(27);
+      expect(first).toHaveLength(28);
 
       const second = await applyMigrations(client);
       expect(second).toEqual([]);
@@ -99,7 +99,7 @@ describe("tier 0 — ledger: first apply records all", () => {
       const { rows } = await client.query(
         `SELECT count(*)::int AS n FROM ${SCHEMA_MIGRATION_TABLE}`,
       );
-      expect(rows[0].n).toBe(27);
+      expect(rows[0].n).toBe(28);
     } finally {
       await client.end();
     }
@@ -109,36 +109,34 @@ describe("tier 0 — ledger: first apply records all", () => {
     const { client } = await createEmptyDatabase();
     try {
       const first = await applyMigrations(client);
-      expect(first).toHaveLength(27);
+      expect(first).toHaveLength(28);
       const last = MIGRATIONS[MIGRATIONS.length - 1]!;
-      expect(last).toMatch(/027_/);
-      // 027's CREATE TABLE / DROP TABLE / DROP COLUMN IF EXISTS are all idempotent —
-      // unlike 023, no pre-revert is needed before re-applying it. Deleting the ledger row
-      // is sufficient to make the pending-only property observable.
+      expect(last).toMatch(/028_/);
+      // 028's ADD COLUMN IF NOT EXISTS / DROP CONSTRAINT IF EXISTS+ADD CONSTRAINT / CREATE
+      // UNIQUE INDEX IF NOT EXISTS are all idempotent — unlike 023, no pre-revert is needed
+      // before re-applying it. Deleting the ledger row is sufficient to make the
+      // pending-only property observable.
       await client.query(`DELETE FROM ${SCHEMA_MIGRATION_TABLE} WHERE name = $1`, [last]);
 
       const ledgerBefore = await appliedMigrations(client);
-      expect(ledgerBefore).toHaveLength(26);
+      expect(ledgerBefore).toHaveLength(27);
       expect(ledgerBefore).not.toContain(last);
 
       const second = await applyMigrations(client);
       expect(second).toEqual([last]);
 
       const ledgerAfter = await appliedMigrations(client);
-      expect(ledgerAfter).toHaveLength(27);
+      expect(ledgerAfter).toHaveLength(28);
       expect(new Set(ledgerAfter)).toEqual(new Set(MIGRATIONS));
 
-      // 027 re-ran as a guarded no-op: the new catalogue tables are still exactly there,
-      // and the drops it re-issues (DROP TABLE/COLUMN IF EXISTS) stay no-ops.
+      // 028 re-ran as a guarded no-op: the movie-schedule run_key columns/constraints
+      // it (re)adds are still exactly there, and the guarded DROP CONSTRAINT/ADD COLUMN
+      // IF NOT EXISTS it re-issues stay no-ops.
       const { rows } = await client.query(
         `SELECT column_name FROM information_schema.columns
-         WHERE table_schema = 'public' AND table_name = 'amc_movie_catalogue_state'`,
+         WHERE table_schema = 'public' AND table_name = 'run_key' AND column_name = 'movie_slug'`,
       );
-      expect(rows.map((r: { column_name: string }) => r.column_name).sort()).toEqual([
-        "last_completed_at",
-        "singleton",
-        "updated_at",
-      ]);
+      expect(rows.map((r: { column_name: string }) => r.column_name)).toEqual(["movie_slug"]);
     } finally {
       await client.end();
     }
@@ -194,7 +192,7 @@ describe("tier 0 — ledger: verifySchemaVersion", () => {
 
       const ledger = await appliedMigrations(client);
       expect(ledger).toContain("999_future.sql");
-      expect(ledger).toHaveLength(28);
+      expect(ledger).toHaveLength(29);
     } finally {
       await client.end();
     }
@@ -247,10 +245,10 @@ describe("tier 0 — ledger: baseline", () => {
       const before = await appliedMigrations(client);
       expect(before).toHaveLength(0);
       const recorded = await baselineMigrations(client);
-      expect(recorded).toHaveLength(27);
+      expect(recorded).toHaveLength(28);
       expect(new Set(recorded)).toEqual(new Set(MIGRATIONS));
       const after = await appliedMigrations(client);
-      expect(after).toHaveLength(27);
+      expect(after).toHaveLength(28);
       expect(new Set(after)).toEqual(new Set(MIGRATIONS));
 
       // Idempotent second baseline inserts nothing.
@@ -284,13 +282,13 @@ describe("tier 0 — ledger: concurrent apply serializes via advisory lock", () 
       // errors — the advisory lock serializes the two runs.
       expect(results).toHaveLength(2);
       const combined = [...results[0], ...results[1]];
-      expect(combined).toHaveLength(27);
+      expect(combined).toHaveLength(28);
       expect(new Set(combined)).toEqual(new Set(MIGRATIONS));
       // Exactly one of the two did the work; the other saw zero pending.
-      expect([results[0].length, results[1].length].sort()).toEqual([0, 27]);
+      expect([results[0].length, results[1].length].sort()).toEqual([0, 28]);
 
       const { rows } = await c1.query(`SELECT count(*)::int AS n FROM ${SCHEMA_MIGRATION_TABLE}`);
-      expect(rows[0].n).toBe(27);
+      expect(rows[0].n).toBe(28);
     } finally {
       await c1.end().catch(() => undefined);
       await c2.end().catch(() => undefined);

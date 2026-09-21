@@ -254,8 +254,7 @@ describe("parseObservation (S31.3–S31.5)", () => {
       status: "OPEN",
       attributes: ["REC", "IMAX"],
       formatCode: "IMAX",
-      deepLinkUrl:
-        "https://www.amctheatres.com/movie-theatres/san-francisco/amc-metreon-16/showtimes",
+      deepLinkUrl: "https://www.amctheatres.com/showtimes/144239197/seats",
       providerMeta: { rawStatus: "Sellable" },
     });
   });
@@ -281,8 +280,16 @@ describe("parseObservation (S31.3–S31.5)", () => {
             utcOffset: "-04:00",
           },
           { movieId: 987, name: "Dune Part 3", slug: "dune-part-3", runTimeMinutes: 155 },
-          { showtimeId: 144239197, status: "Sellable", showDateTimeUtc: "2026-08-13T02:00:00.000Z" },
-          { showtimeId: 145866536, status: "Sellable", showDateTimeUtc: "2026-08-13T02:00:00.000Z" },
+          {
+            showtimeId: 144239197,
+            status: "Sellable",
+            showDateTimeUtc: "2026-08-13T02:00:00.000Z",
+          },
+          {
+            showtimeId: 145866536,
+            status: "Sellable",
+            showDateTimeUtc: "2026-08-13T02:00:00.000Z",
+          },
         ]) +
           `<div id="dune-part-3">Dune Part 3</div>` +
           `<div role="group" aria-label="Showtimes at AMC Metreon 16"><div id="dune-part-3-amc-metreon-16"></div><h3 id="dune-part-3-amc-metreon-16-imax"><span>IMAX</span></h3><a id="144239197" href="/showtimes/144239197" aria-describedby="dune-part-3 dune-part-3-amc-metreon-16 dune-part-3-amc-metreon-16-imax">10:00pm</a></div>` +

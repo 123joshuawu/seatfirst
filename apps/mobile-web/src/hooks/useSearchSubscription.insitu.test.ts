@@ -1,7 +1,12 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import React from "react";
 import TestRenderer from "react-test-renderer";
-import type { ResultGroup, ScheduleSkeletonEntry, SearchSpec, TheatreSelector } from "@seatfirst/core";
+import type {
+  ResultGroup,
+  ScheduleSkeletonEntry,
+  SearchSpec,
+  TheatreSelector,
+} from "@seatfirst/core";
 import { useSeatfirstStore } from "@/store/seatfirstStore";
 import { searchInitialState } from "@/store/searchSlice";
 import { searchFormInitialState } from "@/store/searchFormSlice";
@@ -22,7 +27,9 @@ vi.mock("@/api/search", () => ({
   getSearch: (...args: unknown[]) => mockGetSearch(...args),
 }));
 vi.mock("@/lib/trpc", () => ({
-  trpcClient: { searches: { onProgress: { subscribe: (...args: unknown[]) => mockSubscribe(...args) } } },
+  trpcClient: {
+    searches: { onProgress: { subscribe: (...args: unknown[]) => mockSubscribe(...args) } },
+  },
 }));
 vi.mock("react-native", () => ({
   AppState: {
@@ -89,7 +96,11 @@ function mkEntry(showtimeId: string, theatreId: string, resolved = false): Sched
   } as unknown as ScheduleSkeletonEntry;
 }
 
-function seedActiveSearch(spec: SearchSpec, skeleton: ScheduleSkeletonEntry[], groups: ResultGroup[] = []): void {
+function seedActiveSearch(
+  spec: SearchSpec,
+  skeleton: ScheduleSkeletonEntry[],
+  groups: ResultGroup[] = [],
+): void {
   useSeatfirstStore.setState({
     ...searchFormInitialState,
     ...flowInitialState,
@@ -136,25 +147,18 @@ describe("isSameSearchSubject (ADR 0064 in-situ retention boundary)", () => {
 
   it("retains party-size and overlapping-theatre refinements, but not movie or wholesale theatre swaps", () => {
     expect(isSameSearchSubject(base, mkSpec("mv_dune", listTheatres(["th_1"]), 4))).toBe(true);
-    expect(isSameSearchSubject(base, mkSpec("mv_dune", listTheatres(["th_1", "th_2"])))).toBe(
-      true,
-    );
-    expect(isSameSearchSubject(base, mkSpec("mv_oppenheimer", listTheatres(["th_1"])))).toBe(
-      false,
-    );
+    expect(isSameSearchSubject(base, mkSpec("mv_dune", listTheatres(["th_1", "th_2"])))).toBe(true);
+    expect(isSameSearchSubject(base, mkSpec("mv_oppenheimer", listTheatres(["th_1"])))).toBe(false);
     expect(isSameSearchSubject(base, mkSpec("mv_dune", listTheatres(["th_2"])))).toBe(false);
   });
 
   it("keeps the ADR 0064 §4 AREA-to-LIST hand-prune on the refinement path", () => {
-    const area = mkSpec(
-      "mv_dune",
-      {
-        kind: "AREA",
-        center: { lat: 37.7, lng: -122.4 },
-        radiusKm: 10,
-        limit: 20,
-      } as unknown as TheatreSelector,
-    );
+    const area = mkSpec("mv_dune", {
+      kind: "AREA",
+      center: { lat: 37.7, lng: -122.4 },
+      radiusKm: 10,
+      limit: 20,
+    } as unknown as TheatreSelector);
     expect(isSameSearchSubject(area, base)).toBe(true);
     expect(isSameSearchSubject(base, area)).toBe(true);
   });
@@ -177,7 +181,11 @@ describe("startSearch in-situ skeleton merge", () => {
     });
 
     const state = useSeatfirstStore.getState();
-    expect(state.scheduleSkeleton.map((entry) => entry.showtimeId)).toEqual(["sh_1", "sh_2", "sh_3"]);
+    expect(state.scheduleSkeleton.map((entry) => entry.showtimeId)).toEqual([
+      "sh_1",
+      "sh_2",
+      "sh_3",
+    ]);
     expect([...(state.retainedRowIds as Set<string>)].sort()).toEqual(["sh_1", "sh_2"]);
     expect(mockCreateSearch).toHaveBeenCalledWith(specB, expect.any(String), undefined);
   });
@@ -198,7 +206,11 @@ describe("startSearch in-situ skeleton merge", () => {
     });
 
     const state = useSeatfirstStore.getState();
-    expect(state.scheduleSkeleton.map((entry) => entry.showtimeId)).toEqual(["sh_1", "sh_2", "sh_3"]);
+    expect(state.scheduleSkeleton.map((entry) => entry.showtimeId)).toEqual([
+      "sh_1",
+      "sh_2",
+      "sh_3",
+    ]);
     expect(
       state.scheduleSkeleton
         .filter((entry) => entry.theatreId === "th_2")

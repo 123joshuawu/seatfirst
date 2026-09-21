@@ -3,17 +3,15 @@ import { buildMovieShowtimesUrl, isAllowedUrl } from "../src/amc/routes.js";
 
 describe("buildMovieShowtimesUrl / isAllowedUrl (S64, ADR 0104)", () => {
   it("builds the movie-first showtimes URL shape", () => {
-    expect(
-      buildMovieShowtimesUrl("dune-part-3", "amc-metreon-16", "2026-08-13").toString(),
-    ).toBe(
+    expect(buildMovieShowtimesUrl("dune-part-3", "amc-metreon-16", "2026-08-13").toString()).toBe(
       "https://www.amctheatres.com/movies/dune-part-3/showtimes?date=2026-08-13&theatre=amc-metreon-16",
     );
   });
 
   it("positive control: the builder's own output is allowlisted", () => {
-    expect(isAllowedUrl(buildMovieShowtimesUrl("dune-part-3", "amc-metreon-16", "2026-08-13"))).toBe(
-      true,
-    );
+    expect(
+      isAllowedUrl(buildMovieShowtimesUrl("dune-part-3", "amc-metreon-16", "2026-08-13")),
+    ).toBe(true);
   });
 
   it("accepts a hand-built valid movie-showtimes URL", () => {

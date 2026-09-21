@@ -641,17 +641,14 @@ export function useSearchSubscription(): {
       // above. Distinct from the checkMore/BATCH_DEFERRED continuation, which
       // resubmits the IDENTICAL spec and keeps working as before.
       const prevCoverageSpec = store.serverCoverageSpec;
-      const specChanged =
-        prevCoverageSpec !== null && specHash(prevCoverageSpec) !== hash;
+      const specChanged = prevCoverageSpec !== null && specHash(prevCoverageSpec) !== hash;
       // In-situ retention is only for refinements of the SAME search subject
       // (party size, dates, format, time band, theatre add/remove within the same
       // selection — see isSameSearchSubject). A materially different movie or a
       // wholesale theatre replacement takes the full-reset else-branch below so no
       // stale rows survive under the new search.
       const isUpdate =
-        specChanged &&
-        prevCoverageSpec !== null &&
-        isSameSearchSubject(prevCoverageSpec, spec);
+        specChanged && prevCoverageSpec !== null && isSameSearchSubject(prevCoverageSpec, spec);
       // Either an in-situ update or a same-spec continuation keeps skeleton/groups
       // as retained anchors and resets only the progress fields (UI14.12); a
       // genuinely fresh search — or a changed spec carrying a stale continuation

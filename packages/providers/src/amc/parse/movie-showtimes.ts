@@ -109,7 +109,7 @@ function resolvePageMovieSlug(requestUrl: string, observationTime: Date): string
       observationTime,
     );
   }
-  return match[1]!;
+  return match[1];
 }
 
 function parseMovieShowtimesImpl(
@@ -132,7 +132,10 @@ function parseMovieShowtimesImpl(
   const theatreById = new Map<number, TheatreRecord>();
   for (const t of theatreRecords) {
     const known = theatreById.get(t.theatreId);
-    if (known && (known.slug !== t.slug || known.postalCode !== t.postalCode || known.name !== t.name)) {
+    if (
+      known &&
+      (known.slug !== t.slug || known.postalCode !== t.postalCode || known.name !== t.name)
+    ) {
       upstreamChanged(
         `Multiple theatre records for theatreId ${t.theatreId} disagree on slug/name/postalCode`,
         requestUrl,
@@ -187,7 +190,9 @@ function parseMovieShowtimesImpl(
   // contradictory state, never silently trusted over real data.
   const noShowtimesAlert = $('[role="alert"]')
     .toArray()
-    .some((el) => /no showtimes found|please select a nearby theatre|temporarily closed/i.test($(el).text()));
+    .some((el) =>
+      /no showtimes found|please select a nearby theatre|temporarily closed/i.test($(el).text()),
+    );
   const hasEvidence = showtimeRecords.length > 0 || anchors.length > 0;
 
   if (noShowtimesAlert && hasEvidence) {
@@ -226,12 +231,14 @@ function parseMovieShowtimesImpl(
     formatNamespacedId({
       providerId: PROVIDER_ID,
       kind: "movie",
-      raw: String(movie!.movieId),
+      raw: String(movie.movieId),
     }),
   );
   const runtimeMinutes =
-    typeof movie!.runTimeMinutes === "number" && Number.isInteger(movie!.runTimeMinutes) && movie!.runTimeMinutes > 0
-      ? movie!.runTimeMinutes
+    typeof movie.runTimeMinutes === "number" &&
+    Number.isInteger(movie.runTimeMinutes) &&
+    movie.runTimeMinutes > 0
+      ? movie.runTimeMinutes
       : null;
 
   const performances: Performance[] = [];
@@ -258,7 +265,7 @@ function parseMovieShowtimesImpl(
         observationTime,
       );
     }
-    const tokens = describedBy!.split(/\s+/).filter(Boolean);
+    const tokens = describedBy.split(/\s+/).filter(Boolean);
     if (tokens.length < 2) {
       upstreamChanged(
         `Showtime anchor ${idAttr} has ${tokens.length} aria-describedby token(s), expected at least the movie and theatre-section references`,
@@ -308,17 +315,17 @@ function parseMovieShowtimesImpl(
     // P5.14: resolve the IANA zone from this showtime's own theatre's postal code — never
     // from `utcOffset`, a fixed offset that cannot say whether the zone observes Daylight
     // Saving Time. Each nearby theatre converts in its own zone, not the anchor's.
-    const timezone = resolvePostalCodeTimezone(theatre!.postalCode);
+    const timezone = resolvePostalCodeTimezone(theatre.postalCode);
     if (timezone == null) {
       throw new ProviderError(
         "UPSTREAM_CHANGED",
-        `Postal code "${theatre!.postalCode}" is not in the timezone table`,
+        `Postal code "${theatre.postalCode}" is not in the timezone table`,
         {
           providerMeta: {
             requestUrl,
             observationTime,
-            theatreId: theatre!.theatreId,
-            postalCode: theatre!.postalCode,
+            theatreId: theatre.theatreId,
+            postalCode: theatre.postalCode,
           },
         },
       );
@@ -327,7 +334,7 @@ function parseMovieShowtimesImpl(
       formatNamespacedId({
         providerId: PROVIDER_ID,
         kind: "theatre",
-        raw: String(theatre!.theatreId),
+        raw: String(theatre.theatreId),
       }),
     );
 
@@ -365,7 +372,7 @@ function parseMovieShowtimesImpl(
           observationTime,
         );
       }
-      const leafSpans = target!
+      const leafSpans = target
         .find("span")
         .filter((_, s) => !$(s).hasClass("sr-only") && $(s).children().length === 0);
       if (leafSpans.length === 1) {
@@ -406,11 +413,11 @@ function parseMovieShowtimesImpl(
       formatNamespacedId({
         providerId: PROVIDER_ID,
         kind: "showtime",
-        raw: String(showtimeRecord!.showtimeId),
+        raw: String(showtimeRecord.showtimeId),
       }),
     );
-    const showDateTimeUtc = new Date(showtimeRecord!.showDateTimeUtc);
-    const local = toTheatreLocal(showtimeRecord!.showDateTimeUtc, timezone);
+    const showDateTimeUtc = new Date(showtimeRecord.showDateTimeUtc);
+    const local = toTheatreLocal(showtimeRecord.showDateTimeUtc, timezone);
 
     const candidate = {
       showtimeId: namespacedShowtimeId,
@@ -420,7 +427,7 @@ function parseMovieShowtimesImpl(
       providerMeta: {
         requestUrl,
         observationTime: observationTime.toISOString(),
-        rawStatus: showtimeRecord!.status,
+        rawStatus: showtimeRecord.status,
         rawFormatName,
         rawAttributeNames,
       },
@@ -428,7 +435,7 @@ function parseMovieShowtimesImpl(
       movieId,
       // S24.4: carry the movie title through the parse seam so the schedule-acceptance
       // write can populate the movie catalogue (S24.5).
-      movieTitle: movie!.name,
+      movieTitle: movie.name,
       // P5.10: auditorium identity may be unrecoverable per showtime — AMC's schedule payload
       // never carries one, so this is always null, never a required/derived value.
       auditorium: null,
@@ -438,14 +445,14 @@ function parseMovieShowtimesImpl(
       runtimeMinutes,
       // P5.5: maps the native status string to `ShowtimeStatus` via the normalization table.
       // Deciding what to do with that status is not this parser's job (P5.2: pure, no I/O).
-      status: normalizeShowtimeStatus(showtimeRecord!.status),
+      status: normalizeShowtimeStatus(showtimeRecord.status),
       attributes,
       formatCode,
       // P5.13: null until the seat fetch resolves — prices are not on the schedule.
       minPrice: null,
       // Real, allowlist-validated deep link (the baseline seats map carries zero params):
       // never fabricated from a numeric id outside the corridor, never a placeholder.
-      deepLinkUrl: buildSeatsUrl(showtimeRecord!.showtimeId).toString(),
+      deepLinkUrl: buildSeatsUrl(showtimeRecord.showtimeId).toString(),
       // The schedule payload carries no seat-layout id — only the seat page does.
       layoutId: null,
     };
@@ -455,7 +462,7 @@ function parseMovieShowtimesImpl(
       throw new ProviderError(
         "UPSTREAM_CHANGED",
         `Performance validation failed: ${validated.error.issues[0]?.message}`,
-        { providerMeta: { requestUrl, observationTime, showtimeId: showtimeRecord!.showtimeId } },
+        { providerMeta: { requestUrl, observationTime, showtimeId: showtimeRecord.showtimeId } },
       );
     }
     performances.push(validated.data);

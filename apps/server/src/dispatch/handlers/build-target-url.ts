@@ -56,7 +56,9 @@ export function createBuildTargetUrl(pool: Pool): (runKey: RunKeyRow) => Promise
       }
       const theatreSlug = theatre.slugs[theatre.market_slug];
       if (theatreSlug === undefined) {
-        throw new Error(`theatre ${runKey.theatreId} has no slug for market ${theatre.market_slug}`);
+        throw new Error(
+          `theatre ${runKey.theatreId} has no slug for market ${theatre.market_slug}`,
+        );
       }
       return buildMovieShowtimesUrl(runKey.movieSlug, theatreSlug, runKey.localDate).toString();
     }

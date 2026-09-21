@@ -33,6 +33,7 @@ assert.deepEqual(
     "025_tmdb_movie_slate_release.sql",
     "026_diagnostic_capture.sql",
     "027_amc_movie_catalogue.sql",
+    "028_movie_schedule_resolution.sql",
   ],
 );
 
