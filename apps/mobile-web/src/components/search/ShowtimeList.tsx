@@ -12,6 +12,7 @@ import { colors } from "@/theme/colors";
 import { AppText } from "@/components/core/AppText";
 import { SecondaryButton } from "@/components/core/Button";
 import { ShowtimeRow } from "./ShowtimeRow";
+import { RecoverySheet } from "./RecoverySheet";
 import { applyPreferOrder, NO_PREFERENCE, type PreferToggles } from "@/lib/preferSort";
 import { SeatDot } from "@/components/core/SeatDot";
 export const BATCH_SIZE = 20;
@@ -51,6 +52,9 @@ export interface ShowtimeListProps {
   recheckError?: string | null;
   /** Dismisses the target row's inline recheck result/error. */
   onClearRecheck?: (() => void) | undefined;
+  /** UI41 (ADR 0071 §UI41.4): persistently taken showtimes — each row gets
+   *  `isTaken` so a taken row survives subsequent rechecks on other rows. */
+  takenShowtimeIds?: string[];
   toggles?: PreferToggles;
   placeholderCount?: number | null;
   theaterName?: string;
@@ -99,6 +103,7 @@ export function ShowtimeList({
   recheckResult = null,
   recheckError = null,
   onClearRecheck,
+  takenShowtimeIds = [],
   toggles = NO_PREFERENCE,
   placeholderCount = null,
   theaterName = "",
@@ -219,6 +224,9 @@ export function ShowtimeList({
   const haltedCapacity = searchStatus === "HALTED" && terminalCause === "CAPACITY";
   return (
     <View style={styles.container}>
+      {/* UI41 (ADR 0071): recovery overlay — mounted once at the top level of
+        the results tree, outside the per-row mapping. Renders null unless open. */}
+      <RecoverySheet />
       {showCheckMore ? (
         <View style={styles.banner} testID="continuation-banner">
           <AppText weight="400" style={styles.bannerText}>
@@ -294,6 +302,7 @@ export function ShowtimeList({
               recheckResult={isTargetRow ? recheckResult : null}
               recheckError={isTargetRow ? recheckError : null}
               onClearRecheck={onClearRecheck}
+              isTaken={takenShowtimeIds.includes(entry.showtimeId)}
               provenance={provenanceByShowtimeId?.get(entry.showtimeId) ?? "RESOLVED_CURRENT"}
             />
           );

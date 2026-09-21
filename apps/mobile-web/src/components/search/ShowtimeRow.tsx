@@ -1,9 +1,8 @@
 import { useState, type ReactElement } from "react";
-import { Pressable, StyleSheet, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { Animated } from "react-native";
 import type {
   Placement,
-  RecoveryOption,
   RecheckResult,
   RecommendationReason,
   ResultGroup,
@@ -14,7 +13,6 @@ import { usePulseOpacity } from "@/theme/animations";
 import { AppText } from "@/components/core/AppText";
 import { Badge } from "@/components/core/Badge";
 import { PrimaryButton, SecondaryButton } from "@/components/core/Button";
-import { Checkbox } from "@/components/core/Checkbox";
 import { SeatDotGrid } from "@/components/core/SeatDotGrid";
 import { formatCodeToPref } from "@/lib/buildSearchSpec";
 import {
@@ -23,13 +21,7 @@ import {
   freeAndTotalSeats,
   summarizePlacement,
 } from "@/lib/rowSummary";
-import {
-  distanceLabel,
-  formatPlacementLabel,
-  formatShowtimeLocal as formatShowtimeUtcLocal,
-  priceLabel,
-  relaxationLabel,
-} from "@/lib/presentation";
+import { distanceLabel, priceLabel } from "@/lib/presentation";
 import { openHandoff, resolveDeepLinkForShowtime } from "@/lib/handoff";
 import type { RowProvenance } from "@/hooks/viewModels/useSearchResultsViewModel";
 
@@ -65,6 +57,9 @@ export interface ShowtimeRowProps {
   recheckError?: string | null;
   /** Dismisses this row's inline recheck result/error. */
   onClearRecheck?: (() => void) | undefined;
+  /** UI41 (ADR 0071 §UI41.2): persistent taken state from the store — survives
+   *  subsequent rechecks on other rows, unlike the flight-scoped recheckResult. */
+  isTaken?: boolean;
   /** UI31 (ADR 0064): in-situ diff-merge provenance — retained rows gate the CTA. */
   provenance?: RowProvenance;
 }
@@ -188,31 +183,6 @@ function deriveStatusText(
 /** Accessibility hint for the direct-handoff CTA (ADR 0063 §1 — never implies a hold). */
 const HANDOFF_A11Y_HINT = "Confirms seat availability and opens showtime on AMC";
 
-function showtimeLabelForOption(
-  option: RecoveryOption,
-  groups: readonly {
-    readonly showtimes: readonly {
-      readonly showtimeId: string;
-      readonly showDateTimeUtc: string;
-      readonly timezone: string;
-    }[];
-  }[],
-): string | null {
-  for (const group of groups) {
-    const st = group.showtimes.find((s) => s.showtimeId === option.showtimeId);
-    if (st) return formatShowtimeUtcLocal(st.showDateTimeUtc, st.timezone);
-  }
-  return null;
-}
-
-/** First describable relaxation on the option (mirrors ReplacementCard's display pick). */
-function relaxedDescription(option: RecoveryOption): string | null {
-  for (const r of option.relaxed) {
-    const label = relaxationLabel(r);
-    if (label !== null && label.length > 0) return label;
-  }
-  return null;
-}
 
 export function ShowtimeRow({
   entry,
@@ -232,6 +202,7 @@ export function ShowtimeRow({
   recheckResult = null,
   recheckError = null,
   onClearRecheck,
+  isTaken = false,
   provenance = "RESOLVED_CURRENT",
 }: ShowtimeRowProps): ReactElement {
   const { text, variant } = deriveStatusText(
@@ -250,44 +221,19 @@ export function ShowtimeRow({
   const proximityLabel = distanceLabel(entry.distanceKm);
   const subtitle = [theaterName, formatDisplay, proximityLabel].filter(Boolean).join(" · ");
   const attributeTags = screeningAttributeTags(entry.attributes ?? [], entry.formatCode);
-  const [consentedLevels, setConsentedLevels] = useState<Set<number>>(() => new Set());
   const [handoffError, setHandoffError] = useState<string | null>(null);
 
-  // UI30 (ADR 0063 §5): a GONE result marks this row taken in place — the status
-  // badge and CTA gating follow the effective variant.
+  // UI41 (ADR 0071 §UI41.2): persistent taken state. `isTaken` comes from the
+  // store's append-only `takenShowtimeIds` and survives subsequent rechecks on
+  // other rows; `isGoneRow` covers the flight-scoped result before the store
+  // catches up. Taken rows never render alternative-showtime markup — the
+  // RecoverySheet owns that entirely.
   const isGoneRow = recheckResult !== null && recheckResult.status === "GONE";
+  const isTakenRow = isTaken || isGoneRow;
   const rowAvailable = recheckResult !== null && recheckResult.status === "AVAILABLE";
-  const recoveryOptions: readonly RecoveryOption[] =
-    recheckResult !== null && recheckResult.status === "GONE" ? recheckResult.recovery : [];
-  const effectiveVariant = isGoneRow ? "miss" : variant;
-  const statusText = isGoneRow ? "Seats just taken" : text;
+  const effectiveVariant = isTakenRow ? "miss" : variant;
+  const statusText = isTakenRow ? "Seats just taken" : text;
 
-  const toggleConsent = (level: number): void => {
-    setConsentedLevels((prev) => {
-      const next = new Set(prev);
-      if (next.has(level)) next.delete(level);
-      else next.add(level);
-      return next;
-    });
-  };
-
-  const handleSelectOption = (option: RecoveryOption): void => {
-    // Level 4 consent gate — must be checked before proceeding (ADR 0063 §5).
-    if (
-      option.level === 4 &&
-      option.requiresConsent === true &&
-      !consentedLevels.has(option.level)
-    ) {
-      return;
-    }
-    const deepLinkUrl = resolveDeepLinkForShowtime(option.showtimeId, groups);
-    if (deepLinkUrl === null) {
-      setHandoffError("Couldn't open AMC for that time — pick another alternative");
-      return;
-    }
-    setHandoffError(null);
-    void openHandoff(deepLinkUrl);
-  };
 
   const handleOpenAvailable = (): void => {
     const deepLinkUrl = resolveDeepLinkForShowtime(entry.showtimeId, groups);
@@ -327,6 +273,22 @@ export function ShowtimeRow({
           accessibilityHint={HANDOFF_A11Y_HINT}
           size="compact"
         />
+      );
+    }
+    // UI41 (ADR 0071 §UI41.2): a taken row keeps a disabled "Go to AMC" CTA —
+    // same muted convention as the other-rechecking state (opacity 0.5,
+    // disabled, pointerEvents none). Alternatives live in the RecoverySheet.
+    if (isTakenRow) {
+      return (
+        <View style={styles.mutedCTA} pointerEvents="none">
+          <PrimaryButton
+            label="Go to AMC"
+            onPress={() => onHandoff?.(entry.showtimeId)}
+            disabled
+            accessibilityHint={HANDOFF_A11Y_HINT}
+            size="compact"
+          />
+        </View>
       );
     }
     if (isOtherRechecking) {
@@ -476,6 +438,9 @@ export function ShowtimeRow({
   // render a disabled "Updating…" CTA in its place until it resolves or drops out.
   const showUpdatingCta =
     provenance === "RETAINED_DISPLAY_ONLY" && effectiveVariant === "hit" && !!onHandoff;
+  // UI41 (ADR 0071 §UI41.2): a taken row keeps its disabled CTA visible (the
+  // RecoverySheet owns the alternatives — the row itself never expands).
+  const showTakenCta = isTakenRow && !!onHandoff;
 
   // S59 (ADR 0062 §5, amending ADR 0041 decision 1): price badge on every resolved
   // hit row via priceLabel — formatted amount when present, "Price unavailable"
@@ -582,7 +547,7 @@ export function ShowtimeRow({
       <View style={[styles.cardMain, compact ? styles.cardMainCompact : null]}>
         <View style={styles.expandTarget}>{headContent}</View>
 
-        {handoffAllowed || showUpdatingCta || priceLine || freshnessLabel ? (
+        {handoffAllowed || showUpdatingCta || showTakenCta || priceLine || freshnessLabel ? (
           <View style={[styles.handoffWrap, compact ? styles.handoffWrapCompact : null]}>
             {freshnessLabel ? (
               <AppText
@@ -598,7 +563,7 @@ export function ShowtimeRow({
                 {priceLine}
               </AppText>
             ) : null}
-            {handoffAllowed ? (
+            {handoffAllowed || showTakenCta ? (
               renderHandoffCTA()
             ) : showUpdatingCta ? (
               <PrimaryButton
@@ -634,72 +599,6 @@ export function ShowtimeRow({
         </View>
       ) : null}
 
-      {isGoneRow && recoveryOptions.length > 0 ? (
-        <View style={styles.recoveryPanel} testID={`recovery-panel-${entry.showtimeId}`}>
-          <AppText family="display" weight="700" style={styles.recoveryHeader}>
-            Those seats were just taken · Closest alternatives:
-          </AppText>
-          {recoveryOptions.map((option) => {
-            const optionPlacementLabel = formatPlacementLabel(option.placement);
-            const optionTimeLabel = showtimeLabelForOption(option, groups);
-            const optionRelaxed = relaxedDescription(option);
-            const requiresConsent = option.level === 4 && option.requiresConsent === true;
-            const consented = consentedLevels.has(option.level);
-            return (
-              <View
-                key={`${option.level}-${option.placement.placementKey}-${option.showtimeId}`}
-                style={styles.recoveryOption}
-              >
-                <AppText weight="600" style={styles.recoveryPlacement}>
-                  {optionPlacementLabel}
-                </AppText>
-                {optionTimeLabel ? (
-                  <AppText weight="400" style={styles.recoveryMeta}>
-                    {optionTimeLabel}
-                  </AppText>
-                ) : null}
-                {optionRelaxed ? (
-                  <AppText weight="400" style={styles.recoveryMeta}>
-                    {optionRelaxed}
-                  </AppText>
-                ) : null}
-                {requiresConsent ? (
-                  <Pressable
-                    onPress={() => toggleConsent(option.level)}
-                    accessibilityRole="checkbox"
-                    accessibilityLabel="I understand this is a different showtime and seat"
-                    accessibilityState={{ checked: consented }}
-                    accessibilityHint="Confirms consent for different showtime"
-                    style={styles.consentRow}
-                  >
-                    <Checkbox size="md" checked={consented} standalone={false} />
-                    <AppText weight="400" style={styles.consentText}>
-                      I understand this is a different showtime and seat
-                    </AppText>
-                  </Pressable>
-                ) : null}
-                <View
-                  style={styles.recoveryCTA}
-                  testID={`recovery-handoff-${option.level}-${entry.showtimeId}`}
-                >
-                  <PrimaryButton
-                    label="Go to AMC"
-                    onPress={() => handleSelectOption(option)}
-                    disabled={requiresConsent && !consented}
-                    accessibilityHint={HANDOFF_A11Y_HINT}
-                    size="compact"
-                  />
-                </View>
-              </View>
-            );
-          })}
-          {handoffError ? (
-            <AppText weight="400" style={styles.handoffErrorText}>
-              {handoffError}
-            </AppText>
-          ) : null}
-        </View>
-      ) : null}
     </View>
   );
 }
@@ -892,47 +791,5 @@ const styles = StyleSheet.create({
   handoffErrorText: {
     fontSize: 12,
     color: colors.noValidText,
-  },
-  recoveryPanel: {
-    backgroundColor: colors.replacementBg,
-    borderRadius: 10,
-    paddingVertical: 12,
-    paddingHorizontal: 12,
-    gap: 10,
-  },
-  recoveryHeader: {
-    fontSize: 14,
-    color: colors.replacementTitle,
-  },
-  recoveryOption: {
-    backgroundColor: colors.cardBg,
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: colors.borderHairline,
-    paddingVertical: 10,
-    paddingHorizontal: 12,
-    gap: 6,
-  },
-  recoveryPlacement: {
-    fontSize: 13.5,
-    color: colors.textPrimary,
-  },
-  recoveryMeta: {
-    fontSize: 12,
-    color: colors.textMuted,
-  },
-  recoveryCTA: {
-    marginTop: 4,
-  },
-  consentRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 8,
-    paddingVertical: 4,
-  },
-  consentText: {
-    fontSize: 12,
-    color: colors.textMuted,
-    flexShrink: 1,
   },
 });

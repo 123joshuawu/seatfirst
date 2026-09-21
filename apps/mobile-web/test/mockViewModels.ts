@@ -137,6 +137,8 @@ function baseVm(): MockViewModel {
     recheckingShowtimeId: null,
     recheckTargetShowtimeId: null,
     recheckInlineError: null,
+    takenShowtimeIds: [],
+    recoverySheetOpen: false,
     provenanceByShowtimeId: new Map(),
     displayRows: [],
 
@@ -174,6 +176,7 @@ function baseVm(): MockViewModel {
       restart: noop,
       startHandoff: noop,
       checkMore: noop,
+      dismissRecovery: noop,
       // handoff
       recheck: asyncNoop,
       clearRecheck: noop,

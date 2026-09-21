@@ -109,6 +109,11 @@ export interface SearchResultsViewModel {
   recheckResult: RecheckResult | null;
   /** Row-ready inline error copy (canonical `unavailableCauseLabel`/`recheckErrorLabel`), if any. */
   recheckInlineError: string | null;
+  /** UI41 (ADR 0071 §UI41.4): persistently taken showtimes — threaded through
+   *  `ShowtimeList` to each row's `isTaken` so a taken row survives later rechecks. */
+  takenShowtimeIds: string[];
+  /** UI41 (ADR 0071 §UI41.4): whether the recovery overlay is open. */
+  recoverySheetOpen: boolean;
   /** UI31 (ADR 0064): per-showtime provenance for the in-situ diff-merge window. */
   provenanceByShowtimeId: Map<string, RowProvenance>;
   /** UI31 (ADR 0064): skeleton-derived display rows with provenance + handoff gating. */
@@ -122,6 +127,7 @@ export interface SearchResultsViewModel {
     startHandoff: (showtimeId: string) => void;
     checkMore: () => void;
     clearRecheck: () => void;
+    dismissRecovery: () => void;
   };
 }
 
@@ -151,6 +157,7 @@ export function useSearchResultsViewModel(): SearchResultsViewModel {
     restart,
     partySize,
     clearRecheck,
+    dismissRecovery,
     setFormCollapsed,
   } = store;
 
@@ -535,6 +542,8 @@ export function useSearchResultsViewModel(): SearchResultsViewModel {
     recheckTargetShowtimeId: store.recheckSelectedShowtimeId,
     recheckResult,
     recheckInlineError,
+    takenShowtimeIds: store.takenShowtimeIds,
+    recoverySheetOpen: store.recoverySheetOpen,
     provenanceByShowtimeId,
     displayRows,
     actions: {
@@ -546,6 +555,7 @@ export function useSearchResultsViewModel(): SearchResultsViewModel {
       startHandoff,
       checkMore,
       clearRecheck,
+      dismissRecovery,
     },
   };
 }

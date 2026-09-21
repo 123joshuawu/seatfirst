@@ -313,7 +313,7 @@ describe("ShowtimeRow inline recheck states (UI30.4/6/7)", () => {
     expect(onHandoff).not.toHaveBeenCalled();
   });
 
-  describe("GONE in-situ recovery", () => {
+  describe("GONE taken row (UI41: alternatives live in the RecoverySheet, not the row)", () => {
     const altUrl1 = "https://www.amctheatres.com/showtimes/111/seats";
     const altUrl4 = "https://www.amctheatres.com/showtimes/444/seats";
     const goneResult: RecheckResult = {
@@ -357,47 +357,54 @@ describe("ShowtimeRow inline recheck states (UI30.4/6/7)", () => {
       return { renderer, onHandoff, onClearRecheck };
     }
 
-    it("marks the row taken and lists both recovery options in place", () => {
+    it("marks the row taken with a single disabled CTA and no inline recovery panel", () => {
       const { renderer } = renderGoneRow();
       const str = JSON.stringify(renderer.toJSON());
       expect(str).toContain("Seats just taken");
-      expect(renderer.root.findByProps({ testID: "recovery-panel-sh_gone" })).toBeDefined();
-      expect(str).toContain("Those seats were just taken · Closest alternatives:");
-      // No direct handoff CTA remains for the taken seats: the only two Go to AMC
-      // buttons are the recovery options' own (collapsed + expanded row CTAs gone).
-      expect(compositeButtons(renderer, { accessibilityLabel: "Go to AMC" }).length).toBe(2);
+      expect(renderer.root.findAllByProps({ testID: "recovery-panel-sh_gone" }).length).toBe(0);
+      // The taken seats keep one disabled Go to AMC CTA — alternatives live in
+      // the RecoverySheet, so the row never renders option buttons inline.
+      const buttons = compositeButtons(renderer, { accessibilityLabel: "Go to AMC" });
+      expect(buttons.length).toBe(1);
+      expect(buttons[0]?.props.accessibilityState).toEqual({ disabled: true, busy: false });
+      expect(buttons[0]?.props.onPress).toBeUndefined();
     });
 
-    it("gates the Level 4 option behind its consent checkbox", () => {
-      const { renderer } = renderGoneRow();
-      const l4 = renderer.root.findByProps({ testID: "recovery-handoff-4-sh_gone" });
-      const l4Button = l4.findByProps({ accessibilityLabel: "Go to AMC" });
-      expect(l4Button.props.accessibilityState).toEqual({ disabled: true, busy: false });
-
-      const checkbox = renderer.root.findByProps({
-        accessibilityLabel: "I understand this is a different showtime and seat",
+    it("isTaken alone marks the row taken — no flight-scoped result required", () => {
+      const onHandoff = vi.fn();
+      const entry = mkEntry({ showtimeId: "sh_taken", rank: 0, admitted: true, resolved: true });
+      const renderer = renderRow({
+        entry,
+        groups: [mkHitGroup("sh_taken")],
+        partySize: 2,
+        resolvedCount: 1,
+        onHandoff,
+        handoffEligible: ["sh_taken"],
+        isTaken: true,
       });
-      expect(checkbox.props.accessibilityState).toEqual({ checked: false });
-      act(() => {
-        (checkbox.props.onPress as () => void)();
-      });
-      expect(l4.findByProps({ accessibilityLabel: "Go to AMC" }).props.accessibilityState).toEqual({
-        disabled: false,
-        busy: false,
-      });
+      expect(JSON.stringify(renderer.toJSON())).toContain("Seats just taken");
+      const buttons = compositeButtons(renderer, { accessibilityLabel: "Go to AMC" });
+      expect(buttons.length).toBe(1);
+      expect(buttons[0]?.props.onPress).toBeUndefined();
+      expect(onHandoff).not.toHaveBeenCalled();
     });
 
-    it("hands off the Level 1 alternative directly", () => {
+    it("renders no consent UI — consent lives in the RecoverySheet", () => {
       const { renderer } = renderGoneRow();
-      const l1 = renderer.root.findByProps({ testID: "recovery-handoff-1-sh_gone" });
-      const l1Buttons = l1
-        .findAllByProps({ accessibilityLabel: "Go to AMC" })
-        .filter((n) => typeof n.type !== "string");
-      expect(l1Buttons.length).toBe(1);
-      act(() => {
-        (l1Buttons[0]?.props.onPress as () => void)();
-      });
-      expect(mockOpenHandoff).toHaveBeenCalledWith(altUrl1);
+      expect(
+        renderer.root.findAllByProps({
+          accessibilityLabel: "I understand this is a different showtime and seat",
+        }).length,
+      ).toBe(0);
+    });
+
+    it("never hands off an alternative from the row — the taken CTA is inert", () => {
+      const { renderer, onHandoff } = renderGoneRow();
+      const buttons = compositeButtons(renderer, { accessibilityLabel: "Go to AMC" });
+      expect(buttons.length).toBe(1);
+      expect(buttons[0]?.props.onPress).toBeUndefined();
+      expect(mockOpenHandoff).not.toHaveBeenCalled();
+      expect(onHandoff).not.toHaveBeenCalled();
     });
   });
 });

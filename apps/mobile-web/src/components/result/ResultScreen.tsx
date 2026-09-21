@@ -233,6 +233,7 @@ export function ResultScreen({
         recheckResult={vm.recheckResult}
         recheckError={vm.recheckInlineError}
         onClearRecheck={vm.actions.clearRecheck}
+        takenShowtimeIds={vm.takenShowtimeIds}
         toggles={toggles}
         placeholderCount={vm.previewPlaceholderCount ?? null}
         theaterName={vm.theaterName}

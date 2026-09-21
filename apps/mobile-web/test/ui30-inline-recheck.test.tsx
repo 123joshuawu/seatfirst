@@ -148,6 +148,7 @@ function ResultsSurface(): React.JSX.Element {
     recheckResult: vm.recheckResult,
     recheckError: vm.recheckInlineError,
     onClearRecheck: vm.actions.clearRecheck,
+    takenShowtimeIds: vm.takenShowtimeIds,
   });
 }
 
@@ -223,7 +224,7 @@ describe("UI30 inline recheck end to end (ADR 0063 Verification)", () => {
     expect(mockOpenHandoff).toHaveBeenCalledWith(DEEP_LINK);
   });
 
-  it("GONE renders both recovery options in place and hands off the Level 1 alternative", async () => {
+  it("GONE marks the row taken and hands off the Level 1 alternative from the RecoverySheet", async () => {
     mockRecheckShowtime.mockResolvedValue({
       status: "GONE",
       recovery: [
@@ -268,14 +269,18 @@ describe("UI30 inline recheck end to end (ADR 0063 Verification)", () => {
     // No auto-handoff on a taken row; the screen never moved.
     expect(openUrlSpy).not.toHaveBeenCalled();
     expect(useSeatfirstStore.getState().screen).toBe(screenBefore);
-    // Both recovery options render in place beneath the taken row.
+    // The taken row renders its badge with a disabled CTA and does NOT expand
+    // inline — UI41 moved the alternatives into the RecoverySheet.
     const str = JSON.stringify(renderer.toJSON());
     expect(str).toContain("Seats just taken");
-    expect(str).toContain("Those seats were just taken · Closest alternatives:");
-    expect(renderer.root.findByProps({ testID: `recovery-panel-${SHOWTIME_ID}` })).toBeDefined();
+    expect(
+      renderer.root.findAllByProps({ testID: `recovery-panel-${SHOWTIME_ID}` }).length,
+    ).toBe(0);
+    expect(renderer.root.findByProps({ testID: "recovery-sheet" })).toBeDefined();
+    expect(str).toContain("Those seats were just taken");
 
     // The Level 1 alternative hands off directly to its own deep link.
-    const l1 = renderer.root.findByProps({ testID: `recovery-handoff-1-${SHOWTIME_ID}` });
+    const l1 = renderer.root.findByProps({ testID: "recovery-option-1" });
     const l1Buttons = l1
       .findAllByProps({ accessibilityLabel: "Go to AMC" })
       .filter((n) => typeof n.type !== "string");

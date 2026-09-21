@@ -14,6 +14,12 @@ export interface RecheckState {
   recheckSelectedShowtimeId: string | null;
   recheckSelectedPlacementKey: string | null;
   recheckAttemptedNonce: string | null;
+  /** UI41 (ADR 0071 §UI41.1): every showtime marked taken by a GONE result.
+   *  Append-only across rechecks (never cleared by startRecheck/dismiss) so a
+   *  second recheck can't revert a taken row back to available-looking. */
+  takenShowtimeIds: string[];
+  /** UI41 (ADR 0071 §UI41.1): whether the recovery overlay is open. */
+  recoverySheetOpen: boolean;
 }
 
 export interface RecheckActions {
@@ -26,6 +32,8 @@ export interface RecheckActions {
   setRecheckResult: (result: RecheckResult) => void;
   setRecheckError: (opts: { code: string | null; message: string | null }) => void;
   clearRecheck: () => void;
+  /** UI41 (ADR 0071 §UI41.1): closes the recovery overlay, preserving taken state. */
+  dismissRecovery: () => void;
 }
 
 export type RecheckSlice = RecheckState & RecheckActions;
@@ -39,9 +47,14 @@ export const recheckInitialState: RecheckState = {
   recheckSelectedShowtimeId: null,
   recheckSelectedPlacementKey: null,
   recheckAttemptedNonce: null,
+  takenShowtimeIds: [],
+  recoverySheetOpen: false,
 };
 
-export const createRecheckSlice: StateCreator<SeatfirstStore, [], [], RecheckSlice> = (set) => ({
+export const createRecheckSlice: StateCreator<SeatfirstStore, [], [], RecheckSlice> = (
+  set,
+  get,
+) => ({
   ...recheckInitialState,
 
   startRecheck: ({ showtimeId, placementKey, nonce }) =>
@@ -54,6 +67,9 @@ export const createRecheckSlice: StateCreator<SeatfirstStore, [], [], RecheckSli
       recheckSelectedShowtimeId: showtimeId,
       recheckSelectedPlacementKey: placementKey,
       recheckAttemptedNonce: nonce,
+      // UI41: a new flight closes the sheet but preserves taken rows — a
+      // second recheck must not revert an already-taken row to available.
+      recoverySheetOpen: false,
     }),
 
   setRecheckResult: (result) => {
@@ -61,12 +77,28 @@ export const createRecheckSlice: StateCreator<SeatfirstStore, [], [], RecheckSli
     if (result.status === "AVAILABLE") next = "available";
     else if (result.status === "GONE") next = "gone";
     else if (result.status === "UNAVAILABLE") next = "unavailable";
+    if (result.status === "GONE") {
+      const target = get().recheckSelectedShowtimeId;
+      const prev = get().takenShowtimeIds;
+      set({
+        recheckStatus: next,
+        recheckingShowtimeId: null,
+        recheckResult: result,
+        recheckErrorCode: null,
+        recheckErrorMessage: null,
+        takenShowtimeIds:
+          target !== null && !prev.includes(target) ? [...prev, target] : prev,
+        recoverySheetOpen: true,
+      });
+      return;
+    }
     set({
       recheckStatus: next,
       recheckingShowtimeId: null,
       recheckResult: result,
       recheckErrorCode: null,
       recheckErrorMessage: null,
+      recoverySheetOpen: false,
     });
   },
 
@@ -79,5 +111,7 @@ export const createRecheckSlice: StateCreator<SeatfirstStore, [], [], RecheckSli
       recheckResult: null,
     }),
 
-  clearRecheck: () => set({ ...recheckInitialState }),
+  clearRecheck: () => set({ ...recheckInitialState, takenShowtimeIds: [] }),
+
+  dismissRecovery: () => set({ recoverySheetOpen: false }),
 });
