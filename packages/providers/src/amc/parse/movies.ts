@@ -198,6 +198,19 @@ function mergeMovieFields(target: MovieFields, source: MovieFields): void {
   }
 }
 
+/**
+ * Scrape AMC's national `/movies` catalogue page (an RSC/flight-stream page) to seed the
+ * local `amc_movie_catalogue` table (the 'Now Playing (general release)' default slate).
+ *
+ * Default behavior is featured-only: only AMC's own curated 'Featured' movies are captured.
+ * The full 'All Movies' grid is intentionally excluded because it is too broad/noisy for a
+ * default slate. The DOM/RSC signal distinguishing the two is the card root tag: catalogue
+ * grid tiles are cards rooted at list items (`<li>`), while a featured movie uses an
+ * equivalent aside card (`<aside>`). Traversal threads an `excluded` flag so that once it
+ * enters a subtree rooted at an `<li>` element, every movie discovered anywhere within that
+ * subtree is skipped. Movies under an `<aside>` root and bare/standalone movie-detail
+ * anchors not nested inside any `<li>` continue to be captured exactly as before.
+ */
 function parseMoviesImpl(
   html: string,
   observationTime: Date,
@@ -240,29 +253,35 @@ function parseMoviesImpl(
     return [...links.values()];
   }
 
-  function search(node: unknown): void {
+  function search(node: unknown, excluded = false): void {
     if (!node || typeof node !== "object" || seen.has(node)) return;
     seen.add(node);
 
     if (isRscElement(node)) {
       const props = node[3];
+      // Once inside an `<li>`-rooted grid tile, exclusion sticks for the whole subtree:
+      // a nested `<aside>` must not clear it (defensive; real AMC markup is unlikely to
+      // nest them, but an aside inside an li is still part of the excluded grid tile).
+      const childExcluded = excluded || node[1] === "li";
       const link = movieLink(props.href);
-      if (link) capture(link, collectCardFields(node));
+      if (link && !excluded) capture(link, collectCardFields(node));
 
-      // AMC's catalogue tiles are cards rooted at list items. A featured movie uses an
-      // equivalent aside card. Their metadata lives beside, not inside, the detail link.
-      if (node[1] === "li" || node[1] === "aside") {
+      // AMC's catalogue tiles are cards rooted at list items [`<li>`, the full grid]. A
+      // featured movie uses an equivalent aside card [`<aside>`]. Their metadata lives
+      // beside, not inside, the detail link. Only `<aside>` (featured) cards get the
+      // merge-fields pass — `<li>` (full-grid) subtrees are excluded entirely.
+      if (node[1] === "aside" && !excluded) {
         const fields = collectCardFields(node);
         for (const cardLink of linksIn(node)) capture(cardLink, fields);
       }
-      search(props.children);
+      search(props.children, childExcluded);
       return;
     }
     if (Array.isArray(node)) {
-      for (const item of node) search(item);
+      for (const item of node) search(item, excluded);
       return;
     }
-    for (const child of Object.values(node)) search(child);
+    for (const child of Object.values(node)) search(child, excluded);
   }
 
   search(extractFlightJSON(html));

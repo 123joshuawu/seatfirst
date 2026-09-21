@@ -122,7 +122,7 @@ describe("AMC Parsers (P5)", () => {
     it("extracts and deduplicates RSC movie cards, preserving card metadata", () => {
       const practicalMagicCard = [
         "$",
-        "li",
+        "aside",
         "practical-magic-2-77331",
         {
           children: [
@@ -262,6 +262,73 @@ describe("AMC Parsers (P5)", () => {
         imageUrl: "https://images.example/transformers.jpg",
       });
     });
+    it("excludes li-rooted grid tiles but captures aside featured cards and standalone anchors", () => {
+      const gridCard = [
+        "$",
+        "li",
+        "grid-only-movie-11111",
+        {
+          children: [
+            "$",
+            "$L38",
+            null,
+            {
+              href: "/movies/grid-only-movie-11111",
+              "aria-label": "Grid Only Movie details",
+              children: ["Grid Only Movie", "$undefined"],
+            },
+          ],
+        },
+      ];
+      const featuredCard = [
+        "$",
+        "aside",
+        "featured-movie-22222",
+        {
+          children: [
+            "$",
+            "$L38",
+            null,
+            {
+              href: "/movies/featured-movie-22222",
+              "aria-label": "Featured Movie details",
+              children: ["Featured Movie", "$undefined"],
+            },
+          ],
+        },
+      ];
+      const standaloneAnchor = [
+        "$",
+        "$L38",
+        null,
+        {
+          href: "/movies/standalone-movie-33333",
+          "aria-label": "Standalone Movie details",
+          children: ["Standalone Movie", "$undefined"],
+        },
+      ];
+      const html = makeHtml(
+        JSON.stringify(gridCard),
+        JSON.stringify(featuredCard),
+        JSON.stringify(standaloneAnchor),
+      );
+
+      const movies = parseMovies(html, observationTime, "http://test");
+
+      expect(movies).toHaveLength(2);
+      expect(movies.find((m) => m.movieId === 11111)).toBeUndefined();
+      expect(movies.find((m) => m.movieId === 22222)).toMatchObject({
+        name: "Featured Movie",
+        slug: "featured-movie-22222",
+        movieId: 22222,
+      });
+      expect(movies.find((m) => m.movieId === 33333)).toMatchObject({
+        name: "Standalone Movie",
+        slug: "standalone-movie-33333",
+        movieId: 33333,
+      });
+    });
+
 
     it("fails loudly when the RSC tree has no movie cards", () => {
       const html = makeHtml(
