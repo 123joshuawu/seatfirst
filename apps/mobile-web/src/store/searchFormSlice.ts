@@ -243,22 +243,21 @@ const DEFAULT_WHERE_RADIUS_KM = 10 * 1.609344;
 const DEFAULT_WHERE_LIMIT = DEFAULT_SEARCH_LIMITS.maxTheatres;
 
 /**
- * UI24 (ADR 0052 §1): the initial This-weekend `selectedDates`/`whenPreset`,
- * populated through the same preset resolver and reverse-canonicalization
- * (ADR 0044 amendment 2026-09-05) as every preset write — never an
- * empty/null deferred sentinel, and never a preset label that
- * `getDedupedPresets` has collapsed out of the visible chip row (e.g. This
- * weekend on a Sunday resolves to just today, identical to Tonight — the
- * chip row shows Tonight, so the initial selection must say Tonight too).
+ * UI24 (ADR 0052 §1, amended 2026-09-21): the initial Tonight
+ * `selectedDates`/`whenPreset`, populated through the same preset resolver
+ * and reverse-canonicalization (ADR 0044 amendment 2026-09-05) as every
+ * preset write — never an empty/null deferred sentinel. Tonight is always
+ * `getDedupedPresets`'s first visible chip, so no collapse case applies here
+ * the way This weekend collapsed into Tonight on a Sunday.
  */
 function initialWhenSelection(): { selectedDates: string[]; whenPreset: string } {
   const now = new Date();
   try {
-    const resolved = resolveWhenPreset("This weekend", now);
+    const resolved = resolveWhenPreset("Tonight", now);
     if (resolved) {
       const selectedDates = canonicalizeCustomDates(expandIsos(resolved.from, resolved.to));
       const matched = matchesExistingPreset(selectedDates, resolved.selectedBands, now);
-      return { selectedDates, whenPreset: matched ?? "This weekend" };
+      return { selectedDates, whenPreset: matched ?? "Tonight" };
     }
   } catch {
     // Fall through to the today fallback below.
