@@ -420,7 +420,11 @@ export function createAggregateAnswerHandler(deps: AnswerAssemblerDeps): Aggrega
         showtimes,
         layoutId,
         theatreId: first.theatreId,
-        formatCode: first.formatCode as string,
+        // ADR 0035 Decision 2 + 2026-09-21 amendment: a null formatCode means "Standard" —
+        // map it to the reserved "STANDARD" sentinel here too, never cast null to string
+        // (a null cast previously crashed the whole AGGREGATE job on ResultGroupSchema
+        // validation, permanently stalling the search — production incident 2026-09-21).
+        formatCode: first.formatCode ?? "STANDARD",
         auditorium: first.auditorium,
         attributes: first.attributes,
         resultGroupSchema: ResultGroupSchema,

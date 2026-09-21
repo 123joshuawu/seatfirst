@@ -1747,4 +1747,59 @@ describe("aggregate answer assembler", () => {
     // Manual seed row + first-pass patch only: the second pass emitted nothing.
     expect(count.rows[0]!.count).toBe("2");
   });
+  it("maps a null formatCode to the STANDARD sentinel instead of crashing the pass (2026-09-21 incident)", async () => {
+    await seedProvider(pool);
+    const built = buildAuditoriumLayout({
+      rows: 4,
+      columns: 6,
+      cells: Array.from({ length: 24 }, (_, index) => ({
+        row: Math.floor(index / 6) + 1,
+        column: (index % 6) + 1,
+        kind: "STANDARD" as const,
+        visible: true,
+        available: true,
+      })),
+    });
+    await pool.query(
+      `INSERT INTO auditorium_layout (layout_id, geometry, rows, columns)
+       VALUES ($1, $2::bytea, 4, 6)`,
+      [built.layout.layoutId, encodeAuditoriumLayoutGeometry(built.layout)],
+    );
+    const searchId = await seedSearch(pool, {
+      aggRequestedRev: 1,
+      spec: { ...makeSpec(), group: { kind: "RUN", count: 2 } },
+    });
+    const showtimeIds = await seedScheduleResolution(pool, searchId, {
+      count: 2,
+      layoutId: built.layout.layoutId,
+    });
+    // Standard format: no premium format tag, so format_code stays NULL (the
+    // legacy seed helper never sets it). Only attributes need the real writer
+    // shape (JSON array) for assembly to proceed.
+    await pool.query(
+      `UPDATE performance SET attributes = $1::jsonb, format_code = NULL WHERE layout_id = $2`,
+      [JSON.stringify(["RESERVED_SEATING"]), built.layout.layoutId],
+    );
+    await seedAcceptedSnapshot(pool, showtimeIds[0]!, Buffer.from([0xff, 0xff, 0xff]), 24);
+    await seedPendingFetch(pool, searchId);
+
+    // Pre-fix this threw out of assembleResultGroup
+    // ("Invalid input: expected string, received null"), crashing the whole
+    // AGGREGATE pass with no retry and stalling the search.
+    await expect(runPass(makeDeps(), searchId)).resolves.toBeUndefined();
+
+    const aggregate = await pool.query<{ payload: Record<string, unknown> }>(
+      `SELECT payload FROM search_aggregate WHERE search_id = $1`,
+      [searchId],
+    );
+    expect(aggregate.rows).toHaveLength(1);
+    const payload = aggregate.rows[0]!.payload as {
+      total: number;
+      resolved: number;
+      groups: { layoutId: string; formatCode: string }[];
+    };
+    expect(payload.total).toBe(2);
+    expect(payload.groups).toHaveLength(1);
+    expect(payload.groups[0]!.formatCode).toBe("STANDARD");
+  });
 });
