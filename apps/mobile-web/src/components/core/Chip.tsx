@@ -1,7 +1,8 @@
 import type { ReactElement } from "react";
-import { StyleSheet, Pressable, View } from "react-native";
+import { StyleSheet, Pressable } from "react-native";
 import { colors } from "@/theme/colors";
 import { AppText } from "./AppText";
+import { Checkbox } from "./Checkbox";
 
 export interface ChipProps {
   label: string;
@@ -41,19 +42,7 @@ export function Chip({
         disabled && styles.disabled,
       ]}
     >
-      {checkbox ? (
-        <View
-          style={[styles.checkbox, active ? styles.checkboxOn : styles.checkboxOff]}
-          accessible={false}
-          importantForAccessibility="no"
-        >
-          {active ? (
-            <AppText weight="700" style={styles.checkboxGlyph}>
-              ✓
-            </AppText>
-          ) : null}
-        </View>
-      ) : null}
+      {checkbox ? <Checkbox size="sm" checked={active} standalone={false} /> : null}
       <AppText
         weight={isSquare ? (active ? "700" : "600") : active ? "600" : "500"}
         style={[
@@ -98,25 +87,6 @@ const styles = StyleSheet.create({
   },
   squareLabel: {
     fontSize: 14,
-  },
-  checkbox: {
-    width: 14,
-    height: 14,
-    borderRadius: 4,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  checkboxOn: {
-    backgroundColor: colors.brandDark,
-  },
-  checkboxOff: {
-    borderWidth: 1.5,
-    borderColor: colors.checkboxOffBorder,
-  },
-  checkboxGlyph: {
-    fontSize: 10,
-    lineHeight: 10,
-    color: colors.white,
   },
   disabled: {
     opacity: 0.5,

@@ -14,6 +14,7 @@ import { usePulseOpacity } from "@/theme/animations";
 import { AppText } from "@/components/core/AppText";
 import { Badge } from "@/components/core/Badge";
 import { PrimaryButton, SecondaryButton } from "@/components/core/Button";
+import { Checkbox } from "@/components/core/Checkbox";
 import { SeatDotGrid } from "@/components/core/SeatDotGrid";
 import { formatCodeToPref } from "@/lib/buildSearchSpec";
 import {
@@ -671,17 +672,7 @@ export function ShowtimeRow({
                     accessibilityHint="Confirms consent for different showtime"
                     style={styles.consentRow}
                   >
-                    <View
-                      style={[styles.checkbox, consented ? styles.checkboxChecked : null]}
-                      accessible={false}
-                      importantForAccessibility="no"
-                    >
-                      {consented ? (
-                        <AppText weight="700" style={styles.checkmark}>
-                          ✓
-                        </AppText>
-                      ) : null}
-                    </View>
+                    <Checkbox size="md" checked={consented} standalone={false} />
                     <AppText weight="400" style={styles.consentText}>
                       I understand this is a different showtime and seat
                     </AppText>
@@ -938,23 +929,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 8,
     paddingVertical: 4,
-  },
-  checkbox: {
-    width: 20,
-    height: 20,
-    borderRadius: 6,
-    borderWidth: 1,
-    borderColor: colors.checkboxOffBorder,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  checkboxChecked: {
-    borderColor: colors.brandDark,
-    backgroundColor: colors.brandSoft,
-  },
-  checkmark: {
-    fontSize: 13,
-    color: colors.brandDark,
   },
   consentText: {
     fontSize: 12,

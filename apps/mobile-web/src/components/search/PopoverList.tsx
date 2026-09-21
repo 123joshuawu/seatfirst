@@ -3,6 +3,7 @@ import { Platform, Pressable, StyleSheet, View } from "react-native";
 import { colors } from "@/theme/colors";
 import type { LabeledAction } from "@/types/ui";
 import { AppText } from "@/components/core/AppText";
+import { Checkbox } from "@/components/core/Checkbox";
 import { AutocompletePopover } from "@/components/core/Autocomplete";
 
 export interface PopoverListItem extends LabeledAction {
@@ -77,19 +78,7 @@ export function PopoverList({
             style={[styles.item, disabled && styles.itemDisabled, selected && styles.itemSelected]}
           >
             <View style={styles.itemRow}>
-              {isListbox && (
-                <View
-                  style={[styles.checkbox, selected ? styles.checkboxOn : styles.checkboxOff]}
-                  accessible={false}
-                  importantForAccessibility="no"
-                >
-                  {selected ? (
-                    <AppText weight="700" style={styles.checkboxGlyph}>
-                      ✓
-                    </AppText>
-                  ) : null}
-                </View>
-              )}
+              {isListbox ? <Checkbox size="sm" checked={selected} standalone={false} /> : null}
               <View style={styles.itemTextWrap}>
                 <AppText style={styles.itemLabel}>{item.label}</AppText>
                 {city ? (
@@ -143,26 +132,5 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: colors.textMuted,
     flexShrink: 0,
-  },
-  checkbox: {
-    width: 16,
-    height: 16,
-    borderRadius: 4,
-    borderWidth: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  checkboxOn: {
-    backgroundColor: colors.brandDark,
-    borderColor: colors.brandDark,
-  },
-  checkboxOff: {
-    backgroundColor: colors.cardBg,
-    borderColor: colors.checkboxOffBorder,
-  },
-  checkboxGlyph: {
-    fontSize: 10,
-    color: colors.white,
-    lineHeight: 10,
   },
 });
