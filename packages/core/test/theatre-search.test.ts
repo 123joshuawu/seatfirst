@@ -125,12 +125,16 @@ describe("TheatreSearchResponseSchema (S20.1)", () => {
 
   it("parses a hit with null distanceKm (no user location, G1.5)", () => {
     const hit = { ...baseHit, distanceKm: null };
-    expect(TheatreSearchResponseSchema.parse({ theatres: [hit] })).toEqual({ theatres: [hit] });
+    expect(TheatreSearchResponseSchema.parse({ theatres: [hit] })).toEqual({
+      theatres: [{ ...hit, amenities: [] }],
+    });
   });
 
   it("parses a hit with a finite nonnegative distanceKm", () => {
     const hit = { ...baseHit, distanceKm: 12.5 };
-    expect(TheatreSearchResponseSchema.parse({ theatres: [hit] })).toEqual({ theatres: [hit] });
+    expect(TheatreSearchResponseSchema.parse({ theatres: [hit] })).toEqual({
+      theatres: [{ ...hit, amenities: [] }],
+    });
   });
 
   it("rejects a negative or non-finite distanceKm", () => {

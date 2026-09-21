@@ -34,6 +34,7 @@ assert.deepEqual(
     "026_diagnostic_capture.sql",
     "027_amc_movie_catalogue.sql",
     "028_movie_schedule_resolution.sql",
+    "029_theatre_amenities.sql",
   ],
 );
 

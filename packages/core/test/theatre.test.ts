@@ -17,7 +17,7 @@ const theatre = {
 
 describe("TheatreSchema", () => {
   it("accepts a strict namespaced theatre entity", () => {
-    expect(TheatreSchema.parse(theatre)).toEqual(theatre);
+    expect(TheatreSchema.parse(theatre)).toEqual({ ...theatre, amenities: [] });
   });
 
   it.each([

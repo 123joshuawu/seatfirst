@@ -15,6 +15,83 @@
       "slugs": {
         "san-francisco": "amc-sunnyvale-12"
       },
+      "amenities": [
+        {
+          "code": "imaxwithlaseratamc",
+          "name": "IMAX with Laser at AMC",
+          "sort": 10
+        },
+        {
+          "code": "dolbycinemaatamcprime",
+          "name": "Dolby Cinema at AMC",
+          "sort": 13
+        },
+        {
+          "code": "discountmatinees",
+          "name": "Discount Matinees",
+          "sort": 24
+        },
+        {
+          "code": "reald3d",
+          "name": "RealD 3D",
+          "sort": 52
+        },
+        {
+          "code": "heatedseatsatthistheatre",
+          "name": "Heated AMC Signature Recliners",
+          "sort": 54
+        },
+        {
+          "code": "plushrecliners",
+          "name": "AMC Signature Recliners",
+          "sort": 54
+        },
+        {
+          "code": "reclinerseating",
+          "name": "AMC Signature Recliners",
+          "sort": 54
+        },
+        {
+          "code": "laseratamc",
+          "name": "Laser at AMC",
+          "sort": 60
+        },
+        {
+          "code": "amcartisanfilms",
+          "name": "AMC Artisan Films",
+          "sort": 74
+        },
+        {
+          "code": "fooddrinksonlineordering",
+          "name": "Food & Drinks Mobile Ordering",
+          "sort": 77
+        },
+        {
+          "code": "macguffins",
+          "name": "MacGuffins Bar",
+          "sort": 80
+        },
+        {
+          "code": "reservedseating",
+          "name": "Reserved Seating",
+          "sort": 170
+        },
+        {
+          "code": "assistedlisteningdevices",
+          "name": "Assisted Listening Devices",
+          "sort": 999
+        },
+        {
+          "code": "militarypricingafter4pm",
+          "name": "Military Pricing",
+          "sort": 999
+        },
+        {
+          "code": "wheelchairaccess",
+          "name": "Wheelchair Access",
+          "sort": 999
+        }
+      ],
       "firstSeenAt": "2026-08-15T23:35:08.000Z",
       "lastSeenAt": "2026-08-15T23:35:08.000Z"
     },
@@ -32,6 +109,88 @@
       "slugs": {
         "san-francisco": "amc-newpark-12"
       },
+      "amenities": [
+        {
+          "code": "imaxwithlaseratamc",
+          "name": "IMAX with Laser at AMC",
+          "sort": 10
+        },
+        {
+          "code": "dolbycinemaatamcprime",
+          "name": "Dolby Cinema at AMC",
+          "sort": 13
+        },
+        {
+          "code": "discountmatinees",
+          "name": "Discount Matinees",
+          "sort": 24
+        },
+        {
+          "code": "opencaption",
+          "name": "Open Caption (On-Screen Subtitles)",
+          "sort": 27
+        },
+        {
+          "code": "reald3d",
+          "name": "RealD 3D",
+          "sort": 52
+        },
+        {
+          "code": "amcclubrockers",
+          "name": "AMC Club Rockers",
+          "sort": 54
+        },
+        {
+          "code": "plushrecliners",
+          "name": "AMC Signature Recliners",
+          "sort": 54
+        },
+        {
+          "code": "reclinerseating",
+          "name": "AMC Signature Recliners",
+          "sort": 54
+        },
+        {
+          "code": "laseratamc",
+          "name": "Laser at AMC",
+          "sort": 60
+        },
+        {
+          "code": "fooddrinksonlineordering",
+          "name": "Food & Drinks Mobile Ordering",
+          "sort": 77
+        },
+        {
+          "code": "macguffins",
+          "name": "MacGuffins Bar",
+          "sort": 80
+        },
+        {
+          "code": "homedelivery",
+          "name": "Home Delivery",
+          "sort": 100
+        },
+        {
+          "code": "reservedseating",
+          "name": "Reserved Seating",
+          "sort": 170
+        },
+        {
+          "code": "assistedlisteningdevices",
+          "name": "Assisted Listening Devices",
+          "sort": 999
+        },
+        {
+          "code": "featurefare",
+          "name": "Feature Fare",
+          "sort": 999
+        },
+        {
+          "code": "militarypricingafter4pm",
+          "name": "Military Pricing",
+          "sort": 999
+        }
+      ],
       "firstSeenAt": "2026-08-15T23:35:08.000Z",
       "lastSeenAt": "2026-08-15T23:35:08.000Z"
     },
@@ -49,6 +208,108 @@
       "slugs": {
         "san-francisco": "amc-metreon-16"
       },
+      "amenities": [
+        {
+          "code": "imaxwithlaseratamc",
+          "name": "IMAX with Laser at AMC",
+          "sort": 10
+        },
+        {
+          "code": "dolbycinemaatamcprime",
+          "name": "Dolby Cinema at AMC",
+          "sort": 13
+        },
+        {
+          "code": "screenx",
+          "name": "SCREENX at AMC",
+          "sort": 17
+        },
+        {
+          "code": "discountmatinees",
+          "name": "Discount Matinees",
+          "sort": 24
+        },
+        {
+          "code": "opencaption",
+          "name": "Open Caption (On-Screen Subtitles)",
+          "sort": 27
+        },
+        {
+          "code": "reald3d",
+          "name": "RealD 3D",
+          "sort": 52
+        },
+        {
+          "code": "amcclubrockers",
+          "name": "AMC Club Rockers",
+          "sort": 54
+        },
+        {
+          "code": "plushrecliners",
+          "name": "AMC Signature Recliners",
+          "sort": 54
+        },
+        {
+          "code": "reclinerseating",
+          "name": "AMC Signature Recliners",
+          "sort": 54
+        },
+        {
+          "code": "laseratamc",
+          "name": "Laser at AMC",
+          "sort": 60
+        },
+        {
+          "code": "amcartisanfilms",
+          "name": "AMC Artisan Films",
+          "sort": 74
+        },
+        {
+          "code": "fooddrinksonlineordering",
+          "name": "Food & Drinks Mobile Ordering",
+          "sort": 77
+        },
+        {
+          "code": "macguffins",
+          "name": "MacGuffins Bar",
+          "sort": 80
+        },
+        {
+          "code": "homedelivery",
+          "name": "Home Delivery",
+          "sort": 100
+        },
+        {
+          "code": "reservedseating",
+          "name": "Reserved Seating",
+          "sort": 170
+        },
+        {
+          "code": "assistedlisteningdevices",
+          "name": "Assisted Listening Devices",
+          "sort": 999
+        },
+        {
+          "code": "directv",
+          "name": "DirecTV Live",
+          "sort": 999
+        },
+        {
+          "code": "featurefare",
+          "name": "Feature Fare",
+          "sort": 999
+        },
+        {
+          "code": "militarypricingafter4pm",
+          "name": "Military Pricing",
+          "sort": 999
+        },
+        {
+          "code": "wheelchairaccess",
+          "name": "Wheelchair Access",
+          "sort": 999
+        }
+      ],
       "firstSeenAt": "2026-08-15T23:35:08.000Z",
       "lastSeenAt": "2026-08-15T23:35:08.000Z"
     },
@@ -66,6 +327,68 @@
       "slugs": {
         "san-francisco": "amc-kabuki-8"
       },
+      "amenities": [
+        {
+          "code": "discountmatinees",
+          "name": "Discount Matinees",
+          "sort": 24
+        },
+        {
+          "code": "xl",
+          "name": "XL at AMC",
+          "sort": 53
+        },
+        {
+          "code": "laseratamc",
+          "name": "Laser at AMC",
+          "sort": 60
+        },
+        {
+          "code": "amcartisanfilms",
+          "name": "AMC Artisan Films",
+          "sort": 74
+        },
+        {
+          "code": "fooddrinksonlineordering",
+          "name": "Food & Drinks Mobile Ordering",
+          "sort": 77
+        },
+        {
+          "code": "macguffins",
+          "name": "MacGuffins Bar",
+          "sort": 80
+        },
+        {
+          "code": "homedelivery",
+          "name": "Home Delivery",
+          "sort": 100
+        },
+        {
+          "code": "reservedseating",
+          "name": "Reserved Seating",
+          "sort": 170
+        },
+        {
+          "code": "assistedlisteningdevices",
+          "name": "Assisted Listening Devices",
+          "sort": 999
+        },
+        {
+          "code": "featurefare",
+          "name": "Feature Fare",
+          "sort": 999
+        },
+        {
+          "code": "militarypricingafter4pm",
+          "name": "Military Pricing",
+          "sort": 999
+        },
+        {
+          "code": "wheelchairaccess",
+          "name": "Wheelchair Access",
+          "sort": 999
+        }
+      ],
       "firstSeenAt": "2026-08-15T23:35:08.000Z",
       "lastSeenAt": "2026-08-15T23:35:08.000Z"
     },
@@ -83,6 +406,98 @@
       "slugs": {
         "san-francisco": "amc-manteca-16"
       },
+      "amenities": [
+        {
+          "code": "dolbycinemaatamcprime",
+          "name": "Dolby Cinema at AMC",
+          "sort": 13
+        },
+        {
+          "code": "discountmatinees",
+          "name": "Discount Matinees",
+          "sort": 24
+        },
+        {
+          "code": "opencaption",
+          "name": "Open Caption (On-Screen Subtitles)",
+          "sort": 27
+        },
+        {
+          "code": "sensoryfriendly",
+          "name": "Sensory Friendly Films",
+          "sort": 27
+        },
+        {
+          "code": "reald3d",
+          "name": "RealD 3D",
+          "sort": 52
+        },
+        {
+          "code": "xl",
+          "name": "XL at AMC",
+          "sort": 53
+        },
+        {
+          "code": "reclinerseating",
+          "name": "AMC Signature Recliners",
+          "sort": 54
+        },
+        {
+          "code": "laseratamc",
+          "name": "Laser at AMC",
+          "sort": 60
+        },
+        {
+          "code": "pelculasenespaol",
+          "name": "Películas en Español",
+          "sort": 75
+        },
+        {
+          "code": "fooddrinksonlineordering",
+          "name": "Food & Drinks Mobile Ordering",
+          "sort": 77
+        },
+        {
+          "code": "macguffins",
+          "name": "MacGuffins Bar",
+          "sort": 80
+        },
+        {
+          "code": "homedelivery",
+          "name": "Home Delivery",
+          "sort": 100
+        },
+        {
+          "code": "reservedseating",
+          "name": "Reserved Seating",
+          "sort": 170
+        },
+        {
+          "code": "assistedlisteningdevices",
+          "name": "Assisted Listening Devices",
+          "sort": 999
+        },
+        {
+          "code": "directv",
+          "name": "DirecTV Live",
+          "sort": 999
+        },
+        {
+          "code": "featurefare",
+          "name": "Feature Fare",
+          "sort": 999
+        },
+        {
+          "code": "militarypricingafter4pm",
+          "name": "Military Pricing",
+          "sort": 999
+        },
+        {
+          "code": "wheelchairaccess",
+          "name": "Wheelchair Access",
+          "sort": 999
+        }
+      ],
       "firstSeenAt": "2026-08-15T23:35:08.000Z",
       "lastSeenAt": "2026-08-15T23:35:08.000Z"
     }

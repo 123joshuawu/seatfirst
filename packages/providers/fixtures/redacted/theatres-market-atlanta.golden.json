@@ -15,6 +15,53 @@
       "slugs": {
         "atlanta": "amc-north-dekalb-16"
       },
+      "amenities": [
+        {
+          "code": "discountmatinees",
+          "name": "Discount Matinees",
+          "sort": 24
+        },
+        {
+          "code": "reald3d",
+          "name": "RealD 3D",
+          "sort": 52
+        },
+        {
+          "code": "fooddrinksonlineordering",
+          "name": "Food & Drinks Mobile Ordering",
+          "sort": 77
+        },
+        {
+          "code": "homedelivery",
+          "name": "Home Delivery",
+          "sort": 100
+        },
+        {
+          "code": "reservedseating",
+          "name": "Reserved Seating",
+          "sort": 170
+        },
+        {
+          "code": "assistedlisteningdevices",
+          "name": "Assisted Listening Devices",
+          "sort": 999
+        },
+        {
+          "code": "featurefare",
+          "name": "Feature Fare",
+          "sort": 999
+        },
+        {
+          "code": "militarypricingafter4pm",
+          "name": "Military Pricing",
+          "sort": 999
+        },
+        {
+          "code": "wheelchairaccess",
+          "name": "Wheelchair Access",
+          "sort": 999
+        }
+      ],
       "firstSeenAt": "2026-08-15T23:35:06.000Z",
       "lastSeenAt": "2026-08-15T23:35:06.000Z"
     },
@@ -32,6 +79,88 @@
       "slugs": {
         "atlanta": "amc-sugarloaf-mills-18"
       },
+      "amenities": [
+        {
+          "code": "dolbycinemaatamcprime",
+          "name": "Dolby Cinema at AMC",
+          "sort": 13
+        },
+        {
+          "code": "discountmatinees",
+          "name": "Discount Matinees",
+          "sort": 24
+        },
+        {
+          "code": "sensoryfriendly",
+          "name": "Sensory Friendly Films",
+          "sort": 27
+        },
+        {
+          "code": "reald3d",
+          "name": "RealD 3D",
+          "sort": 52
+        },
+        {
+          "code": "xl",
+          "name": "XL at AMC",
+          "sort": 53
+        },
+        {
+          "code": "reclinerseating",
+          "name": "AMC Signature Recliners",
+          "sort": 54
+        },
+        {
+          "code": "laseratamc",
+          "name": "Laser at AMC",
+          "sort": 60
+        },
+        {
+          "code": "pelculasenespaol",
+          "name": "Películas en Español",
+          "sort": 75
+        },
+        {
+          "code": "fooddrinksonlineordering",
+          "name": "Food & Drinks Mobile Ordering",
+          "sort": 77
+        },
+        {
+          "code": "macguffins",
+          "name": "MacGuffins Bar",
+          "sort": 80
+        },
+        {
+          "code": "homedelivery",
+          "name": "Home Delivery",
+          "sort": 100
+        },
+        {
+          "code": "reservedseating",
+          "name": "Reserved Seating",
+          "sort": 170
+        },
+        {
+          "code": "assistedlisteningdevices",
+          "name": "Assisted Listening Devices",
+          "sort": 999
+        },
+        {
+          "code": "featurefare",
+          "name": "Feature Fare",
+          "sort": 999
+        },
+        {
+          "code": "militarypricingafter4pm",
+          "name": "Military Pricing",
+          "sort": 999
+        },
+        {
+          "code": "wheelchairaccess",
+          "name": "Wheelchair Access",
+          "sort": 999
+        }
+      ],
       "firstSeenAt": "2026-08-15T23:35:06.000Z",
       "lastSeenAt": "2026-08-15T23:35:06.000Z"
     },
@@ -49,6 +178,83 @@
       "slugs": {
         "atlanta": "amc-avenue-forsyth-12"
       },
+      "amenities": [
+        {
+          "code": "imax",
+          "name": "IMAX at AMC",
+          "sort": 11
+        },
+        {
+          "code": "dolbycinemaatamcprime",
+          "name": "Dolby Cinema at AMC",
+          "sort": 13
+        },
+        {
+          "code": "discountmatinees",
+          "name": "Discount Matinees",
+          "sort": 24
+        },
+        {
+          "code": "reald3d",
+          "name": "RealD 3D",
+          "sort": 52
+        },
+        {
+          "code": "reclinerseating",
+          "name": "AMC Signature Recliners",
+          "sort": 54
+        },
+        {
+          "code": "laseratamc",
+          "name": "Laser at AMC",
+          "sort": 60
+        },
+        {
+          "code": "fooddrinksonlineordering",
+          "name": "Food & Drinks Mobile Ordering",
+          "sort": 77
+        },
+        {
+          "code": "macguffins",
+          "name": "MacGuffins Bar",
+          "sort": 80
+        },
+        {
+          "code": "homedelivery",
+          "name": "Home Delivery",
+          "sort": 100
+        },
+        {
+          "code": "reservedseating",
+          "name": "Reserved Seating",
+          "sort": 170
+        },
+        {
+          "code": "assistedlisteningdevices",
+          "name": "Assisted Listening Devices",
+          "sort": 999
+        },
+        {
+          "code": "directv",
+          "name": "DirecTV Live",
+          "sort": 999
+        },
+        {
+          "code": "featurefare",
+          "name": "Feature Fare",
+          "sort": 999
+        },
+        {
+          "code": "militarypricingafter4pm",
+          "name": "Military Pricing",
+          "sort": 999
+        },
+        {
+          "code": "wheelchairaccess",
+          "name": "Wheelchair Access",
+          "sort": 999
+        }
+      ],
       "firstSeenAt": "2026-08-15T23:35:06.000Z",
       "lastSeenAt": "2026-08-15T23:35:06.000Z"
     },
@@ -66,6 +272,78 @@
       "slugs": {
         "atlanta": "amc-north-point-mall-12"
       },
+      "amenities": [
+        {
+          "code": "imaxwithlaseratamc",
+          "name": "IMAX with Laser at AMC",
+          "sort": 10
+        },
+        {
+          "code": "dolbycinemaatamcprime",
+          "name": "Dolby Cinema at AMC",
+          "sort": 13
+        },
+        {
+          "code": "discountmatinees",
+          "name": "Discount Matinees",
+          "sort": 24
+        },
+        {
+          "code": "reald3d",
+          "name": "RealD 3D",
+          "sort": 52
+        },
+        {
+          "code": "amcclubrockers",
+          "name": "AMC Club Rockers",
+          "sort": 54
+        },
+        {
+          "code": "plushrecliners",
+          "name": "AMC Signature Recliners",
+          "sort": 54
+        },
+        {
+          "code": "reclinerseating",
+          "name": "AMC Signature Recliners",
+          "sort": 54
+        },
+        {
+          "code": "laseratamc",
+          "name": "Laser at AMC",
+          "sort": 60
+        },
+        {
+          "code": "fooddrinksonlineordering",
+          "name": "Food & Drinks Mobile Ordering",
+          "sort": 77
+        },
+        {
+          "code": "macguffins",
+          "name": "MacGuffins Bar",
+          "sort": 80
+        },
+        {
+          "code": "reservedseating",
+          "name": "Reserved Seating",
+          "sort": 170
+        },
+        {
+          "code": "assistedlisteningdevices",
+          "name": "Assisted Listening Devices",
+          "sort": 999
+        },
+        {
+          "code": "militarypricingafter4pm",
+          "name": "Military Pricing",
+          "sort": 999
+        },
+        {
+          "code": "wheelchairaccess",
+          "name": "Wheelchair Access",
+          "sort": 999
+        }
+      ],
       "firstSeenAt": "2026-08-15T23:35:06.000Z",
       "lastSeenAt": "2026-08-15T23:35:06.000Z"
     },
@@ -83,6 +361,83 @@
       "slugs": {
         "atlanta": "amc-phipps-plaza-14"
       },
+      "amenities": [
+        {
+          "code": "dolbycinemaatamcprime",
+          "name": "Dolby Cinema at AMC",
+          "sort": 13
+        },
+        {
+          "code": "discountmatinees",
+          "name": "Discount Matinees",
+          "sort": 24
+        },
+        {
+          "code": "reald3d",
+          "name": "RealD 3D",
+          "sort": 52
+        },
+        {
+          "code": "plushrecliners",
+          "name": "AMC Signature Recliners",
+          "sort": 54
+        },
+        {
+          "code": "reclinerseating",
+          "name": "AMC Signature Recliners",
+          "sort": 54
+        },
+        {
+          "code": "laseratamc",
+          "name": "Laser at AMC",
+          "sort": 60
+        },
+        {
+          "code": "amcartisanfilms",
+          "name": "AMC Artisan Films",
+          "sort": 74
+        },
+        {
+          "code": "fooddrinksonlineordering",
+          "name": "Food & Drinks Mobile Ordering",
+          "sort": 77
+        },
+        {
+          "code": "macguffins",
+          "name": "MacGuffins Bar",
+          "sort": 80
+        },
+        {
+          "code": "homedelivery",
+          "name": "Home Delivery",
+          "sort": 100
+        },
+        {
+          "code": "reservedseating",
+          "name": "Reserved Seating",
+          "sort": 170
+        },
+        {
+          "code": "assistedlisteningdevices",
+          "name": "Assisted Listening Devices",
+          "sort": 999
+        },
+        {
+          "code": "featurefare",
+          "name": "Feature Fare",
+          "sort": 999
+        },
+        {
+          "code": "militarypricingafter4pm",
+          "name": "Military Pricing",
+          "sort": 999
+        },
+        {
+          "code": "wheelchairaccess",
+          "name": "Wheelchair Access",
+          "sort": 999
+        }
+      ],
       "firstSeenAt": "2026-08-15T23:35:06.000Z",
       "lastSeenAt": "2026-08-15T23:35:06.000Z"
     },
@@ -100,6 +455,93 @@
       "slugs": {
         "atlanta": "amc-colonial-18"
       },
+      "amenities": [
+        {
+          "code": "amcprime",
+          "name": "PRIME at AMC",
+          "sort": 15
+        },
+        {
+          "code": "discountmatinees",
+          "name": "Discount Matinees",
+          "sort": 24
+        },
+        {
+          "code": "opencaption",
+          "name": "Open Caption (On-Screen Subtitles)",
+          "sort": 27
+        },
+        {
+          "code": "reald3d",
+          "name": "RealD 3D",
+          "sort": 52
+        },
+        {
+          "code": "plushrecliners",
+          "name": "AMC Signature Recliners",
+          "sort": 54
+        },
+        {
+          "code": "reclinerseating",
+          "name": "AMC Signature Recliners",
+          "sort": 54
+        },
+        {
+          "code": "laseratamc",
+          "name": "Laser at AMC",
+          "sort": 60
+        },
+        {
+          "code": "amcartisanfilms",
+          "name": "AMC Artisan Films",
+          "sort": 74
+        },
+        {
+          "code": "fooddrinksonlineordering",
+          "name": "Food & Drinks Mobile Ordering",
+          "sort": 77
+        },
+        {
+          "code": "macguffins",
+          "name": "MacGuffins Bar",
+          "sort": 80
+        },
+        {
+          "code": "homedelivery",
+          "name": "Home Delivery",
+          "sort": 100
+        },
+        {
+          "code": "reservedseating",
+          "name": "Reserved Seating",
+          "sort": 170
+        },
+        {
+          "code": "assistedlisteningdevices",
+          "name": "Assisted Listening Devices",
+          "sort": 999
+        },
+        {
+          "code": "directv",
+          "name": "DirecTV Live",
+          "sort": 999
+        },
+        {
+          "code": "featurefare",
+          "name": "Feature Fare",
+          "sort": 999
+        },
+        {
+          "code": "militarypricingafter4pm",
+          "name": "Military Pricing",
+          "sort": 999
+        },
+        {
+          "code": "wheelchairaccess",
+          "name": "Wheelchair Access",
+          "sort": 999
+        }
+      ],
       "firstSeenAt": "2026-08-15T23:35:06.000Z",
       "lastSeenAt": "2026-08-15T23:35:06.000Z"
     },
@@ -117,6 +559,78 @@
       "slugs": {
         "atlanta": "amc-madison-yards-8"
       },
+      "amenities": [
+        {
+          "code": "dolbycinemaatamcprime",
+          "name": "Dolby Cinema at AMC",
+          "sort": 13
+        },
+        {
+          "code": "discountmatinees",
+          "name": "Discount Matinees",
+          "sort": 24
+        },
+        {
+          "code": "reald3d",
+          "name": "RealD 3D",
+          "sort": 52
+        },
+        {
+          "code": "heatedseats",
+          "name": "Heated AMC Signature Recliners",
+          "sort": 54
+        },
+        {
+          "code": "heatedseatsatthistheatre",
+          "name": "Heated AMC Signature Recliners",
+          "sort": 54
+        },
+        {
+          "code": "plushrecliners",
+          "name": "AMC Signature Recliners",
+          "sort": 54
+        },
+        {
+          "code": "reclinerseating",
+          "name": "AMC Signature Recliners",
+          "sort": 54
+        },
+        {
+          "code": "laseratamc",
+          "name": "Laser at AMC",
+          "sort": 60
+        },
+        {
+          "code": "fooddrinksonlineordering",
+          "name": "Food & Drinks Mobile Ordering",
+          "sort": 77
+        },
+        {
+          "code": "macguffins",
+          "name": "MacGuffins Bar",
+          "sort": 80
+        },
+        {
+          "code": "homedelivery",
+          "name": "Home Delivery",
+          "sort": 100
+        },
+        {
+          "code": "reservedseating",
+          "name": "Reserved Seating",
+          "sort": 170
+        },
+        {
+          "code": "assistedlisteningdevices",
+          "name": "Assisted Listening Devices",
+          "sort": 999
+        },
+        {
+          "code": "wheelchairaccess",
+          "name": "Wheelchair Access",
+          "sort": 999
+        }
+      ],
       "firstSeenAt": "2026-08-15T23:35:06.000Z",
       "lastSeenAt": "2026-08-15T23:35:06.000Z"
     },
@@ -134,6 +648,108 @@
       "slugs": {
         "atlanta": "amc-southlake-24"
       },
+      "amenities": [
+        {
+          "code": "imaxwithlaseratamc",
+          "name": "IMAX with Laser at AMC",
+          "sort": 10
+        },
+        {
+          "code": "dolbycinemaatamcprime",
+          "name": "Dolby Cinema at AMC",
+          "sort": 13
+        },
+        {
+          "code": "4dx",
+          "name": "4DX at AMC",
+          "sort": 17
+        },
+        {
+          "code": "discountmatinees",
+          "name": "Discount Matinees",
+          "sort": 24
+        },
+        {
+          "code": "opencaption",
+          "name": "Open Caption (On-Screen Subtitles)",
+          "sort": 27
+        },
+        {
+          "code": "reald3d",
+          "name": "RealD 3D",
+          "sort": 52
+        },
+        {
+          "code": "amcclubrockers",
+          "name": "AMC Club Rockers",
+          "sort": 54
+        },
+        {
+          "code": "plushrecliners",
+          "name": "AMC Signature Recliners",
+          "sort": 54
+        },
+        {
+          "code": "reclinerseating",
+          "name": "AMC Signature Recliners",
+          "sort": 54
+        },
+        {
+          "code": "laseratamc",
+          "name": "Laser at AMC",
+          "sort": 60
+        },
+        {
+          "code": "pelculasenespaol",
+          "name": "Películas en Español",
+          "sort": 75
+        },
+        {
+          "code": "fooddrinksonlineordering",
+          "name": "Food & Drinks Mobile Ordering",
+          "sort": 77
+        },
+        {
+          "code": "macguffins",
+          "name": "MacGuffins Bar",
+          "sort": 80
+        },
+        {
+          "code": "homedelivery",
+          "name": "Home Delivery",
+          "sort": 100
+        },
+        {
+          "code": "reservedseating",
+          "name": "Reserved Seating",
+          "sort": 170
+        },
+        {
+          "code": "assistedlisteningdevices",
+          "name": "Assisted Listening Devices",
+          "sort": 999
+        },
+        {
+          "code": "directv",
+          "name": "DirecTV Live",
+          "sort": 999
+        },
+        {
+          "code": "featurefare",
+          "name": "Feature Fare",
+          "sort": 999
+        },
+        {
+          "code": "militarypricingafter4pm",
+          "name": "Military Pricing",
+          "sort": 999
+        },
+        {
+          "code": "wheelchairaccess",
+          "name": "Wheelchair Access",
+          "sort": 999
+        }
+      ],
       "firstSeenAt": "2026-08-15T23:35:06.000Z",
       "lastSeenAt": "2026-08-15T23:35:06.000Z"
     },
@@ -151,6 +767,98 @@
       "slugs": {
         "atlanta": "amc-barrett-commons-24"
       },
+      "amenities": [
+        {
+          "code": "imaxwithlaseratamc",
+          "name": "IMAX with Laser at AMC",
+          "sort": 10
+        },
+        {
+          "code": "dolbycinemaatamcprime",
+          "name": "Dolby Cinema at AMC",
+          "sort": 13
+        },
+        {
+          "code": "discountmatinees",
+          "name": "Discount Matinees",
+          "sort": 24
+        },
+        {
+          "code": "opencaption",
+          "name": "Open Caption (On-Screen Subtitles)",
+          "sort": 27
+        },
+        {
+          "code": "reald3d",
+          "name": "RealD 3D",
+          "sort": 52
+        },
+        {
+          "code": "heatedseats",
+          "name": "Heated AMC Signature Recliners",
+          "sort": 54
+        },
+        {
+          "code": "heatedseatsatthistheatre",
+          "name": "Heated AMC Signature Recliners",
+          "sort": 54
+        },
+        {
+          "code": "reclinerseating",
+          "name": "AMC Signature Recliners",
+          "sort": 54
+        },
+        {
+          "code": "laseratamc",
+          "name": "Laser at AMC",
+          "sort": 60
+        },
+        {
+          "code": "fooddrinksonlineordering",
+          "name": "Food & Drinks Mobile Ordering",
+          "sort": 77
+        },
+        {
+          "code": "macguffins",
+          "name": "MacGuffins Bar",
+          "sort": 80
+        },
+        {
+          "code": "homedelivery",
+          "name": "Home Delivery",
+          "sort": 100
+        },
+        {
+          "code": "reservedseating",
+          "name": "Reserved Seating",
+          "sort": 170
+        },
+        {
+          "code": "assistedlisteningdevices",
+          "name": "Assisted Listening Devices",
+          "sort": 999
+        },
+        {
+          "code": "directv",
+          "name": "DirecTV Live",
+          "sort": 999
+        },
+        {
+          "code": "featurefare",
+          "name": "Feature Fare",
+          "sort": 999
+        },
+        {
+          "code": "militarypricingafter4pm",
+          "name": "Military Pricing",
+          "sort": 999
+        },
+        {
+          "code": "wheelchairaccess",
+          "name": "Wheelchair Access",
+          "sort": 999
+        }
+      ],
       "firstSeenAt": "2026-08-15T23:35:06.000Z",
       "lastSeenAt": "2026-08-15T23:35:06.000Z"
     },
@@ -168,6 +876,103 @@
       "slugs": {
         "atlanta": "amc-parkway-pointe-15"
       },
+      "amenities": [
+        {
+          "code": "dolbycinemaatamcprime",
+          "name": "Dolby Cinema at AMC",
+          "sort": 13
+        },
+        {
+          "code": "discountmatinees",
+          "name": "Discount Matinees",
+          "sort": 24
+        },
+        {
+          "code": "opencaption",
+          "name": "Open Caption (On-Screen Subtitles)",
+          "sort": 27
+        },
+        {
+          "code": "sensoryfriendly",
+          "name": "Sensory Friendly Films",
+          "sort": 27
+        },
+        {
+          "code": "reald3d",
+          "name": "RealD 3D",
+          "sort": 52
+        },
+        {
+          "code": "plushrecliners",
+          "name": "AMC Signature Recliners",
+          "sort": 54
+        },
+        {
+          "code": "reclinerseating",
+          "name": "AMC Signature Recliners",
+          "sort": 54
+        },
+        {
+          "code": "laseratamc",
+          "name": "Laser at AMC",
+          "sort": 60
+        },
+        {
+          "code": "amcartisanfilms",
+          "name": "AMC Artisan Films",
+          "sort": 74
+        },
+        {
+          "code": "pelculasenespaol",
+          "name": "Películas en Español",
+          "sort": 75
+        },
+        {
+          "code": "fooddrinksonlineordering",
+          "name": "Food & Drinks Mobile Ordering",
+          "sort": 77
+        },
+        {
+          "code": "macguffins",
+          "name": "MacGuffins Bar",
+          "sort": 80
+        },
+        {
+          "code": "homedelivery",
+          "name": "Home Delivery",
+          "sort": 100
+        },
+        {
+          "code": "reservedseating",
+          "name": "Reserved Seating",
+          "sort": 170
+        },
+        {
+          "code": "assistedlisteningdevices",
+          "name": "Assisted Listening Devices",
+          "sort": 999
+        },
+        {
+          "code": "directv",
+          "name": "DirecTV Live",
+          "sort": 999
+        },
+        {
+          "code": "featurefare",
+          "name": "Feature Fare",
+          "sort": 999
+        },
+        {
+          "code": "militarypricingafter4pm",
+          "name": "Military Pricing",
+          "sort": 999
+        },
+        {
+          "code": "wheelchairaccess",
+          "name": "Wheelchair Access",
+          "sort": 999
+        }
+      ],
       "firstSeenAt": "2026-08-15T23:35:06.000Z",
       "lastSeenAt": "2026-08-15T23:35:06.000Z"
     }
