@@ -1,4 +1,3 @@
-import type { TheatreAmenity } from "@seatfirst/core";
 import * as B from "./boundaries.js";
 import type { Statement } from "./boundaries.js";
 import { firstRow, requireFields } from "./transactions.js";
@@ -103,6 +102,12 @@ export function markOutboxPublished(
 
 export type TheatreSlugs = Readonly<Record<string, string>>;
 
+export interface DurabilityTheatreAmenity {
+  readonly code: string;
+  readonly name: string;
+  readonly sort?: number | undefined;
+}
+
 export interface UpsertTheatreInput {
   readonly theatreId: string;
   readonly providerId: string;
@@ -116,7 +121,7 @@ export interface UpsertTheatreInput {
   readonly slugs: TheatreSlugs | null;
   readonly firstSeenAt: Date;
   readonly lastSeenAt: Date;
-  readonly amenities?: readonly TheatreAmenity[] | null;
+  readonly amenities?: readonly DurabilityTheatreAmenity[] | null;
 }
 export interface TheatreRow {
   readonly theatre_id: string;
@@ -131,7 +136,7 @@ export interface TheatreRow {
   readonly slugs: Record<string, string> | null;
   readonly first_seen_at: Date;
   readonly last_seen_at: Date;
-  readonly amenities: readonly TheatreAmenity[] | unknown;
+  readonly amenities: readonly DurabilityTheatreAmenity[] | unknown;
 }
 export function upsertTheatre(db: SqlClient, input: UpsertTheatreInput): Promise<TheatreRow[]> {
   return runStatement(db, B.THEATRE_UPSERT, [
