@@ -1,6 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef } from "react";
 import type { ReactNode, RefObject } from "react";
 import type { ReactElement } from "react";
+import type { StyleProp, ViewStyle } from "react-native";
 import {
   ActivityIndicator,
   Platform,
@@ -339,10 +340,12 @@ export interface AutocompleteProps<T> {
    * stays open across toggles.
    */
   closeOnSelect?: boolean | undefined;
+  /** Disables keyboard handling and applies the field's disabled treatment. */
+  disabled?: boolean | undefined;
   children: ReactNode;
 }
 
-interface AutocompleteContextValue {
+export interface AutocompleteContextValue {
   items: readonly unknown[];
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
@@ -357,10 +360,15 @@ interface AutocompleteContextValue {
   getItemProps: (index: number) => ComboboxItemProps;
   listId: string;
   label: string;
+  disabled: boolean;
 }
 
 const AutocompleteContext = createContext<AutocompleteContextValue | null>(null);
 
+/**
+ * Rich option rows can consume the root's active-index and ARIA helpers
+ * without being forced through `Autocomplete.Item`'s simple Pressable shape.
+ */
 function useAutocompleteContext(): AutocompleteContextValue {
   const ctx = useContext(AutocompleteContext);
   if (!ctx) throw new Error("Autocomplete compound components must render inside <Autocomplete>.");
@@ -377,6 +385,7 @@ export function Autocomplete<T>({
   listId: listIdProp,
   label = "Suggestions",
   closeOnSelect = true,
+  disabled = false,
   children,
 }: AutocompleteProps<T>): ReactElement {
   const inputRef = useRef<TextInput | null>(null);
@@ -398,6 +407,7 @@ export function Autocomplete<T>({
     listId: listIdProp,
     label,
     inputRef,
+    disabled,
   });
   const value = useMemo<AutocompleteContextValue>(
     () => ({
@@ -417,14 +427,22 @@ export function Autocomplete<T>({
       getItemProps: combobox.getItemProps,
       listId: combobox.listId,
       label,
+      disabled,
     }),
-    [items, isOpen, onOpenChange, handleSelect, getItemLabel, combobox, inputRef, label],
+    [items, isOpen, onOpenChange, handleSelect, getItemLabel, combobox, inputRef, label, disabled],
   );
   return <AutocompleteContext.Provider value={value}><View>{children}</View></AutocompleteContext.Provider>;
 }
 
 export namespace Autocomplete {
-  export type InputProps = TextInputProps;
+  export interface InputProps extends TextInputProps {
+    /**
+     * Keeps bespoke field adornments inside the shared shell. The underlying
+     * TextInput and its styles remain caller-owned.
+     */
+    endAdornment?: ReactNode;
+    inputContainerStyle?: StyleProp<ViewStyle> | undefined;
+  }
 
   /**
    * Text input inside the styled field shell. Applies the focused border
@@ -432,22 +450,37 @@ export namespace Autocomplete {
    * the combobox ARIA props, and chains the consumer's `onKeyPress` after
    * keyboard navigation. Opening the popup stays caller-controlled (`isOpen`).
    */
-  export function Input({ onKeyPress: consumerKeyPress, ...rest }: InputProps): ReactElement {
+  export function Input({
+    onKeyPress: consumerKeyPress,
+    endAdornment,
+    inputContainerStyle,
+    ...rest
+  }: InputProps): ReactElement {
     const ctx = useAutocompleteContext();
+    const input = (
+      <TextInput
+        {...rest}
+        // Web-only ARIA passthrough, same cast convention as the legacy
+        // popover below (RN types carry no `aria-*` props; RNW forwards
+        // unknown props to the underlying `<input>` on web).
+        {...(ctx.inputProps as unknown as Record<string, unknown>)}
+        ref={ctx.inputRef}
+        onKeyPress={(e) => {
+          ctx.handleKeyDown(e);
+          consumerKeyPress?.(e);
+        }}
+      />
+    );
     return (
-      <AutocompleteFieldShell focused={ctx.isOpen}>
-        <TextInput
-          {...rest}
-          // Web-only ARIA passthrough, same cast convention as the legacy
-          // popover below (RN types carry no `aria-*` props; RNW forwards
-          // unknown props to the underlying `<input>` on web).
-          {...(ctx.inputProps as unknown as Record<string, unknown>)}
-          ref={ctx.inputRef}
-          onKeyPress={(e) => {
-            ctx.handleKeyDown(e);
-            consumerKeyPress?.(e);
-          }}
-        />
+      <AutocompleteFieldShell focused={ctx.isOpen} disabled={ctx.disabled}>
+        {endAdornment ? (
+          <View style={inputContainerStyle}>
+            {input}
+            {endAdornment}
+          </View>
+        ) : (
+          input
+        )}
       </AutocompleteFieldShell>
     );
   }
@@ -467,6 +500,8 @@ export namespace Autocomplete {
     onClose?: (() => void) | undefined;
     /** Max height of the option list; defaults to the legacy 360. */
     scrollMaxHeight?: number | undefined;
+    /** Renders the popup itself as an alert instead of a listbox. */
+    alert?: boolean | undefined;
     children: ReactNode;
   }
 
@@ -484,6 +519,7 @@ export namespace Autocomplete {
     isMobile,
     onClose,
     scrollMaxHeight,
+    alert = false,
     children,
   }: ContentProps): ReactElement | null {
     const ctx = useAutocompleteContext();
@@ -519,7 +555,7 @@ export namespace Autocomplete {
                 showsVerticalScrollIndicator
                 {...(Platform.OS === "web"
                   ? ({
-                      role: "listbox",
+                      role: alert ? "alert" : "listbox",
                       id: ctx.listId,
                       "aria-label": labelledBy,
                     } as unknown as Record<string, unknown>)
@@ -537,9 +573,10 @@ export namespace Autocomplete {
         ref={popoverRef}
         style={[styles.popover, popoverShadow]}
         accessibilityLabel={labelledBy}
+        accessibilityRole={alert ? "alert" : undefined}
         {...(Platform.OS === "web"
           ? ({
-              role: "listbox",
+              role: alert ? "alert" : "listbox",
               id: ctx.listId,
               "aria-label": labelledBy,
             } as unknown as Record<string, unknown>)
@@ -562,6 +599,10 @@ export namespace Autocomplete {
     );
   }
 
+  /** Escape hatch for rich, caller-owned option rows. */
+  export function useContext(): AutocompleteContextValue {
+    return useAutocompleteContext();
+  }
   export interface ItemProps {
     /** Index into the root `items` (the `useCombobox` active-index model). */
     index: number;

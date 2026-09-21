@@ -914,3 +914,97 @@ describe("MovieField movie input identity (audit finding 10)", () => {
     renderer.unmount();
   });
 });
+
+describe("MovieField combobox keyboard navigation", () => {
+  function pressMovieKey(renderer: TestRenderer.ReactTestRenderer, key: string): void {
+    const input = renderer.root.findByType(TextInput);
+    TestRenderer.act(() => {
+      (
+        input.props as unknown as {
+          onKeyPress: (event: { nativeEvent: { key: string }; preventDefault: () => void }) => void;
+        }
+      ).onKeyPress({ nativeEvent: { key }, preventDefault: vi.fn() });
+    });
+  }
+
+  it("traverses custom, live, and general-release rows in visual order and selects with Enter", () => {
+    const onSelectCustomEvent = vi.fn();
+    const onSelectLive = vi.fn();
+    const onSelectGeneral = vi.fn();
+    const renderer = createRenderer(
+      React.createElement(
+        MovieField,
+        ui42Props({
+          movieValue: "Dune",
+          onSelectCustomEvent,
+          liveScheduleMovies: [{ label: "Dune: Part Three", onPress: onSelectLive, posterUrl: null }],
+          nowPlayingSuggestions: [
+            { label: "Dune: Part Four", onPress: onSelectGeneral, posterUrl: null },
+          ],
+        }),
+      ),
+    );
+
+    pressMovieKey(renderer, "ArrowDown");
+    let input = renderer.root.findByType(TextInput);
+    expect(input.props["aria-activedescendant"]).toBe("movie-listbox--custom-event-Dune-0");
+
+    pressMovieKey(renderer, "ArrowDown");
+    input = renderer.root.findByType(TextInput);
+    expect(input.props["aria-activedescendant"]).toBe(
+      "movie-listbox--live-schedule-Dune%3A%20Part%20Three-0",
+    );
+
+    pressMovieKey(renderer, "ArrowDown");
+    input = renderer.root.findByType(TextInput);
+    expect(input.props["aria-activedescendant"]).toBe(
+      "movie-listbox--now-playing-Dune%3A%20Part%20Four-0",
+    );
+
+    pressMovieKey(renderer, "ArrowUp");
+    input = renderer.root.findByType(TextInput);
+    expect(input.props["aria-activedescendant"]).toBe(
+      "movie-listbox--live-schedule-Dune%3A%20Part%20Three-0",
+    );
+    const activeOption = renderer.root.find(
+      (node) =>
+        node.props.id === "movie-listbox--live-schedule-Dune%3A%20Part%20Three-0" &&
+        node.props["aria-selected"] === true,
+    );
+    expect(activeOption).toBeTruthy();
+
+    pressMovieKey(renderer, "Enter");
+    expect(onSelectLive).toHaveBeenCalledTimes(1);
+    expect(onSelectCustomEvent).not.toHaveBeenCalled();
+    expect(onSelectGeneral).not.toHaveBeenCalled();
+    renderer.unmount();
+  });
+
+  it("closes through onBlur when Escape is pressed", () => {
+    const onBlur = vi.fn();
+    function EscapeHarness(): React.ReactElement {
+      const [movieFocused, setMovieFocused] = React.useState(true);
+      return (
+        <MovieField
+          {...ui42Props({
+            movieValue: "Dune",
+            movieFocused,
+            nowPlayingSuggestions: [{ label: "Dune: Part Three", onPress: vi.fn(), posterUrl: null }],
+            onBlur: () => {
+              onBlur();
+              setMovieFocused(false);
+            },
+          })}
+        />
+      );
+    }
+
+    const renderer = createRenderer(<EscapeHarness />);
+    pressMovieKey(renderer, "Escape");
+
+    expect(onBlur).toHaveBeenCalledTimes(1);
+    expect(renderer.root.findByType(TextInput).props["aria-expanded"]).toBe(false);
+    expect(renderer.root.findAll((node) => node.props.id === "movie-listbox")).toHaveLength(0);
+    renderer.unmount();
+  });
+});

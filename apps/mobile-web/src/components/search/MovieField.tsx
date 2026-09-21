@@ -1,10 +1,10 @@
 import { useState, type ReactElement } from "react";
-import { Image, StyleSheet, Platform, Pressable, TextInput, View } from "react-native";
+import { Image, StyleSheet, Platform, Pressable, View } from "react-native";
 import { colors } from "@/theme/colors";
 import { fontFamily } from "@/theme/typography";
 import type { MovieSuggestion } from "@/hooks/viewModels/useSubmitSearchViewModel";
 import { AppText } from "@/components/core/AppText";
-import { AutocompleteFieldShell, AutocompletePopover } from "@/components/core/Autocomplete";
+import { Autocomplete } from "@/components/core/Autocomplete";
 import { EyebrowLabel } from "@/components/core/EyebrowLabel";
 import { getFacetDisplay, shouldDimFacet } from "@/lib/facetCounts";
 
@@ -156,6 +156,202 @@ function SuggestionBadge({ text }: { text: string }): ReactElement {
   );
 }
 
+interface MovieComboboxItem {
+  key: string;
+  onPress: () => void;
+}
+
+function getMovieComboboxItemKey(prefix: string, label: string, index: number): string {
+  return `${prefix}-${encodeURIComponent(label)}-${index}`;
+}
+
+function MovieCustomEventRow({
+  query,
+  onSelect,
+  isLocked,
+  index,
+}: {
+  query: string;
+  onSelect: ((query: string) => void) | undefined;
+  isLocked: boolean;
+  index: number | undefined;
+}): ReactElement {
+  const { activeIndex, getItemProps, setActiveIndex } = Autocomplete.useContext();
+  const itemProps = index === undefined ? undefined : getItemProps(index);
+  const active = index !== undefined && index === activeIndex;
+  return (
+    <Pressable
+      onPress={() => onSelect?.(query)}
+      accessibilityRole="menuitem"
+      accessibilityLabel={`🔍 Search for event: "${query}"`}
+      accessibilityHint="Searches for this custom event title"
+      focusable={!isLocked}
+      onHoverIn={index === undefined ? undefined : () => setActiveIndex(index)}
+      {...(Platform.OS === "web"
+        ? ((itemProps ?? { role: "option" }) as unknown as Record<string, unknown>)
+        : {})}
+      style={({ pressed, hovered }: { pressed: boolean; hovered?: boolean }) => [
+        styles.item,
+        active && styles.itemActive,
+        (pressed || hovered) && !isLocked && styles.itemPressed,
+        Platform.OS === "web"
+          ? ({ cursor: isLocked ? "default" : "pointer" } as unknown as Record<string, unknown>)
+          : null,
+      ]}
+    >
+      <AppText
+        style={[styles.itemLabel, { flex: 1 }]}
+      >{`🔍 Search for event: "${query}"`}</AppText>
+    </Pressable>
+  );
+}
+
+function MovieCountedCard({
+  item,
+  index,
+  movieCounts,
+  effectiveTotal,
+  warmZeroMovieIds,
+  onWidenWindow,
+  isLocked,
+}: {
+  item: MovieSuggestion;
+  index: number;
+  movieCounts: MovieFieldProps["movieCounts"];
+  effectiveTotal: number;
+  warmZeroMovieIds: MovieFieldProps["warmZeroMovieIds"];
+  onWidenWindow: MovieFieldProps["onWidenWindow"];
+  isLocked: boolean;
+}): ReactElement {
+  const { activeIndex, getItemProps, setActiveIndex } = Autocomplete.useContext();
+  const entry: { count: number; coldTheatreCount: number } | undefined = (() => {
+    if (!movieCounts) return undefined;
+    if (movieCounts instanceof Map)
+      return (movieCounts as Map<string, { count: number; coldTheatreCount: number }>).get(
+        item.label,
+      );
+    return (movieCounts as Record<string, { count: number; coldTheatreCount: number }>)[item.label];
+  })();
+  const display = entry ? getFacetDisplay(entry, effectiveTotal) : null;
+  const warmZero = (() => {
+    if (warmZeroMovieIds?.has(item.label)) return true;
+    if (!entry) return false;
+    return shouldDimFacet(entry, effectiveTotal);
+  })();
+  const countText = display ? display.text : null;
+  const isRowDisabled = isLocked || warmZero;
+  const suggestionTitle = getSuggestionTitle(item);
+  const suggestionBadge = getSuggestionBadge(item);
+  const itemProps = getItemProps(index);
+  const active = index === activeIndex;
+  return (
+    <Pressable
+      onPress={isRowDisabled ? undefined : item.onPress}
+      disabled={isRowDisabled}
+      accessibilityRole="menuitem"
+      accessibilityLabel={`${suggestionTitle}${suggestionBadge ? `, ${suggestionBadge}` : ""}${countText ? `, ${countText}` : ""}`}
+      accessibilityState={{ disabled: isRowDisabled }}
+      focusable={!isRowDisabled}
+      onHoverIn={() => setActiveIndex(index)}
+      {...(Platform.OS === "web"
+        ? (itemProps as unknown as Record<string, unknown>)
+        : {})}
+      style={({ pressed, hovered }: { pressed: boolean; hovered?: boolean }) => [
+        styles.item,
+        styles.movieCard,
+        warmZero && { opacity: 0.5 },
+        warmZero && styles.itemDisabled,
+        active && styles.itemActive,
+        (pressed || hovered) && !isRowDisabled && styles.itemPressed,
+        Platform.OS === "web"
+          ? ({
+              cursor: isRowDisabled ? "default" : "pointer",
+            } as unknown as Record<string, unknown>)
+          : null,
+      ]}
+    >
+      <MoviePoster posterUrl={item.posterUrl} title={suggestionTitle} />
+      <View style={{ flex: 1, gap: 2 }}>
+        <View style={styles.titleRow}>
+          <AppText style={[styles.itemLabel, warmZero && { opacity: 0.5 }]}>
+            {suggestionTitle}
+          </AppText>
+          {suggestionBadge ? <SuggestionBadge text={suggestionBadge} /> : null}
+        </View>
+        {countText ? (
+          <AppText weight="400" style={styles.countLabel}>
+            {countText === "not checked yet"
+              ? countText
+              : `${countText} showtime${countText === "1" ? "" : "s"}`}
+          </AppText>
+        ) : null}
+      </View>
+      {warmZero && onWidenWindow ? (
+        <Pressable
+          onPress={isLocked ? undefined : onWidenWindow}
+          disabled={isLocked}
+          accessibilityRole="button"
+          accessibilityLabel="Try tomorrow"
+          accessibilityHint="Widens window to tomorrow"
+          focusable={!isLocked}
+          style={styles.forwardAction}
+        >
+          <AppText weight="600" style={styles.forwardActionText}>
+            none · Try tomorrow →
+          </AppText>
+        </Pressable>
+      ) : null}
+    </Pressable>
+  );
+}
+
+function MoviePlainCard({
+  item,
+  index,
+  isLocked,
+}: {
+  item: MovieSuggestion;
+  index: number;
+  isLocked: boolean;
+}): ReactElement {
+  const { activeIndex, getItemProps, setActiveIndex } = Autocomplete.useContext();
+  const suggestionTitle = getSuggestionTitle(item);
+  const suggestionBadge = getSuggestionBadge(item);
+  const itemProps = getItemProps(index);
+  const active = index === activeIndex;
+  return (
+    <Pressable
+      onPress={isLocked ? undefined : item.onPress}
+      disabled={isLocked}
+      accessibilityRole="menuitem"
+      accessibilityLabel={`${suggestionTitle}${suggestionBadge ? `, ${suggestionBadge}` : ""}`}
+      accessibilityState={{ disabled: isLocked }}
+      focusable={!isLocked}
+      onHoverIn={() => setActiveIndex(index)}
+      {...(Platform.OS === "web"
+        ? (itemProps as unknown as Record<string, unknown>)
+        : {})}
+      style={({ pressed, hovered }: { pressed: boolean; hovered?: boolean }) => [
+        styles.item,
+        styles.movieCard,
+        active && styles.itemActive,
+        (pressed || hovered) && !isLocked && styles.itemPressed,
+        Platform.OS === "web"
+          ? ({ cursor: isLocked ? "default" : "pointer" } as unknown as Record<string, unknown>)
+          : null,
+      ]}
+    >
+      <MoviePoster posterUrl={item.posterUrl} title={suggestionTitle} />
+      <View style={{ flex: 1 }}>
+        <View style={styles.titleRow}>
+          <AppText style={styles.itemLabel}>{suggestionTitle}</AppText>
+          {suggestionBadge ? <SuggestionBadge text={suggestionBadge} /> : null}
+        </View>
+      </View>
+    </Pressable>
+  );
+}
+
 export function MovieField({
   theaterConfirmed,
   movieValue,
@@ -212,27 +408,6 @@ export function MovieField({
   // block swaps its idle CTA copy for a busy status line, keeping the same
   // disabled/busy Pressable a11y pattern.
   const showLiveScheduleStatus = onCheckLiveSchedule != null && !hasLiveGroup;
-  const customEventRow = showCustomEventRow ? (
-    <Pressable
-      onPress={() => onSelectCustomEvent?.(trimmedEventQuery)}
-      accessibilityRole="menuitem"
-      accessibilityLabel={`🔍 Search for event: "${trimmedEventQuery}"`}
-      accessibilityHint="Searches for this custom event title"
-      focusable={!isLocked}
-      {...(Platform.OS === "web" ? ({ role: "option" } as unknown as Record<string, unknown>) : {})}
-      style={({ pressed, hovered }: { pressed: boolean; hovered?: boolean }) => [
-        styles.item,
-        (pressed || hovered) && !isLocked && styles.itemPressed,
-        Platform.OS === "web"
-          ? ({ cursor: isLocked ? "default" : "pointer" } as unknown as Record<string, unknown>)
-          : null,
-      ]}
-    >
-      <AppText
-        style={[styles.itemLabel, { flex: 1 }]}
-      >{`🔍 Search for event: "${trimmedEventQuery}"`}</AppText>
-    </Pressable>
-  ) : null;
   const liveScheduleStatusBlock = showLiveScheduleStatus ? (
     <View style={[styles.statusBlock, isWarm === false && styles.statusBlockCold]}>
       {isCheckingLiveSchedule ? (
@@ -297,210 +472,118 @@ export function MovieField({
   // labelled section headers. The shell follows the first visible group
   // (confirmed schedule when warm, otherwise the general-release guesses).
   const listHeader = hasLiveGroup ? liveScheduleHeader : nowPlayingHeader;
-  const renderCountedCard = (item: MovieSuggestion, i: number): ReactElement => {
-    const entry: { count: number; coldTheatreCount: number } | undefined = (() => {
-      if (!movieCounts) return undefined;
-      if (movieCounts instanceof Map)
-        return (movieCounts as Map<string, { count: number; coldTheatreCount: number }>).get(
-          item.label,
-        );
-      return (movieCounts as Record<string, { count: number; coldTheatreCount: number }>)[
-        item.label
-      ];
-    })();
-    const display = entry ? getFacetDisplay(entry, effectiveTotal) : null;
-    const warmZero = (() => {
-      if (warmZeroMovieIds?.has(item.label)) return true;
-      if (!entry) return false;
-      return shouldDimFacet(entry, effectiveTotal);
-    })();
-    const countText = display ? display.text : null;
-    const isRowDisabled = !!isLocked || warmZero;
-    // UI42.4 — title with release year + expectation badge.
-    const suggestionTitle = getSuggestionTitle(item);
-    const suggestionBadge = getSuggestionBadge(item);
-    return (
-      <Pressable
-        key={i}
-        onPress={isRowDisabled ? undefined : item.onPress}
-        disabled={isRowDisabled}
-        accessibilityRole="menuitem"
-        accessibilityLabel={`${suggestionTitle}${suggestionBadge ? `, ${suggestionBadge}` : ""}${countText ? `, ${countText}` : ""}`}
-        accessibilityState={{ disabled: !!isRowDisabled }}
-        focusable={!isRowDisabled}
-        {...(Platform.OS === "web"
-          ? ({ role: "option" } as unknown as Record<string, unknown>)
-          : {})}
-        style={({ pressed, hovered }: { pressed: boolean; hovered?: boolean }) => [
-          styles.item,
-          styles.movieCard,
-          warmZero && { opacity: 0.5 },
-          warmZero && styles.itemDisabled,
-          (pressed || hovered) && !isRowDisabled && styles.itemPressed,
-          Platform.OS === "web"
-            ? ({
-                cursor: isRowDisabled ? "default" : "pointer",
-              } as unknown as Record<string, unknown>)
-            : null,
-        ]}
-      >
-        <MoviePoster posterUrl={item.posterUrl} title={suggestionTitle} />
-        <View style={{ flex: 1, gap: 2 }}>
-          <View style={styles.titleRow}>
-            <AppText style={[styles.itemLabel, warmZero && { opacity: 0.5 }]}>
-              {suggestionTitle}
-            </AppText>
-            {suggestionBadge ? <SuggestionBadge text={suggestionBadge} /> : null}
-          </View>
-          {countText ? (
-            <AppText weight="400" style={styles.countLabel}>
-              {countText === "not checked yet"
-                ? countText
-                : `${countText} showtime${countText === "1" ? "" : "s"}`}
-            </AppText>
-          ) : null}
-        </View>
-        {warmZero && onWidenWindow ? (
-          <Pressable
-            onPress={isLocked ? undefined : onWidenWindow}
-            disabled={isLocked}
-            accessibilityRole="button"
-            accessibilityLabel="Try tomorrow"
-            accessibilityHint="Widens window to tomorrow"
-            focusable={!isLocked}
-            style={styles.forwardAction}
-          >
-            <AppText weight="600" style={styles.forwardActionText}>
-              none · Try tomorrow →
-            </AppText>
-          </Pressable>
-        ) : null}
-      </Pressable>
-    );
-  };
-  const renderPlainCard = (item: MovieSuggestion, i: number): ReactElement => {
-    // UI42.4 — title with release year + expectation badge.
-    const suggestionTitle = getSuggestionTitle(item);
-    const suggestionBadge = getSuggestionBadge(item);
-    return (
-      <Pressable
-        key={i}
-        onPress={isLocked ? undefined : item.onPress}
-        disabled={!!isLocked}
-        accessibilityRole="menuitem"
-        accessibilityLabel={`${suggestionTitle}${suggestionBadge ? `, ${suggestionBadge}` : ""}`}
-        accessibilityState={{ disabled: !!isLocked }}
-        focusable={!isLocked}
-        {...(Platform.OS === "web"
-          ? ({ role: "option" } as unknown as Record<string, unknown>)
-          : {})}
-        style={({ pressed, hovered }: { pressed: boolean; hovered?: boolean }) => [
-          styles.item,
-          styles.movieCard,
-          (pressed || hovered) && !isLocked && styles.itemPressed,
-          Platform.OS === "web"
-            ? ({ cursor: isLocked ? "default" : "pointer" } as unknown as Record<string, unknown>)
-            : null,
-        ]}
-      >
-        <MoviePoster posterUrl={item.posterUrl} title={suggestionTitle} />
-        <View style={{ flex: 1 }}>
-          <View style={styles.titleRow}>
-            <AppText style={styles.itemLabel}>{suggestionTitle}</AppText>
-            {suggestionBadge ? <SuggestionBadge text={suggestionBadge} /> : null}
-          </View>
-        </View>
-      </Pressable>
-    );
-  };
+  // Keyboard traversal follows the rendered visual order. Status, gate, error,
+  // and loading branches intentionally contribute no options.
+  const comboboxItems: readonly MovieComboboxItem[] =
+    theaterConfirmed && !movieSearchError && !movieIsSearching && hasAnyGroup
+      ? [
+          ...(showCustomEventRow
+            ? [
+                {
+                  key: getMovieComboboxItemKey("custom-event", trimmedEventQuery, 0),
+                  onPress: () => onSelectCustomEvent?.(trimmedEventQuery),
+                },
+              ]
+            : []),
+          ...liveScheduleMovies.map((item, index) => ({
+            key: getMovieComboboxItemKey("live-schedule", item.label, index),
+            onPress: item.onPress,
+          })),
+          ...nowPlayingSuggestions.map((item, index) => ({
+            key: getMovieComboboxItemKey("now-playing", item.label, index),
+            onPress: item.onPress,
+          })),
+        ]
+      : [];
+  const customEventIndex = hasAnyGroup && showCustomEventRow ? 0 : undefined;
+  const liveScheduleStartIndex = customEventIndex === undefined ? 0 : 1;
+  const nowPlayingStartIndex = liveScheduleStartIndex + liveScheduleMovies.length;
+  const contentHeader =
+    !theaterConfirmed || movieSearchError || movieIsSearching ? liveScheduleHeader : listHeader;
   return (
-    // A positioned popover's own zIndex only wins within its parent's stacking context, not
-    // against the ChipRow siblings further down this card — this wrapper needs its own zIndex
-    // to paint the whole field (dropdown included) above the form content below it.
-    <View style={{ marginBottom: desktop ? 12 : 20, zIndex: 2 }}>
-      <EyebrowLabel marginBottom={desktop ? 6 : 8}>Movie</EyebrowLabel>
-      <View>
-        <AutocompleteFieldShell focused={movieFocused && !isLocked} disabled={isLocked}>
-          <View style={styles.inputRow}>
-            <TextInput
-              value={movieValue}
-              onChangeText={isLocked ? undefined : onChangeText}
-              onFocus={isLocked ? undefined : onFocus}
-              onBlur={onBlur}
-              placeholder="Search or browse what's playing"
-              placeholderTextColor={colors.textTertiary}
-              style={[
-                styles.input,
-                desktop && styles.inputDesktop,
-                isLocked && styles.inputDisabled,
-              ]}
-              editable={!isLocked}
-              selectTextOnFocus={!isLocked}
-              accessibilityRole="combobox"
-              accessibilityLabel="Movie title"
-              accessibilityState={{ disabled: !!isLocked, expanded: movieFocused && !isLocked }}
-              accessibilityHint="Search or browse movies"
-              focusable={!isLocked}
-              {...(Platform.OS === "web"
-                ? ({
-                    role: "combobox",
-                    "aria-expanded": movieFocused && !isLocked,
-                    "aria-haspopup": "listbox",
-                    "aria-controls": "movie-listbox",
-                    "aria-autocomplete": "list",
-                    // Screen-reader/autofill hook for the HTML input; distinct
-                    // from the "movie-listbox" popover id above.
-                    id: "seatfirst-movie",
-                    name: "movie",
-                  } as unknown as Record<string, unknown>)
-                : {})}
-            />
-            <AppText
-              weight="500"
-              style={styles.chevron}
-              accessible={false}
-              importantForAccessibility="no"
-            >
-              ›
-            </AppText>
-          </View>
-        </AutocompleteFieldShell>
-        {/* Guard/loading shells below reuse `liveScheduleHeader`: with no list
-            content there is no guess group to label, so the theatre-specific
-            header is the honest shell title. */}
-        {movieFocused && !isLocked ? (
-          !theaterConfirmed ? (
-            <AutocompletePopover
-              id="movie-listbox"
-              header={liveScheduleHeader}
-              isMobile={isMobile}
-              onClose={onBlur}
-            >
+    <Autocomplete<MovieComboboxItem>
+      items={comboboxItems}
+      isOpen={movieFocused && !isLocked}
+      onOpenChange={(open) => {
+        if (!open) onBlur();
+      }}
+      onSelect={(item) => item.onPress()}
+      getItemKey={(item) => item.key}
+      listId="movie-listbox"
+      label={listHeader}
+      disabled={isLocked}
+    >
+      {/* A positioned popover's own zIndex only wins within its parent's stacking context, not
+          against the ChipRow siblings further down this card — this wrapper needs its own zIndex
+          to paint the whole field (dropdown included) above the form content below it. */}
+      <View style={{ marginBottom: desktop ? 12 : 20, zIndex: 2 }}>
+        <EyebrowLabel marginBottom={desktop ? 6 : 8}>Movie</EyebrowLabel>
+        <View>
+          <Autocomplete.Input
+            value={movieValue}
+            onChangeText={isLocked ? undefined : onChangeText}
+            onFocus={isLocked ? undefined : onFocus}
+            onBlur={onBlur}
+            placeholder="Search or browse what's playing"
+            placeholderTextColor={colors.textTertiary}
+            style={[
+              styles.input,
+              desktop && styles.inputDesktop,
+              isLocked && styles.inputDisabled,
+            ]}
+            editable={!isLocked}
+            selectTextOnFocus={!isLocked}
+            accessibilityRole="combobox"
+            accessibilityLabel="Movie title"
+            accessibilityState={{ disabled: isLocked, expanded: movieFocused && !isLocked }}
+            accessibilityHint="Search or browse movies"
+            focusable={!isLocked}
+            inputContainerStyle={styles.inputRow}
+            endAdornment={
+              <AppText
+                weight="500"
+                style={styles.chevron}
+                accessible={false}
+                importantForAccessibility="no"
+              >
+                ›
+              </AppText>
+            }
+            {...(Platform.OS === "web"
+              ? ({
+                  role: "combobox",
+                  "aria-expanded": movieFocused && !isLocked,
+                  "aria-haspopup": "listbox",
+                  "aria-controls": "movie-listbox",
+                  "aria-autocomplete": "list",
+                  // Screen-reader/autofill hook for the HTML input; distinct
+                  // from the "movie-listbox" popover id above.
+                  id: "seatfirst-movie",
+                  name: "movie",
+                } as unknown as Record<string, unknown>)
+              : {})}
+          />
+          {/* Guard/loading shells below reuse `liveScheduleHeader`: with no list
+              content there is no guess group to label, so the theatre-specific
+              header is the honest shell title. */}
+          <Autocomplete.Content
+            header={contentHeader}
+            alert={movieSearchError != null}
+            scrollMaxHeight={hasAnyGroup ? 326 : undefined}
+            isMobile={isMobile}
+            onClose={onBlur}
+          >
+            {!theaterConfirmed ? (
               <View style={styles.item}>
                 <AppText style={styles.itemLabelMuted}>
                   Choose where to see movie availability.
                 </AppText>
               </View>
-            </AutocompletePopover>
-          ) : movieSearchError ? (
-            <AutocompletePopover
-              id="movie-listbox"
-              header={liveScheduleHeader}
-              alert
-              isMobile={isMobile}
-              onClose={onBlur}
-            >
+            ) : movieSearchError ? (
               <View style={styles.item}>
                 <AppText style={styles.itemLabelError}>{movieSearchError}</AppText>
               </View>
-            </AutocompletePopover>
-          ) : movieIsSearching ? (
-            <AutocompletePopover
-              id="movie-listbox"
-              header={liveScheduleHeader}
-              isMobile={isMobile}
-              onClose={onBlur}
-            >
+            ) : movieIsSearching ? (
               <View
                 style={styles.item}
                 accessibilityLiveRegion="polite"
@@ -510,70 +593,95 @@ export function MovieField({
               >
                 <AppText style={styles.itemLabelMuted}>Loading…</AppText>
               </View>
-            </AutocompletePopover>
-          ) : hasAnyGroup ? (
-            <AutocompletePopover
-              id="movie-listbox"
-              header={listHeader}
-              scrollMaxHeight={326}
-              isMobile={isMobile}
-              onClose={onBlur}
-            >
-              {liveScheduleStatusBlock}
-              {showCustomEventRow ? <View style={styles.moviesGrid}>{customEventRow}</View> : null}
-              {hasLiveGroup ? (
-                <View>
-                  {hasLiveGroup && hasNowPlayingGroup ? (
-                    <AppText weight="700" style={styles.sectionHeader} accessibilityRole="header">
-                      {liveScheduleHeader}
-                    </AppText>
-                  ) : null}
+            ) : hasAnyGroup ? (
+              <>
+                {liveScheduleStatusBlock}
+                {showCustomEventRow ? (
                   <View style={styles.moviesGrid}>
-                    {liveScheduleMovies.map((item, i) => renderCountedCard(item, i))}
+                    <MovieCustomEventRow
+                      query={trimmedEventQuery}
+                      onSelect={onSelectCustomEvent}
+                      isLocked={isLocked}
+                      index={customEventIndex}
+                    />
                   </View>
-                </View>
-              ) : null}
-              {hasNowPlayingGroup ? (
-                <View style={hasLiveGroup ? styles.sectionDivider : undefined}>
-                  {hasLiveGroup && hasNowPlayingGroup ? (
-                    <AppText weight="700" style={styles.sectionHeader} accessibilityRole="header">
-                      {nowPlayingHeader}
-                    </AppText>
-                  ) : null}
+                ) : null}
+                {hasLiveGroup ? (
+                  <View>
+                    {hasNowPlayingGroup ? (
+                      <AppText weight="700" style={styles.sectionHeader} accessibilityRole="header">
+                        {liveScheduleHeader}
+                      </AppText>
+                    ) : null}
+                    <View style={styles.moviesGrid}>
+                      {liveScheduleMovies.map((item, index) => (
+                        <MovieCountedCard
+                          key={getMovieComboboxItemKey("live-schedule", item.label, index)}
+                          item={item}
+                          index={liveScheduleStartIndex + index}
+                          movieCounts={movieCounts}
+                          effectiveTotal={effectiveTotal}
+                          warmZeroMovieIds={warmZeroMovieIds}
+                          onWidenWindow={onWidenWindow}
+                          isLocked={isLocked}
+                        />
+                      ))}
+                    </View>
+                  </View>
+                ) : null}
+                {hasNowPlayingGroup ? (
+                  <View style={hasLiveGroup ? styles.sectionDivider : undefined}>
+                    {hasLiveGroup ? (
+                      <AppText weight="700" style={styles.sectionHeader} accessibilityRole="header">
+                        {nowPlayingHeader}
+                      </AppText>
+                    ) : null}
+                    <View style={styles.moviesGrid}>
+                      {nowPlayingSuggestions.map((item, index) => (
+                        <MoviePlainCard
+                          key={getMovieComboboxItemKey("now-playing", item.label, index)}
+                          item={item}
+                          index={nowPlayingStartIndex + index}
+                          isLocked={isLocked}
+                        />
+                      ))}
+                    </View>
+                  </View>
+                ) : null}
+              </>
+            ) : (
+              <>
+                {liveScheduleStatusBlock}
+                {showCustomEventRow ? (
                   <View style={styles.moviesGrid}>
-                    {nowPlayingSuggestions.map((item, i) => renderPlainCard(item, i))}
+                    <MovieCustomEventRow
+                      query={trimmedEventQuery}
+                      onSelect={onSelectCustomEvent}
+                      isLocked={isLocked}
+                      index={undefined}
+                    />
                   </View>
+                ) : null}
+                <View style={styles.item}>
+                  <AppText style={styles.itemLabelMuted}>No movies found</AppText>
                 </View>
-              ) : null}
-            </AutocompletePopover>
-          ) : (
-            <AutocompletePopover
-              id="movie-listbox"
-              header={listHeader}
-              isMobile={isMobile}
-              onClose={onBlur}
+              </>
+            )}
+          </Autocomplete.Content>
+          {liveScheduleErrorRow}
+          {movieClearedNotice ? (
+            <AppText
+              weight="400"
+              style={styles.notice}
+              accessibilityRole="alert"
+              accessibilityLiveRegion="polite"
             >
-              {liveScheduleStatusBlock}
-              {showCustomEventRow ? <View style={styles.moviesGrid}>{customEventRow}</View> : null}
-              <View style={styles.item}>
-                <AppText style={styles.itemLabelMuted}>No movies found</AppText>
-              </View>
-            </AutocompletePopover>
-          )
-        ) : null}
-        {liveScheduleErrorRow}
-        {movieClearedNotice ? (
-          <AppText
-            weight="400"
-            style={styles.notice}
-            accessibilityRole="alert"
-            accessibilityLiveRegion="polite"
-          >
-            {movieClearedNotice}
-          </AppText>
-        ) : null}
+              {movieClearedNotice}
+            </AppText>
+          ) : null}
+        </View>
       </View>
-    </View>
+    </Autocomplete>
   );
 }
 
@@ -650,6 +758,9 @@ const styles = StyleSheet.create({
     borderRadius: 9,
     borderWidth: 1,
     borderColor: "transparent",
+  },
+  itemActive: {
+    backgroundColor: colors.brandSoft,
   },
   itemPressed: {
     backgroundColor: colors.cardMutedBg,
