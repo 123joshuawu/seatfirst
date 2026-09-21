@@ -98,6 +98,30 @@ function formatLabel(formatCode: string | null): string {
   return "Standard";
 }
 
+/**
+ * S62 (ADR 0067): curated screening-attribute tags for seating/accessibility.
+ * Unknown codes are ignored (never raw pass-through); format codes are never
+ * tagged here — `formatLabel(entry.formatCode)` already owns the format badge.
+ * Heated recliners takes precedence: never show both "Heated Recliners" and
+ * "Recliners" for the same card.
+ */
+function screeningAttributeTags(
+  attributes: readonly string[],
+  formatCode: string | null,
+): string[] {
+  const codes = new Set(attributes.map((code) => code.toLowerCase()));
+  const format = (formatCode ?? "").toLowerCase();
+  if (format.length > 0) codes.delete(format);
+  const tags: string[] = [];
+  if (codes.has("heatedseats")) {
+    tags.push("Heated Recliners");
+  } else if (codes.has("reclinerseating") || codes.has("plushrecliners")) {
+    tags.push("Recliners");
+  }
+  if (codes.has("opencaption")) tags.push("Open Caption");
+  return tags;
+}
+
 function findGroupForShowtime(showtimeId: string, groups: ResultGroup[]): ResultGroup | undefined {
   return groups.find((g) => g.showtimes.some((s) => s.showtimeId === showtimeId));
 }
@@ -224,6 +248,7 @@ export function ShowtimeRow({
   const formatDisplay = formatLabel(entry.formatCode);
   const proximityLabel = distanceLabel(entry.distanceKm);
   const subtitle = [theaterName, formatDisplay, proximityLabel].filter(Boolean).join(" · ");
+  const attributeTags = screeningAttributeTags(entry.attributes ?? [], entry.formatCode);
   const [consentedLevels, setConsentedLevels] = useState<Set<number>>(() => new Set());
   const [handoffError, setHandoffError] = useState<string | null>(null);
 
@@ -498,6 +523,13 @@ export function ShowtimeRow({
             {subtitle}
           </AppText>
         ) : null}
+        {attributeTags.length > 0 ? (
+          <View style={styles.attributeBadgeRow}>
+            {attributeTags.map((tag) => (
+              <Badge key={tag} label={tag} background={colors.amberTagBg} color={colors.amberTagText} />
+            ))}
+          </View>
+        ) : null}
         <View style={styles.statusWrap}>
           {effectiveVariant === "hit" && placementLine ? (
             <AppText weight="400" style={styles.placementText}>
@@ -755,6 +787,11 @@ const styles = StyleSheet.create({
   subtitleText: {
     fontSize: 13.5,
     color: colors.textMuted,
+  },
+  attributeBadgeRow: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 6,
   },
   occupancyText: {
     fontSize: 9.5,

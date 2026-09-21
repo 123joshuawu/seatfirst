@@ -54,6 +54,7 @@ function baseVm(): MockViewModel {
     theatreNameById: new Map<string, string>(),
     theaterCity: "",
     theaterDistanceLabel: null,
+    theatreAmenities: [],
     seatPrefsSummaryLabel: "Recommended sweet spot",
     targetStatusLabel: "Scanning for centered, middle-third seats.",
     movieRuntimeGenreLabel: null,

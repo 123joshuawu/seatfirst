@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useRef } from "react";
 import { useWindowDimensions } from "react-native";
 import type { FormatPref, SeatPrefName } from "@/types/placement";
 import type { ChipItem } from "@/types/ui";
-import type { SearchSpec } from "@seatfirst/core";
+import type { SearchSpec, TheatreAmenity } from "@seatfirst/core";
 import { localDateString, MOVIE_BROWSE_SPAN_DAYS } from "@/lib/dates";
 import {
   buildSearchSpec,
@@ -75,6 +75,8 @@ export interface SubmitSearchViewModel {
   theatreNameById: Map<string, string>;
   theaterCity: string;
   theaterDistanceLabel: string | null;
+  /** S62 (ADR 0067): venue amenities of the primary (single-selected) theatre, for the State-2 confirmation card badges. */
+  theatreAmenities: TheatreAmenity[];
   seatPrefsSummaryLabel: string;
   targetStatusLabel: string;
   movieRuntimeGenreLabel: string | null;
@@ -215,6 +217,7 @@ export function useSubmitSearchViewModel(
                 name: legacyTheatre.name,
                 city: legacyTheatre.city,
                 distanceKm: legacyTheatre.distanceKm,
+                amenities: legacyTheatre.amenities ?? [],
               },
             ]
           : [],
@@ -848,6 +851,7 @@ export function useSubmitSearchViewModel(
     ),
     theaterCity: selectedTheatres.length === 1 ? (primaryTheatre?.city ?? "") : "",
     theaterDistanceLabel,
+    theatreAmenities: primaryTheatre?.amenities ?? [],
     seatPrefsSummaryLabel,
     targetStatusLabel,
     movieRuntimeGenreLabel,

@@ -360,6 +360,7 @@ export function makeScheduleSkeletonEntry(
     showDateTimeLocal: `${DEV_ANCHOR_DATE}T19:10`,
     formatCode: "STANDARD",
     distanceKm: DEV_DISTANCE_KM,
+    attributes: [],
     rank: 0,
     admitted: true,
     resolved: true,

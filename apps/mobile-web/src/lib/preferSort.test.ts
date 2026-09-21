@@ -19,6 +19,7 @@ function mkEntry(over: {
     showDateTimeLocal: "2026-08-30T19:00",
     formatCode: over.formatCode ?? "STANDARD",
     distanceKm: null,
+    attributes: [],
     rank: over.rank ?? 0,
     admitted: over.admitted ?? true,
     resolved: over.resolved ?? true,

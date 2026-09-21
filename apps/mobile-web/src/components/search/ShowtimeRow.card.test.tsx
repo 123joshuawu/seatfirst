@@ -557,3 +557,52 @@ describe("shared distanceLabel helper (UI25.2 regression guard)", () => {
     expect(distanceLabel(Infinity)).toBeNull();
   });
 });
+
+describe("ShowtimeRow screening attribute badges (S62.10 / ADR 0067)", () => {
+  let attrCase = 0;
+  function renderWithAttributes(attributes: string[]): string {
+    attrCase += 1;
+    const entry = mkEntry({ showtimeId: `sh_attr_${attrCase}`, attributes });
+    const renderer = renderRow({
+      entry,
+      groups: [],
+      partySize: 2,
+      resolvedCount: 0,
+    });
+    return JSON.stringify(renderer.toJSON());
+  }
+
+  function countOccurrences(haystack: string, needle: string): number {
+    return haystack.split(needle).length - 1;
+  }
+
+  it("renders a Recliners badge for recliner-family codes, deduped", () => {
+    expect(renderWithAttributes(["reclinerseating"])).toContain("Recliners");
+    expect(renderWithAttributes(["plushrecliners"])).toContain("Recliners");
+    const both = renderWithAttributes(["reclinerseating", "plushrecliners"]);
+    expect(countOccurrences(both, "Recliners")).toBe(1);
+  });
+
+  it("renders Heated Recliners with precedence over plain Recliners", () => {
+    const heated = renderWithAttributes(["heatedseats"]);
+    expect(heated).toContain("Heated Recliners");
+    const combined = renderWithAttributes(["heatedseats", "reclinerseating"]);
+    expect(combined).toContain("Heated Recliners");
+    // Exactly one Recliners occurrence — the heated one, never both tags.
+    expect(countOccurrences(combined, "Recliners")).toBe(1);
+  });
+
+  it("renders an Open Caption badge for opencaption", () => {
+    expect(renderWithAttributes(["opencaption"])).toContain("Open Caption");
+  });
+
+  it("renders nothing extra for unknown codes or the entry's own format code", () => {
+    expect(renderWithAttributes(["reservedseating"])).not.toContain("Reserved Seating");
+    expect(renderWithAttributes(["somefuturecode"])).not.toContain("somefuturecode");
+    // The format's own code in attributes never becomes a generic tag — the
+    // raw uppercase code appears nowhere (the subtitle renders "Standard").
+    expect(renderWithAttributes(["STANDARD"])).not.toContain("STANDARD");
+    expect(renderWithAttributes([])).not.toContain("Recliners");
+    expect(renderWithAttributes([])).not.toContain("Open Caption");
+  });
+});

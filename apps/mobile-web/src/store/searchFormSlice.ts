@@ -1,7 +1,7 @@
 import type { StateCreator } from "zustand";
 import type { FormatPref, SeatPrefName } from "@/types/placement";
 import type { SeatfirstStore } from "./seatfirstStore";
-import { DEFAULT_SEARCH_LIMITS } from "@seatfirst/core";
+import { DEFAULT_SEARCH_LIMITS, type TheatreAmenity } from "@seatfirst/core";
 import {
   BAND_ORDER,
   resolveWhenPreset,
@@ -40,6 +40,8 @@ export interface WhereTheatreRef {
   name?: string;
   city?: string | null;
   distanceKm?: number | null;
+  /** S62 (ADR 0067): venue amenities retained at selection time, like the other presentation metadata above. */
+  amenities?: TheatreAmenity[];
 }
 
 function copyWhereTheatreRef(ref: WhereTheatreRef): WhereTheatreRef {
@@ -49,6 +51,7 @@ function copyWhereTheatreRef(ref: WhereTheatreRef): WhereTheatreRef {
     ...(ref.name !== undefined ? { name: ref.name } : {}),
     ...(ref.city !== undefined ? { city: ref.city } : {}),
     ...(ref.distanceKm !== undefined ? { distanceKm: ref.distanceKm } : {}),
+    ...(ref.amenities !== undefined ? { amenities: [...ref.amenities] } : {}),
   };
 }
 

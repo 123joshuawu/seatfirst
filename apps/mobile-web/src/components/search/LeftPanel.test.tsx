@@ -284,3 +284,84 @@ describe("LeftPanel State 2 enrichment (UI25)", () => {
     expect(panelJson.children).toEqual(expect.arrayContaining(ghostJson));
   });
 });
+
+describe("LeftPanel State-2 venue amenity badges (S62.9 / ADR 0067)", () => {
+  function renderConfirmation(overrides: Parameters<typeof makeMockVm>[0] = {}): string {
+    setMockVm(
+      makeMockVm({
+        leftIsConfirmation: true,
+        movieTitleDisplay: "Dune: Part Three",
+        theaterDisplay: "AMC Metreon 16 · San Francisco",
+        posterUrl: "https://image.tmdb.org/t/p/w185/abc.jpg",
+        theaterDistanceLabel: null,
+        movieRuntimeGenreLabel: null,
+        quickPartyLabel: "4 together",
+        quickWindowLabel: "This weekend · Evenings",
+        quickFormatLabel: "Any format",
+        seatPrefsSummaryLabel: "Recommended sweet spot",
+        ...overrides,
+      }),
+    );
+    let renderer!: TestRenderer.ReactTestRenderer;
+    TestRenderer.act(() => {
+      renderer = TestRenderer.create(React.createElement(LeftPanel, null));
+    });
+    return JSON.stringify(renderer.toJSON());
+  }
+
+  it("renders amenity labels under the distance line for a theatre with amenities", () => {
+    const str = renderConfirmation({
+      theaterDistanceLabel: "1.1 mi",
+      theatreAmenities: [
+        { code: "macguffins", name: "MacGuffins Bar" },
+        { code: "reclinerseating", name: "Recliners" },
+        { code: "wheelchairaccess", name: "Wheelchair Access" },
+      ],
+    });
+    expect(str).toContain("1.1 mi away");
+    expect(str).toContain("MacGuffins Bar");
+    expect(str).toContain("Recliners");
+    expect(str).toContain("Wheelchair Access");
+    expect(str).not.toMatch(/\+\d+ more/);
+  });
+
+  it("renders a +N more suffix when there are more than 3 amenities", () => {
+    const str = renderConfirmation({
+      theatreAmenities: [
+        { code: "macguffins", name: "MacGuffins Bar" },
+        { code: "reclinerseating", name: "Recliners" },
+        { code: "wheelchairaccess", name: "Wheelchair Access" },
+        { code: "featurefare", name: "Feature Fare" },
+        { code: "plushrecliners", name: "Plush Recliners" },
+      ],
+    });
+    expect(str).toContain("MacGuffins Bar");
+    expect(str).toContain("Recliners");
+    expect(str).toContain("Wheelchair Access");
+    expect(str).toContain("+2 more");
+    expect(str).not.toContain("Feature Fare");
+    expect(str).not.toContain("Plush Recliners");
+  });
+
+  it("renders no extra badge row for an empty amenities list", () => {
+    const str = renderConfirmation({ theatreAmenities: [] });
+    expect(str).not.toMatch(/\+\d+ more/);
+  });
+
+  it("filters ticketing-policy codes and renders nothing when all are filtered out", () => {
+    const filtered = renderConfirmation({
+      theatreAmenities: [{ code: "DiscountMatinees", name: "Discount Matinees" }],
+    });
+    expect(filtered).not.toContain("Discount Matinees");
+    expect(filtered).not.toMatch(/\+\d+ more/);
+
+    const mixed = renderConfirmation({
+      theatreAmenities: [
+        { code: "macguffins", name: "MacGuffins Bar" },
+        { code: "discountmatinees", name: "Discount Matinees" },
+      ],
+    });
+    expect(mixed).toContain("MacGuffins Bar");
+    expect(mixed).not.toContain("Discount Matinees");
+  });
+});

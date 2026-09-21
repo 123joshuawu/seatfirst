@@ -189,6 +189,7 @@ function selectMovieAndTheatre(): void {
       city: "San Francisco",
       address: null,
       slugs: null,
+      amenities: [],
       firstSeenAt: "2026-01-01T00:00:00Z",
       lastSeenAt: "2026-01-01T00:00:00Z",
       distanceKm: null,

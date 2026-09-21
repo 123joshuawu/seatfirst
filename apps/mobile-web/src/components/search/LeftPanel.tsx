@@ -5,6 +5,7 @@ import type { ReactElement } from "react";
 import { StyleSheet, Image, Platform, View } from "react-native";
 import { colors } from "@/theme/colors";
 import { AppText } from "@/components/core/AppText";
+import { Badge } from "@/components/core/Badge";
 import { SeatGrid } from "@/components/map/SeatGrid";
 import type { RecoveryOption } from "@seatfirst/core";
 import type { SeatDotData, SeatGridRow } from "@/types/placement";
@@ -48,6 +49,24 @@ function buildTargetMiniRows(partySize: number): SeatGridRow[] {
 }
 
 /**
+ * S62 (ADR 0067): venue amenity codes that are ticketing policies, not physical
+ * facilities — never badged on the confirmation card. The genuinely obvious
+ * pricing/membership codes from AMC's real venue vocabulary (observed in the
+ * captured `theatres-market-*` filter dropdown: `discountmatinees`,
+ * `militarypricingafter4pm`, `amcclubrockers` alongside facility codes like
+ * `macguffins`, `wheelchairaccess`, `plushrecliners`). Compared case-insensitively;
+ * everything else renders — never over-filter a real facility.
+ */
+const NON_FACILITY_AMENITY_CODES: ReadonlySet<string> = new Set([
+  "discountmatinees",
+  "militarypricingafter4pm",
+  "amcclubrockers",
+]);
+
+/** Maximum venue amenity badges before the `+N more` suffix. */
+const MAX_VENUE_AMENITY_BADGES = 3;
+
+/**
  * The persistent left column across the non-result screens: an unfocused "example result"
  * before the user has picked anything, a movie/theater confirmation card while
  * searching/checking, or the auditorium seat map while rechecking/replacing/confirming.
@@ -67,8 +86,12 @@ export function LeftPanel({
   const handoffVm = useHandoffViewModel(focusedRecoveryOption);
   const progressVm = useSearchProgressViewModel();
   const vm = { ...formVm, ...handoffVm, ...progressVm };
+  // S62 (ADR 0067): facility amenities for the State-2 confirmation card —
+  // ticketing-policy codes filtered out, empty/filtered-to-empty renders no row.
+  const venueAmenities = (vm.theatreAmenities ?? []).filter(
+    (amenity) => !NON_FACILITY_AMENITY_CODES.has(amenity.code.toLowerCase()),
+  );
   if (!vm.showLeftCol) return null;
-
   return (
     <View style={vm.isMobile ? styles.rootMobile : styles.rootDesktop}>
       <View style={styles.wordmarkRow}>
@@ -112,6 +135,23 @@ export function LeftPanel({
                 <AppText weight="400" style={styles.confirmationDistance}>
                   {`${vm.theaterDistanceLabel} away`}
                 </AppText>
+              ) : null}
+              {venueAmenities.length > 0 ? (
+                <View style={styles.amenityRow}>
+                  {venueAmenities.slice(0, MAX_VENUE_AMENITY_BADGES).map((amenity) => (
+                    <Badge
+                      key={amenity.code}
+                      label={amenity.name}
+                      background={colors.amberTagBg}
+                      color={colors.amberTagText}
+                    />
+                  ))}
+                  {venueAmenities.length > MAX_VENUE_AMENITY_BADGES ? (
+                    <AppText weight="600" style={styles.amenityMore}>
+                      {`+${venueAmenities.length - MAX_VENUE_AMENITY_BADGES} more`}
+                    </AppText>
+                  ) : null}
+                </View>
               ) : null}
               {vm.movieRuntimeGenreLabel !== null ? (
                 <AppText weight="400" style={styles.confirmationDistance}>
@@ -277,6 +317,17 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: colors.textMuted,
     marginTop: 2,
+  },
+  amenityRow: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    alignItems: "center",
+    gap: 6,
+    marginTop: 6,
+  },
+  amenityMore: {
+    fontSize: 12,
+    color: colors.textMuted,
   },
   targetSummary: {
     borderTopWidth: 1,

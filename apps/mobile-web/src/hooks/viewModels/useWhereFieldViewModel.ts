@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Platform } from "react-native";
 import type { TextInput } from "react-native";
-import { DEFAULT_SEARCH_LIMITS, type TheatreSearchHit } from "@seatfirst/core";
+import { DEFAULT_SEARCH_LIMITS, type TheatreAmenity, type TheatreSearchHit } from "@seatfirst/core";
 import { useSeatfirstStore, type SeatfirstStore } from "@/store/seatfirstStore";
 import {
   getWhereFieldMode,
@@ -87,6 +87,13 @@ export function getHitCity(hit: WhereListItem): string | null {
 
 export function getHitDistance(hit: WhereListItem): number | null {
   return typeof hit.distanceKm === "number" ? hit.distanceKm : null;
+}
+
+/** S62 (ADR 0067): venue amenities carried by a browse/query hit; place-panel refs may also carry them once selected. */
+export function getHitAmenities(hit: WhereListItem): TheatreAmenity[] | null {
+  const amenities = (hit as { amenities?: unknown }).amenities;
+  if (!Array.isArray(amenities)) return null;
+  return amenities as TheatreAmenity[];
 }
 
 export interface WhereFieldViewModel {
@@ -397,12 +404,17 @@ export function useWhereFieldViewModel({
       const id = getHitId(hit);
       const providerId = hit.providerId;
       if (!id) return;
+      const hitAmenities = getHitAmenities(hit);
       toggleTheatre({
         id,
         providerId,
         name: getHitName(hit),
         city: getHitCity(hit),
         distanceKm: getHitDistance(hit),
+        // S62 (ADR 0067): retain venue amenities at selection time so the
+        // State-2 confirmation card can badge them. Omitted (not emptied) when
+        // the hit carries none, keeping refs exactly as before in that case.
+        ...(hitAmenities !== null && hitAmenities.length > 0 ? { amenities: hitAmenities } : {}),
       });
       setWhereQuery("");
       setActiveKey(null);

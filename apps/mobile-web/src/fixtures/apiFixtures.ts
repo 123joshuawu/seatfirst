@@ -117,6 +117,7 @@ export function makeTheatreSearchHit(
     city: "San Francisco",
     address: "135 Fourth St",
     slugs: null,
+    amenities: [],
     firstSeenAt: DEV_SEEN_AT,
     lastSeenAt: DEV_SEEN_AT,
     distanceKm: 2.4,
