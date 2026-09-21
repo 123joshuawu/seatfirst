@@ -198,13 +198,20 @@ export function MovieField({
   // typed non-blank text.
   const trimmedEventQuery = movieValue.trim();
   const showCustomEventRow = trimmedEventQuery.length > 0 && onSelectCustomEvent != null;
+  // ADR-0100 — two explicit suggestion groups. Group presence is computed
+  // before the status-block gate so the gate can depend on it: once the
+  // confirmed live schedule has loaded (`hasLiveGroup`), the CTA/busy block
+  // hides entirely.
+  const hasLiveGroup = liveScheduleMovies.length > 0;
+  const hasNowPlayingGroup = nowPlayingSuggestions.length > 0;
   // ADR-0100 — live-schedule status block. Rendered FIRST inside the open
   // popover (top slot, above all movie groups) whenever the caller wires the
-  // live-schedule check; `isWarm === false` (Cold Mode) gets a more prominent
+  // live-schedule check AND the confirmed schedule has not yet loaded;
+  // `isWarm === false` (Cold Mode) gets a more prominent
   // tinted treatment, Hot Mode a neutral one. While a refresh is in flight the
   // block swaps its idle CTA copy for a busy status line, keeping the same
   // disabled/busy Pressable a11y pattern.
-  const showLiveScheduleStatus = onCheckLiveSchedule != null;
+  const showLiveScheduleStatus = onCheckLiveSchedule != null && !hasLiveGroup;
   const customEventRow = showCustomEventRow ? (
     <Pressable
       onPress={() => onSelectCustomEvent?.(trimmedEventQuery)}
@@ -285,11 +292,6 @@ export function MovieField({
   // rhythm so the form CTA clears ~900px viewports. `undefined` (no override
   // passed) keeps the long-standing mobile values.
   const desktop = isMobile === false;
-  // ADR-0100 — two explicit suggestion groups. The confirmed schedule group
-  // renders with theatre counts (the Hot Mode counted-card branch); the
-  // generic guess group renders plain cards (the Cold Mode branch).
-  const hasLiveGroup = liveScheduleMovies.length > 0;
-  const hasNowPlayingGroup = nowPlayingSuggestions.length > 0;
   const hasAnyGroup = hasLiveGroup || hasNowPlayingGroup;
   // The popover shell takes a single `header`, but the list body carries two
   // labelled section headers. The shell follows the first visible group

@@ -538,7 +538,7 @@ describe("MovieField UI42.6 live schedule status block", () => {
         MovieField,
         ui42Props({
           movieValue: "Dun",
-          liveScheduleMovies: [{ label: "Dune: Part Three", onPress: vi.fn(), posterUrl: null }],
+          nowPlayingSuggestions: [{ label: "Dune: Part Three", onPress: vi.fn(), posterUrl: null }],
           onCheckLiveSchedule,
         }),
       ),
@@ -567,7 +567,7 @@ describe("MovieField UI42.6 live schedule status block", () => {
         MovieField,
         ui42Props({
           movieValue: "Dun",
-          liveScheduleMovies: [{ label: "Dune: Part Three", onPress: vi.fn(), posterUrl: null }],
+          nowPlayingSuggestions: [{ label: "Dune: Part Three", onPress: vi.fn(), posterUrl: null }],
           onCheckLiveSchedule,
           isCheckingLiveSchedule: true,
         }),
@@ -603,6 +603,40 @@ describe("MovieField UI42.6 live schedule status block", () => {
     expect(jsonStr).not.toContain("Check today's live schedule");
     renderer.unmount();
   });
+  it("hides both the CTA and the busy line once the live schedule has loaded", () => {
+    const onCheckLiveSchedule = vi.fn();
+    const renderer = createRenderer(
+      React.createElement(
+        MovieField,
+        ui42Props({
+          movieValue: "Dun",
+          liveScheduleMovies: [{ label: "Dune: Part Three", onPress: vi.fn(), posterUrl: null }],
+          onCheckLiveSchedule,
+        }),
+      ),
+    );
+    const jsonStr = JSON.stringify(renderer.toJSON());
+    expect(jsonStr).not.toContain("Check today's live schedule");
+    expect(jsonStr).not.toContain("Checking today's live schedule");
+    expect(jsonStr).not.toContain("Looking for a special event");
+    renderer.unmount();
+    const busyRenderer = createRenderer(
+      React.createElement(
+        MovieField,
+        ui42Props({
+          movieValue: "Dun",
+          liveScheduleMovies: [{ label: "Dune: Part Three", onPress: vi.fn(), posterUrl: null }],
+          onCheckLiveSchedule,
+          isCheckingLiveSchedule: true,
+        }),
+      ),
+    );
+    const busyStr = JSON.stringify(busyRenderer.toJSON());
+    expect(busyStr).not.toContain("Check today's live schedule");
+    expect(busyStr).not.toContain("Checking today's live schedule");
+    expect(busyStr).not.toContain("Looking for a special event");
+    busyRenderer.unmount();
+  });
 });
 
 describe("MovieField UI42.6 live schedule error", () => {
@@ -620,7 +654,7 @@ describe("MovieField UI42.6 live schedule error", () => {
     );
     const jsonStr = JSON.stringify(renderer.toJSON());
     expect(jsonStr).toContain("Couldn't check the live schedule. Please try again.");
-    expect(jsonStr).toContain("Check today's live schedule");
+    expect(jsonStr).not.toContain("Check today's live schedule");
     const alert = renderer.root.find((node) => node.props.accessibilityRole === "alert");
     expect(alert).toBeTruthy();
     renderer.unmount();
@@ -701,14 +735,14 @@ describe("MovieField ADR-0100 two-group split", () => {
     expect(jsonStr).toContain(guessHeader);
     expect(jsonStr).toContain("Dune: Part Three");
     expect(jsonStr).toContain("Dune: Part Four (general)");
-    // Order: status block → custom-event row → live group → guess group.
-    const statusIdx = jsonStr.indexOf("Looking for a special event");
+    // Order: custom-event row → live group → guess group. The live-schedule
+    // status block hides once the confirmed schedule has loaded.
+    expect(jsonStr).not.toContain("Looking for a special event");
+    expect(jsonStr).not.toContain("Check today's live schedule");
     const eventIdx = jsonStr.indexOf("Search for event:");
     const liveIdx = jsonStr.indexOf("Dune: Part Three");
     const guessIdx = jsonStr.indexOf("Dune: Part Four (general)");
-    expect(statusIdx).toBeGreaterThanOrEqual(0);
     expect(eventIdx).toBeGreaterThanOrEqual(0);
-    expect(statusIdx).toBeLessThan(eventIdx);
     expect(eventIdx).toBeLessThan(liveIdx);
     expect(liveIdx).toBeLessThan(guessIdx);
     renderer.unmount();
@@ -842,15 +876,18 @@ describe("MovieField ADR-0100 two-group split", () => {
     renderer.unmount();
   });
 
-  it("shows the loading line at the top when checking with both groups present", () => {
+  it("shows the loading line at the top when checking before the live schedule loads", () => {
     const renderer = createRenderer(
       React.createElement(
         MovieField,
         splitProps({
           movieValue: "",
           isCheckingLiveSchedule: true,
-          liveScheduleMovies: [{ label: "Dune: Part Three", onPress: vi.fn(), posterUrl: null }],
-          nowPlayingSuggestions: [{ label: "Interstellar", onPress: vi.fn(), posterUrl: null }],
+          liveScheduleMovies: [],
+          nowPlayingSuggestions: [
+            { label: "Dune: Part Three", onPress: vi.fn(), posterUrl: null },
+            { label: "Interstellar", onPress: vi.fn(), posterUrl: null },
+          ],
         }),
       ),
     );
