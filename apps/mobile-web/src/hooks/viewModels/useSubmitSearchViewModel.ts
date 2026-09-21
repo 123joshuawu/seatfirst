@@ -222,7 +222,6 @@ export function useSubmitSearchViewModel(
   );
   const primaryTheatre = selectedTheatres[0] ?? null;
   const theaterConfirmed = selectedTheatres.length > 0;
-  const formatReady = !!movie.trim() && theaterConfirmed;
 
   const admissionRejected =
     liveError?.code === "ADMISSION_REJECTED" && typeof liveError.retryAfterSeconds === "number"
@@ -415,14 +414,16 @@ export function useSubmitSearchViewModel(
   const facetTotalTheatres = facetTheatreIds.length;
   const movieIdsForFacet = theatreMovieSet.movies.map((group) => group.movieId);
   const formatCodeForPref = (pref: FormatPref): string | null => {
+    if (pref === "any") return "ANY";
     if (pref === "imax") return "imax";
     if (pref === "dolby") return "dolbycinemaatamcprime";
     if (pref === "standard") return "STANDARD";
     return null;
   };
-  const formatCandidates: string[] = FORMAT_META.map((m) => formatCodeForPref(m.v)!).filter(
-    (c): c is string => c !== null,
-  );
+  const formatCandidates: string[] = [
+    "ANY",
+    ...FORMAT_META.map((m) => formatCodeForPref(m.v)!).filter((c): c is string => c !== null),
+  ];
   // UI24 (ADR 0052 §6): DATE counts for the "Dates" chip row's resolved dates,
   // and every other axis scoped to the exact active date scope — Movie/Format
   // send `base.dateScope` (never `base.weekdays`); TIME_OF_DAY sends the exact
@@ -552,6 +553,9 @@ export function useSubmitSearchViewModel(
     const code = formatCodeForPref(m.v);
     if (code) formatPrefByCode.set(code, m.v);
   }
+  // The "any" pref has no FORMAT_META row, so register its reserved "ANY"
+  // candidate explicitly — same alias mechanism as imax/dolby/standard above.
+  formatPrefByCode.set("ANY", "any");
   formatFacet.countsMap.forEach((entry, candidate) => {
     const pref = formatPrefByCode.get(candidate);
     if (pref) {
@@ -563,6 +567,10 @@ export function useSubmitSearchViewModel(
       if (meta) {
         formatCountsByPref.set(meta.label, entry);
         formatCountsByPref.set(meta.label.toLowerCase(), entry);
+      } else if (pref === "any") {
+        // "any" has no FORMAT_META row: alias the "Any format" chip label
+        // directly so ChipRow's label-based lookup resolves it.
+        formatCountsByPref.set("Any format", entry);
       }
     }
     formatCountsByPref.set(candidate, entry);
@@ -574,23 +582,12 @@ export function useSubmitSearchViewModel(
     { v: "any" as FormatPref, label: "Any format" },
     ...FORMAT_META.map((m) => ({ v: m.v, label: m.label })),
   ];
+  // Every chip — including "Any format" — returns a bare label: ChipRow appends
+  // the shared `(count)` suffix from formatCounts (ADR 0051 amendment) via
+  // getFacetDisplay, so "Any format" renders (N)/(N+)/bare through the same
+  // tri-state path as IMAX/Dolby/Standard. The "ANY" facet entry lands in
+  // formatCountsByPref under "any" via the formatPrefByCode alias above.
   const formatOptions = formatChipDefs.map((o) => {
-    if (o.v === "any") {
-      const total =
-        windowSummary != null
-          ? windowSummary.formatCounts.imax +
-            windowSummary.formatCounts.dolby +
-            windowSummary.formatCounts.standard
-          : null;
-      return {
-        label: formatReady && total !== null ? `${o.label} (${total})` : o.label,
-        active: formatPref === o.v,
-        onPress: () => selectFormat(o.v),
-      };
-    }
-    // Bare label: ChipRow appends the shared `(count)` suffix from facetCounts
-    // (ADR 0051 amendment) — no pre-baked `·` separator here, so Dolby renders
-    // through the same path as IMAX/Standard.
     return {
       label: o.label,
       active: formatPref === o.v,
@@ -664,10 +661,19 @@ export function useSubmitSearchViewModel(
     matchingShowtimeCount,
   ]);
 
+  // UI18.8: the CTA's theatre count uses warm counts only. The active format
+  // selection always has a formatCountsByPref entry once facet data lands
+  // (including the "any" alias), so total - cold is the real warm subset —
+  // never the raw selected-theatre count. While facet data is unavailable
+  // (Cold Mode gates the facet hooks off, or the response is still in flight)
+  // degrade to the full selected count rather than blocking the CTA.
+  const activeFormatEntry = formatCountsByPref.get(formatPref);
   const warmTheatreCount =
-    confirmedMatchingShowtimeCount !== null && selectedTheatres.length > 0
-      ? selectedTheatres.length
-      : null;
+    activeFormatEntry !== undefined && facetTheatreIds.length > 0
+      ? facetTheatreIds.length - activeFormatEntry.coldTheatreCount
+      : confirmedMatchingShowtimeCount !== null && selectedTheatres.length > 0
+        ? selectedTheatres.length
+        : null;
   const submitButtonLabel = !theaterConfirmed
     ? "Choose where to look"
     : !movie.trim() || !hasMovieSelection

@@ -6,7 +6,6 @@ import {
   shouldDimFacet,
   shouldDisableFacet,
   toFacetMap,
-  getWarmScopeSummary,
 } from "./facetCounts";
 
 describe("facetCounts helpers — tri-state (UI18.6)", () => {
@@ -94,18 +93,6 @@ describe("facetCounts helpers — tri-state (UI18.6)", () => {
       const notChecked = { count: 0, coldTheatreCount: t };
       expect(getFacetDisplay(notChecked, t).text).toBe("not checked yet");
     }
-  });
-
-  it("getWarmScopeSummary sums only warm (cold===0)", () => {
-    const m = new Map<string, { count: number; coldTheatreCount: number }>([
-      ["a", { count: 5, coldTheatreCount: 0 }],
-      ["b", { count: 3, coldTheatreCount: 1 }],
-      ["c", { count: 0, coldTheatreCount: 0 }],
-    ]);
-    const summary = getWarmScopeSummary(m);
-    // Only a and c are warm (cold 0), sum is 5+0=5, theatres 2
-    expect(summary.warmShowtimes).toBe(5);
-    expect(summary.warmTheatres).toBe(2);
   });
 
   it("fail-to-pass guard — cold zero must NOT dim (regression if someone changes shouldDim to include cold)", () => {

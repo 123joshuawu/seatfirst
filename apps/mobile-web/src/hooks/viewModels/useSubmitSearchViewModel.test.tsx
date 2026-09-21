@@ -3,6 +3,7 @@ import React from "react";
 import TestRenderer from "react-test-renderer";
 import { DEFAULT_SEARCH_LIMITS, specHash, type SearchSpec } from "@seatfirst/core";
 import { buildSearchSpec } from "@/lib/buildSearchSpec";
+import { getFacetDisplay } from "@/lib/facetCounts";
 import { useSeatfirstStore } from "@/store/seatfirstStore";
 import {
   useSubmitSearchViewModel,
@@ -227,14 +228,16 @@ describe("useSubmitSearchViewModel CTA label and format chips (UX audit)", () =>
     expect(vm.searchDisabled).toBe(false);
   });
 
-  it("'Any format' chip carries the summed total-pool count", () => {
+  it("'Any format' chip returns a bare label — ChipRow appends the tri-state count", () => {
     const utc = showtimeInTwoDays();
     setMovieSet([
       { showDateTimeUtc: utc, formatCode: "imax" },
       { showDateTimeUtc: utc, formatCode: null },
     ]);
     const vm = captureVm();
-    expect(vm.formatOptions[0]?.label).toBe("Any format (2)");
+    // No pre-baked "(2)" suffix: the count renders through ChipRow's
+    // getFacetDisplay path from vm.formatCounts, like IMAX/Dolby/Standard.
+    expect(vm.formatOptions[0]?.label).toBe("Any format");
   });
 
   it("'Any format' chip renders bare while the window is not ready", () => {
@@ -243,6 +246,115 @@ describe("useSubmitSearchViewModel CTA label and format chips (UX audit)", () =>
     useSeatfirstStore.setState({ movie: "", selectedMovieId: null });
     const vm = captureVm();
     expect(vm.formatOptions[0]?.label).toBe("Any format");
+  });
+});
+
+describe("useSubmitSearchViewModel Any-format facet + warm CTA count (ADR 0036 amendment)", () => {
+  const EMPTY_FACET = {
+    data: null,
+    countsMap: new Map<string, { count: number; coldTheatreCount: number }>(),
+    countsRecord: {},
+    isLoading: false,
+    error: null,
+  };
+
+  /** Stub useFacetCounts per axis: FORMAT gets `formatMap`, every other axis empty. */
+  function stubFacetMaps(formatMap: Map<string, { count: number; coldTheatreCount: number }>): void {
+    mockFacetCounts.mockImplementation((input: UseFacetCountsInput | null) => {
+      if (input?.axes?.[0]?.kind === "FORMAT") {
+        return { ...EMPTY_FACET, countsMap: formatMap };
+      }
+      return { ...EMPTY_FACET, countsMap: new Map() };
+    });
+  }
+
+  /** Two theatres selected, five cached showtimes on the selected date (warm scope). */
+  function setTwoTheatreWarmForm(): string {
+    const utc = showtimeInTwoDays();
+    setMovieSet([
+      { showDateTimeUtc: utc, formatCode: "imax" },
+      { showDateTimeUtc: utc, formatCode: "imax" },
+      { showDateTimeUtc: utc, formatCode: null },
+      { showDateTimeUtc: utc, formatCode: null },
+      { showDateTimeUtc: utc, formatCode: null },
+    ]);
+    useSeatfirstStore.setState({
+      selectedTheatres: [
+        { id: "th_1", providerId: "amc", name: "AMC One", city: "SF", distanceKm: 1.1 },
+        { id: "th_2", providerId: "amc", name: "AMC Two", city: "SF", distanceKm: 2.2 },
+      ],
+      movie: "Dune",
+      selectedMovieId: "mv_dune",
+      selectedDates: [laDateOf(utc)],
+      timeOfDay: "All times",
+      selectedBands: [],
+      isCustom: true,
+      whenPreset: "Custom",
+      formatPref: "any",
+    });
+    return utc;
+  }
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it("FORMAT facet request includes the reserved ANY candidate", () => {
+    stubFacetMaps(new Map());
+    setTwoTheatreWarmForm();
+    captureVm();
+    const formatCall = mockFacetCounts.mock.calls.find(
+      (call) => (call[0] as UseFacetCountsInput | null)?.axes?.[0]?.kind === "FORMAT",
+    );
+    const candidates = (formatCall?.[0] as UseFacetCountsInput)?.axes?.[0];
+    expect(candidates).toMatchObject({ kind: "FORMAT" });
+    expect((candidates as { candidates: string[] }).candidates).toContain("ANY");
+  });
+
+  it('"any" pref resolves through the tri-state map: partial ANY renders "5+"', () => {
+    stubFacetMaps(
+      new Map([
+        ["ANY", { count: 5, coldTheatreCount: 1 }],
+        ["imax", { count: 2, coldTheatreCount: 1 }],
+        ["STANDARD", { count: 3, coldTheatreCount: 1 }],
+      ]),
+    );
+    setTwoTheatreWarmForm();
+    const vm = captureVm();
+    // The "any" alias resolves exactly like imax/dolby/standard…
+    expect(vm.formatCounts?.get("any")).toEqual({ count: 5, coldTheatreCount: 1 });
+    // …including the "Any format" chip-label alias ChipRow looks up by label.
+    expect(vm.formatCounts?.get("Any format")).toEqual({ count: 5, coldTheatreCount: 1 });
+    // …and the shared tri-state helper reports partial ("5+") over 2 theatres.
+    expect(getFacetDisplay(vm.formatCounts?.get("any"), vm.facetTotalTheatres ?? 0).text).toBe("5+");
+    expect(vm.facetTotalTheatres).toBe(2);
+  });
+
+  it("submit label states the warm theatre count, not the full selected count (UI18.8)", () => {
+    stubFacetMaps(
+      new Map([
+        ["ANY", { count: 5, coldTheatreCount: 1 }],
+        ["imax", { count: 2, coldTheatreCount: 1 }],
+        ["STANDARD", { count: 3, coldTheatreCount: 1 }],
+      ]),
+    );
+    setTwoTheatreWarmForm();
+    const vm = captureVm();
+    expect(vm.matchingShowtimeCount).toBe(5);
+    expect(vm.warmTheatreCount).toBe(1);
+    expect(vm.submitButtonLabel).toBe("Search 5 showtimes across 1 theatre");
+    expect(vm.submitButtonLabel).not.toContain("across 2 theatres");
+  });
+
+  it("submit label degrades to the full selected count while facet data is unavailable (Cold Mode safe)", () => {
+    // Facet hooks gated off / response in flight: empty maps, warm local count.
+    stubFacetMaps(new Map());
+    setTwoTheatreWarmForm();
+    const vm = captureVm();
+    expect(vm.matchingShowtimeCount).toBe(5);
+    expect(vm.formatCounts?.get("any")).toBeUndefined();
+    expect(vm.warmTheatreCount).toBe(2);
+    expect(vm.submitButtonLabel).toBe("Search 5 showtimes across 2 theatres");
   });
 });
 

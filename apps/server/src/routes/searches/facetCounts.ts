@@ -286,8 +286,15 @@ export const facetCounts = t.procedure
 
     const counts: FacetCountsResponse["counts"] = [];
     for (const { candidate, plan } of candidatePlans) {
+      // ADR 0036 amendment (2026-09-21): reserved ANY FORMAT candidate — skips
+      // the format predicate entirely (every performance matches regardless of
+      // format). A `{kind:"FORMAT", code:"ANY"}` predicate would match nothing
+      // since "ANY" is not a real provider format code, so null (same as a
+      // non-FORMAT axis) is the only correct filter here.
       const formatFilter =
-        candidate.kind === "FORMAT" ? formatPredicate(candidate.responseCandidate) : null;
+        candidate.kind === "FORMAT" && candidate.responseCandidate !== "ANY"
+          ? formatPredicate(candidate.responseCandidate)
+          : null;
       let count = 0;
       let coldTheatreCount = 0;
       for (const { range, timezone } of reads) {

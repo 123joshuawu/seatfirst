@@ -286,8 +286,9 @@ function facetBands(timeOfDay: string | undefined): string[] {
  * The one real predicate every movie-scoped facet candidate below is filtered through —
  * exactly `summarizeMovieWindow`'s own date/time/format matching against the same
  * `DEV_MOVIE_GROUPS` catalogue the theatre's movie browse already answers with. This is what
- * keeps the "Any format" total (computed client-side in `useSubmitSearchViewModel` from real
- * showtimes) and the per-format facet chips (this mock) from ever disagreeing again
+ * keeps the client-side window total (`useSubmitSearchViewModel`'s `windowSummary`, from real
+ * showtimes — the "Any format" chip itself now renders the ANY facet entry via ChipRow) and
+ * the per-format facet chips (this mock) from ever disagreeing again
  * (`docs/seeded-ui-states-audit.md` §2 — specific formats summing past "Any format").
  */
 function countRealShowtimes(
@@ -353,9 +354,15 @@ export function makeFacetCountsResponse(
             case "MOVIE":
               return countRealShowtimes(candidate, baseDates, baseBands) * theatreCount;
             case "FORMAT":
+              // Reserved "ANY" candidate (ADR 0036 amendment, 2026-09-21): like
+              // the server, skip format filtering so every showtime counts.
               return (
-                countRealShowtimes(input.base.movieId as string, baseDates, baseBands, candidate) *
-                theatreCount
+                countRealShowtimes(
+                  input.base.movieId as string,
+                  baseDates,
+                  baseBands,
+                  candidate === "ANY" ? undefined : candidate,
+                ) * theatreCount
               );
             case "DATE":
               return (

@@ -201,7 +201,7 @@ describe("useSeatfirstDemo real window counts, search gate, and poster", () => {
     resetStore();
   });
 
-  it("Any format carries the total-pool count while specific chips stay bare until facets check", () => {
+  it("all format chips stay bare at hook level — counts render via ChipRow facets", () => {
     selectMovieAndTheatre();
     useSeatfirstStore.setState({
       selectedDates: ["2026-02-06"],
@@ -209,8 +209,11 @@ describe("useSeatfirstDemo real window counts, search gate, and poster", () => {
       selectedBands: [],
     });
     const { result, unmount } = renderHook(() => useSeatfirstDemo());
+    // No pre-baked "(N)" suffix: "Any format" renders its count through the
+    // same ChipRow/getFacetDisplay path as IMAX/Dolby/Standard (ADR 0036
+    // amendment) — the hook only supplies the bare label.
     const labels = result.current.formatOptions.map((o) => o.label);
-    expect(labels).toEqual(["Any format (2)", "IMAX", "Dolby Cinema", "Standard"]);
+    expect(labels).toEqual(["Any format", "IMAX", "Dolby Cinema", "Standard"]);
     expect(result.current.matchingShowtimeCount).toBe(2);
     unmount();
   });
@@ -240,7 +243,7 @@ describe("useSeatfirstDemo real window counts, search gate, and poster", () => {
     const { result, unmount } = renderHook(() => useSeatfirstDemo());
     expect(result.current.matchingShowtimeCount).toBe(8);
     expect(result.current.formatOptions.map((o) => o.label)).toEqual([
-      "Any format (8)",
+      "Any format",
       "IMAX",
       "Dolby Cinema",
       "Standard",
@@ -318,7 +321,7 @@ describe("useSeatfirstDemo real window counts, search gate, and poster", () => {
     const any = renderHook(() => useSeatfirstDemo());
     expect(any.result.current.matchingShowtimeCount).toBe(2);
     expect(any.result.current.formatOptions.map((o) => o.label)).toEqual([
-      "Any format (2)",
+      "Any format",
       "IMAX",
       "Dolby Cinema",
       "Standard",

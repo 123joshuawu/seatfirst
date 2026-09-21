@@ -101,33 +101,6 @@ export function shouldDisableFacet(
   return shouldDimFacet(entry, totalTheatres);
 }
 
-/**
- * Warm scope summary for CTA (UI18.8): "Search N showtimes across M theatres"
- * using warm counts only. Sums only the warm (cold===0) entries — the CTA's
- * advisory hint and the authoritative capacity block are complementary; the 200
- * ceiling is consumed, never re-derived here.
- */
-export function getWarmScopeSummary(
-  entries: Map<string, FacetCountEntry> | Record<string, FacetCountEntry> | FacetCountEntry[],
-  totalTheatres?: number,
-): { warmShowtimes: number; warmTheatres: number } {
-  void totalTheatres;
-  const list: FacetCountEntry[] = Array.isArray(entries)
-    ? entries
-    : entries instanceof Map
-      ? Array.from(entries.values())
-      : Object.values(entries);
-  let warmShowtimes = 0;
-  let warmTheatres = 0;
-  for (const e of list) {
-    if (e.coldTheatreCount === 0) {
-      warmShowtimes += e.count;
-      warmTheatres += 1;
-    }
-  }
-  return { warmShowtimes, warmTheatres };
-}
-
 /** True when every candidate is not checked yet (all cold). */
 export function isAllNotCheckedYet(
   entries: Map<string, FacetCountEntry> | Record<string, FacetCountEntry>,

@@ -136,6 +136,22 @@ describe("API fixture builders parse against the real contracts", () => {
     expect(standard?.count).toBeGreaterThan(0);
   });
 
+  it('reserved "ANY" FORMAT candidate counts every seeded showtime regardless of format (ADR 0036 amendment)', () => {
+    const input = {
+      ...facetInputWithMovie,
+      axes: [{ kind: "FORMAT", candidates: ["imax", "ANY"] }],
+    } as FacetCountsInput;
+    const response = makeFacetCountsResponse(input, "warm");
+    expect(() => FacetCountsResponseSchema.parse(response)).not.toThrow();
+    const imax = response.counts.find((entry) => entry.candidate === "imax");
+    const any = response.counts.find((entry) => entry.candidate === "ANY");
+    // Seeded showtimes for this movie are all STANDARD: IMAX reads 0 while
+    // "ANY" skips format filtering and reads the whole pool.
+    expect(imax).toMatchObject({ count: 0, coldTheatreCount: 0 });
+    expect(any?.count).toBeGreaterThan(0);
+    expect(any).toMatchObject({ coldTheatreCount: 0 });
+  });
+
   it("returns all-zero entries per candidate when no movie is selected", () => {
     // `null` (explicitly no movie) and a missing `movieId` (never set) both mean "no movie
     // context" — the mock must not invent populated counts for either, in any mode.

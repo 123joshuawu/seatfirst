@@ -3,11 +3,12 @@ import React from "react";
 import TestRenderer from "react-test-renderer";
 import { MovieField } from "./MovieField";
 import { TheaterField } from "./TheaterField";
+import { SearchForm } from "./SearchForm";
 
 import { useSeatfirstStore } from "@/store/seatfirstStore";
 import fs from "fs";
 import path from "path";
-import { makeMockVm } from "../../../test/mockViewModels";
+import { makeMockVm, setMockVm } from "../../../test/mockViewModels";
 
 vi.mock("@/hooks/useTheatreSearch", () => ({
   useTheatreSearch: () => ({
@@ -236,13 +237,49 @@ describe("UI18.7 dead-end forward action", () => {
 });
 
 describe("UI18.8 CTA warm-count scope", () => {
-  it("button shows Search N showtimes across M theatres using warm counts", () => {
-    const vm = makeMockVm({
-      matchingShowtimeCount: 34,
-      warmTheatreCount: 3,
-      submitButtonLabel: "Search 34 showtimes across 3 theatres",
-    });
-    expect(vm.submitButtonLabel).toContain("Search 34 showtimes across 3 theatres");
+  it("CTA button renders the warm theatre count from the view model (real SearchForm wiring)", () => {
+    // The hook derives "across 1 theatre" from facet warm data (2 selected, 1
+    // cold) — SearchForm must pass that label into the CTA button verbatim
+    // rather than recomputing its own count. Would fail if SearchForm dropped
+    // or rewrote the label.
+    setMockVm(
+      makeMockVm({
+        matchingShowtimeCount: 5,
+        warmTheatreCount: 1,
+        submitButtonLabel: "Search 5 showtimes across 1 theatre",
+      }),
+    );
+    const renderer = createRenderer(React.createElement(SearchForm, null));
+    const str = jsonString(renderer);
+    expect(str).toContain("Search 5 showtimes across 1 theatre");
+    expect(str).not.toContain("across 2 theatres");
+    renderer.unmount();
+  });
+  it('"Any format" chip renders the partial tri-state count through ChipRow (real facet path)', () => {
+    // Bare "Any format" label + a partially-cold ANY entry must render as
+    // "Any format (5+)" via ChipRow's getFacetDisplay path — identically to
+    // the IMAX/Dolby/Standard chips. Would fail if the chip bypassed facets.
+    setMockVm(
+      makeMockVm({
+        formatOptions: [
+          { label: "Any format", active: true, onPress: () => {} },
+          { label: "IMAX", active: false, onPress: () => {} },
+        ],
+        formatCounts: new Map([
+          ["any", { count: 5, coldTheatreCount: 1 }],
+          ["Any format", { count: 5, coldTheatreCount: 1 }],
+          ["imax", { count: 2, coldTheatreCount: 1 }],
+          ["IMAX", { count: 2, coldTheatreCount: 1 }],
+        ]),
+        facetTotalTheatres: 2,
+        submitButtonLabel: "Search 5 showtimes across 1 theatre",
+      }),
+    );
+    const renderer = createRenderer(React.createElement(SearchForm, null));
+    const str = jsonString(renderer);
+    expect(str).toContain("Any format (5+)");
+    expect(str).toContain("IMAX (2+)");
+    renderer.unmount();
   });
   it("CTA advisory hint appears when obviously too broad", () => {
     const vm = makeMockVm({

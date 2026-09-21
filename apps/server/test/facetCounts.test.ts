@@ -357,6 +357,58 @@ describe("searches.facetCounts (S43)", () => {
     ]);
   });
 
+  it('FORMAT axis reserved "ANY" candidate counts every performance regardless of format (ADR 0036 amendment)', async () => {
+    const d1 = isoDate(DAY_OFFSET_DAYS);
+    await seedScheduleDay(pool, THEATRE_A, d1, new Date(), [
+      { showtimeId: `${PROVIDER}:showtime:any1`, movieId: MOVIE_1, formatCode: "imax" },
+      { showtimeId: `${PROVIDER}:showtime:any2`, movieId: MOVIE_1, formatCode: null },
+      {
+        showtimeId: `${PROVIDER}:showtime:any3`,
+        movieId: MOVIE_1,
+        formatCode: "dolbycinemaatamcprime",
+      },
+    ]);
+
+    const response = await facetClient().searches.facetCounts.query({
+      providerId: PROVIDER,
+      theatreIds: [THEATRE_A],
+      base: {},
+      axes: [{ kind: "FORMAT", candidates: ["imax", "ANY"] }],
+    });
+
+    // "ANY" skips the format predicate, so its count is the sum of all
+    // performances — not just the IMAX-matching subset.
+    expect(response.counts).toEqual([
+      { kind: "FORMAT", candidate: "imax", count: 1, coldTheatreCount: 0 },
+      { kind: "FORMAT", candidate: "ANY", count: 3, coldTheatreCount: 0 },
+    ]);
+  });
+
+  it('"ANY" candidate reports real per-theatre cold freshness like any other candidate', async () => {
+    const d1 = isoDate(DAY_OFFSET_DAYS);
+    const staleCapturedAt = new Date(Date.now() - (FRESHNESS_MS + 60_000));
+    await seedScheduleDay(pool, THEATRE_A, d1, new Date(), [
+      { showtimeId: `${PROVIDER}:showtime:anyc1`, movieId: MOVIE_1, formatCode: "imax" },
+      { showtimeId: `${PROVIDER}:showtime:anyc2`, movieId: MOVIE_1, formatCode: null },
+    ]);
+    await seedScheduleDay(pool, THEATRE_B, d1, staleCapturedAt, [
+      { showtimeId: `${PROVIDER}:showtime:anyc3`, movieId: MOVIE_1, formatCode: "imax" },
+    ]);
+
+    const response = await facetClient().searches.facetCounts.query({
+      providerId: PROVIDER,
+      theatreIds: [THEATRE_A, THEATRE_B],
+      base: {},
+      axes: [{ kind: "FORMAT", candidates: ["ANY"] }],
+    });
+
+    // Theatre B is stale past freshnessMs: cold, excluded from the count but
+    // reported in coldTheatreCount — identical accounting to other candidates.
+    expect(response.counts).toEqual([
+      { kind: "FORMAT", candidate: "ANY", count: 2, coldTheatreCount: 1 },
+    ]);
+  });
+
   it("base+axis composition: a MOVIE candidate's count reflects fixed base.horizon+base.timeOfDay evening", async () => {
     // Hand-derived: two shows on the current weekend block's Friday — one at
     // 19:00 UTC (evening under the decided 17:00–20:59 bounds) and one at
