@@ -945,6 +945,7 @@ async function mapNavigationOutcome(
         skipFetch: performancePolicy(performance.status) === "SKIP_SOLD_OUT",
         formatCode: (performance as { formatCode?: string | null }).formatCode ?? null,
         theatreId: (performance as { theatreId?: string }).theatreId ?? "unknown",
+        attributes: performance.attributes ?? [],
       }));
       const accepted = await withTransaction(deps.pool, async (tx) => {
         const result = await stageScheduleAcceptance(tx, handle, showtimes, {

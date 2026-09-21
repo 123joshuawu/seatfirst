@@ -149,6 +149,7 @@ function toUpsertInput(theatre: Theatre, marketSlug: string): UpsertTheatreInput
     city: theatre.city,
     address: theatre.address,
     slugs: theatre.slugs,
+    amenities: theatre.amenities,
     firstSeenAt: theatre.firstSeenAt,
     lastSeenAt: theatre.lastSeenAt,
   };

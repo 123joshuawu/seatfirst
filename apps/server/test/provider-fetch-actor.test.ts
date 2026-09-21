@@ -843,12 +843,13 @@ describe.skipIf(chromeExecutable === null)("provider fetch actor (S8)", () => {
           : String(row.local_date).slice(0, 10);
       expect(localDate).toBe("2026-08-20");
     }
-    // S14 control: `attributes` is not one of the product columns PERFORMANCE_UPDATE_PRODUCT
-    // writes (boundaries.ts:151-165), so the column keeps its own DB default `{}` from
-    // B5C_PERFORMANCE — not the seam's `readonly string[]` values this test injected. The
-    // resolved `status`/`formatCode`/`movieId` columns are asserted in test 2c below.
+    // S62: the actor forwards the parse seam's `performance.attributes` into
+    // `stageScheduleAcceptance`, so the jsonb column holds the real per-showtime
+    // arrays — not the `{}` default. (`attributes` is still not a
+    // PERFORMANCE_UPDATE_PRODUCT product column; the resolved
+    // `status`/`formatCode`/`movieId` columns are asserted in test 2c below.)
     for (const row of performances.rows) {
-      expect(row.attributes).toEqual({});
+      expect(row.attributes).toEqual(["IMAX"]);
     }
 
     const keyRow = await pool.query<{ accepted_revision: string }>(

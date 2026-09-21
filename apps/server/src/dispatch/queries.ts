@@ -420,11 +420,11 @@ function mapAggregatePerformance(row: Record<string, unknown>): AggregatePerform
     localDate: String(row["local_date"]),
     startsAt: toIsoString(row["starts_at"]),
     observationId: rowString(row, "observation_id"),
-    // The jsonb column only ever holds `{}` today (see `repository.ts`'s
-    // `ScheduleRangePerformance.attributes` doc): the only write path
-    // (`stageScheduleAcceptance`) hardcodes `{}` because the parse seam's attributes
-    // payload "still [has] no schema home today", so coerce non-arrays to `[]`.
-    // Defensive compatibility shim, not a data source — nothing non-empty is ever written.
+    // The jsonb column holds real attribute arrays (see `repository.ts`'s
+    // `ScheduleRangePerformance.attributes` doc): `stageScheduleAcceptance` persists
+    // the parse seam's `performance.attributes` per showtime (S62 dual-tier pipeline),
+    // so coerce non-arrays to `[]` only as a defensive compatibility shim for legacy
+    // rows written before the pipeline existed.
     attributes: attributesOrEmpty(row["attributes"]),
     movieId: rowNullableString(row, "movie_id"),
     auditorium: rowNullableString(row, "auditorium"),

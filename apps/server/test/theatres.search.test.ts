@@ -298,6 +298,27 @@ describe("theatres.search (S20)", () => {
     expect(byCityWithOrigin.theatres[0]!.city).toBe("Chicago");
     expect(byCityWithOrigin.theatres[0]!.distanceKm).not.toBeNull();
   });
+
+  it("returns amenities on hits, round-tripped from the catalogue (S62.7)", async () => {
+    await upsertTheatre(poolClient(pool), {
+      ...theatreInput("amc:theatre:amen", "Amenity Theatre", 41, -87),
+      amenities: [{ code: "imax", name: "IMAX" }],
+    });
+    await upsertTheatre(
+      poolClient(pool),
+      theatreInput("amc:theatre:plain", "Plain Theatre", 41, -86),
+    );
+
+    const client = makeClient(server.baseUrl);
+    const body = await client.theatres.search.query({ q: "theatre" });
+
+    expect(body.theatres).toHaveLength(2);
+    expect(body.theatres.find((hit) => hit.name === "Amenity Theatre")?.amenities).toEqual([
+      { code: "imax", name: "IMAX" },
+    ]);
+    expect(body.theatres.find((hit) => hit.name === "Plain Theatre")?.amenities).toEqual([]);
+    expect(TheatreSearchResponseSchema.safeParse(body).success).toBe(true);
+  });
 });
 
 describe("theatres.search (S49 — browse mode)", () => {

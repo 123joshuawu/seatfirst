@@ -186,6 +186,7 @@ function theatre(id: string, marketSlug = "atlanta"): Theatre {
     city: "Atlanta",
     address: "123 Main St, Atlanta, GA 30303",
     slugs: { [marketSlug]: id },
+    amenities: [],
     firstSeenAt: NOW,
     lastSeenAt: NOW,
   };
@@ -291,6 +292,23 @@ describe("runCatalogueCrawlTick — S26.8/S26.9 orchestration", () => {
       expect.objectContaining({ theatreId: "amc:theatre:b", marketSlug: "atlanta" }),
     ]);
     expect(h.advanced).toEqual([{ slugs: ["atlanta"], nextIndex: 1 }]);
+  });
+
+  it("forwards parsed theatre amenities into the upsert input (S62)", async () => {
+    const h = makeHarness();
+    h.setState([row({ cursor: cursor(["atlanta"], 0) })]);
+    h.setTheatres([
+      { ...theatre("a", "atlanta"), amenities: [{ code: "imax", name: "IMAX" }] },
+    ]);
+
+    await runCatalogueCrawlTick(h.deps);
+
+    expect(h.upserts).toEqual([
+      expect.objectContaining({
+        theatreId: "amc:theatre:a",
+        amenities: [{ code: "imax", name: "IMAX" }],
+      }),
+    ]);
   });
 
   it("skips just the current market page and advances the cursor when the parser reports UPSTREAM_CHANGED", async () => {

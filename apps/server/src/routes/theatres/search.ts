@@ -5,6 +5,7 @@ import {
   distanceKm,
   TheatreIdSchema,
   TheatreSearchInputSchema,
+  type TheatreAmenity,
   type TheatreSearchHit,
   type TheatreSearchResponse,
 } from "@seatfirst/core";
@@ -52,6 +53,7 @@ function toHit(row: TheatreRow, distanceKmValue: number | null): TheatreSearchHi
     // so convert to the ISO instant form that satisfies `UtcInstantSchema`.
     firstSeenAt: row.first_seen_at.toISOString(),
     lastSeenAt: row.last_seen_at.toISOString(),
+    amenities: Array.isArray(row.amenities) ? (row.amenities as TheatreAmenity[]) : [],
     distanceKm: distanceKmValue,
   };
 }

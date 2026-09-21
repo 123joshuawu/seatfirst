@@ -235,6 +235,8 @@ interface SeededPerformance {
   readonly layoutId?: string | null;
   /** ADR 0008 format code; omitted = "DIGITAL" fake code (non-format) so existing tests keep passing. */
   readonly formatCode?: string | null;
+  /** S62: normalized attribute codes the seed write persists; omitted = [] (no attributes). */
+  readonly attributes?: readonly string[];
 }
 /** Seeds a cached schedule through S14's write path: RUN_KEY_UPSERT → RUN_CREATE →
  * outbox → lease → pre-dispatch, then `stageScheduleAcceptance` + one
@@ -282,6 +284,7 @@ async function seedCachedSchedule(
         movieId: performance.movieId ?? MOVIE,
         startsAt: new Date(`${localDate}T19:00:00.000Z`),
         skipFetch: performance.skipFetch,
+        attributes: performance.attributes ?? [],
       })),
       { capturedAt },
     );
@@ -513,6 +516,31 @@ describe("searches.create (S15)", () => {
       [response.searchId],
     );
     expect(jobs.rows).toEqual([{ showtime_id: "st_selected" }]);
+  });
+
+  it("warm create carries cached performance attributes onto scheduleSkeleton entries (S62.8)", async () => {
+    await seedProvider(admin);
+    await seedCachedSchedule(pool, {
+      performances: [
+        {
+          showtimeId: "st_attr",
+          movieId: MOVIE,
+          status: "OPEN",
+          skipFetch: false,
+          attributes: ["DOLBY"],
+        },
+      ],
+    });
+    const client = makeClient(server.baseUrl, SESSION);
+
+    const response = await client.searches.create.mutate({
+      spec: makeSpec(),
+      idempotencyKey: "skeleton_attributes",
+    });
+
+    expect(response.status).toBe("RUNNING");
+    expect(response.scheduleSkeleton).toHaveLength(1);
+    expect(response.scheduleSkeleton[0]?.attributes).toEqual(["DOLBY"]);
   });
 
   it("warm create, mixed statuses: RUNNING, showtimeCount 1 (eligible), reservation 1, only the OPEN showtime gets work (item 2) — S36 filtered via performancePolicy + matchesScheduleWindow", async () => {
