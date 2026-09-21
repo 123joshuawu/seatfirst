@@ -292,12 +292,28 @@ export const createSearchSlice: StateCreator<SeatfirstStore, [], [], SearchSlice
     }),
 
   appendScheduleSkeleton: (entries: ScheduleSkeletonEntry[]) =>
-    set((prev) => ({
-      scheduleSkeleton: [...prev.scheduleSkeleton, ...entries],
-      // Same guard as setScheduleSkeleton: an empty continuation must not wipe the
-      // preview placeholder — only non-empty authoritative data replaces it (UI14.12).
-      previewPlaceholderCount: entries.length > 0 ? null : prev.previewPlaceholderCount,
-    })),
+    set((prev) => {
+      if (entries.length === 0) return prev;
+      // Dedupe-safe append (ADR 0064 in-situ merge): showtimeIds already present
+      // (e.g. a successor search's skeleton re-covering retained rows) are skipped
+      // here — overlapping rows patch in place via patchScheduleSkeleton, never
+      // duplicate. The BATCH_DEFERRED continuation path carries no overlap, so this
+      // is a no-op there, not a behavior change.
+      const seen = new Set(prev.scheduleSkeleton.map((e) => e.showtimeId));
+      const fresh: ScheduleSkeletonEntry[] = [];
+      for (const entry of entries) {
+        if (seen.has(entry.showtimeId)) continue;
+        seen.add(entry.showtimeId);
+        fresh.push(entry);
+      }
+      if (fresh.length === 0) return prev;
+      return {
+        scheduleSkeleton: [...prev.scheduleSkeleton, ...fresh],
+        // Same guard as before: only non-empty authoritative data replaces the
+        // preview placeholder (UI14.12).
+        previewPlaceholderCount: null,
+      };
+    }),
 
   setTerminalCause: (cause: string | null) => set({ terminalCause: cause }),
 

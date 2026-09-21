@@ -75,6 +75,50 @@ describe("searchSlice scheduleSkeleton (UI14.8)", () => {
     expect(s.scheduleSkeleton.map((e) => e.showtimeId)).toEqual(["sh_a", "sh_b", "sh_c", "sh_d"]);
   });
 
+  it("appendScheduleSkeleton skips already-present showtimeIds (ADR 0064 in-situ merge)", () => {
+    useSeatfirstStore
+      .getState()
+      .setScheduleSkeleton([
+        mkEntry({ showtimeId: "sh_a", rank: 0 }),
+        mkEntry({ showtimeId: "sh_b", rank: 1 }),
+      ]);
+    // Successor search re-covers sh_a/sh_b and adds sh_c: only sh_c appends.
+    useSeatfirstStore
+      .getState()
+      .appendScheduleSkeleton([
+        mkEntry({ showtimeId: "sh_a", rank: 0, resolved: true }),
+        mkEntry({ showtimeId: "sh_b", rank: 1, resolved: true }),
+        mkEntry({ showtimeId: "sh_c", rank: 2 }),
+      ]);
+    const s = useSeatfirstStore.getState();
+    expect(s.scheduleSkeleton.map((e) => e.showtimeId)).toEqual(["sh_a", "sh_b", "sh_c"]);
+  });
+
+  it("appendScheduleSkeleton dedupes repeated ids within one batch", () => {
+    useSeatfirstStore.getState().setScheduleSkeleton([mkEntry({ showtimeId: "sh_a", rank: 0 })]);
+    useSeatfirstStore
+      .getState()
+      .appendScheduleSkeleton([
+        mkEntry({ showtimeId: "sh_b", rank: 1 }),
+        mkEntry({ showtimeId: "sh_b", rank: 1 }),
+      ]);
+    expect(useSeatfirstStore.getState().scheduleSkeleton.map((e) => e.showtimeId)).toEqual([
+      "sh_a",
+      "sh_b",
+    ]);
+  });
+
+  it("appendScheduleSkeleton with only overlapping ids is a no-op for the placeholder", () => {
+    useSeatfirstStore.getState().setScheduleSkeleton([mkEntry({ showtimeId: "sh_a", rank: 0 })]);
+    useSeatfirstStore.getState().setPreviewPlaceholderCount(null);
+    useSeatfirstStore
+      .getState()
+      .appendScheduleSkeleton([mkEntry({ showtimeId: "sh_a", rank: 0, resolved: true })]);
+    const s = useSeatfirstStore.getState();
+    expect(s.scheduleSkeleton.map((e) => e.showtimeId)).toEqual(["sh_a"]);
+    expect(s.previewPlaceholderCount).toBeNull();
+  });
+
   it("setScheduleSkeleton([]) preserves previewPlaceholderCount while cold (t=0 empty)", () => {
     // previewPlaceholderCount is set by useSubmitSearchViewModel before createSearch
     // returns; an empty skeleton at t=0 must not wipe it (UI14.8/S46).

@@ -6,6 +6,7 @@
 import { useCallback, useEffect, useRef } from "react";
 import { AppState } from "react-native";
 import type {
+  PerformancePredicate,
   RankedAnswer,
   ResultGroup,
   ScheduleSkeletonEntry,
@@ -80,6 +81,63 @@ function getAppStateModule(): {
       addEventListener: (type: string, handler: (state: string) => void) => { remove: () => void };
     };
   return null;
+}
+/**
+ * ADR 0064 subject gate (in-situ retention boundary): row retention is only for
+ * refinements of the SAME underlying search subject — party size, dates, format,
+ * time band, seat prefs, and theatre add/remove refinements within the same
+ * selection. A materially different search (different movie predicate, or a
+ * wholesale theatre-set replacement) must take the full-reset branch instead of
+ * appending stale rows under the new search.
+ */
+function collectMovieIds(node: PerformancePredicate, into: Set<string>): void {
+  if (node.kind === "MOVIE") {
+    for (const id of node.ids) into.add(id);
+    return;
+  }
+  if (node.kind === "AND" || node.kind === "OR") {
+    for (const child of node.of) collectMovieIds(child, into);
+    return;
+  }
+  if (node.kind === "NOT") {
+    collectMovieIds(node.of, into);
+  }
+}
+
+function movieIdKey(spec: SearchSpec): string | null {
+  const ids = new Set<string>();
+  collectMovieIds(spec.where, ids);
+  if (ids.size === 0) return null;
+  return [...ids].sort().join("\u0000");
+}
+
+export function isSameSearchSubject(prev: SearchSpec, next: SearchSpec): boolean {
+  if (prev.providerId !== next.providerId) return false;
+  // A different movie predicate (not the same movie refined) is a new subject.
+  const prevMovie = movieIdKey(prev);
+  const nextMovie = movieIdKey(next);
+  if (prevMovie === null || nextMovie === null || prevMovie !== nextMovie) return false;
+  const prevTheatres = prev.theatres;
+  const nextTheatres = next.theatres;
+  if (prevTheatres.kind === "LIST" && nextTheatres.kind === "LIST") {
+    if (prevTheatres.refs.length === 0 || nextTheatres.refs.length === 0) return false;
+    const prevIds = new Set(prevTheatres.refs.map((r) => r.id));
+    // Zero overlap is unambiguously a wholesale replacement; any overlap
+    // (add/remove within the same selection) is a refinement.
+    return nextTheatres.refs.some((r) => prevIds.has(r.id));
+  }
+  if (prevTheatres.kind === "AREA" && nextTheatres.kind === "AREA") {
+    return (
+      prevTheatres.center.lat === nextTheatres.center.lat &&
+      prevTheatres.center.lng === nextTheatres.center.lng &&
+      prevTheatres.radiusKm === nextTheatres.radiusKm &&
+      prevTheatres.limit === nextTheatres.limit
+    );
+  }
+  // Mixed AREA↔LIST: the ADR 0064 §4 hand-prune (AREA→LIST after unchecking a
+  // discovered theatre) and its inverse broaden-back are refinements within the
+  // same area — retain.
+  return true;
 }
 
 export function useSearchSubscription(): {
@@ -582,12 +640,23 @@ export function useSearchSubscription(): {
       // server-covered spec (ADR 0064) — independent of the continuation hint
       // above. Distinct from the checkMore/BATCH_DEFERRED continuation, which
       // resubmits the IDENTICAL spec and keeps working as before.
+      const prevCoverageSpec = store.serverCoverageSpec;
+      const specChanged =
+        prevCoverageSpec !== null && specHash(prevCoverageSpec) !== hash;
+      // In-situ retention is only for refinements of the SAME search subject
+      // (party size, dates, format, time band, theatre add/remove within the same
+      // selection — see isSameSearchSubject). A materially different movie or a
+      // wholesale theatre replacement takes the full-reset else-branch below so no
+      // stale rows survive under the new search.
       const isUpdate =
-        store.serverCoverageSpec !== null && specHash(store.serverCoverageSpec) !== hash;
+        specChanged &&
+        prevCoverageSpec !== null &&
+        isSameSearchSubject(prevCoverageSpec, spec);
       // Either an in-situ update or a same-spec continuation keeps skeleton/groups
       // as retained anchors and resets only the progress fields (UI14.12); a
-      // genuinely fresh search resets everything.
-      const retainsRows = isUpdate || isContinuationHint;
+      // genuinely fresh search — or a changed spec carrying a stale continuation
+      // hint (e.g. a movie switch submitted via "Update search") — resets everything.
+      const retainsRows = isUpdate || (isContinuationHint && !specChanged);
       // Rollback bookkeeping for the optimistic in-situ reset below.
       let rollbackProgress: {
         answer: typeof store.answer;
@@ -651,8 +720,19 @@ export function useSearchSubscription(): {
         const skeleton = (res as unknown as { scheduleSkeleton?: ScheduleSkeletonEntry[] })
           .scheduleSkeleton;
         if (Array.isArray(skeleton)) {
-          if (retainsRows) s.appendScheduleSkeleton(skeleton);
-          else s.setScheduleSkeleton(skeleton);
+          if (retainsRows) {
+            // In-situ merge: mirror the SSE skeleton handler's split — showtimes
+            // already present patch in place (never duplicate on same-subject
+            // updates like party size), while genuinely-new ids (added theatre,
+            // deferred tail) append. appendScheduleSkeleton is itself dedupe-safe,
+            // so the continuation path below stays a pure append.
+            const live = useSeatfirstStore.getState();
+            const existingIds = new Set(live.scheduleSkeleton.map((e) => e.showtimeId));
+            const newEntries = skeleton.filter((e) => !existingIds.has(e.showtimeId));
+            const patchEntries = skeleton.filter((e) => existingIds.has(e.showtimeId));
+            if (newEntries.length > 0) s.appendScheduleSkeleton(newEntries);
+            if (patchEntries.length > 0) s.patchScheduleSkeleton(patchEntries);
+          } else s.setScheduleSkeleton(skeleton);
           // Seed total from skeleton length if server total not yet known
           if (skeleton.length > 0 && s.total === 0) {
             useSeatfirstStore.setState({ total: skeleton.length });
