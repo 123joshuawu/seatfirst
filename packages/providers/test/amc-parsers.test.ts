@@ -60,6 +60,7 @@ describe("AMC Parsers (P5)", () => {
           city: "San Francisco",
           address: "135 Fourth St, Suite 3000, San Francisco, CA, 94103",
           slugs: { "san-francisco": "amc-metreon-16" },
+          amenities: [],
           firstSeenAt: observationTime,
           lastSeenAt: observationTime,
         },
@@ -86,6 +87,7 @@ describe("AMC Parsers (P5)", () => {
           city: "Albany",
           address: "2823 Nottingham Way, Albany, GA, 31707-4010",
           slugs: { "albany-ga": "amc-classic-albany-16" },
+          amenities: [],
           firstSeenAt: observationTime,
           lastSeenAt: observationTime,
         },
@@ -115,6 +117,20 @@ describe("AMC Parsers (P5)", () => {
       );
       const theatres3 = parseTheatres(html3, observationTime, "http://test");
       expect(theatres3[0]!.city).toBe("Sunnyvale");
+    });
+
+    it("parses and sorts amenities from the Flight attributes edges, missing sort last", () => {
+      const html = makeHtml(
+        `[{"theatreId":2001,"name":"AMC Amenities","slug":"amc-amenities","marketSlug":"test","latitude":37.7845,"longitude":-122.4036,"address":{"street":"135 Fourth St","city":"San Francisco","stateCode":"CA","postalCode":"94103"},"attributes":{"edges":[{"node":{"code":"ZED","name":"Zed Bar","details":{}}},{"node":{"code":"IMAX","name":"IMAX","details":{"sort":2}}},{"node":{"code":"DOLBY","name":"Dolby Cinema","details":{"sort":1}}},{"node":{"code":"CAFE","name":"Cafe"}}]}}]`,
+      );
+      const theatres = parseTheatres(html, observationTime, "http://test");
+      expect(theatres).toHaveLength(1);
+      expect(theatres[0]!.amenities).toEqual([
+        { code: "DOLBY", name: "Dolby Cinema", sort: 1 },
+        { code: "IMAX", name: "IMAX", sort: 2 },
+        { code: "ZED", name: "Zed Bar" },
+        { code: "CAFE", name: "Cafe" },
+      ]);
     });
   });
 

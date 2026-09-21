@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { formatNamespacedId, TheatreIdSchema, TheatreSchema, type Theatre } from "@seatfirst/core";
+import { formatNamespacedId, TheatreIdSchema, TheatreSchema, type Theatre, type TheatreAmenity } from "@seatfirst/core";
 import { extractShapeFromHtml } from "../flight.js";
 import { ProviderError, attachUpstreamChangedDiagnostic } from "../../errors.js";
 import { resolvePostalCodeTimezone } from "../postal-timezone.js";
@@ -28,6 +28,25 @@ const PublicTheatreSummarySchema = z
     longitude: z.number().optional(),
     utcOffset: z.string().optional(),
     marketName: z.string().optional(),
+    attributes: z
+      .object({
+        edges: z
+          .array(
+            z.object({
+              node: z.object({
+                code: z.string(),
+                name: z.string(),
+                details: z
+                  .object({
+                    sort: z.number().int().optional(),
+                  })
+                  .optional(),
+              }),
+            }),
+          )
+          .optional(),
+      })
+      .optional(),
   })
   .passthrough();
 
@@ -106,6 +125,7 @@ function parseTheatresImpl(html: string, observationTime: Date, requestUrl: stri
         // codebase (`TheatreRefSchema.slugs` at packages/core/src/search-spec.ts:46 leaves the
         // key open) — this is the engineering decision, made and documented here.
         slugs: { [t.marketSlug]: t.slug },
+        amenities: extractAmenities(t),
         // No persistence/merge happens in this pure parser (that is S2's job): both timestamps
         // are "as observed in this single parse," not a claim about when the theatre was first
         // seen across all history. A caller that already has a stored `firstSeenAt` keeps it;
@@ -128,6 +148,19 @@ export function parseTheatres(html: string, observationTime: Date, requestUrl: s
     attachUpstreamChangedDiagnostic(error, { url: requestUrl, body: html });
     throw error;
   }
+}
+
+export function extractAmenities(t: PublicTheatreSummary): TheatreAmenity[] {
+  const amenities: TheatreAmenity[] = [];
+  for (const edge of t.attributes?.edges ?? []) {
+    const amenity: TheatreAmenity = { code: edge.node.code, name: edge.node.name };
+    if (typeof edge.node.details?.sort === "number") {
+      amenity.sort = edge.node.details.sort;
+    }
+    amenities.push(amenity);
+  }
+  amenities.sort((a, b) => (a.sort ?? 999) - (b.sort ?? 999));
+  return amenities;
 }
 
 function extractCity(t: PublicTheatreSummary): string | null {
