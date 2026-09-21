@@ -133,12 +133,14 @@ describe("AutocompletePopover outside-pointerdown dismiss", () => {
       header: "Places and theatres",
       isMobile: true,
     });
+    // Scrim Pressable (shared "Close dialog" label from `Sheet`) + header
+    // Close button Pressable (`Close ${header}` from `Sheet.Header`).
     const dismisssers = renderer.root.findAll(
       (node) =>
-        node.props.accessibilityLabel === "Close Places and theatres" &&
+        (node.props.accessibilityLabel === "Close dialog" ||
+          node.props.accessibilityLabel === "Close Places and theatres") &&
         typeof node.props.onPress === "function",
     );
-    // Scrim Pressable + Close button Pressable.
     expect(dismisssers.length).toBeGreaterThanOrEqual(2);
     for (const node of dismisssers) {
       act(() => {

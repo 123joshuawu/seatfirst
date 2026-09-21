@@ -1,11 +1,11 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import TestRenderer, { act } from "react-test-renderer";
-import { Pressable, ScrollView } from "react-native";
+import { Pressable, ScrollView, View } from "react-native";
 import { WhenCustomSheet } from "./WhenCustomSheet";
 import { HowItWorksSheet } from "./HowItWorksSheet";
+import { Sheet } from "@/components/core/Sheet";
 import { AppText } from "@/components/core/AppText";
 import { useSeatfirstStore } from "@/store/seatfirstStore";
-
 function textContent(node: unknown): string {
   if (typeof node === "string" || typeof node === "number") return String(node);
   if (Array.isArray(node)) return node.map(textContent).join("");
@@ -55,9 +55,34 @@ describe("mobile sheet full-height layout (P0-3)", () => {
     const bodies = root.findAllByType(ScrollView);
     expect(bodies).toHaveLength(1);
     const body = bodies[0]!;
-    const panelStyle = (body.parent!.props as { style: Record<string, unknown> }).style;
-    expect(panelStyle.flex).toBe(1);
-    expect(panelStyle.maxHeight).toBeUndefined();
+    // P0 structural fix: the footer buttons live in the fixed Sheet.Footer
+    // outside the scrollable body, so they stay pinned no matter how tall
+    // the calendar grid grows — not below the viewport fold.
+    expect(
+      body.findAll(
+        (node) => (node.props as { testID?: string })?.testID === "custom-sheet-footer",
+      ),
+    ).toHaveLength(0);
+    const footer = root.findByType(Sheet.Footer);
+    const footerLabels = footer
+      .findAllByType(Pressable)
+      .map((n) => (n.props as { accessibilityLabel?: string }).accessibilityLabel);
+    for (const label of ["Clear dates", "Cancel", "Apply"]) {
+      expect(footerLabels).toContain(label);
+    }
+    // Fixed-footer + scrollable-body layout contract (owned by Sheet): the
+    // footer never shrinks away and the body is the bounded flex scroller.
+    expect(footer.findAllByType(View)[0]!.props.style).toMatchObject({ flexShrink: 0 });
+    expect(body.props.style).toMatchObject({ flex: 1, minHeight: 0 });
+    // The panel caps the viewport (85/90%) instead of stretching full-height,
+    // so the body above becomes the bounded scroller.
+    const panel = root.findByType(Sheet.Body).parent!;
+    const panelStyle = Object.assign(
+      {},
+      ...(panel.props.style as Array<Record<string, unknown>>),
+    );
+    expect(panelStyle.flex).toBeUndefined();
+    expect(panelStyle.maxHeight).toBeDefined();
     const insideLabels = body
       .findAllByType(Pressable)
       .map((n) => (n.props as { accessibilityLabel?: string }).accessibilityLabel);
@@ -166,13 +191,18 @@ describe("mobile sheet full-height layout (P0-3)", () => {
     const bodies = root.findAllByType(ScrollView);
     expect(bodies).toHaveLength(1);
     const body = bodies[0]!;
-    const panelStyle = (body.parent!.props as { style: Record<string, unknown> }).style;
+    const panel = root.findByType(Sheet.Body).parent!;
+    const panelStyle = Object.assign(
+      {},
+      ...(panel.props.style as Array<Record<string, unknown>>),
+    );
     expect(panelStyle.flex).toBeUndefined();
     expect(panelStyle.maxHeight).toBeDefined();
+    expect(body.props.style).toMatchObject({ flex: 1, minHeight: 0 });
     const insideLabels = body
       .findAllByType(Pressable)
       .map((n) => (n.props as { accessibilityLabel?: string }).accessibilityLabel);
-    expect(insideLabels).not.toContain("Close how it works");
+    expect(insideLabels).not.toContain("Close How it works");
   });
 });
 
@@ -451,7 +481,7 @@ describe("WhenCustomSheet Escape + backdrop dismiss (BUG-03)", () => {
 
   it("tapping the backdrop scrim closes via the Cancel path", () => {
     const { tonightDates, root } = openEagerCustom();
-    pressByLabel(root, "Close custom window dialog");
+    pressByLabel(root, "Close dialog");
     expectCancelBehavior(tonightDates);
   });
 
@@ -465,7 +495,7 @@ describe("WhenCustomSheet Escape + backdrop dismiss (BUG-03)", () => {
       .find(
         (n) =>
           (n.props as { accessibilityLabel?: string }).accessibilityLabel ===
-          "Close custom window dialog",
+          "Close dialog",
       );
     expect(scrim, "scrim pressable exists").toBeDefined();
     const overlayPressables = scrim!.parent!.findAllByType(Pressable);
@@ -474,7 +504,7 @@ describe("WhenCustomSheet Escape + backdrop dismiss (BUG-03)", () => {
     expect(panelPressables.length).toBeGreaterThan(0);
     for (const node of panelPressables) {
       expect((node.props as { accessibilityLabel?: string }).accessibilityLabel).not.toBe(
-        "Close custom window dialog",
+        "Close dialog",
       );
     }
     // Behavioral check: pressing a date cell inside the panel edits the

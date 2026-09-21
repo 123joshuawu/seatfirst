@@ -111,7 +111,7 @@ function findClose(
   renderer: TestRenderer.ReactTestRenderer,
 ): TestRenderer.ReactTestInstance | null {
   const found = renderer.root.findAllByType(Pressable);
-  return found.find((node) => node.props.accessibilityLabel === "Close how it works") ?? null;
+  return found.find((node) => node.props.accessibilityLabel === "Close How it works") ?? null;
 }
 
 describe("UI26.2 header subtitle is platform-conditional", () => {

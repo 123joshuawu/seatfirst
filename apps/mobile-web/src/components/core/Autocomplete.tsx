@@ -2,9 +2,7 @@ import { useEffect, useRef } from "react";
 import type { ReactNode, RefObject } from "react";
 import type { ReactElement } from "react";
 import {
-  Modal,
   Platform,
-  Pressable,
   ScrollView,
   StyleSheet,
   useWindowDimensions,
@@ -12,7 +10,7 @@ import {
 } from "react-native";
 import { colors } from "@/theme/colors";
 import { AppText } from "./AppText";
-
+import { Sheet } from "./Sheet";
 /**
  * Mobile breakpoint — mirrors `MOBILE_BREAKPOINT` in
  * `useSubmitSearchViewModel` (`vm.isMobile` is `width < 680`). Kept as a local
@@ -140,72 +138,55 @@ export function AutocompletePopover({
    * (`width < 680`, same as `vm.isMobile`).
    */
   isMobile?: boolean | undefined;
-  /** Dismiss handler: sheet scrim + Close button, and outside-pointerdown. */
+  /** Dismiss handler: sheet scrim + Close button, Escape (via `Sheet`), and outside-pointerdown. */
   onClose?: (() => void) | undefined;
 }): ReactElement {
   const { width } = useWindowDimensions();
   const showAsSheet = isMobile ?? width < AUTOCOMPLETE_MOBILE_BREAKPOINT;
   // Live node for the outside-pointerdown check: the inline popover itself on
-  // desktop, the sheet *panel* on mobile so a scrim tap dismisses up front
-  // and the follow-on click passes through to the element behind the sheet
-  // instead of being swallowed by the scrim.
+  // desktop, the sheet *content wrapper* on mobile so a scrim tap dismisses
+  // up front and the follow-on click passes through to the element behind
+  // the sheet instead of being swallowed by the scrim.
   const popoverRef = useRef<View | null>(null);
   // Mirrors the DOM id the tracked node carries on web (see the `id` props
   // below); the hook falls back to it when the ref never attached.
   const popoverDomId = showAsSheet ? `${id}-panel` : id;
   useOutsidePointerDownDismiss(popoverRef, popoverDomId, onClose);
   if (showAsSheet) {
-    // Mobile bottom sheet — mirrors the established sheet convention
-    // (HowItWorksSheet/WhenCustomSheet): rgba(0,0,0,0.4) scrim with a
-    // bottom-anchored panel. `Modal` portals to the document body, escaping
-    // the transformed RNW ancestors that would otherwise trap `fixed` (and
-    // clip the absolutely-positioned inline popover against the card).
+    // Mobile bottom sheet on the shared `Sheet` primitive (overlay/scrim/
+    // panel, Escape-to-dismiss, and ARIA dialog wiring all live there now).
+    // `Sheet`'s `Modal` portals to the document body, escaping the
+    // transformed RNW ancestors that would otherwise trap `fixed` (and clip
+    // the absolutely-positioned inline popover against the card).
     // Selection/keyboard behavior is unchanged: `children` render as-is.
+    //
+    // The tracked dismiss node is the content wrapper (`${id}-panel`) inside
+    // the body, so a scrim tap dismisses up front and the follow-on click
+    // passes through to the element behind the sheet — same as before, when
+    // the panel itself was the tracked node. Taps on the fixed header
+    // dismiss at pointerdown like scrim taps; `onClose` handlers are
+    // idempotent state updates so that race is harmless.
+    //
+    // `scrollMaxHeight` keeps its exact meaning via the inner list scroller:
+    // the sheet body itself is non-scrolling, so the cap still bounds the
+    // option list (desktop behavior untouched).
+    const handleClose = onClose ?? (() => {});
     return (
-      <Modal visible transparent animationType="none" onRequestClose={onClose}>
-        <View
-          style={styles.sheetOverlay}
-          accessibilityLabel={`${ariaLabel} dialog`}
-          {...(Platform.OS === "web"
-            ? ({
-                role: "dialog",
-                id,
-                "aria-label": ariaLabel,
-                "aria-modal": "true",
-              } as unknown as Record<string, unknown>)
-            : {})}
-        >
-          <Pressable
-            onPress={onClose}
-            accessibilityRole="button"
-            accessibilityLabel={`Close ${header}`}
-            style={styles.sheetScrim}
-          />
+      <Sheet open={true} onClose={handleClose} ariaLabel={`${ariaLabel} dialog`} maxWidth={400}>
+        <Sheet.Header title={header} onClose={handleClose} />
+        <Sheet.Body scrollable={false}>
           <View
             ref={popoverRef}
-            style={styles.sheetPanel}
+            style={styles.sheetContent}
             {...(Platform.OS === "web"
               ? ({ role: "document", id: `${id}-panel` } as unknown as Record<string, unknown>)
               : {})}
           >
-            <View style={styles.sheetHeaderRow}>
-              <AppText weight="700" style={styles.sheetTitle}>
-                {header}
-              </AppText>
-              <Pressable
-                onPress={onClose}
-                accessibilityRole="button"
-                accessibilityLabel={`Close ${header}`}
-                accessibilityHint="Closes the suggestions"
-                style={styles.sheetClose}
-              >
-                <AppText weight="600" style={styles.sheetCloseText}>
-                  Close
-                </AppText>
-              </Pressable>
-            </View>
             <ScrollView
-              style={scrollMaxHeight !== undefined ? { maxHeight: scrollMaxHeight } : null}
+              style={[
+                styles.sheetList,
+                scrollMaxHeight !== undefined ? { maxHeight: scrollMaxHeight } : null,
+              ]}
               keyboardShouldPersistTaps="handled"
               nestedScrollEnabled
               showsVerticalScrollIndicator
@@ -213,8 +194,8 @@ export function AutocompletePopover({
               {children}
             </ScrollView>
           </View>
-        </View>
-      </Modal>
+        </Sheet.Body>
+      </Sheet>
     );
   }
   return (
@@ -303,48 +284,16 @@ const styles = StyleSheet.create({
   scroll: {
     maxHeight: 360,
   },
-  sheetOverlay: {
-    position: Platform.OS === "web" ? ("fixed" as unknown as "absolute") : "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    justifyContent: "flex-end",
-    alignItems: "center",
-    padding: 16,
-    zIndex: 100,
+  // Mobile sheet content wrapper (the outside-pointerdown tracked node) and
+  // inner option-list scroller. Overlay/scrim/panel/header chrome now comes
+  // from the shared `Sheet` primitive; only the dismiss-tracking wrapper and
+  // the `scrollMaxHeight`-capped list remain local.
+  sheetContent: {
+    flex: 1,
+    minHeight: 0,
   },
-  sheetScrim: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: "rgba(0,0,0,0.4)",
-  },
-  sheetPanel: {
-    backgroundColor: "#fff",
-    borderRadius: 12,
-    padding: 16,
-    width: "100%",
-    maxWidth: 400,
-    maxHeight: "80%",
-    gap: 12,
-  },
-  sheetHeaderRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-  },
-  sheetTitle: {
-    fontSize: 16,
-  },
-  sheetClose: {
-    paddingVertical: 4,
-    paddingHorizontal: 8,
-  },
-  sheetCloseText: {
-    fontSize: 14,
-    color: colors.brandDark,
+  sheetList: {
+    flex: 1,
+    minHeight: 0,
   },
 });

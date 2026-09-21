@@ -2,6 +2,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import TestRenderer, { act } from "react-test-renderer";
 import { Pressable, ScrollView } from "react-native";
 import { HowItWorksSheet } from "./HowItWorksSheet";
+import { Sheet } from "@/components/core/Sheet";
 
 /**
  * BUG-02 dismiss paths + UX-03 size-to-content contract for HowItWorksSheet.
@@ -61,7 +62,7 @@ describe("HowItWorksSheet dismiss + size-to-content (BUG-02 / UX-03)", () => {
   it("tapping the scrim calls onClose; tapping the panel does not", () => {
     const onClose = vi.fn();
     const root = renderSheet(onClose);
-    pressByLabel(root, "Close how it works dialog");
+    pressByLabel(root, "Close dialog");
     expect(onClose).toHaveBeenCalledTimes(1);
     // The panel is a sibling rendered above the scrim, not inside it: its
     // subtree contains no scrim press handler, so interacting with panel
@@ -71,12 +72,12 @@ describe("HowItWorksSheet dismiss + size-to-content (BUG-02 / UX-03)", () => {
       .filter(
         (n) =>
           (n.props as { accessibilityLabel?: string }).accessibilityLabel !==
-          "Close how it works dialog",
+          "Close dialog",
       );
     expect(panel.length).toBeGreaterThan(0);
     for (const node of panel) {
       const label = (node.props as { accessibilityLabel?: string }).accessibilityLabel;
-      if (label === "Close how it works") continue; // the explicit close action
+      if (label === "Close How it works") continue; // the explicit close action
       expect((node.props as { onPress?: unknown }).onPress).toBeUndefined();
     }
   });
@@ -87,7 +88,7 @@ describe("HowItWorksSheet dismiss + size-to-content (BUG-02 / UX-03)", () => {
       .findAllByType(Pressable)
       .find(
         (n) =>
-          (n.props as { accessibilityLabel?: string }).accessibilityLabel === "Close how it works",
+          (n.props as { accessibilityLabel?: string }).accessibilityLabel === "Close How it works",
       );
     expect(btn).toBeDefined();
     const style = btn!.props.style as {
@@ -107,10 +108,14 @@ describe("HowItWorksSheet dismiss + size-to-content (BUG-02 / UX-03)", () => {
   it("panel sizes to content: no flex stretch, capped maxHeight with scrolling body", () => {
     const root = renderSheet(vi.fn());
     const body = root.findByType(ScrollView);
-    const panelStyle = (body.parent!.props as { style: Record<string, unknown> }).style;
+    // The Sheet panel style arrives as an array ([base, { maxWidth }, { maxHeight }]).
+    const panel = root.findByType(Sheet.Body).parent!;
+    const panelStyle = Object.assign({}, ...(panel.props.style as Array<Record<string, unknown>>));
     expect(panelStyle.flex).toBeUndefined();
+    // Capped at 85/90% of the viewport (the UX-03 cap, now owned by Sheet).
     expect(panelStyle.maxHeight).toBeDefined();
-    const bodyStyle = body.props.style as { maxHeight?: number };
-    expect(bodyStyle.maxHeight).toBeDefined();
+    // The shared body is the bounded scroller: flex fill with minHeight 0 so
+    // it shrinks inside the capped panel instead of pushing content out.
+    expect(body.props.style).toMatchObject({ flex: 1, minHeight: 0 });
   });
 });
