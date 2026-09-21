@@ -12,6 +12,7 @@ import { extractShapeFromHtml } from "../flight.js";
 import { resolveScheduleFromDom } from "./schedule-dom.js";
 import { ProviderError, attachUpstreamChangedDiagnostic } from "../../errors.js";
 import { resolvePostalCodeTimezone } from "../postal-timezone.js";
+import { buildSeatsUrl } from "../routes.js";
 import {
   normalizeShowtimeStatus,
   normalizeFormatCode,
@@ -265,11 +266,12 @@ function parseShowtimesImpl(
         formatCode,
         // P5.13: null until the seat fetch resolves — prices are not on the schedule.
         minPrice: null,
-        // Placeholder: a valid, non-empty URL (never fabricated from the numeric upstream id,
-        // P5.11) so this candidate passes schema validation below. `getSchedule` (provider.ts)
-        // overwrites this with the real, allowlist-validated deep link immediately after this
-        // function returns — never left as the placeholder for any caller to observe.
-        deepLinkUrl: requestUrl,
+        // Real, allowlist-validated deep link (the baseline seats map carries zero params),
+        // built from the validated numeric upstream id (`PublicShowtimeSchema.showtimeId`
+        // is `z.number()`), mirroring the movie-first parser — never the schedule listing
+        // page's own request URL. `getSchedule` (provider.ts) recomputes the same value via
+        // `deepLink`, so its enrichment is now idempotent for schedule-resolved rows.
+        deepLinkUrl: buildSeatsUrl(st.showtimeId).toString(),
         // The schedule payload carries no seat-layout id — only the seat page does.
         layoutId: null,
       };

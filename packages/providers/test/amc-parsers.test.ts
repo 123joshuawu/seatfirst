@@ -393,8 +393,8 @@ describe("AMC Parsers (P5)", () => {
         formatCode: "IMAX",
         minPrice: null,
         layoutId: null,
-        // Placeholder before `getSchedule`'s deep-link enrichment overwrites it.
-        deepLinkUrl: "http://test/showtimes",
+        // Real per-showtime seats deep link, built at parse time (not the listing URL).
+        deepLinkUrl: "https://www.amctheatres.com/showtimes/144239197/seats",
       });
       expect(res[0]!.showDateTimeUtc).toEqual(new Date("2026-08-13T05:00:00.000Z"));
       expect(res[0]!.providerMeta).toMatchObject({ rawStatus: "Sellable" });
