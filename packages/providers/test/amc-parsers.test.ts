@@ -329,7 +329,6 @@ describe("AMC Parsers (P5)", () => {
       });
     });
 
-
     it("fails loudly when the RSC tree has no movie cards", () => {
       const html = makeHtml(
         JSON.stringify(["$", "$L38", null, { href: "/movies/uxrow", children: "Noise" }]),
