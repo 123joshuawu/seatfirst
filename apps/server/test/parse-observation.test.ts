@@ -289,7 +289,14 @@ describe("parseObservation (S31.3–S31.5)", () => {
       payload(makeHtml({ notLayout: true })),
       runKey("SHOWTIME_FETCH"),
     );
-    expect(result).toEqual({ ok: false, cause: "PARSER_SCHEMA_INCOMPATIBLE" });
+    expect(result).toEqual({
+      ok: false,
+      cause: "PARSER_SCHEMA_INCOMPATIBLE",
+      parserError: {
+        code: "UPSTREAM_CHANGED",
+        message: "Could not locate PublicSeatMap shape in Flight payload",
+      },
+    });
   });
 
   it("returns the message for errors outside P5 schema drift", async () => {

@@ -294,6 +294,10 @@ let readiness: ReadinessServer;
 let supervisor: BrowserSupervisor;
 let recordingRedis: RecordingRedis;
 let messages: string[];
+let recordedLogs: Array<{
+  readonly fields: Record<string, unknown>;
+  readonly message: string;
+}>;
 const heldDeferreds: Array<ReturnType<typeof deferred>> = [];
 
 beforeAll(async () => {
@@ -344,6 +348,7 @@ beforeEach(async () => {
   await aggregateQueue.drain();
   recordingRedis = new RecordingRedis(redisClient);
   messages = [];
+  recordedLogs = [];
   for (const held of heldDeferreds.splice(0)) {
     held.resolve();
   }
@@ -360,8 +365,9 @@ const db = () => poolClient(pool);
 /** Full O4-interface double over the shared `messages` sink; children share the sink so
  * post-child warns/errors still land where the `until()` waits look. */
 function sinkLogger(): SeatfirstLogger {
-  const record = (_fields: Record<string, unknown>, message: string): void => {
+  const record = (fields: Record<string, unknown>, message: string): void => {
     messages.push(message);
+    recordedLogs.push({ fields, message });
   };
   const quiet = (): void => undefined;
   const build = (): SeatfirstLogger => ({
@@ -1505,7 +1511,15 @@ describe.skipIf(chromeExecutable === null)("provider fetch actor (S8)", () => {
     await driveRun(
       makeDeps({
         harness,
-        parse: () => Promise.resolve({ ok: false, cause: "PARSER_SCHEMA_INCOMPATIBLE" }),
+        parse: () =>
+          Promise.resolve({
+            ok: false,
+            cause: "PARSER_SCHEMA_INCOMPATIBLE",
+            parserError: {
+              code: "UPSTREAM_CHANGED",
+              message: 'Postal code "31420" is not in the timezone table',
+            },
+          }),
       }),
       world.runId,
       "SHOWTIME_FETCH",
@@ -1523,6 +1537,16 @@ describe.skipIf(chromeExecutable === null)("provider fetch actor (S8)", () => {
     ]);
     const run = await readRunState(world.runId);
     expect(run.failCause).toBe("PARSER_SCHEMA_INCOMPATIBLE");
+    expect(recordedLogs).toContainEqual({
+      fields: {
+        run_id: world.runId,
+        outcome: "UPSTREAM_CHANGED",
+        fail_cause: "PARSER_SCHEMA_INCOMPATIBLE",
+        parser_error_code: "UPSTREAM_CHANGED",
+        parser_error_message: 'Postal code "31420" is not in the timezone table',
+      },
+      message: "provider fetch: parser schema incompatibility paused route",
+    });
   });
 
   it("10. heartbeat loss mid-navigation (concurrent B9 halt) → CANCELLED, no durability call from the handler, capacity released after cleanup", async () => {

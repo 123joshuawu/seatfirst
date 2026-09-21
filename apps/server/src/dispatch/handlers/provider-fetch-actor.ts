@@ -136,16 +136,28 @@ export type ParseResult =
   | Readonly<{
       ok: false;
       cause: "PARSER_SCHEMA_INCOMPATIBLE";
+      parserError?: Readonly<{
+        code: "UPSTREAM_CHANGED";
+        message: string;
+      }>;
       diagnostic?: UpstreamChangedDiagnostic;
     }>
-  | Readonly<{ ok: false; cause: string; diagnostic?: UpstreamChangedDiagnostic }>;
+  | Readonly<{
+      ok: false;
+      cause: string;
+      parserError?: Readonly<{
+        code: "UPSTREAM_CHANGED";
+        message: string;
+      }>;
+      diagnostic?: UpstreamChangedDiagnostic;
+    }>;
 
 /**
  * Raw/unredacted diagnostic payload for `UPSTREAM_CHANGED` (risk-accepted by Josh Wu;
  * see the ADR amendments in this batch). Populated by the provider parse layer, which
  * fires on an already-fetched HTML string with no live `Page` — so url+body+headers
- * only, never a screenshot. Additive: consumers that never look for it observe the
- * exact same outcome shape as before. Absent (undefined) = no capture attempted.
+ * only, never a screenshot. This payload stays on the non-enumerable diagnostic side
+ * channel and never enters the operational log.
  */
 export interface UpstreamChangedDiagnostic {
   /** Raw request URL, full query string included — never redacted. */
@@ -794,6 +806,16 @@ async function mapNavigationOutcome(
             kind: "PARSER_SCHEMA_INCOMPATIBLE",
             routeClass,
           });
+          logger.error(
+            {
+              run_id: handle.runId,
+              outcome: "UPSTREAM_CHANGED",
+              fail_cause: parsed.cause,
+              parser_error_code: parsed.parserError?.code,
+              parser_error_message: parsed.parserError?.message,
+            },
+            "provider fetch: parser schema incompatibility paused route",
+          );
           // Best-effort raw capture AFTER the real transition committed — never throws.
           await captureUpstreamChangedDiagnostic(deps, logger, handle.runId, parsed);
           recordFetchDuration(deps.metrics, startedAt, "HALTED");

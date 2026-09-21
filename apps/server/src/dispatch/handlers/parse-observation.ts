@@ -5,8 +5,8 @@
  * already-fetched `runKey.recheckPlacement` geometry for the RECHECK verdict (S31.4/D1).
  *
  * S31.5 — every thrown error is mapped to `{ ok: false, cause }`, never allowed to leak an
- * untyped throw into the actor: a `ProviderError` with code `UPSTREAM_CHANGED` → the S8.15
- * `PARSER_SCHEMA_INCOMPATIBLE` path; anything else → its message.
+ * untyped throw into the actor: a `ProviderError` with code `UPSTREAM_CHANGED` keeps its safe
+ * code/message summary while mapping to S8.15's `PARSER_SCHEMA_INCOMPATIBLE` control path.
  */
 import { buildAuditoriumLayout, getBit, parseNamespacedId, popcount } from "@seatfirst/core";
 import {
@@ -116,7 +116,14 @@ export const parseObservation: ProviderFetchActorDeps["parseObservation"] = (
     }
   } catch (error) {
     if (error instanceof ProviderError && error.code === "UPSTREAM_CHANGED") {
-      const failure = { ok: false as const, cause: "PARSER_SCHEMA_INCOMPATIBLE" as const };
+      const failure = {
+        ok: false as const,
+        cause: "PARSER_SCHEMA_INCOMPATIBLE" as const,
+        parserError: {
+          code: error.code,
+          message: error.message,
+        },
+      };
       // Forward the parse layer's raw capture side channel (non-enumerable `diagnostic`,
       // invisible to existing `toEqual` pins) so the actor's best-effort capture can read it.
       const diagnostic = getUpstreamChangedDiagnostic(error);
