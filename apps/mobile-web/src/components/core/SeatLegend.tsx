@@ -52,9 +52,7 @@ export function SeatLegend({ compact = false }: SeatLegendProps): ReactElement {
           accessible={false}
           importantForAccessibility="no"
         >
-          <View
-            style={[styles.glyphBox, { width: glyphSize + 5, height: glyphSize + 5 }]}
-          >
+          <View style={[styles.glyphBox, { width: glyphSize + 5, height: glyphSize + 5 }]}>
             <SeatDot
               active={entry.dot.active}
               hue="amber"

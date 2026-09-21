@@ -221,7 +221,9 @@ function nodesWithRole(
   return root.findAll((node) => (node.props as { role?: unknown }).role === role);
 }
 
-function comboPressables(renderer: TestRenderer.ReactTestRenderer): TestRenderer.ReactTestInstance[] {
+function comboPressables(
+  renderer: TestRenderer.ReactTestRenderer,
+): TestRenderer.ReactTestInstance[] {
   // Composite Pressables only; the RN mock also renders a host "Pressable"
   // string node with identical props (Button.test.tsx convention).
   return renderer.root.findAllByType(Pressable).filter((n) => typeof n.type !== "string");
@@ -234,12 +236,16 @@ function comboTextInput(renderer: TestRenderer.ReactTestRenderer): TestRenderer.
 }
 
 function flatStyle(style: unknown): Record<string, unknown> {
+  const out: Record<string, unknown> = {};
   const list = Array.isArray(style) ? style : [style];
-  return Object.assign({}, ...list.filter((s) => s && typeof s === "object"));
+  for (const entry of list) {
+    if (entry && typeof entry === "object") Object.assign(out, entry);
+  }
+  return out;
 }
 
 describe("Autocomplete compound components", () => {
-  let mounted: TestRenderer.ReactTestRenderer[] = [];
+  const mounted: TestRenderer.ReactTestRenderer[] = [];
   afterEach(() => {
     for (const r of mounted.splice(0)) r.unmount();
   });
@@ -289,7 +295,9 @@ describe("Autocomplete compound components", () => {
     // Options keep their option semantics inside the sheet list. Each row
     // appears twice (composite Pressable + host node, Button.test.tsx
     // convention), so assert on ids rather than count.
-    const optionIds = nodesWithRole(renderer.root, "option").map((n) => n.props.id);
+    const optionIds = nodesWithRole(renderer.root, "option").map(
+      (n) => (n.props as { id?: unknown }).id,
+    );
     expect(optionIds).toContain("combo-movies--m1");
     expect(optionIds).toContain("combo-movies--m2");
   });
@@ -323,7 +331,9 @@ describe("Autocomplete compound components", () => {
     mounted.push(renderer);
     const press = (key: string): void => {
       act(() => {
-        comboTextInput(renderer).props.onKeyPress({ nativeEvent: { key } });
+        (comboTextInput(renderer).props as { onKeyPress: (e: unknown) => void }).onKeyPress({
+          nativeEvent: { key },
+        });
       });
     };
     press("ArrowDown");
@@ -368,9 +378,7 @@ describe("Autocomplete compound components", () => {
       );
     });
     mounted.push(renderer);
-    const label = renderer.root
-      .findAllByType(AppText)
-      .find((n) => n.props.children === "Dune");
+    const label = renderer.root.findAllByType(AppText).find((n) => n.props.children === "Dune");
     expect(label).toBeDefined();
   });
 
@@ -397,12 +405,12 @@ describe("Autocomplete compound components", () => {
       );
     });
     mounted.push(renderer);
-    const groupLabels = nodesWithRole(renderer.root, "group").map((n) => n.props["aria-label"]);
+    const groupLabels = nodesWithRole(renderer.root, "group").map(
+      (n) => (n.props as { "aria-label"?: unknown })["aria-label"],
+    );
     expect(groupLabels).toContain("NEARBY THEATRES");
     expect(nodesWithRole(renderer.root, "status").length).toBeGreaterThanOrEqual(2);
-    const copy = renderer.root
-      .findAllByType(AppText)
-      .map((n) => n.props.children as unknown);
+    const copy = renderer.root.findAllByType(AppText).map((n) => n.props.children as unknown);
     expect(copy).toContain("No results found");
     expect(copy).toContain("Loading…");
     // …and the loading state pairs its copy with a spinner.

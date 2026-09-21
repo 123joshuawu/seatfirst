@@ -70,9 +70,7 @@ describe("HowItWorksSheet dismiss + size-to-content (BUG-02 / UX-03)", () => {
     const panel = root
       .findAllByType(Pressable)
       .filter(
-        (n) =>
-          (n.props as { accessibilityLabel?: string }).accessibilityLabel !==
-          "Close dialog",
+        (n) => (n.props as { accessibilityLabel?: string }).accessibilityLabel !== "Close dialog",
       );
     expect(panel.length).toBeGreaterThan(0);
     for (const node of panel) {
@@ -110,7 +108,9 @@ describe("HowItWorksSheet dismiss + size-to-content (BUG-02 / UX-03)", () => {
     const body = root.findByType(ScrollView);
     // The Sheet panel style arrives as an array ([base, { maxWidth }, { maxHeight }]).
     const panel = root.findByType(Sheet.Body).parent!;
-    const panelStyle = Object.assign({}, ...(panel.props.style as Array<Record<string, unknown>>));
+    const panelStyle = (panel.props.style as Array<Record<string, unknown>>).reduce<
+      Record<string, unknown>
+    >((acc, entry) => Object.assign(acc, entry), {});
     expect(panelStyle.flex).toBeUndefined();
     // Capped at 85/90% of the viewport (the UX-03 cap, now owned by Sheet).
     expect(panelStyle.maxHeight).toBeDefined();

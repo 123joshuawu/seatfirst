@@ -3,11 +3,7 @@ import { useWindowDimensions } from "react-native";
 import type { RecoveryOption, ResultGroup } from "@seatfirst/core";
 import { useSeatfirstStore } from "@/store/seatfirstStore";
 import { openHandoff, resolveDeepLinkForShowtime } from "@/lib/handoff";
-import {
-  formatPlacementLabel,
-  formatShowtimeLocal,
-  relaxationLabel,
-} from "@/lib/presentation";
+import { formatPlacementLabel, formatShowtimeLocal, relaxationLabel } from "@/lib/presentation";
 
 /** Shared mobile breakpoint — mirrors `MOBILE_BREAKPOINT` in
  *  `useSubmitSearchViewModel` (`vm.isMobile` is `width < 680`). */
@@ -100,8 +96,7 @@ export function useRecoverySheetViewModel(): RecoverySheetViewModel {
 
   const recheckResult = store.recheckResult;
   const takenShowtimeId = store.recheckSelectedShowtimeId;
-  const open =
-    store.recoverySheetOpen && recheckResult !== null && recheckResult.status === "GONE";
+  const open = store.recoverySheetOpen && recheckResult !== null && recheckResult.status === "GONE";
 
   // Transient UI-only state: reset whenever the sheet opens on a new target
   // or closes, so consent never leaks across taken showtimes.

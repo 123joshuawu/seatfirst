@@ -3,7 +3,10 @@ import { AppText } from "./AppText";
 import { SeatDot } from "./SeatDot";
 import { SeatLegend } from "./SeatLegend";
 
-type Node = { type?: unknown; props: Record<string, unknown> & { children?: unknown; style?: unknown } };
+type Node = {
+  type?: unknown;
+  props: Record<string, unknown> & { children?: unknown; style?: unknown };
+};
 
 function flattenStyle(style: unknown): Record<string, unknown> {
   const out: Record<string, unknown> = {};

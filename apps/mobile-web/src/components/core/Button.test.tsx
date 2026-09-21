@@ -3,12 +3,7 @@ import TestRenderer, { act } from "react-test-renderer";
 import { Pressable, View } from "react-native";
 import { colors } from "@/theme/colors";
 import { AppText } from "./AppText";
-import {
-  Button,
-  PrimaryButton,
-  SecondaryButton,
-  TextLinkButton,
-} from "./Button";
+import { Button, PrimaryButton, SecondaryButton, TextLinkButton } from "./Button";
 import { LoadingSpinner } from "./LoadingSpinner";
 
 let mounted: TestRenderer.ReactTestRenderer[] = [];
@@ -29,23 +24,20 @@ function render(el: React.ReactElement): TestRenderer.ReactTestRenderer {
 /** The single logical Pressable (composite; the RN mock also renders a host
  * "Pressable" string node with identical props — filtered out here, matching
  * the compositeButtons convention in ShowtimeRow.handoff.test.tsx). */
-function singlePressable(
-  renderer: TestRenderer.ReactTestRenderer,
-): TestRenderer.ReactTestInstance {
-  const nodes = renderer.root
-    .findAllByType(Pressable)
-    .filter((n) => typeof n.type !== "string");
+function singlePressable(renderer: TestRenderer.ReactTestRenderer): TestRenderer.ReactTestInstance {
+  const nodes = renderer.root.findAllByType(Pressable).filter((n) => typeof n.type !== "string");
   expect(nodes).toHaveLength(1);
   return nodes[0]!;
 }
 
 /** Merges an RN style array into one object (mock StyleSheet is a passthrough). */
 function flatStyle(style: unknown): Record<string, unknown> {
+  const out: Record<string, unknown> = {};
   const list = Array.isArray(style) ? style : [style];
-  return Object.assign(
-    {},
-    ...list.filter((s) => s && typeof s === "object"),
-  );
+  for (const entry of list) {
+    if (entry && typeof entry === "object") Object.assign(out, entry);
+  }
+  return out;
 }
 
 /** Resolves a Pressable `style` prop — static object/array or the UI35.2
@@ -54,7 +46,7 @@ function pressableStyle(
   node: TestRenderer.ReactTestInstance,
   state: { pressed: boolean; hovered?: boolean } = { pressed: false },
 ): Record<string, unknown> {
-  const raw = node.props.style;
+  const raw = node.props.style as unknown;
   const resolved =
     typeof raw === "function"
       ? (raw as (s: { pressed: boolean; hovered?: boolean }) => unknown)(state)
@@ -70,17 +62,13 @@ function labelText(renderer: TestRenderer.ReactTestRenderer): string {
 describe("Button core primitives", () => {
   describe("TextLinkButton", () => {
     it("uses colors.brandContrast as default color for WCAG AA compliance (ADR 0068)", () => {
-      const renderer = render(
-        <TextLinkButton label="← Edit search" onPress={() => {}} />,
-      );
+      const renderer = render(<TextLinkButton label="← Edit search" onPress={() => {}} />);
       const text = renderer.root.findByType(AppText);
       expect(flatStyle(text.props.style).color).toBe(colors.brandContrast);
     });
 
     it("has hitSlop applied for comfortable touch target size", () => {
-      const renderer = render(
-        <TextLinkButton label="Change" onPress={() => {}} />,
-      );
+      const renderer = render(<TextLinkButton label="Change" onPress={() => {}} />);
       const btn = singlePressable(renderer);
       expect(btn.props.hitSlop).toEqual({ top: 12, bottom: 12, left: 12, right: 12 });
       expect(btn.props.accessibilityRole).toBe("button");
@@ -106,9 +94,7 @@ describe("Button core primitives", () => {
     });
 
     it("defaults to size 12 with no underline", () => {
-      const renderer = render(
-        <TextLinkButton label="Change" onPress={() => {}} />,
-      );
+      const renderer = render(<TextLinkButton label="Change" onPress={() => {}} />);
       const style = flatStyle(renderer.root.findByType(AppText).props.style);
       expect(style.fontSize).toBe(12);
       expect(style.textDecorationLine).toBe("none");
@@ -116,9 +102,7 @@ describe("Button core primitives", () => {
 
     it("disabled uses disabledText and blocks interaction", () => {
       const onPress = vi.fn();
-      const renderer = render(
-        <TextLinkButton label="Change" onPress={onPress} disabled />,
-      );
+      const renderer = render(<TextLinkButton label="Change" onPress={onPress} disabled />);
       const btn = singlePressable(renderer);
       expect(btn.props.onPress).toBeUndefined();
       expect(btn.props.disabled).toBe(true);
@@ -128,9 +112,7 @@ describe("Button core primitives", () => {
     });
 
     it("hover underlines the label and dims the container (UI35.2 link)", () => {
-      const renderer = render(
-        <TextLinkButton label="Change" onPress={() => {}} />,
-      );
+      const renderer = render(<TextLinkButton label="Change" onPress={() => {}} />);
       const btn = singlePressable(renderer);
       act(() => {
         (btn.props.onHoverIn as () => void)();
@@ -141,38 +123,32 @@ describe("Button core primitives", () => {
       act(() => {
         (btn.props.onHoverOut as () => void)();
       });
-      expect(
-        flatStyle(renderer.root.findByType(AppText).props.style).textDecorationLine,
-      ).toBe("none");
+      expect(flatStyle(renderer.root.findByType(AppText).props.style).textDecorationLine).toBe(
+        "none",
+      );
     });
 
     it("press underlines the label and dims the container (UI35.2 link)", () => {
-      const renderer = render(
-        <TextLinkButton label="Change" onPress={() => {}} />,
-      );
+      const renderer = render(<TextLinkButton label="Change" onPress={() => {}} />);
       const btn = singlePressable(renderer);
       act(() => {
         (btn.props.onPressIn as () => void)();
       });
-      expect(
-        flatStyle(renderer.root.findByType(AppText).props.style).textDecorationLine,
-      ).toBe("underline");
+      expect(flatStyle(renderer.root.findByType(AppText).props.style).textDecorationLine).toBe(
+        "underline",
+      );
       expect(pressableStyle(btn, { pressed: true }).opacity).toBe(0.7);
     });
 
     it("idle link has full opacity and brandContrast text (UI35.2 link normal)", () => {
-      const renderer = render(
-        <TextLinkButton label="Change" onPress={() => {}} />,
-      );
+      const renderer = render(<TextLinkButton label="Change" onPress={() => {}} />);
       const btn = singlePressable(renderer);
       const idle = pressableStyle(btn);
       expect(idle.opacity ?? 1).toBe(1);
     });
 
     it("shows the web focus ring only while focused (UI35.3)", () => {
-      const renderer = render(
-        <TextLinkButton label="Change" onPress={() => {}} />,
-      );
+      const renderer = render(<TextLinkButton label="Change" onPress={() => {}} />);
       const btn = singlePressable(renderer);
       expect(pressableStyle(btn).outlineColor).toBeUndefined();
       act(() => {
@@ -226,9 +202,7 @@ describe("Button core primitives", () => {
           testID="rechecking-collapsed-sh_hit"
         />,
       );
-      expect(singlePressable(renderer).props.testID).toBe(
-        "rechecking-collapsed-sh_hit",
-      );
+      expect(singlePressable(renderer).props.testID).toBe("rechecking-collapsed-sh_hit");
     });
 
     it("plain button renders just the label with no spinner", () => {
@@ -244,9 +218,7 @@ describe("Button core primitives", () => {
     });
 
     it("compact scales padding/label and carries hitSlop; default has no hitSlop (UI35.4)", () => {
-      const compact = render(
-        <PrimaryButton label="Go to AMC" onPress={() => {}} size="compact" />,
-      );
+      const compact = render(<PrimaryButton label="Go to AMC" onPress={() => {}} size="compact" />);
       const compactBtn = singlePressable(compact);
       expect(compactBtn.props.hitSlop).toEqual({
         top: 12,
@@ -272,25 +244,19 @@ describe("Button core primitives", () => {
       const renderer = render(<PrimaryButton label="Go to AMC" onPress={() => {}} />);
       const btn = singlePressable(renderer);
       expect(pressableStyle(btn).backgroundColor).toBe(colors.brandContrast);
-      expect(pressableStyle(btn, { pressed: true }).backgroundColor).toBe(
+      expect(pressableStyle(btn, { pressed: true }).backgroundColor).toBe(colors.brandDark);
+      expect(pressableStyle(btn, { pressed: false, hovered: true }).backgroundColor).toBe(
         colors.brandDark,
       );
-      expect(
-        pressableStyle(btn, { pressed: false, hovered: true }).backgroundColor,
-      ).toBe(colors.brandDark);
     });
 
     it("disabled keeps the disabled fill even when pressed, with disabledText label", () => {
       const onPress = vi.fn();
-      const renderer = render(
-        <PrimaryButton label="Go to AMC" onPress={onPress} disabled />,
-      );
+      const renderer = render(<PrimaryButton label="Go to AMC" onPress={onPress} disabled />);
       const btn = singlePressable(renderer);
       expect(btn.props.onPress).toBeUndefined();
       expect(btn.props.accessibilityState).toEqual({ disabled: true, busy: false });
-      expect(pressableStyle(btn, { pressed: true }).backgroundColor).toBe(
-        colors.disabledBg,
-      );
+      expect(pressableStyle(btn, { pressed: true }).backgroundColor).toBe(colors.disabledBg);
       expect(flatStyle(renderer.root.findByType(AppText).props.style).color).toBe(
         colors.disabledText,
       );
@@ -312,9 +278,7 @@ describe("Button core primitives", () => {
     });
 
     it("is not focusable while disabled", () => {
-      const renderer = render(
-        <PrimaryButton label="Go to AMC" onPress={() => {}} disabled />,
-      );
+      const renderer = render(<PrimaryButton label="Go to AMC" onPress={() => {}} disabled />);
       expect(singlePressable(renderer).props.focusable).toBe(false);
     });
   });
@@ -322,9 +286,7 @@ describe("Button core primitives", () => {
   describe("SecondaryButton", () => {
     it("busy surfaces in accessibilityState WITHOUT gating interaction", () => {
       const onPress = vi.fn();
-      const renderer = render(
-        <SecondaryButton label="Retry" onPress={onPress} busy />,
-      );
+      const renderer = render(<SecondaryButton label="Retry" onPress={onPress} busy />);
       const btn = singlePressable(renderer);
       expect(btn.props.accessibilityState).toEqual({ disabled: false, busy: true });
       // Unlike PrimaryButton's loading, busy does not block presses.
@@ -337,9 +299,7 @@ describe("Button core primitives", () => {
     });
 
     it("appends the suffix glyph to the label", () => {
-      const renderer = render(
-        <SecondaryButton label="2 together" suffix="▾" onPress={() => {}} />,
-      );
+      const renderer = render(<SecondaryButton label="2 together" suffix="▾" onPress={() => {}} />);
       expect(labelText(renderer)).toBe("2 together ▾");
     });
 
@@ -360,12 +320,8 @@ describe("Button core primitives", () => {
       expect(pillFlat.borderRadius).toBe(999);
       expect(pillFlat.backgroundColor).toBe(colors.white);
 
-      const muted = render(
-        <SecondaryButton label="Retry" background="muted" onPress={() => {}} />,
-      );
-      expect(pressableStyle(singlePressable(muted)).backgroundColor).toBe(
-        colors.cardMutedBg,
-      );
+      const muted = render(<SecondaryButton label="Retry" background="muted" onPress={() => {}} />);
+      expect(pressableStyle(singlePressable(muted)).backgroundColor).toBe(colors.cardMutedBg);
 
       const wide = render(
         <SecondaryButton label="See other options" fullWidth onPress={() => {}} />,
@@ -384,16 +340,12 @@ describe("Button core primitives", () => {
       );
       const btn = singlePressable(renderer);
       expect(pressableStyle(btn).backgroundColor).toBe(colors.white);
-      expect(pressableStyle(btn, { pressed: true }).backgroundColor).toBe(
-        colors.borderSoft,
-      );
+      expect(pressableStyle(btn, { pressed: true }).backgroundColor).toBe(colors.borderSoft);
     });
 
     it("disabled dims via opacity and blocks presses", () => {
       const onPress = vi.fn();
-      const renderer = render(
-        <SecondaryButton label="Retry" onPress={onPress} disabled />,
-      );
+      const renderer = render(<SecondaryButton label="Retry" onPress={onPress} disabled />);
       const btn = singlePressable(renderer);
       expect(btn.props.onPress).toBeUndefined();
       expect(btn.props.accessibilityState).toEqual({ disabled: true, busy: false });
@@ -438,17 +390,10 @@ describe("Button core primitives", () => {
       const flat = pressableStyle(btn);
       expect(flat.backgroundColor).toBe(colors.white);
       expect(flat.borderRadius).toBe(12);
-      expect(pressableStyle(btn, { pressed: true }).backgroundColor).toBe(
-        colors.borderSoft,
-      );
+      expect(pressableStyle(btn, { pressed: true }).backgroundColor).toBe(colors.borderSoft);
 
       const pill = render(
-        <Button
-          label="Change format"
-          variant="secondary"
-          shape="pill"
-          onPress={() => {}}
-        />,
+        <Button label="Change format" variant="secondary" shape="pill" onPress={() => {}} />,
       );
       expect(pressableStyle(singlePressable(pill)).borderRadius).toBe(999);
     });
@@ -470,19 +415,14 @@ describe("Button core primitives", () => {
       act(() => {
         (btn.props.onHoverIn as () => void)();
       });
-      expect(
-        flatStyle(renderer.root.findByType(AppText).props.style).textDecorationLine,
-      ).toBe("underline");
+      expect(flatStyle(renderer.root.findByType(AppText).props.style).textDecorationLine).toBe(
+        "underline",
+      );
     });
 
     it("compact size carries hitSlop on any variant (UI35.4)", () => {
       const renderer = render(
-        <Button
-          label="Edit search"
-          variant="secondary"
-          size="compact"
-          onPress={() => {}}
-        />,
+        <Button label="Edit search" variant="secondary" size="compact" onPress={() => {}} />,
       );
       expect(singlePressable(renderer).props.hitSlop).toEqual({
         top: 12,
@@ -494,9 +434,7 @@ describe("Button core primitives", () => {
 
     it("loading forces disabled with busy:true and an inline spinner", () => {
       const onPress = vi.fn();
-      const renderer = render(
-        <Button label="Finding seats…" onPress={onPress} loading />,
-      );
+      const renderer = render(<Button label="Finding seats…" onPress={onPress} loading />);
       const btn = singlePressable(renderer);
       expect(btn.props.onPress).toBeUndefined();
       expect(btn.props.disabled).toBe(true);
@@ -528,15 +466,11 @@ describe("Button core primitives", () => {
     });
 
     it("disabled buttons are not focusable and keep idle fill under press", () => {
-      const renderer = render(
-        <Button label="Find my seats" onPress={() => {}} disabled />,
-      );
+      const renderer = render(<Button label="Find my seats" onPress={() => {}} disabled />);
       const btn = singlePressable(renderer);
       expect(btn.props.focusable).toBe(false);
       expect(btn.props.accessibilityState).toEqual({ disabled: true, busy: false });
-      expect(pressableStyle(btn, { pressed: true }).backgroundColor).toBe(
-        colors.disabledBg,
-      );
+      expect(pressableStyle(btn, { pressed: true }).backgroundColor).toBe(colors.disabledBg);
     });
   });
 });

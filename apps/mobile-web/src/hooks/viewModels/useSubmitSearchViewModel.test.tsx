@@ -259,7 +259,9 @@ describe("useSubmitSearchViewModel Any-format facet + warm CTA count (ADR 0036 a
   };
 
   /** Stub useFacetCounts per axis: FORMAT gets `formatMap`, every other axis empty. */
-  function stubFacetMaps(formatMap: Map<string, { count: number; coldTheatreCount: number }>): void {
+  function stubFacetMaps(
+    formatMap: Map<string, { count: number; coldTheatreCount: number }>,
+  ): void {
     mockFacetCounts.mockImplementation((input: UseFacetCountsInput | null) => {
       if (input?.axes?.[0]?.kind === "FORMAT") {
         return { ...EMPTY_FACET, countsMap: formatMap };
@@ -304,7 +306,7 @@ describe("useSubmitSearchViewModel Any-format facet + warm CTA count (ADR 0036 a
     setTwoTheatreWarmForm();
     captureVm();
     const formatCall = mockFacetCounts.mock.calls.find(
-      (call) => (call[0] as UseFacetCountsInput | null)?.axes?.[0]?.kind === "FORMAT",
+      (call) => call[0]?.axes?.[0]?.kind === "FORMAT",
     );
     const candidates = (formatCall?.[0] as UseFacetCountsInput)?.axes?.[0];
     expect(candidates).toMatchObject({ kind: "FORMAT" });
@@ -326,7 +328,9 @@ describe("useSubmitSearchViewModel Any-format facet + warm CTA count (ADR 0036 a
     // …including the "Any format" chip-label alias ChipRow looks up by label.
     expect(vm.formatCounts?.get("Any format")).toEqual({ count: 5, coldTheatreCount: 1 });
     // …and the shared tri-state helper reports partial ("5+") over 2 theatres.
-    expect(getFacetDisplay(vm.formatCounts?.get("any"), vm.facetTotalTheatres ?? 0).text).toBe("5+");
+    expect(getFacetDisplay(vm.formatCounts?.get("any"), vm.facetTotalTheatres ?? 0).text).toBe(
+      "5+",
+    );
     expect(vm.facetTotalTheatres).toBe(2);
   });
 

@@ -75,7 +75,11 @@ export function RecoverySheet(): ReactElement | null {
           showsVerticalScrollIndicator
         >
           {vm.options.map((item) => (
-            <View key={`${item.option.level}-${item.option.showtimeId}`} style={styles.optionCard} testID={`recovery-option-${item.option.level}`}>
+            <View
+              key={`${item.option.level}-${item.option.showtimeId}`}
+              style={styles.optionCard}
+              testID={`recovery-option-${item.option.level}`}
+            >
               <AppText weight="700" style={styles.optionHeader}>
                 {item.header}
               </AppText>

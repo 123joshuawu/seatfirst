@@ -253,7 +253,7 @@ describe("ShowtimeList (UI14.8-14.14)", () => {
     );
     expect(actions.length).toBeGreaterThan(0);
     act(() => {
-      actions[0]!.props.onPress();
+      (actions[0]!.props as { onPress: () => void }).onPress();
     });
     expect(onEditSearch).toHaveBeenCalledTimes(1);
     renderer.unmount();
@@ -551,7 +551,7 @@ describe("ShowtimeList halted/terminal zero-result empty state (critical fix)", 
       expect(action.props.accessibilityState).toMatchObject({ disabled: false });
     }
     act(() => {
-      actions[0]!.props.onPress();
+      (actions[0]!.props as { onPress: () => void }).onPress();
     });
     expect(onEditSearch).toHaveBeenCalledTimes(1);
     renderer.unmount();

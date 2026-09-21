@@ -131,7 +131,8 @@ export function useCombobox<T>(options: UseComboboxOptions<T>): UseComboboxRetur
     [items, listId, getItemKey],
   );
 
-  const activeItemId = activeIndex >= 0 && activeIndex < items.length ? getItemId(activeIndex) : null;
+  const activeItemId =
+    activeIndex >= 0 && activeIndex < items.length ? getItemId(activeIndex) : null;
 
   const handleKeyDown = useCallback(
     (e: unknown) => {

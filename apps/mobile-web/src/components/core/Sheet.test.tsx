@@ -1,16 +1,16 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import TestRenderer, { act } from "react-test-renderer";
 import { Modal, Pressable, ScrollView, View } from "react-native";
-import {
-  Sheet,
-  sheetMaxHeightForViewport,
-  SMALL_SHEET_VIEWPORT_HEIGHT,
-} from "./Sheet";
+import { Sheet, sheetMaxHeightForViewport, SMALL_SHEET_VIEWPORT_HEIGHT } from "./Sheet";
 import { AppText } from "./AppText";
 
 function flatStyle(style: unknown): Record<string, unknown> {
+  const out: Record<string, unknown> = {};
   const list = Array.isArray(style) ? style : [style];
-  return Object.assign({}, ...list.filter((s) => s && typeof s === "object"));
+  for (const entry of list) {
+    if (entry && typeof entry === "object") Object.assign(out, entry);
+  }
+  return out;
 }
 
 function pressByLabel(root: TestRenderer.ReactTestInstance, label: string): void {
@@ -54,7 +54,9 @@ describe("Sheet primitive", () => {
             onClose={onClose}
             {...(props?.subtitle !== undefined ? { subtitle: props.subtitle } : {})}
           />
-          <Sheet.Body {...(props?.scrollable !== undefined ? { scrollable: props.scrollable } : {})}>
+          <Sheet.Body
+            {...(props?.scrollable !== undefined ? { scrollable: props.scrollable } : {})}
+          >
             <AppText weight="400">Body content</AppText>
           </Sheet.Body>
           {props?.footer === false ? null : (
@@ -134,19 +136,19 @@ describe("Sheet primitive", () => {
     const btn = root
       .findAllByType(Pressable)
       .find(
-        (n) => (n.props as { accessibilityLabel?: string }).accessibilityLabel === "Close Test sheet",
+        (n) =>
+          (n.props as { accessibilityLabel?: string }).accessibilityLabel === "Close Test sheet",
       );
     expect(btn, "header close exists").toBeDefined();
     const style = btn!.props.style as { minWidth?: number; minHeight?: number };
     const hitSlop = btn!.props.hitSlop as
-      | { top?: number; bottom?: number; left?: number; right?: number }
-      | undefined;
-    expect((style.minWidth ?? 0) + (hitSlop?.left ?? 0) + (hitSlop?.right ?? 0)).toBeGreaterThanOrEqual(
-      44,
-    );
-    expect((style.minHeight ?? 0) + (hitSlop?.top ?? 0) + (hitSlop?.bottom ?? 0)).toBeGreaterThanOrEqual(
-      44,
-    );
+      { top?: number; bottom?: number; left?: number; right?: number } | undefined;
+    expect(
+      (style.minWidth ?? 0) + (hitSlop?.left ?? 0) + (hitSlop?.right ?? 0),
+    ).toBeGreaterThanOrEqual(44);
+    expect(
+      (style.minHeight ?? 0) + (hitSlop?.top ?? 0) + (hitSlop?.bottom ?? 0),
+    ).toBeGreaterThanOrEqual(44);
     pressByLabel(root, "Close Test sheet");
     expect(onClose).toHaveBeenCalledTimes(1);
   });
@@ -189,11 +191,11 @@ describe("Sheet primitive", () => {
     // Footer content is not inside the scrollable body: the P0 structural fix.
     const body = root.findByType(Sheet.Body);
     expect(
-      body.findAll(
-        (node) => (node.props as { children?: unknown }).children === "Footer action",
-      ),
+      body.findAll((node) => (node.props as { children?: unknown }).children === "Footer action"),
     ).toHaveLength(0);
-    expect(footer.findAllByType(AppText).map((n) => n.props.children)).toContain("Footer action");
+    expect(
+      footer.findAllByType(AppText).map((n) => (n.props as { children?: unknown }).children),
+    ).toContain("Footer action");
   });
 
   it("panel caps height (90% at test-viewport 768px) with a 440 default maxWidth", () => {

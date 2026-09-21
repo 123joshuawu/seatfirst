@@ -6,6 +6,14 @@ import { HowItWorksSheet } from "./HowItWorksSheet";
 import { Sheet } from "@/components/core/Sheet";
 import { AppText } from "@/components/core/AppText";
 import { useSeatfirstStore } from "@/store/seatfirstStore";
+
+/** Merges the Sheet panel's `[base, { maxWidth }, { maxHeight }]` style array. */
+function flatStyleArray(style: unknown): Record<string, unknown> {
+  return (style as Array<Record<string, unknown>>).reduce<Record<string, unknown>>(
+    (acc, entry) => Object.assign(acc, entry),
+    {},
+  );
+}
 function textContent(node: unknown): string {
   if (typeof node === "string" || typeof node === "number") return String(node);
   if (Array.isArray(node)) return node.map(textContent).join("");
@@ -59,9 +67,7 @@ describe("mobile sheet full-height layout (P0-3)", () => {
     // outside the scrollable body, so they stay pinned no matter how tall
     // the calendar grid grows — not below the viewport fold.
     expect(
-      body.findAll(
-        (node) => (node.props as { testID?: string })?.testID === "custom-sheet-footer",
-      ),
+      body.findAll((node) => (node.props as { testID?: string })?.testID === "custom-sheet-footer"),
     ).toHaveLength(0);
     const footer = root.findByType(Sheet.Footer);
     const footerLabels = footer
@@ -77,10 +83,7 @@ describe("mobile sheet full-height layout (P0-3)", () => {
     // The panel caps the viewport (85/90%) instead of stretching full-height,
     // so the body above becomes the bounded scroller.
     const panel = root.findByType(Sheet.Body).parent!;
-    const panelStyle = Object.assign(
-      {},
-      ...(panel.props.style as Array<Record<string, unknown>>),
-    );
+    const panelStyle = flatStyleArray(panel.props.style);
     expect(panelStyle.flex).toBeUndefined();
     expect(panelStyle.maxHeight).toBeDefined();
     const insideLabels = body
@@ -192,10 +195,7 @@ describe("mobile sheet full-height layout (P0-3)", () => {
     expect(bodies).toHaveLength(1);
     const body = bodies[0]!;
     const panel = root.findByType(Sheet.Body).parent!;
-    const panelStyle = Object.assign(
-      {},
-      ...(panel.props.style as Array<Record<string, unknown>>),
-    );
+    const panelStyle = flatStyleArray(panel.props.style);
     expect(panelStyle.flex).toBeUndefined();
     expect(panelStyle.maxHeight).toBeDefined();
     expect(body.props.style).toMatchObject({ flex: 1, minHeight: 0 });
@@ -493,9 +493,7 @@ describe("WhenCustomSheet Escape + backdrop dismiss (BUG-03)", () => {
     const scrim = root
       .findAllByType(Pressable)
       .find(
-        (n) =>
-          (n.props as { accessibilityLabel?: string }).accessibilityLabel ===
-          "Close dialog",
+        (n) => (n.props as { accessibilityLabel?: string }).accessibilityLabel === "Close dialog",
       );
     expect(scrim, "scrim pressable exists").toBeDefined();
     const overlayPressables = scrim!.parent!.findAllByType(Pressable);

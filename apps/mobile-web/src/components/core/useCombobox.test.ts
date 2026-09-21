@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import React from "react";
 import TestRenderer, { act } from "react-test-renderer";
+import type { TextInput } from "react-native";
 import { useCombobox, type UseComboboxReturn } from "./useCombobox";
 
 const ITEMS = ["alpha", "bravo", "charlie"] as const;
@@ -28,9 +29,7 @@ function renderCombobox(initial?: {
   const onOpenChange = vi.fn();
   const onSubmitQuery = vi.fn();
   const blur = vi.fn();
-  const inputRef = { current: { blur } } as unknown as React.RefObject<
-    import("react-native").TextInput | null
-  >;
+  const inputRef = { current: { blur } } as unknown as React.RefObject<TextInput | null>;
   let api!: UseComboboxReturn;
 
   function Probe(props: { items: readonly string[]; isOpen: boolean }): null {
@@ -73,8 +72,7 @@ function renderCombobox(initial?: {
       });
     },
     keyDown: (key: string, shape = "dom", extra = {}) => {
-      const event =
-        shape === "dom" ? { key, ...extra } : { nativeEvent: { key }, ...extra };
+      const event = shape === "dom" ? { key, ...extra } : { nativeEvent: { key }, ...extra };
       act(() => {
         api.handleKeyDown(event);
       });

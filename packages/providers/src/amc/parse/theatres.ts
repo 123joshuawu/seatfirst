@@ -1,5 +1,11 @@
 import { z } from "zod";
-import { formatNamespacedId, TheatreIdSchema, TheatreSchema, type Theatre, type TheatreAmenity } from "@seatfirst/core";
+import {
+  formatNamespacedId,
+  TheatreIdSchema,
+  TheatreSchema,
+  type Theatre,
+  type TheatreAmenity,
+} from "@seatfirst/core";
 import { extractShapeFromHtml } from "../flight.js";
 import { ProviderError, attachUpstreamChangedDiagnostic } from "../../errors.js";
 import { resolvePostalCodeTimezone } from "../postal-timezone.js";

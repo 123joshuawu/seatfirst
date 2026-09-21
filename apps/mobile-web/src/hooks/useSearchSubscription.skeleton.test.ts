@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unnecessary-type-assertion */
 import { describe, expect, it, vi, beforeEach } from "vitest";
 import { useSeatfirstStore } from "@/store/seatfirstStore";
 import { searchInitialState } from "@/store/searchSlice";

@@ -937,7 +937,9 @@ describe("MovieField combobox keyboard navigation", () => {
         ui42Props({
           movieValue: "Dune",
           onSelectCustomEvent,
-          liveScheduleMovies: [{ label: "Dune: Part Three", onPress: onSelectLive, posterUrl: null }],
+          liveScheduleMovies: [
+            { label: "Dune: Part Three", onPress: onSelectLive, posterUrl: null },
+          ],
           nowPlayingSuggestions: [
             { label: "Dune: Part Four", onPress: onSelectGeneral, posterUrl: null },
           ],
@@ -989,7 +991,9 @@ describe("MovieField combobox keyboard navigation", () => {
           {...ui42Props({
             movieValue: "Dune",
             movieFocused,
-            nowPlayingSuggestions: [{ label: "Dune: Part Three", onPress: vi.fn(), posterUrl: null }],
+            nowPlayingSuggestions: [
+              { label: "Dune: Part Three", onPress: vi.fn(), posterUrl: null },
+            ],
             onBlur: () => {
               onBlur();
               setMovieFocused(false);

@@ -183,7 +183,6 @@ function deriveStatusText(
 /** Accessibility hint for the direct-handoff CTA (ADR 0063 §1 — never implies a hold). */
 const HANDOFF_A11Y_HINT = "Confirms seat availability and opens showtime on AMC";
 
-
 export function ShowtimeRow({
   entry,
   groups,
@@ -233,7 +232,6 @@ export function ShowtimeRow({
   const rowAvailable = recheckResult !== null && recheckResult.status === "AVAILABLE";
   const effectiveVariant = isTakenRow ? "miss" : variant;
   const statusText = isTakenRow ? "Seats just taken" : text;
-
 
   const handleOpenAvailable = (): void => {
     const deepLinkUrl = resolveDeepLinkForShowtime(entry.showtimeId, groups);
@@ -492,7 +490,12 @@ export function ShowtimeRow({
         {attributeTags.length > 0 ? (
           <View style={styles.attributeBadgeRow}>
             {attributeTags.map((tag) => (
-              <Badge key={tag} label={tag} background={colors.amberTagBg} color={colors.amberTagText} />
+              <Badge
+                key={tag}
+                label={tag}
+                background={colors.amberTagBg}
+                color={colors.amberTagText}
+              />
             ))}
           </View>
         ) : null}
@@ -598,7 +601,6 @@ export function ShowtimeRow({
           </View>
         </View>
       ) : null}
-
     </View>
   );
 }

@@ -316,9 +316,9 @@ describe("UI41 recovery sheet end to end (ADR 0071 Verification)", () => {
     expect(ctas[0]?.props.accessibilityState).toEqual({ disabled: true, busy: false });
     expect(ctas[0]?.props.onPress).toBeUndefined();
     // …and does NOT expand inline — the old accordion is gone.
-    expect(
-      compositeNodes(renderer.root, { testID: `recovery-panel-${SHOWTIME_A}` }).length,
-    ).toBe(0);
+    expect(compositeNodes(renderer.root, { testID: `recovery-panel-${SHOWTIME_A}` }).length).toBe(
+      0,
+    );
     // The RecoverySheet owns the alternatives now.
     expect(compositeNodes(renderer.root, { testID: "recovery-sheet" }).length).toBe(1);
     expect(str).toContain("Those seats were just taken");

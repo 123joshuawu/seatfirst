@@ -21,9 +21,7 @@ function render(el: React.ReactElement): TestRenderer.ReactTestRenderer {
 
 /** The single logical Pressable (composite; the RN mock also renders a host
  * "Pressable" string node with identical props — filtered out here). */
-function singlePressable(
-  renderer: TestRenderer.ReactTestRenderer,
-): TestRenderer.ReactTestInstance {
+function singlePressable(renderer: TestRenderer.ReactTestRenderer): TestRenderer.ReactTestInstance {
   const nodes = renderer.root.findAllByType(Pressable);
   const logical = nodes.filter((n) => typeof n.type !== "string");
   expect(logical).toHaveLength(1);
@@ -46,8 +44,9 @@ function pressableStyle(
   node: TestRenderer.ReactTestInstance,
   state: { pressed: boolean; hovered?: boolean } = { pressed: false },
 ): Record<string, unknown> {
-  const style = node.props.style;
-  const resolved = typeof style === "function" ? style(state) : style;
+  const style = node.props.style as unknown;
+  const resolved =
+    typeof style === "function" ? (style as (s: typeof state) => unknown)(state) : style;
   return flatStyle(resolved);
 }
 

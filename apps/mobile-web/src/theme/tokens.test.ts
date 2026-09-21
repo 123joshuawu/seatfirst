@@ -22,9 +22,7 @@ const COLOR_RE = /^(#[0-9a-f]{6}|rgba?\([^)]+\))$/i;
 
 function allValues(obj: Record<string, unknown>): string[] {
   return Object.values(obj).flatMap((v) =>
-    typeof v === "object" && v !== null
-      ? allValues(v as Record<string, unknown>)
-      : [v as string],
+    typeof v === "object" && v !== null ? allValues(v as Record<string, unknown>) : [v as string],
   );
 }
 
@@ -73,9 +71,7 @@ describe("tokens", () => {
   });
 
   it("clears WCAG AA (4.5:1) for inverse text on the primary fill", () => {
-    expect(
-      contrast(tokens.text.inverse, tokens.interactive.primary),
-    ).toBeGreaterThanOrEqual(4.5);
+    expect(contrast(tokens.text.inverse, tokens.interactive.primary)).toBeGreaterThanOrEqual(4.5);
   });
 
   it("clears the 3:1 threshold for brand text and the focus border on canvas", () => {

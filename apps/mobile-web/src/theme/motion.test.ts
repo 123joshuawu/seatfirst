@@ -29,9 +29,7 @@ function renderHook(): { current: ReturnType<typeof usePrefersReducedMotion> } {
   return ref as { current: ReturnType<typeof usePrefersReducedMotion> };
 }
 
-async function renderHookFlushed(): Promise<
-  ReturnType<typeof usePrefersReducedMotion>
-> {
+async function renderHookFlushed(): Promise<ReturnType<typeof usePrefersReducedMotion>> {
   const ref: { current: ReturnType<typeof usePrefersReducedMotion> | null } = {
     current: null,
   };
@@ -40,6 +38,11 @@ async function renderHookFlushed(): Promise<
     return null;
   }
   let renderer!: TestRenderer.ReactTestRenderer;
+  // Async act() callback intentionally has no internal await: passing an
+  // async function (not a sync one) is what makes react-test-renderer's
+  // `act` drain the microtask queue after the callback resolves, flushing
+  // the hook's AccessibilityInfo promise-based state update below.
+  // eslint-disable-next-line @typescript-eslint/require-await
   await act(async () => {
     renderer = TestRenderer.create(createElement(Probe));
   });

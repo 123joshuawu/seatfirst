@@ -86,8 +86,7 @@ export const createRecheckSlice: StateCreator<SeatfirstStore, [], [], RecheckSli
         recheckResult: result,
         recheckErrorCode: null,
         recheckErrorMessage: null,
-        takenShowtimeIds:
-          target !== null && !prev.includes(target) ? [...prev, target] : prev,
+        takenShowtimeIds: target !== null && !prev.includes(target) ? [...prev, target] : prev,
         recoverySheetOpen: true,
       });
       return;

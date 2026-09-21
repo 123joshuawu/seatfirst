@@ -199,9 +199,7 @@ function MovieCustomEventRow({
           : null,
       ]}
     >
-      <AppText
-        style={[styles.itemLabel, { flex: 1 }]}
-      >{`🔍 Search for event: "${query}"`}</AppText>
+      <AppText style={[styles.itemLabel, { flex: 1 }]}>{`🔍 Search for event: "${query}"`}</AppText>
     </Pressable>
   );
 }
@@ -253,9 +251,7 @@ function MovieCountedCard({
       accessibilityState={{ disabled: isRowDisabled }}
       focusable={!isRowDisabled}
       onHoverIn={() => setActiveIndex(index)}
-      {...(Platform.OS === "web"
-        ? (itemProps as unknown as Record<string, unknown>)
-        : {})}
+      {...(Platform.OS === "web" ? itemProps : {})}
       style={({ pressed, hovered }: { pressed: boolean; hovered?: boolean }) => [
         styles.item,
         styles.movieCard,
@@ -328,9 +324,7 @@ function MoviePlainCard({
       accessibilityState={{ disabled: isLocked }}
       focusable={!isLocked}
       onHoverIn={() => setActiveIndex(index)}
-      {...(Platform.OS === "web"
-        ? (itemProps as unknown as Record<string, unknown>)
-        : {})}
+      {...(Platform.OS === "web" ? itemProps : {})}
       style={({ pressed, hovered }: { pressed: boolean; hovered?: boolean }) => [
         styles.item,
         styles.movieCard,
@@ -526,11 +520,7 @@ export function MovieField({
             onBlur={onBlur}
             placeholder="Search or browse what's playing"
             placeholderTextColor={colors.textTertiary}
-            style={[
-              styles.input,
-              desktop && styles.inputDesktop,
-              isLocked && styles.inputDisabled,
-            ]}
+            style={[styles.input, desktop && styles.inputDesktop, isLocked && styles.inputDisabled]}
             editable={!isLocked}
             selectTextOnFocus={!isLocked}
             accessibilityRole="combobox"

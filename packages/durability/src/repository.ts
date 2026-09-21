@@ -136,7 +136,9 @@ export interface TheatreRow {
   readonly slugs: Record<string, string> | null;
   readonly first_seen_at: Date;
   readonly last_seen_at: Date;
-  readonly amenities: readonly DurabilityTheatreAmenity[] | unknown;
+  /** Raw JSONB value from the driver — callers narrow with `Array.isArray`
+   * (e.g. `routes/theatres/search.ts`) before casting to `TheatreAmenity[]`. */
+  readonly amenities: unknown;
 }
 export function upsertTheatre(db: SqlClient, input: UpsertTheatreInput): Promise<TheatreRow[]> {
   return runStatement(db, B.THEATRE_UPSERT, [

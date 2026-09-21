@@ -16,7 +16,7 @@ function tapByLabel(renderer: TestRenderer.ReactTestRenderer, label: string): vo
   expect(targets.length).toBeGreaterThan(0);
   const target = targets[0]!;
   act(() => {
-    target.props.onPress();
+    (target.props as { onPress: () => void }).onPress();
   });
 }
 
@@ -38,15 +38,12 @@ describe("EmptyState (UI38.1)", () => {
       testID: "empty-state-no-results",
     });
     const str = JSON.stringify(renderer.toJSON());
-    const summaries = renderer.root.findAll(
-      (node) => node.props?.accessibilityRole === "summary",
-    );
+    const summaries = renderer.root.findAll((node) => node.props?.accessibilityRole === "summary");
     // Composite View and its host both carry the role; at least one exposes
     // the accessible container contract with this state's testID.
     expect(
       summaries.filter(
-        (node) =>
-          node.props.accessible === true && node.props.testID === "empty-state-no-results",
+        (node) => node.props.accessible === true && node.props.testID === "empty-state-no-results",
       ).length,
     ).toBeGreaterThan(0);
     const headers = renderer.root.findAll((node) => node.props?.accessibilityRole === "header");
@@ -75,7 +72,11 @@ describe("EmptyState (UI38.1)", () => {
       title: "No showtimes match your criteria",
       description: "Try adjusting your search or party size.",
       action: { label: "Edit search", onPress: onPrimary },
-      secondaryAction: { label: "See other dates", onPress: onSecondary, testID: "empty-secondary" },
+      secondaryAction: {
+        label: "See other dates",
+        onPress: onSecondary,
+        testID: "empty-secondary",
+      },
     });
     const str = JSON.stringify(renderer.toJSON());
     expect(str).toContain("Edit search");
@@ -101,8 +102,7 @@ describe("EmptyState (UI38.1)", () => {
     // Primary-slot override renders through SecondaryButton (no direct testID);
     // secondary-slot override renders through PrimaryButton (testID on the button).
     const goButtons = renderer.root.findAll(
-      (node) =>
-        node.props?.accessibilityRole === "button" && node.props?.testID === "empty-go",
+      (node) => node.props?.accessibilityRole === "button" && node.props?.testID === "empty-go",
     );
     expect(goButtons.length).toBeGreaterThan(0);
     tapByLabel(renderer, "Reset");

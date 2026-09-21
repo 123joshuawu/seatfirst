@@ -297,9 +297,7 @@ describe("runCatalogueCrawlTick — S26.8/S26.9 orchestration", () => {
   it("forwards parsed theatre amenities into the upsert input (S62)", async () => {
     const h = makeHarness();
     h.setState([row({ cursor: cursor(["atlanta"], 0) })]);
-    h.setTheatres([
-      { ...theatre("a", "atlanta"), amenities: [{ code: "imax", name: "IMAX" }] },
-    ]);
+    h.setTheatres([{ ...theatre("a", "atlanta"), amenities: [{ code: "imax", name: "IMAX" }] }]);
 
     await runCatalogueCrawlTick(h.deps);
 

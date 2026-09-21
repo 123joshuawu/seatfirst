@@ -88,9 +88,7 @@ describe("Checkbox", () => {
     expect(el.type).toBe(Pressable);
     expect(el.props.accessibilityRole).toBe("checkbox");
     expect(el.props.accessibilityState).toEqual({ checked: true, disabled: false });
-    expect(el.props.accessibilityLabel).toBe(
-      "I understand this is a different showtime and seat",
-    );
+    expect(el.props.accessibilityLabel).toBe("I understand this is a different showtime and seat");
     expect(el.props.accessibilityHint).toBe("Confirms consent");
     const target = flattenStyle(el.props.style);
     expect(target.minWidth).toBe(44);

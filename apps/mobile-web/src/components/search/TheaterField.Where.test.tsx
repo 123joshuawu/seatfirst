@@ -273,27 +273,33 @@ describe("TheaterField Where — UI37 theatre list controls", () => {
       renderer.root
         .findAllByType(Checkbox)
         .filter((checkbox) => checkbox.props.standalone === false);
-    expect(checkboxes().map((checkbox) => checkbox.props.checked)).toEqual([false, false]);
+    expect(
+      checkboxes().map((checkbox) => (checkbox.props as { checked: boolean }).checked),
+    ).toEqual([false, false]);
 
     const selectAll = renderer.root.find(
       (node) => node.props.accessibilityLabel === "Select all theatres",
     );
     act(() => {
-      selectAll.props.onPress();
+      (selectAll.props as { onPress: () => void }).onPress();
     });
     expect(useSeatfirstStore.getState().selectedTheatres.map((theatre) => theatre.id)).toEqual([
       "amc:theatre:1",
     ]);
-    expect(checkboxes().map((checkbox) => checkbox.props.checked)).toEqual([true, false]);
+    expect(
+      checkboxes().map((checkbox) => (checkbox.props as { checked: boolean }).checked),
+    ).toEqual([true, false]);
 
     const deselectAll = renderer.root.find(
       (node) => node.props.accessibilityLabel === "Deselect all theatres",
     );
     act(() => {
-      deselectAll.props.onPress();
+      (deselectAll.props as { onPress: () => void }).onPress();
     });
     expect(useSeatfirstStore.getState().selectedTheatres).toEqual([]);
-    expect(checkboxes().map((checkbox) => checkbox.props.checked)).toEqual([false, false]);
+    expect(
+      checkboxes().map((checkbox) => (checkbox.props as { checked: boolean }).checked),
+    ).toEqual([false, false]);
   });
 
   it("widens the radius and re-renders the zero-result theatre search", () => {
@@ -314,7 +320,7 @@ describe("TheaterField Where — UI37 theatre list controls", () => {
       (node) => node.props.accessibilityLabel === "Widen radius to 15 mi",
     );
     act(() => {
-      retry.props.onPress();
+      (retry.props as { onPress: () => void }).onPress();
     });
     expect(useSeatfirstStore.getState().whereRadiusKm).toBe(15 * 1.609344);
     expect(mockUseTheatreSearch.mock.calls.length).toBeGreaterThan(callsBeforeRetry);

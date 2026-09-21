@@ -375,7 +375,7 @@ function useAutocompleteContext(): AutocompleteContextValue {
   return ctx;
 }
 
-export function Autocomplete<T>({
+function AutocompleteRoot<T>({
   items,
   isOpen,
   onOpenChange,
@@ -415,9 +415,7 @@ export function Autocomplete<T>({
       isOpen,
       onOpenChange,
       onSelect: (item: unknown) => handleSelect(item as T),
-      getItemLabel: getItemLabel
-        ? (item: unknown) => getItemLabel(item as T)
-        : undefined,
+      getItemLabel: getItemLabel ? (item: unknown) => getItemLabel(item as T) : undefined,
       activeIndex: combobox.activeIndex,
       setActiveIndex: combobox.setActiveIndex,
       handleKeyDown: combobox.handleKeyDown,
@@ -431,281 +429,313 @@ export function Autocomplete<T>({
     }),
     [items, isOpen, onOpenChange, handleSelect, getItemLabel, combobox, inputRef, label, disabled],
   );
-  return <AutocompleteContext.Provider value={value}><View>{children}</View></AutocompleteContext.Provider>;
+  return (
+    <AutocompleteContext.Provider value={value}>
+      <View>{children}</View>
+    </AutocompleteContext.Provider>
+  );
 }
 
-export namespace Autocomplete {
-  export interface InputProps extends TextInputProps {
-    /**
-     * Keeps bespoke field adornments inside the shared shell. The underlying
-     * TextInput and its styles remain caller-owned.
-     */
-    endAdornment?: ReactNode;
-    inputContainerStyle?: StyleProp<ViewStyle> | undefined;
-  }
-
+export interface AutocompleteInputProps extends TextInputProps {
   /**
-   * Text input inside the styled field shell. Applies the focused border
-   * (`colors.brandDark`) + focus shadow via `AutocompleteFieldShell`, spreads
-   * the combobox ARIA props, and chains the consumer's `onKeyPress` after
-   * keyboard navigation. Opening the popup stays caller-controlled (`isOpen`).
+   * Keeps bespoke field adornments inside the shared shell. The underlying
+   * TextInput and its styles remain caller-owned.
    */
-  export function Input({
-    onKeyPress: consumerKeyPress,
-    endAdornment,
-    inputContainerStyle,
-    ...rest
-  }: InputProps): ReactElement {
-    const ctx = useAutocompleteContext();
-    const input = (
-      <TextInput
-        {...rest}
-        // Web-only ARIA passthrough, same cast convention as the legacy
-        // popover below (RN types carry no `aria-*` props; RNW forwards
-        // unknown props to the underlying `<input>` on web).
-        {...(ctx.inputProps as unknown as Record<string, unknown>)}
-        ref={ctx.inputRef}
-        onKeyPress={(e) => {
-          ctx.handleKeyDown(e);
-          consumerKeyPress?.(e);
-        }}
-      />
-    );
+  endAdornment?: ReactNode;
+  inputContainerStyle?: StyleProp<ViewStyle> | undefined;
+}
+
+/**
+ * Text input inside the styled field shell. Applies the focused border
+ * (`colors.brandDark`) + focus shadow via `AutocompleteFieldShell`, spreads
+ * the combobox ARIA props, and chains the consumer's `onKeyPress` after
+ * keyboard navigation. Opening the popup stays caller-controlled (`isOpen`).
+ */
+function AutocompleteInput({
+  onKeyPress: consumerKeyPress,
+  endAdornment,
+  inputContainerStyle,
+  ...rest
+}: AutocompleteInputProps): ReactElement {
+  const ctx = useAutocompleteContext();
+  const input = (
+    <TextInput
+      {...rest}
+      // Web-only ARIA passthrough, same cast convention as the legacy
+      // popover below (RN types carry no `aria-*` props; RNW forwards
+      // unknown props to the underlying `<input>` on web).
+      {...ctx.inputProps}
+      ref={ctx.inputRef}
+      onKeyPress={(e) => {
+        ctx.handleKeyDown(e);
+        consumerKeyPress?.(e);
+      }}
+    />
+  );
+  return (
+    <AutocompleteFieldShell focused={ctx.isOpen} disabled={ctx.disabled}>
+      {endAdornment ? (
+        <View style={inputContainerStyle}>
+          {input}
+          {endAdornment}
+        </View>
+      ) : (
+        input
+      )}
+    </AutocompleteFieldShell>
+  );
+}
+
+export interface AutocompleteContentProps {
+  /** Visible section title; doubles as the accessible name when set. */
+  header?: string | undefined;
+  /** Accessible name for the popup; defaults to `header`, then `label`. */
+  ariaLabel?: string | undefined;
+  /**
+   * Mobile override — same convention as the legacy `AutocompletePopover`:
+   * forces the Sheet branch in tests / for callers that already know
+   * `vm.isMobile`. Defaults to `width < breakpoints.mobile`.
+   */
+  isMobile?: boolean | undefined;
+  /** Dismiss handler; defaults to `onOpenChange(false)`. */
+  onClose?: (() => void) | undefined;
+  /** Max height of the option list; defaults to the legacy 360. */
+  scrollMaxHeight?: number | undefined;
+  /** Renders the popup itself as an alert instead of a listbox. */
+  alert?: boolean | undefined;
+  children: ReactNode;
+}
+
+/**
+ * Responsive popup. Desktop renders the in-flow popover (same chrome as the
+ * legacy branch: `colors.popoverBorder` border, popover shadow, `zIndex`
+ * 10, `keyboardShouldPersistTaps="handled"` list). Mobile composes the
+ * shared `Sheet` primitive exactly as the legacy mobile branch does
+ * (fixed header, non-scrolling body, `scrollMaxHeight`-capped inner list).
+ * Outside-pointerdown dismiss is shared with the legacy hook above.
+ */
+function AutocompleteContent({
+  header,
+  ariaLabel,
+  isMobile,
+  onClose,
+  scrollMaxHeight,
+  alert = false,
+  children,
+}: AutocompleteContentProps): ReactElement | null {
+  const ctx = useAutocompleteContext();
+  const { width } = useWindowDimensions();
+  const showAsSheet = isMobile ?? width < breakpoints.mobile;
+  const labelledBy = ariaLabel ?? header ?? ctx.label;
+  const handleClose = onClose ?? (() => ctx.onOpenChange(false));
+  const popoverRef = useRef<View | null>(null);
+  const popoverDomId = showAsSheet ? `${ctx.listId}-panel` : ctx.listId;
+  // Only armed while open: unlike the legacy popover (mounted only when
+  // open), this component stays mounted and returns null when closed.
+  useOutsidePointerDownDismiss(popoverRef, popoverDomId, ctx.isOpen ? handleClose : undefined);
+  if (!ctx.isOpen) return null;
+  if (showAsSheet) {
     return (
-      <AutocompleteFieldShell focused={ctx.isOpen} disabled={ctx.disabled}>
-        {endAdornment ? (
-          <View style={inputContainerStyle}>
-            {input}
-            {endAdornment}
-          </View>
-        ) : (
-          input
-        )}
-      </AutocompleteFieldShell>
-    );
-  }
-
-  export interface ContentProps {
-    /** Visible section title; doubles as the accessible name when set. */
-    header?: string | undefined;
-    /** Accessible name for the popup; defaults to `header`, then `label`. */
-    ariaLabel?: string | undefined;
-    /**
-     * Mobile override — same convention as the legacy `AutocompletePopover`:
-     * forces the Sheet branch in tests / for callers that already know
-     * `vm.isMobile`. Defaults to `width < breakpoints.mobile`.
-     */
-    isMobile?: boolean | undefined;
-    /** Dismiss handler; defaults to `onOpenChange(false)`. */
-    onClose?: (() => void) | undefined;
-    /** Max height of the option list; defaults to the legacy 360. */
-    scrollMaxHeight?: number | undefined;
-    /** Renders the popup itself as an alert instead of a listbox. */
-    alert?: boolean | undefined;
-    children: ReactNode;
-  }
-
-  /**
-   * Responsive popup. Desktop renders the in-flow popover (same chrome as the
-   * legacy branch: `colors.popoverBorder` border, popover shadow, `zIndex`
-   * 10, `keyboardShouldPersistTaps="handled"` list). Mobile composes the
-   * shared `Sheet` primitive exactly as the legacy mobile branch does
-   * (fixed header, non-scrolling body, `scrollMaxHeight`-capped inner list).
-   * Outside-pointerdown dismiss is shared with the legacy hook above.
-   */
-  export function Content({
-    header,
-    ariaLabel,
-    isMobile,
-    onClose,
-    scrollMaxHeight,
-    alert = false,
-    children,
-  }: ContentProps): ReactElement | null {
-    const ctx = useAutocompleteContext();
-    const { width } = useWindowDimensions();
-    const showAsSheet = isMobile ?? width < breakpoints.mobile;
-    const labelledBy = ariaLabel ?? header ?? ctx.label;
-    const handleClose = onClose ?? (() => ctx.onOpenChange(false));
-    const popoverRef = useRef<View | null>(null);
-    const popoverDomId = showAsSheet ? `${ctx.listId}-panel` : ctx.listId;
-    // Only armed while open: unlike the legacy popover (mounted only when
-    // open), this component stays mounted and returns null when closed.
-    useOutsidePointerDownDismiss(popoverRef, popoverDomId, ctx.isOpen ? handleClose : undefined);
-    if (!ctx.isOpen) return null;
-    if (showAsSheet) {
-      return (
-        <Sheet open={true} onClose={handleClose} ariaLabel={`${labelledBy} dialog`} maxWidth={400}>
-          {header ? <Sheet.Header title={header} onClose={handleClose} /> : null}
-          <Sheet.Body scrollable={false}>
-            <View
-              ref={popoverRef}
-              style={styles.sheetContent}
+      <Sheet open={true} onClose={handleClose} ariaLabel={`${labelledBy} dialog`} maxWidth={400}>
+        {header ? <Sheet.Header title={header} onClose={handleClose} /> : null}
+        <Sheet.Body scrollable={false}>
+          <View
+            ref={popoverRef}
+            style={styles.sheetContent}
+            {...(Platform.OS === "web"
+              ? ({ role: "document", id: `${ctx.listId}-panel` } as unknown as Record<
+                  string,
+                  unknown
+                >)
+              : {})}
+          >
+            <ScrollView
+              style={[
+                styles.sheetList,
+                scrollMaxHeight !== undefined ? { maxHeight: scrollMaxHeight } : null,
+              ]}
+              keyboardShouldPersistTaps="handled"
+              nestedScrollEnabled
+              showsVerticalScrollIndicator
               {...(Platform.OS === "web"
-                ? ({ role: "document", id: `${ctx.listId}-panel` } as unknown as Record<string, unknown>)
+                ? ({
+                    role: alert ? "alert" : "listbox",
+                    id: ctx.listId,
+                    "aria-label": labelledBy,
+                  } as unknown as Record<string, unknown>)
                 : {})}
             >
-              <ScrollView
-                style={[
-                  styles.sheetList,
-                  scrollMaxHeight !== undefined ? { maxHeight: scrollMaxHeight } : null,
-                ]}
-                keyboardShouldPersistTaps="handled"
-                nestedScrollEnabled
-                showsVerticalScrollIndicator
-                {...(Platform.OS === "web"
-                  ? ({
-                      role: alert ? "alert" : "listbox",
-                      id: ctx.listId,
-                      "aria-label": labelledBy,
-                    } as unknown as Record<string, unknown>)
-                  : {})}
-              >
-                {children}
-              </ScrollView>
-            </View>
-          </Sheet.Body>
-        </Sheet>
-      );
-    }
-    return (
-      <View
-        ref={popoverRef}
-        style={[styles.popover, popoverShadow]}
-        accessibilityLabel={labelledBy}
-        accessibilityRole={alert ? "alert" : undefined}
-        {...(Platform.OS === "web"
-          ? ({
-              role: alert ? "alert" : "listbox",
-              id: ctx.listId,
-              "aria-label": labelledBy,
-            } as unknown as Record<string, unknown>)
-          : {})}
-      >
-        {header ? (
-          <AppText weight="700" style={styles.header}>
-            {header}
-          </AppText>
-        ) : null}
-        <ScrollView
-          style={[styles.scroll, scrollMaxHeight !== undefined ? { maxHeight: scrollMaxHeight } : null]}
-          keyboardShouldPersistTaps="handled"
-          nestedScrollEnabled
-          showsVerticalScrollIndicator
-        >
-          {children}
-        </ScrollView>
-      </View>
-    );
-  }
-
-  /** Escape hatch for rich, caller-owned option rows. */
-  export function useContext(): AutocompleteContextValue {
-    return useAutocompleteContext();
-  }
-  export interface ItemProps {
-    /** Index into the root `items` (the `useCombobox` active-index model). */
-    index: number;
-    /** Rich row content; falls back to the root `getItemLabel` when omitted. */
-    children?: ReactNode;
-    /** Extra press side effect; selection (`onSelect` + maybe-close) always runs. */
-    onPress?: (() => void) | undefined;
-  }
-
-  /**
-   * Option row: hover syncs the keyboard highlight, press selects. Active
-   * highlight is `colors.brandSoft`; `aria-selected` tracks `activeIndex`.
-   */
-  export function Item({ index, children, onPress: consumerOnPress }: ItemProps): ReactElement | null {
-    const ctx = useAutocompleteContext();
-    const item = ctx.items[index];
-    if (item === undefined) return null;
-    const itemProps = ctx.getItemProps(index);
-    const active = index === ctx.activeIndex;
-    return (
-      <Pressable
-        onPress={() => {
-          ctx.onSelect(item);
-          consumerOnPress?.();
-        }}
-        onHoverIn={() => ctx.setActiveIndex(index)}
-        accessibilityRole="button"
-        accessibilityState={{ selected: active }}
-        style={({ pressed }: { pressed: boolean }) => [
-          comboStyles.item,
-          active && comboStyles.itemActive,
-          pressed && comboStyles.itemPressed,
-        ]}
-        {...(Platform.OS === "web"
-          ? ({
-              role: "option",
-              id: itemProps.id,
-              "aria-selected": active,
-            } as unknown as Record<string, unknown>)
-          : {})}
-      >
-        {children ?? (ctx.getItemLabel ? <AppText>{ctx.getItemLabel(item)}</AppText> : null)}
-      </Pressable>
-    );
-  }
-
-  export interface GroupProps {
-    label: string;
-    children: ReactNode;
-  }
-
-  /** Labelled section (e.g. "NEARBY THEATRES", "CHOOSE A MOVIE"). */
-  export function Group({ label, children }: GroupProps): ReactElement {
-    return (
-      <View
-        accessibilityLabel={label}
-        {...(Platform.OS === "web"
-          ? ({ role: "group", "aria-label": label } as unknown as Record<string, unknown>)
-          : {})}
-      >
-        <AppText weight="700" style={styles.header}>
-          {label}
-        </AppText>
-        {children}
-      </View>
-    );
-  }
-
-  export interface StatusProps {
-    /** Defaults: "No results found" (Empty), "Loading…" (Loading). */
-    message?: string | undefined;
-    children?: ReactNode;
-  }
-
-  /** Semantic empty state (`role="status"`). */
-  export function Empty({ message = "No results found", children }: StatusProps): ReactElement {
-    return (
-      <View
-        style={comboStyles.status}
-        {...(Platform.OS === "web" ? ({ role: "status" } as unknown as Record<string, unknown>) : {})}
-      >
-        {children ?? <AppText style={comboStyles.statusText}>{message}</AppText>}
-      </View>
-    );
-  }
-
-  /** Semantic loading state (`role="status"` + spinner). */
-  export function Loading({ message = "Loading…", children }: StatusProps): ReactElement {
-    return (
-      <View
-        style={comboStyles.status}
-        {...(Platform.OS === "web" ? ({ role: "status" } as unknown as Record<string, unknown>) : {})}
-      >
-        {children ?? (
-          <View style={comboStyles.loadingRow}>
-            <ActivityIndicator />
-            <AppText style={comboStyles.statusText}>{message}</AppText>
+              {children}
+            </ScrollView>
           </View>
-        )}
-      </View>
+        </Sheet.Body>
+      </Sheet>
     );
   }
+  return (
+    <View
+      ref={popoverRef}
+      style={[styles.popover, popoverShadow]}
+      accessibilityLabel={labelledBy}
+      accessibilityRole={alert ? "alert" : undefined}
+      {...(Platform.OS === "web"
+        ? ({
+            role: alert ? "alert" : "listbox",
+            id: ctx.listId,
+            "aria-label": labelledBy,
+          } as unknown as Record<string, unknown>)
+        : {})}
+    >
+      {header ? (
+        <AppText weight="700" style={styles.header}>
+          {header}
+        </AppText>
+      ) : null}
+      <ScrollView
+        style={[
+          styles.scroll,
+          scrollMaxHeight !== undefined ? { maxHeight: scrollMaxHeight } : null,
+        ]}
+        keyboardShouldPersistTaps="handled"
+        nestedScrollEnabled
+        showsVerticalScrollIndicator
+      >
+        {children}
+      </ScrollView>
+    </View>
+  );
 }
+
+/** Escape hatch for rich, caller-owned option rows. */
+function autocompleteUseContext(): AutocompleteContextValue {
+  return useAutocompleteContext();
+}
+export interface AutocompleteItemProps {
+  /** Index into the root `items` (the `useCombobox` active-index model). */
+  index: number;
+  /** Rich row content; falls back to the root `getItemLabel` when omitted. */
+  children?: ReactNode;
+  /** Extra press side effect; selection (`onSelect` + maybe-close) always runs. */
+  onPress?: (() => void) | undefined;
+}
+
+/**
+ * Option row: hover syncs the keyboard highlight, press selects. Active
+ * highlight is `colors.brandSoft`; `aria-selected` tracks `activeIndex`.
+ */
+function AutocompleteItem({
+  index,
+  children,
+  onPress: consumerOnPress,
+}: AutocompleteItemProps): ReactElement | null {
+  const ctx = useAutocompleteContext();
+  const item = ctx.items[index];
+  if (item === undefined) return null;
+  const itemProps = ctx.getItemProps(index);
+  const active = index === ctx.activeIndex;
+  return (
+    <Pressable
+      onPress={() => {
+        ctx.onSelect(item);
+        consumerOnPress?.();
+      }}
+      onHoverIn={() => ctx.setActiveIndex(index)}
+      accessibilityRole="button"
+      accessibilityState={{ selected: active }}
+      style={({ pressed }: { pressed: boolean }) => [
+        comboStyles.item,
+        active && comboStyles.itemActive,
+        pressed && comboStyles.itemPressed,
+      ]}
+      {...(Platform.OS === "web"
+        ? ({
+            role: "option",
+            id: itemProps.id,
+            "aria-selected": active,
+          } as unknown as Record<string, unknown>)
+        : {})}
+    >
+      {children ?? (ctx.getItemLabel ? <AppText>{ctx.getItemLabel(item)}</AppText> : null)}
+    </Pressable>
+  );
+}
+
+export interface AutocompleteGroupProps {
+  label: string;
+  children: ReactNode;
+}
+
+/** Labelled section (e.g. "NEARBY THEATRES", "CHOOSE A MOVIE"). */
+function AutocompleteGroup({ label, children }: AutocompleteGroupProps): ReactElement {
+  return (
+    <View
+      accessibilityLabel={label}
+      {...(Platform.OS === "web"
+        ? ({ role: "group", "aria-label": label } as unknown as Record<string, unknown>)
+        : {})}
+    >
+      <AppText weight="700" style={styles.header}>
+        {label}
+      </AppText>
+      {children}
+    </View>
+  );
+}
+
+export interface AutocompleteStatusProps {
+  /** Defaults: "No results found" (Empty), "Loading…" (Loading). */
+  message?: string | undefined;
+  children?: ReactNode;
+}
+
+/** Semantic empty state (`role="status"`). */
+function AutocompleteEmpty({
+  message = "No results found",
+  children,
+}: AutocompleteStatusProps): ReactElement {
+  return (
+    <View
+      style={comboStyles.status}
+      {...(Platform.OS === "web" ? ({ role: "status" } as unknown as Record<string, unknown>) : {})}
+    >
+      {children ?? <AppText style={comboStyles.statusText}>{message}</AppText>}
+    </View>
+  );
+}
+
+/** Semantic loading state (`role="status"` + spinner). */
+function AutocompleteLoading({
+  message = "Loading…",
+  children,
+}: AutocompleteStatusProps): ReactElement {
+  return (
+    <View
+      style={comboStyles.status}
+      {...(Platform.OS === "web" ? ({ role: "status" } as unknown as Record<string, unknown>) : {})}
+    >
+      {children ?? (
+        <View style={comboStyles.loadingRow}>
+          <ActivityIndicator />
+          <AppText style={comboStyles.statusText}>{message}</AppText>
+        </View>
+      )}
+    </View>
+  );
+}
+
+/** Compound component: `Autocomplete.Input`/`.Content`/`.Item`/`.Group`/
+ * `.Empty`/`.Loading`/`.useContext` attached via `Object.assign` rather than
+ * a TS `namespace` (ESLint `no-namespace`, ES2015 module syntax preferred) —
+ * same runtime shape, generic root call signature, and call-site API. */
+export const Autocomplete = Object.assign(AutocompleteRoot, {
+  Input: AutocompleteInput,
+  Content: AutocompleteContent,
+  useContext: autocompleteUseContext,
+  Item: AutocompleteItem,
+  Group: AutocompleteGroup,
+  Empty: AutocompleteEmpty,
+  Loading: AutocompleteLoading,
+});
 
 const comboStyles = StyleSheet.create({
   item: {

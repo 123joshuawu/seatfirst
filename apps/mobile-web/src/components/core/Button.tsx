@@ -194,11 +194,7 @@ function renderButton(o: ButtonCoreOptions, ix: ButtonInteraction): ReactElement
       onFocus={ix.handleFocus}
       onBlur={ix.handleBlur}
       style={({ pressed, hovered }: PressableState) => [
-        o.variant === "primary"
-          ? styles.primaryBase
-          : isPill
-            ? styles.pillBase
-            : styles.rectBase,
+        o.variant === "primary" ? styles.primaryBase : isPill ? styles.pillBase : styles.rectBase,
         o.variant === "primary" && o.size === "compact" ? styles.primaryCompact : null,
         o.variant === "secondary" && o.background === "white" ? styles.bgWhite : null,
         o.variant === "secondary" && o.background === "muted" ? styles.bgMuted : null,

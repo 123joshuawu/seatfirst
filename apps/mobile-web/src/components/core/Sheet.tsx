@@ -48,7 +48,13 @@ export function sheetMaxHeightForViewport(viewportHeight: number): "85%" | "90%"
  * popovers against the card). Dismissal: scrim tap, header Close button,
  * Escape on web, and `onRequestClose` (Android hardware back) on native.
  */
-export function Sheet({ open, onClose, ariaLabel, maxWidth = 440, children }: SheetProps): ReactElement | null {
+function SheetBase({
+  open,
+  onClose,
+  ariaLabel,
+  maxWidth = 440,
+  children,
+}: SheetProps): ReactElement | null {
   // Hooks stay above the `!open` early return so hook order is stable across
   // renders (same convention as the sheets this consolidates).
   const { height } = useWindowDimensions();
@@ -82,7 +88,9 @@ export function Sheet({ open, onClose, ariaLabel, maxWidth = 440, children }: Sh
           accessibilityRole="button"
           accessibilityLabel="Close dialog"
         />
-        <View style={[styles.panel, { maxWidth }, { maxHeight: sheetMaxHeightForViewport(height) }]}>
+        <View
+          style={[styles.panel, { maxWidth }, { maxHeight: sheetMaxHeightForViewport(height) }]}
+        >
           {children}
         </View>
       </View>
@@ -90,68 +98,75 @@ export function Sheet({ open, onClose, ariaLabel, maxWidth = 440, children }: Sh
   );
 }
 
-export namespace Sheet {
-  export function Header({
-    title,
-    onClose,
-    subtitle,
-  }: {
-    title: string;
-    onClose: () => void;
-    subtitle?: string;
-  }): ReactElement {
-    return (
-      <View style={styles.headerRow}>
-        <View style={styles.headerTextWrap}>
-          <AppText family="display" weight="700" style={styles.title}>
-            {title}
+function SheetHeader({
+  title,
+  onClose,
+  subtitle,
+}: {
+  title: string;
+  onClose: () => void;
+  subtitle?: string;
+}): ReactElement {
+  return (
+    <View style={styles.headerRow}>
+      <View style={styles.headerTextWrap}>
+        <AppText family="display" weight="700" style={styles.title}>
+          {title}
+        </AppText>
+        {subtitle ? (
+          <AppText weight="400" style={styles.subtitle}>
+            {subtitle}
           </AppText>
-          {subtitle ? (
-            <AppText weight="400" style={styles.subtitle}>
-              {subtitle}
-            </AppText>
-          ) : null}
-        </View>
-        <Pressable
-          onPress={onClose}
-          accessibilityRole="button"
-          accessibilityLabel={`Close ${title}`}
-          hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
-          style={styles.closeButton}
-        >
-          <AppText weight="600" style={styles.closeText}>
-            Close
-          </AppText>
-        </Pressable>
+        ) : null}
       </View>
-    );
-  }
-
-  export function Body({
-    children,
-    scrollable = true,
-  }: {
-    children: ReactNode;
-    scrollable?: boolean;
-  }): ReactElement {
-    if (!scrollable) return <View style={styles.body}>{children}</View>;
-    return (
-      <ScrollView
-        style={styles.bodyScroll}
-        contentContainerStyle={styles.bodyContent}
-        keyboardShouldPersistTaps="handled"
-        nestedScrollEnabled
-        showsVerticalScrollIndicator
+      <Pressable
+        onPress={onClose}
+        accessibilityRole="button"
+        accessibilityLabel={`Close ${title}`}
+        hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
+        style={styles.closeButton}
       >
-        {children}
-      </ScrollView>
-    );
-  }
-
-  export function Footer({ children }: { children: ReactNode }): ReactElement {
-    return <View style={styles.footer}>{children}</View>;
-  }
+        <AppText weight="600" style={styles.closeText}>
+          Close
+        </AppText>
+      </Pressable>
+    </View>
+  );
 }
+
+function SheetBody({
+  children,
+  scrollable = true,
+}: {
+  children: ReactNode;
+  scrollable?: boolean;
+}): ReactElement {
+  if (!scrollable) return <View style={styles.body}>{children}</View>;
+  return (
+    <ScrollView
+      style={styles.bodyScroll}
+      contentContainerStyle={styles.bodyContent}
+      keyboardShouldPersistTaps="handled"
+      nestedScrollEnabled
+      showsVerticalScrollIndicator
+    >
+      {children}
+    </ScrollView>
+  );
+}
+
+function SheetFooter({ children }: { children: ReactNode }): ReactElement {
+  return <View style={styles.footer}>{children}</View>;
+}
+
+/** Compound component: `Sheet.Header`/`Sheet.Body`/`Sheet.Footer` attached via
+ * `Object.assign` rather than a TS `namespace` (ESLint `no-namespace`, ES2015
+ * module syntax preferred) — same runtime shape and call-site API. */
+export const Sheet = Object.assign(SheetBase, {
+  Header: SheetHeader,
+  Body: SheetBody,
+  Footer: SheetFooter,
+});
 
 const styles = StyleSheet.create({
   overlay: {

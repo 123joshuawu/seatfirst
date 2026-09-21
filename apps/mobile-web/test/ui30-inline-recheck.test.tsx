@@ -273,9 +273,9 @@ describe("UI30 inline recheck end to end (ADR 0063 Verification)", () => {
     // inline — UI41 moved the alternatives into the RecoverySheet.
     const str = JSON.stringify(renderer.toJSON());
     expect(str).toContain("Seats just taken");
-    expect(
-      renderer.root.findAllByProps({ testID: `recovery-panel-${SHOWTIME_ID}` }).length,
-    ).toBe(0);
+    expect(renderer.root.findAllByProps({ testID: `recovery-panel-${SHOWTIME_ID}` }).length).toBe(
+      0,
+    );
     expect(renderer.root.findByProps({ testID: "recovery-sheet" })).toBeDefined();
     expect(str).toContain("Those seats were just taken");
 

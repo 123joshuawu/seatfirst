@@ -28,16 +28,16 @@ function renderSlot(slot: EmptyStateAction, defaultVariant: "primary" | "seconda
   const variant = slot.variant ?? defaultVariant;
   if (variant === "secondary") {
     const button = (
-      <SecondaryButton
-        label={slot.label}
-        onPress={slot.onPress}
-        accessibilityHint={slot.label}
-      />
+      <SecondaryButton label={slot.label} onPress={slot.onPress} accessibilityHint={slot.label} />
     );
     return slot.testID ? <View testID={slot.testID}>{button}</View> : button;
   }
   return (
-    <PrimaryButton label={slot.label} onPress={slot.onPress} {...(slot.testID ? { testID: slot.testID } : {})} />
+    <PrimaryButton
+      label={slot.label}
+      onPress={slot.onPress}
+      {...(slot.testID ? { testID: slot.testID } : {})}
+    />
   );
 }
 
