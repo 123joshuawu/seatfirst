@@ -5,7 +5,7 @@ exports[`CustomDateCalendar facet badges (UI23.4) > renders the pre-existing cel
   <View
     style={
       {
-        "backgroundColor": "#fff",
+        "backgroundColor": "#ffffff",
         "flexDirection": "row",
         "position": "sticky",
         "top": 0,
@@ -32,7 +32,7 @@ exports[`CustomDateCalendar facet badges (UI23.4) > renders the pre-existing cel
               "fontWeight": "500",
             },
             {
-              "color": "#6B7280",
+              "color": "#6b665f",
               "fontSize": 11,
             },
           ]
@@ -59,7 +59,7 @@ exports[`CustomDateCalendar facet badges (UI23.4) > renders the pre-existing cel
               "fontWeight": "500",
             },
             {
-              "color": "#6B7280",
+              "color": "#6b665f",
               "fontSize": 11,
             },
           ]
@@ -86,7 +86,7 @@ exports[`CustomDateCalendar facet badges (UI23.4) > renders the pre-existing cel
               "fontWeight": "500",
             },
             {
-              "color": "#6B7280",
+              "color": "#6b665f",
               "fontSize": 11,
             },
           ]
@@ -113,7 +113,7 @@ exports[`CustomDateCalendar facet badges (UI23.4) > renders the pre-existing cel
               "fontWeight": "500",
             },
             {
-              "color": "#6B7280",
+              "color": "#6b665f",
               "fontSize": 11,
             },
           ]
@@ -140,7 +140,7 @@ exports[`CustomDateCalendar facet badges (UI23.4) > renders the pre-existing cel
               "fontWeight": "500",
             },
             {
-              "color": "#6B7280",
+              "color": "#6b665f",
               "fontSize": 11,
             },
           ]
@@ -167,7 +167,7 @@ exports[`CustomDateCalendar facet badges (UI23.4) > renders the pre-existing cel
               "fontWeight": "500",
             },
             {
-              "color": "#6B7280",
+              "color": "#6b665f",
               "fontSize": 11,
             },
           ]
@@ -194,7 +194,7 @@ exports[`CustomDateCalendar facet badges (UI23.4) > renders the pre-existing cel
               "fontWeight": "500",
             },
             {
-              "color": "#6B7280",
+              "color": "#6b665f",
               "fontSize": 11,
             },
           ]
@@ -214,7 +214,7 @@ exports[`CustomDateCalendar facet badges (UI23.4) > renders the pre-existing cel
             "fontWeight": "600",
           },
           {
-            "color": "#111827",
+            "color": "#1c1a17",
             "fontSize": 13,
             "paddingBottom": 4,
             "paddingTop": 4,
@@ -269,8 +269,8 @@ exports[`CustomDateCalendar facet badges (UI23.4) > renders the pre-existing cel
             {
               "alignItems": "center",
               "aspectRatio": 1,
-              "backgroundColor": "#fff",
-              "borderColor": "#D1D5DB",
+              "backgroundColor": "#ffffff",
+              "borderColor": "rgba(28,26,23,.16)",
               "borderRadius": 8,
               "borderWidth": 1,
               "justifyContent": "center",
@@ -286,7 +286,7 @@ exports[`CustomDateCalendar facet badges (UI23.4) > renders the pre-existing cel
                   "fontWeight": "500",
                 },
                 {
-                  "color": "#111827",
+                  "color": "#1c1a17",
                   "fontSize": 14,
                 },
               ]
@@ -317,8 +317,8 @@ exports[`CustomDateCalendar facet badges (UI23.4) > renders the pre-existing cel
             {
               "alignItems": "center",
               "aspectRatio": 1,
-              "backgroundColor": "#111827",
-              "borderColor": "#111827",
+              "backgroundColor": "#a95e1c",
+              "borderColor": "#a95e1c",
               "borderRadius": 8,
               "borderWidth": 1,
               "justifyContent": "center",
@@ -334,7 +334,7 @@ exports[`CustomDateCalendar facet badges (UI23.4) > renders the pre-existing cel
                   "fontWeight": "700",
                 },
                 {
-                  "color": "#fff",
+                  "color": "#ffffff",
                   "fontSize": 14,
                 },
               ]
@@ -365,8 +365,8 @@ exports[`CustomDateCalendar facet badges (UI23.4) > renders the pre-existing cel
             {
               "alignItems": "center",
               "aspectRatio": 1,
-              "backgroundColor": "#fff",
-              "borderColor": "#D1D5DB",
+              "backgroundColor": "#ffffff",
+              "borderColor": "rgba(28,26,23,.16)",
               "borderRadius": 8,
               "borderWidth": 1,
               "justifyContent": "center",
@@ -382,7 +382,7 @@ exports[`CustomDateCalendar facet badges (UI23.4) > renders the pre-existing cel
                   "fontWeight": "500",
                 },
                 {
-                  "color": "#111827",
+                  "color": "#1c1a17",
                   "fontSize": 14,
                 },
               ]

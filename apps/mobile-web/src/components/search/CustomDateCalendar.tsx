@@ -2,6 +2,7 @@ import type { ReactElement } from "react";
 import { View, Pressable } from "react-native";
 import { AppText } from "@/components/core/AppText";
 import { localDateString } from "@/lib/dates";
+import { colors } from "@/theme/colors";
 import { getFacetDisplay, shouldDimFacet } from "@/lib/facetCounts";
 import type { FacetCountEntry } from "@/lib/facetCounts";
 
@@ -120,15 +121,15 @@ export function CustomDateCalendar(props: CustomDateCalendarProps): ReactElement
               justifyContent: "center",
               borderRadius: 8,
               borderWidth: 1,
-              borderColor: selected ? "#111827" : "#D1D5DB",
-              backgroundColor: selected ? "#111827" : "#fff",
+              borderColor: selected ? colors.brandContrast : colors.borderStrong,
+              backgroundColor: selected ? colors.brandContrast : colors.cardBg,
             }}
           >
             <AppText
               weight={selected ? "700" : "500"}
               style={{
                 fontSize: 14,
-                color: selected ? "#fff" : "#111827",
+                color: selected ? colors.white : colors.textPrimary,
               }}
             >
               {String(date.getDate())}
@@ -165,8 +166,8 @@ export function CustomDateCalendar(props: CustomDateCalendarProps): ReactElement
             gap: 2,
             borderRadius: 8,
             borderWidth: 1,
-            borderColor: selected ? "#111827" : "#D1D5DB",
-            backgroundColor: selected ? "#111827" : "#fff",
+            borderColor: selected ? colors.brandContrast : colors.borderStrong,
+            backgroundColor: selected ? colors.brandContrast : colors.cardBg,
             ...(dim ? { opacity: 0.5 } : {}),
           }}
         >
@@ -174,7 +175,7 @@ export function CustomDateCalendar(props: CustomDateCalendarProps): ReactElement
             weight={selected ? "700" : "500"}
             style={{
               fontSize: 14,
-              color: selected ? "#fff" : "#111827",
+              color: selected ? colors.white : colors.textPrimary,
             }}
           >
             {String(date.getDate())}
@@ -184,7 +185,7 @@ export function CustomDateCalendar(props: CustomDateCalendarProps): ReactElement
               weight="500"
               style={{
                 fontSize: 10,
-                color: selected ? "#fff" : "#111827",
+                color: selected ? colors.white : colors.textTertiary,
               }}
             >
               {badge}
@@ -209,7 +210,7 @@ export function CustomDateCalendar(props: CustomDateCalendarProps): ReactElement
           position: "sticky",
           top: 0,
           zIndex: 1,
-          backgroundColor: "#fff",
+          backgroundColor: colors.cardBg,
         }}
       >
         {WEEKDAY_LABELS.map((label, idx) => (
@@ -222,7 +223,7 @@ export function CustomDateCalendar(props: CustomDateCalendarProps): ReactElement
               paddingVertical: 4,
             }}
           >
-            <AppText weight="500" style={{ fontSize: 11, color: "#6B7280" }}>
+            <AppText weight="500" style={{ fontSize: 11, color: colors.textMuted }}>
               {label}
             </AppText>
           </View>
@@ -240,7 +241,7 @@ export function CustomDateCalendar(props: CustomDateCalendarProps): ReactElement
             accessibilityRole="header"
             style={{
               fontSize: 13,
-              color: "#111827",
+              color: colors.textPrimary,
               paddingTop: groupIndex === 0 ? 4 : 8,
               paddingBottom: 4,
             }}
