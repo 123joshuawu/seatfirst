@@ -2,6 +2,7 @@ import { describe, expect, it, vi, beforeEach, afterEach } from "vitest";
 import React from "react";
 import TestRenderer, { act } from "react-test-renderer";
 import { TextInput } from "react-native";
+import { Checkbox } from "@/components/core/Checkbox";
 import { useSeatfirstStore } from "@/store/seatfirstStore";
 import { searchFormInitialState } from "@/store/searchFormSlice";
 import { bootstrapInitialState } from "@/store/bootstrapSlice";
@@ -252,6 +253,71 @@ describe("TheaterField Where — browse-on-focus", () => {
     expect(jsonString(renderer)).toContain("AMC Metreon 16");
     expect(jsonString(renderer)).toContain("Remove AMC Metreon 16");
     expect(jsonString(renderer)).toContain("where-option-theatre-amc:theatre:1");
+  });
+});
+
+describe("TheaterField Where — UI37 theatre list controls", () => {
+  it("uses Checkbox state per row and selects/deselects every visible selectable theatre", () => {
+    useSeatfirstStore.setState({ whereQuery: "", whereFocused: true });
+    let renderer!: TestRenderer.ReactTestRenderer;
+    act(() => {
+      renderer = TestRenderer.create(
+        React.createElement(TheaterField, {
+          isLocked: false,
+          warmZeroTheatreIds: new Set(["amc:theatre:2"]),
+        }),
+      );
+    });
+
+    const checkboxes = () =>
+      renderer.root
+        .findAllByType(Checkbox)
+        .filter((checkbox) => checkbox.props.standalone === false);
+    expect(checkboxes().map((checkbox) => checkbox.props.checked)).toEqual([false, false]);
+
+    const selectAll = renderer.root.find(
+      (node) => node.props.accessibilityLabel === "Select all theatres",
+    );
+    act(() => {
+      selectAll.props.onPress();
+    });
+    expect(useSeatfirstStore.getState().selectedTheatres.map((theatre) => theatre.id)).toEqual([
+      "amc:theatre:1",
+    ]);
+    expect(checkboxes().map((checkbox) => checkbox.props.checked)).toEqual([true, false]);
+
+    const deselectAll = renderer.root.find(
+      (node) => node.props.accessibilityLabel === "Deselect all theatres",
+    );
+    act(() => {
+      deselectAll.props.onPress();
+    });
+    expect(useSeatfirstStore.getState().selectedTheatres).toEqual([]);
+    expect(checkboxes().map((checkbox) => checkbox.props.checked)).toEqual([false, false]);
+  });
+
+  it("widens the radius and re-renders the zero-result theatre search", () => {
+    useSeatfirstStore.setState({
+      whereQuery: "none",
+      whereFocused: true,
+      whereRadiusKm: 10 * 1.609344,
+      selectedTheatres: [{ id: "amc:theatre:1", providerId: "amc", name: "AMC Metreon 16" }],
+    });
+    let renderer!: TestRenderer.ReactTestRenderer;
+    act(() => {
+      renderer = TestRenderer.create(React.createElement(TheaterField, { isLocked: false }));
+    });
+    expect(jsonString(renderer)).toContain("No theatre matches “none”");
+    const callsBeforeRetry = mockUseTheatreSearch.mock.calls.length;
+
+    const retry = renderer.root.find(
+      (node) => node.props.accessibilityLabel === "Widen radius to 15 mi",
+    );
+    act(() => {
+      retry.props.onPress();
+    });
+    expect(useSeatfirstStore.getState().whereRadiusKm).toBe(15 * 1.609344);
+    expect(mockUseTheatreSearch.mock.calls.length).toBeGreaterThan(callsBeforeRetry);
   });
 });
 

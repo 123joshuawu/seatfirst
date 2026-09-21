@@ -95,6 +95,25 @@ export function getHitAmenities(hit: WhereListItem): TheatreAmenity[] | null {
   if (!Array.isArray(amenities)) return null;
   return amenities as TheatreAmenity[];
 }
+// Single source of truth for the WhereTheatreRef a row hit carries at
+// selection time (S62/ADR 0067 amenities included). Shared by the per-row
+// toggle and the select-all bulk action so both select exactly the same ref.
+function toWhereTheatreRef(hit: WhereListItem): WhereTheatreRef | null {
+  const id = getHitId(hit);
+  if (!id) return null;
+  const hitAmenities = getHitAmenities(hit);
+  return {
+    id,
+    providerId: hit.providerId,
+    name: getHitName(hit),
+    city: getHitCity(hit),
+    distanceKm: getHitDistance(hit),
+    // S62 (ADR 0067): retain venue amenities at selection time so the
+    // State-2 confirmation card can badge them. Omitted (not emptied) when
+    // the hit carries none, keeping refs exactly as before in that case.
+    ...(hitAmenities !== null && hitAmenities.length > 0 ? { amenities: hitAmenities } : {}),
+  };
+}
 
 export interface WhereFieldViewModel {
   whereFieldMode: "empty" | "place" | "theatres";
@@ -132,6 +151,8 @@ export interface WhereFieldViewModel {
     handleFocus: () => void;
     handleBlur: () => void;
     handleSelectTheatre: (hit: WhereListItem) => void;
+    handleSelectAllTheatres: (hits: WhereListItem[]) => void;
+    handleDeselectAllTheatres: (hits: WhereListItem[]) => void;
     handleSelectCandidate: (candidate: SuggestCandidate) => void;
     handleClearWhere: () => void;
     handleConvertWherePlaceToTheatres: () => void;
@@ -401,21 +422,9 @@ export function useWhereFieldViewModel({
   const handleSelectTheatre = useCallback(
     (hit: WhereListItem) => {
       if (whereFieldMode === "place") return;
-      const id = getHitId(hit);
-      const providerId = hit.providerId;
-      if (!id) return;
-      const hitAmenities = getHitAmenities(hit);
-      toggleTheatre({
-        id,
-        providerId,
-        name: getHitName(hit),
-        city: getHitCity(hit),
-        distanceKm: getHitDistance(hit),
-        // S62 (ADR 0067): retain venue amenities at selection time so the
-        // State-2 confirmation card can badge them. Omitted (not emptied) when
-        // the hit carries none, keeping refs exactly as before in that case.
-        ...(hitAmenities !== null && hitAmenities.length > 0 ? { amenities: hitAmenities } : {}),
-      });
+      const ref = toWhereTheatreRef(hit);
+      if (!ref) return;
+      toggleTheatre(ref);
       setWhereQuery("");
       setActiveKey(null);
     },
@@ -437,6 +446,39 @@ export function useWhereFieldViewModel({
       deselectTheatre(id);
     },
     [deselectTheatre, whereFieldMode],
+  );
+
+  // UI37 bulk select: adds every currently-visible selectable row in one store
+  // update. It preserves invisible prior picks and builds every added ref with
+  // the same helper as the per-row toggle.
+  const handleSelectAllTheatres = useCallback(
+    (hits: WhereListItem[]) => {
+      if (whereFieldMode === "place") return;
+      const selectedIds = new Set(selectedTheatres.map((theatre) => theatre.id));
+      const additions = hits
+        .filter((hit) => !selectedIds.has(getHitId(hit)))
+        .map(toWhereTheatreRef)
+        .filter((ref): ref is WhereTheatreRef => ref !== null);
+      if (additions.length === 0) return;
+      setSelectedTheatres([...selectedTheatres, ...additions]);
+      setWhereQuery("");
+      setActiveKey(null);
+    },
+    [selectedTheatres, setSelectedTheatres, setWhereQuery, whereFieldMode],
+  );
+
+  // UI37 bulk deselect: removes every currently-visible selectable row in one
+  // store update while retaining any selection that is not in the current list.
+  const handleDeselectAllTheatres = useCallback(
+    (hits: WhereListItem[]) => {
+      if (whereFieldMode === "place") return;
+      const visibleIds = new Set(hits.map(getHitId));
+      const remaining = selectedTheatres.filter((theatre) => !visibleIds.has(theatre.id));
+      if (remaining.length === selectedTheatres.length) return;
+      setSelectedTheatres(remaining);
+      setActiveKey(null);
+    },
+    [selectedTheatres, setSelectedTheatres, whereFieldMode],
   );
 
   const handleConvertWherePlaceToTheatres = useCallback(() => {
@@ -782,6 +824,8 @@ export function useWhereFieldViewModel({
       handleFocus,
       handleBlur,
       handleSelectTheatre,
+      handleSelectAllTheatres,
+      handleDeselectAllTheatres,
       handleSelectCandidate,
       handleClearWhere,
       handleConvertWherePlaceToTheatres,

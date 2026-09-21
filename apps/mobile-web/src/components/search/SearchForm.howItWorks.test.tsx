@@ -15,6 +15,12 @@ vi.mock("@/hooks/viewModels/useSubmitSearchViewModel", () => ({
   useSubmitSearchViewModel: vi.fn(),
 }));
 vi.mock("@/hooks/viewModels/useWhereFieldViewModel", () => ({
+  RADIUS_OPTIONS: [
+    { label: "5 mi", valueKm: 5 * 1.609344 },
+    { label: "10 mi", valueKm: 10 * 1.609344 },
+    { label: "15 mi", valueKm: 15 * 1.609344 },
+    { label: "25 mi", valueKm: 40 },
+  ],
   useWhereFieldViewModel: () => ({
     whereFieldMode: "empty" as const,
     inputValue: "",
@@ -37,6 +43,7 @@ vi.mock("@/hooks/viewModels/useWhereFieldViewModel", () => ({
     activeIndex: -1,
     activeKey: null,
     theatres: [],
+    theatresFirst: false,
     shouldShowLegacyConfirmed: false,
     showDropdown: false,
     inputAriaProps: {},
@@ -49,6 +56,8 @@ vi.mock("@/hooks/viewModels/useWhereFieldViewModel", () => ({
       handleFocus: vi.fn(),
       handleBlur: vi.fn(),
       handleSelectTheatre: vi.fn(),
+      handleSelectAllTheatres: vi.fn(),
+      handleDeselectAllTheatres: vi.fn(),
       handleSelectCandidate: vi.fn(),
       handleClearWhere: vi.fn(),
       handleConvertWherePlaceToTheatres: vi.fn(),

@@ -4,6 +4,7 @@ import { Platform, Pressable, StyleSheet, TextInput, View } from "react-native";
 import { colors } from "@/theme/colors";
 import { fontFamily } from "@/theme/typography";
 import { AppText } from "@/components/core/AppText";
+import { Checkbox } from "@/components/core/Checkbox";
 import { AutocompletePopover } from "@/components/core/Autocomplete";
 import { EyebrowLabel } from "@/components/core/EyebrowLabel";
 import {
@@ -13,11 +14,13 @@ import {
   formatRadiusSpoken,
   getHitCity,
   getHitDistance,
+  getHitId,
   getHitName,
   getPlaceOptionKey,
   getTheatreOptionKey,
   getWhereOptionId,
 } from "@/hooks/viewModels/useWhereFieldViewModel";
+import type { WhereListItem } from "@/hooks/viewModels/useWhereFieldViewModel";
 import type { GeocodeResolver, SuggestPlaceResolver } from "@/lib/geocodeSeam";
 import { getFacetDisplay, shouldDimFacet } from "@/lib/facetCounts";
 import { formatUsPlaceLabel } from "@/lib/placeLabel";
@@ -54,6 +57,31 @@ export function TheaterField({
     ...(suggestPlaceResolver ? { suggestPlaceResolver } : {}),
   });
   const inputRef = React.useRef<TextInput>(null);
+  // ASD-STE100: warm-zero rows render dimmed with an "Any time →" dead-end
+  // action instead of a checkbox toggle; the select-all bulk action below
+  // must skip exactly these rows, so both paths share this predicate.
+  const getTheatreCountEntry = (id: string) => {
+    if (!theatreCounts) return undefined;
+    if (theatreCounts instanceof Map) return theatreCounts.get(id);
+    return (theatreCounts as Record<string, { count: number; coldTheatreCount: number }>)[id];
+  };
+  const isWarmZeroTheatre = (hit: WhereListItem): boolean => {
+    const id = getHitId(hit);
+    return warmZeroTheatreIds?.has(id) || shouldDimFacet(getTheatreCountEntry(id), 1);
+  };
+  // UI37 select-all scope: exactly the rows the toggle will add/remove —
+  // currently-visible theatres minus the warm-zero-disabled ones (which keep
+  // their dead-end action instead). Locked state disables the toggle via the
+  // Pressable below, not by shrinking this list.
+  const selectableTheatreHits = vm.theatres.filter((hit) => !isWarmZeroTheatre(hit));
+  const allSelectableTheatresSelected =
+    selectableTheatreHits.length > 0 &&
+    selectableTheatreHits.every((hit) =>
+      vm.selectedTheatres.some((theatre) => theatre.id === getHitId(hit)),
+    );
+  // UI37 radius retry target: the next-larger radius option, if any.
+  const widenRadiusTarget =
+    RADIUS_OPTIONS.find((option) => option.valueKm > vm.whereRadiusKm) ?? null;
   const renderSelectableTheatreRows = () =>
     vm.theatres.map((hit, idx) => {
       const id = getTheatreOptionKey(hit).slice("theatre:".length);
@@ -63,11 +91,7 @@ export function TheaterField({
         distanceKm !== null && Number.isFinite(distanceKm)
           ? `${(distanceKm * 0.621371).toFixed(1)} mi`
           : null;
-      const entry: { count: number; coldTheatreCount: number } | undefined = (() => {
-        if (!theatreCounts) return undefined;
-        if (theatreCounts instanceof Map) return theatreCounts.get(id);
-        return (theatreCounts as Record<string, { count: number; coldTheatreCount: number }>)[id];
-      })();
+      const entry = getTheatreCountEntry(id);
       const display = entry ? getFacetDisplay(entry, 1) : null;
       const warmZero = warmZeroTheatreIds?.has(id) || shouldDimFacet(entry, 1);
       const isRowDisabled = isLocked || warmZero;
@@ -105,17 +129,9 @@ export function TheaterField({
             style={styles.selectableTheatre}
           >
             <View style={styles.theatreRowLeft}>
-              <View
-                accessible={false}
-                importantForAccessibility="no"
-                style={[styles.checkbox, selected ? styles.checkboxOn : styles.checkboxOff]}
-              >
-                {selected ? (
-                  <AppText weight="800" style={styles.checkboxGlyph}>
-                    ✓
-                  </AppText>
-                ) : null}
-              </View>
+              {/* UI33 shared Checkbox (non-standalone: the outer Pressable keeps
+              the row's checkbox role, label, hint, and active-id wiring). */}
+              <Checkbox size="sm" checked={selected} standalone={false} />
               <View style={styles.theatreTextWrap}>
                 <AppText style={[styles.itemLabel, selected && { fontWeight: "600" }]}>
                   {getHitName(hit)}
@@ -697,7 +713,44 @@ export function TheaterField({
                     <AppText style={styles.itemLabelMuted}>Searching…</AppText>
                   </View>
                 ) : vm.theatres.length > 0 ? (
-                  renderSelectableTheatreRows()
+                  <>
+                    {/* UI37 select-all: toggles every currently-visible
+                    selectable theatre (warm-zero-disabled rows excluded).
+                    Styled as a small heading-adjacent text button, matching
+                    the file's clearButton/footer-action visual language. */}
+                    {selectableTheatreHits.length > 0 ? (
+                      <Pressable
+                        onPress={
+                          isLocked
+                            ? undefined
+                            : () =>
+                                allSelectableTheatresSelected
+                                  ? vm.actions.handleDeselectAllTheatres(selectableTheatreHits)
+                                  : vm.actions.handleSelectAllTheatres(selectableTheatreHits)
+                        }
+                        disabled={isLocked}
+                        accessibilityRole="button"
+                        accessibilityLabel={
+                          allSelectableTheatresSelected
+                            ? "Deselect all theatres"
+                            : "Select all theatres"
+                        }
+                        accessibilityHint={
+                          allSelectableTheatresSelected
+                            ? "Clears every visible theatre selection"
+                            : "Selects every visible theatre"
+                        }
+                        accessibilityState={{ disabled: isLocked }}
+                        focusable={!isLocked}
+                        style={[styles.selectAllRow, isLocked && styles.itemDisabled]}
+                      >
+                        <AppText weight="600" style={styles.selectAllText}>
+                          {allSelectableTheatresSelected ? "Deselect all" : "Select all"}
+                        </AppText>
+                      </Pressable>
+                    ) : null}
+                    {renderSelectableTheatreRows()}
+                  </>
                 ) : (
                   <View style={styles.item}>
                     <AppText style={styles.itemLabelMuted}>
@@ -705,6 +758,30 @@ export function TheaterField({
                         ? `No theatre matches “${trimmedQuery}”`
                         : "No theatres found"}
                     </AppText>
+                    {/* UI37 radius retry: a zero-result theatre search can retry
+                    at the next-larger radius without leaving theatre mode, via
+                    the same setWhereRadiusKm primitive as the place-panel
+                    chips. Hidden once the radius is already at its maximum. */}
+                    {widenRadiusTarget ? (
+                      <Pressable
+                        onPress={
+                          isLocked
+                            ? undefined
+                            : () => vm.actions.setWhereRadiusKm(widenRadiusTarget.valueKm)
+                        }
+                        disabled={isLocked}
+                        accessibilityRole="button"
+                        accessibilityLabel={`Widen radius to ${widenRadiusTarget.label}`}
+                        accessibilityHint="Retries the theatre search at a larger radius"
+                        accessibilityState={{ disabled: isLocked }}
+                        focusable={!isLocked}
+                        style={[styles.retryAction, isLocked && styles.itemDisabled]}
+                      >
+                        <AppText weight="600" style={styles.retryActionText}>
+                          Widen radius to {widenRadiusTarget.label} →
+                        </AppText>
+                      </Pressable>
+                    ) : null}
                   </View>
                 )}
               </View>
@@ -897,6 +974,26 @@ const styles = StyleSheet.create({
     paddingHorizontal: 4,
   },
   clearButtonText: {
+    fontSize: 13,
+    color: colors.brandDark,
+  },
+  // UI37 select-all toggle: small heading-adjacent text button, matching the
+  // clearButton/footer-action visual language (13px semibold brandDark).
+  selectAllRow: {
+    paddingHorizontal: 14,
+    paddingVertical: 6,
+    alignSelf: "flex-start",
+  },
+  selectAllText: {
+    fontSize: 13,
+    color: colors.brandDark,
+  },
+  // UI37 radius retry inside the theatre empty state: same text-button idiom.
+  retryAction: {
+    paddingTop: 8,
+    alignSelf: "flex-start",
+  },
+  retryActionText: {
     fontSize: 13,
     color: colors.brandDark,
   },
@@ -1188,19 +1285,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     alignItems: "center",
     justifyContent: "center",
-  },
-  checkboxOn: {
-    backgroundColor: colors.brandDark,
-    borderColor: colors.brandDark,
-  },
-  checkboxOff: {
-    backgroundColor: colors.cardBg,
-    borderColor: colors.checkboxOffBorder,
-  },
-  checkboxGlyph: {
-    fontSize: 11,
-    color: colors.white,
-    lineHeight: 11,
   },
   pinSlot: {
     borderWidth: 0,
