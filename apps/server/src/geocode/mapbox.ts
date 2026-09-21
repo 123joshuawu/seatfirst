@@ -38,6 +38,8 @@ const ACCEPTED_FEATURE_TYPES = new Set([
   "district",
   "region",
 ]);
+
+const SUGGEST_FEATURE_TYPES = new Set(["place", "locality"]);
 export function createMapboxGeocodeResolver(deps: MapboxGeocodeResolverDeps): GeocodeResolver {
   const fetchImpl = deps.fetch ?? fetch;
 
@@ -132,7 +134,7 @@ export function createMapboxGeocodeResolver(deps: MapboxGeocodeResolverDeps): Ge
       const url =
         `${MAPBOX_API_BASE_URL}/search/geocode/v6/forward` +
         `?q=${encodeURIComponent(query)}` +
-        `&country=US&worldview=us&autocomplete=true&limit=5` +
+        `&country=US&worldview=us&types=place,locality&autocomplete=true&limit=5` +
         `&access_token=${encodeURIComponent(deps.accessToken)}`;
 
       let response: Response;
@@ -175,7 +177,7 @@ export function createMapboxGeocodeResolver(deps: MapboxGeocodeResolverDeps): Ge
           properties?: { feature_type?: unknown; full_address?: unknown };
         };
         const featureType = feature?.properties?.feature_type;
-        if (typeof featureType !== "string" || !ACCEPTED_FEATURE_TYPES.has(featureType)) {
+        if (typeof featureType !== "string" || !SUGGEST_FEATURE_TYPES.has(featureType)) {
           continue;
         }
         const fullAddress = feature?.properties?.full_address;

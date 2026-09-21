@@ -423,6 +423,7 @@ describe("S52.2 — injected-fetch Mapbox suggest params and filtering", () => {
     expect(url).toContain(`q=${encodeURIComponent("san fran")}`);
     expect(url).toContain("country=US");
     expect(url).toContain("worldview=us");
+    expect(url).toContain("types=place,locality");
     expect(url).toContain("autocomplete=true");
     expect(url).toContain("limit=5");
     expect(url).toContain(`access_token=${encodeURIComponent("pk.test token+/")}`);
@@ -430,7 +431,7 @@ describe("S52.2 — injected-fetch Mapbox suggest params and filtering", () => {
     expect(bucketAcquires).toBe(1);
   });
 
-  it("accepts only S51-D6 feature types and maps valid full_address to {label}, empty returns []", async () => {
+  it("accepts only city/place feature types (place, locality) and maps valid full_address to {label}, empty returns []", async () => {
     const bucket: GeocodeTokenBucket = { acquire: () => Promise.resolve() };
     const logger = capturingLogger();
     const stubFetch: typeof fetch = () =>
@@ -457,13 +458,8 @@ describe("S52.2 — injected-fetch Mapbox suggest params and filtering", () => {
       fetch: stubFetch,
     });
     const out = await resolver.suggest("test");
-    // poison poi and empty / missing full_address skipped, rest accepted until 5
-    expect(out).toEqual([
-      { label: "A" },
-      { label: "123 Main St" },
-      { label: "California" },
-      { label: "B" },
-    ]);
+    // poison poi, non-city types (address, region), and empty / missing full_address skipped, only place/locality accepted until 5
+    expect(out).toEqual([{ label: "A" }, { label: "B" }]);
   });
 
   it("empty accepted results return [] not error, and resolve retains autocomplete=false limit=1 with full_address mapping", async () => {
