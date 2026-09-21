@@ -1,6 +1,7 @@
 import type { NavigationAttempt, NavigationScope } from "@seatfirst/browser-runtime";
 import { formatNamespacedId, type Theatre } from "@seatfirst/core";
 import type { CatalogueCrawlStateRow, UpsertTheatreInput } from "@seatfirst/durability";
+import { ProviderError } from "@seatfirst/providers";
 
 import { isCatalogueCrawlDue } from "./due.js";
 
@@ -32,6 +33,18 @@ export type CatalogueCrawlTick =
       readonly page: "DIRECTORY" | "MARKET";
       readonly slugCount: number;
       readonly theatreCount: number;
+    }
+  | {
+      // A single theatre's unrecognized data (e.g. an AMC postal code missing from the
+      // vendored timezone table) must not block every other market page forever — mirrors
+      // the per-route isolation in provider-fetch-actor.ts (PARSER_SCHEMA_INCOMPATIBLE):
+      // skip just this page, advance the cursor, let the pass keep making progress. The
+      // page is not retried automatically; a human fixes the vendored data and the next
+      // monthly pass revisits it.
+      readonly kind: "PAGE_SKIPPED_PARSER_INCOMPATIBLE";
+      readonly slug: string;
+      readonly parserErrorCode: string;
+      readonly parserErrorMessage: string;
     }
   | { readonly kind: "PASS_COMPLETED" }
   | { readonly kind: "NAVIGATION_UNSUCCESSFUL"; readonly outcome: string };
@@ -202,19 +215,44 @@ export async function runCatalogueCrawlTick(deps: CatalogueCrawlDeps): Promise<C
     }
 
     const observationTime = deps.now();
-    const theatres = deps.parseTheatres(documentHtml, observationTime, targetUrl);
-    for (const theatre of theatres) {
-      await deps.upsertTheatre(toUpsertInput(theatre, action.slug));
+    let parseResult:
+      | { readonly ok: true; readonly theatres: Theatre[] }
+      | { readonly ok: false; readonly error: ProviderError };
+    try {
+      parseResult = {
+        ok: true,
+        theatres: deps.parseTheatres(documentHtml, observationTime, targetUrl),
+      };
+    } catch (error) {
+      if (!(error instanceof ProviderError) || error.code !== "UPSTREAM_CHANGED") {
+        throw error;
+      }
+      parseResult = { ok: false, error };
+    }
+
+    if (parseResult.ok) {
+      for (const theatre of parseResult.theatres) {
+        await deps.upsertTheatre(toUpsertInput(theatre, action.slug));
+      }
     }
     await deps.advanceCursor(deps.providerId, {
       slugs: action.cursor.slugs,
       nextIndex: action.cursor.nextIndex + 1,
     });
+
+    if (!parseResult.ok) {
+      return {
+        kind: "PAGE_SKIPPED_PARSER_INCOMPATIBLE",
+        slug: action.slug,
+        parserErrorCode: parseResult.error.code,
+        parserErrorMessage: parseResult.error.message,
+      };
+    }
     return {
       kind: "PAGE_PROCESSED",
       page: "MARKET",
       slugCount: action.cursor.slugs.length,
-      theatreCount: theatres.length,
+      theatreCount: parseResult.theatres.length,
     };
   } finally {
     if (attempt !== null) {

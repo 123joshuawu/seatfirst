@@ -47,6 +47,16 @@ export function runCatalogueCrawler(
         const started = Date.now();
         try {
           const tick = await runCatalogueCrawlTick(deps);
+          if (tick.kind === "PAGE_SKIPPED_PARSER_INCOMPATIBLE") {
+            logger.warn(
+              {
+                slug: tick.slug,
+                parserErrorCode: tick.parserErrorCode,
+                parserErrorMessage: tick.parserErrorMessage,
+              },
+              "catalogue crawl: market page skipped, parser schema incompatible",
+            );
+          }
           onTickComplete?.(tick);
         } catch (error) {
           logger.error({ error }, "catalogue crawl tick failed");

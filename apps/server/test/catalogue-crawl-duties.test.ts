@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import type { NavigationAttempt, NavigationScope } from "@seatfirst/browser-runtime";
 import type { CatalogueCrawlStateRow, UpsertTheatreInput } from "@seatfirst/durability";
 import type { Theatre, TheatreId } from "@seatfirst/core";
+import { ProviderError } from "@seatfirst/providers";
 import { runCatalogueCrawlTick } from "../src/catalogue-crawl/duties.js";
 import type { CatalogueCrawlDeps, CatalogueCursor } from "../src/catalogue-crawl/duties.js";
 
@@ -24,6 +25,7 @@ interface Harness {
   setNavigationAttempt(attempt: NavigationAttempt): void;
   setSlugs(slugs: readonly string[]): void;
   setTheatres(theatres: Theatre[]): void;
+  setTheatresError(error: Error): void;
 }
 
 const NOW = new Date("2026-08-15T00:00:00Z");
@@ -36,6 +38,7 @@ function makeHarness(): Harness {
     attempt: successAttempt("<html></html>"),
     slugs: [] as readonly string[],
     theatres: [] as Theatre[],
+    theatresError: null as Error | null,
     began: 0,
     advanced: [] as CatalogueCursor[],
     completed: 0,
@@ -75,7 +78,12 @@ function makeHarness(): Harness {
       return Promise.resolve(h.attempt);
     },
     parseMarketSlugs: () => h.slugs,
-    parseTheatres: () => h.theatres,
+    parseTheatres: () => {
+      if (h.theatresError !== null) {
+        throw h.theatresError;
+      }
+      return h.theatres;
+    },
     buildDirectoryUrl: () => "https://www.amctheatres.com/movie-theatres",
     buildMarketUrl: (slug) => `https://www.amctheatres.com/movie-theatres/${slug}`,
     mintId: () => "raw-id",
@@ -119,6 +127,9 @@ function makeHarness(): Harness {
     },
     setTheatres: (theatres) => {
       h.theatres = theatres;
+    },
+    setTheatresError: (error) => {
+      h.theatresError = error;
     },
   };
 }
@@ -280,6 +291,39 @@ describe("runCatalogueCrawlTick — S26.8/S26.9 orchestration", () => {
       expect.objectContaining({ theatreId: "amc:theatre:b", marketSlug: "atlanta" }),
     ]);
     expect(h.advanced).toEqual([{ slugs: ["atlanta"], nextIndex: 1 }]);
+  });
+
+  it("skips just the current market page and advances the cursor when the parser reports UPSTREAM_CHANGED", async () => {
+    const h = makeHarness();
+    h.setState([row({ cursor: cursor(["albany-ga", "atlanta"], 0) })]);
+    h.setTheatresError(
+      new ProviderError("UPSTREAM_CHANGED", 'Postal code "31420" is not in the timezone table'),
+    );
+
+    const tick = await runCatalogueCrawlTick(h.deps);
+
+    expect(tick).toEqual({
+      kind: "PAGE_SKIPPED_PARSER_INCOMPATIBLE",
+      slug: "albany-ga",
+      parserErrorCode: "UPSTREAM_CHANGED",
+      parserErrorMessage: 'Postal code "31420" is not in the timezone table',
+    });
+    // The pass keeps making progress: the cursor still advances past the bad page...
+    expect(h.advanced).toEqual([{ slugs: ["albany-ga", "atlanta"], nextIndex: 1 }]);
+    // ...and nothing from the failed page's (partial, untrustworthy) parse is upserted.
+    expect(h.upserts).toEqual([]);
+    // The semaphore is still released, same as every other branch.
+    expect(h.released).toHaveLength(1);
+  });
+
+  it("still fails the whole tick on a parser error that is not UPSTREAM_CHANGED", async () => {
+    const h = makeHarness();
+    h.setState([row({ cursor: cursor(["atlanta"], 0) })]);
+    h.setTheatresError(new ProviderError("UPSTREAM_BLOCKED", "Cloudflare challenge"));
+
+    await expect(runCatalogueCrawlTick(h.deps)).rejects.toThrow("Cloudflare challenge");
+    // An unhandled failure must not silently skip the page: no cursor advance.
+    expect(h.advanced).toEqual([]);
   });
 
   it("resumes at the cursor index, not the directory, after a restart", async () => {
