@@ -13,8 +13,12 @@ import type { ResultGroup } from "@seatfirst/core";
  * Approved in this reconciliation (Option A) — see spec Shared Contracts.
  */
 export interface RowDotGrid {
-  /** rows * columns cells, row-major, matching ResultGroup's own flattening. */
-  cells: { free: boolean; isSeat: boolean }[];
+  /**
+   * rows * columns cells, row-major, matching ResultGroup's own flattening.
+   * `accessible` marks wheelchair/companion seats (UI39 / ADR 0069) so dot grids can
+   * render the diamond silhouette — optional so existing fixtures stay valid.
+   */
+  cells: { free: boolean; isSeat: boolean; accessible?: boolean }[];
   rows: number;
   columns: number;
 }
@@ -35,7 +39,10 @@ export function buildRowDotGrid(group: ResultGroup, showtimeIndex: number): RowD
     // Cites result-contracts.ts ResultGroup.freeIn + group-assembly.ts:229-237
     const freeList = group.freeIn[cell];
     const free = Array.isArray(freeList) ? freeList.includes(showtimeIndex) : false;
-    cells.push({ free, isSeat });
+    // accessible derivation — WHEELCHAIR (2) / COMPANION (3) per layout.ts SEAT_KIND_CODE.
+    const kind = group.seatKinds[cell];
+    const accessible = kind === 2 || kind === 3;
+    cells.push({ free, isSeat, accessible });
   }
   return { cells, rows: group.rows, columns: group.columns };
 }

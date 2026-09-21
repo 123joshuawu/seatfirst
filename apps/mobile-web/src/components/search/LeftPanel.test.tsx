@@ -365,3 +365,55 @@ describe("LeftPanel State-2 venue amenity badges (S62.9 / ADR 0067)", () => {
     expect(mixed).not.toContain("Discount Matinees");
   });
 });
+
+describe("LeftPanel auditorium seat legend (UI39 / ADR 0069)", () => {
+  function renderAuditorium(): string {
+    setMockVm(
+      makeMockVm({
+        leftIsConfirmation: false,
+        leftIsAuditorium: true,
+        isMobile: false,
+        movieTitleDisplay: "Dune: Part Three",
+        theaterName: "AMC Metreon 16",
+        activePlacement: {
+          id: "placement-1",
+          format: "Standard",
+          auditorium: "Aud 7",
+          seats: "Row F, Seats 5–6",
+          seatDesc: "",
+          altDesc: "",
+          hue: "amber",
+          run: { row: 0, startCol: 0, count: 2 },
+          showtimes: [],
+          explanation: { concise: "", balanced: "", detailed: "" },
+        },
+        gridRows: [{ dots: [{ active: true, hue: "amber", size: 10 }] }],
+      }),
+    );
+    let renderer!: TestRenderer.ReactTestRenderer;
+    TestRenderer.act(() => {
+      renderer = TestRenderer.create(React.createElement(LeftPanel, null));
+    });
+    return JSON.stringify(renderer.toJSON());
+  }
+
+  it("renders the compact seating legend directly under the auditorium seat map", () => {
+    const str = renderAuditorium();
+    expect(str).toContain(
+      "Seating legend: Best placement, Available, Taken, Lost, and Accessible seating",
+    );
+    expect(str).toContain("Best placement");
+    expect(str).toContain("Accessible");
+    // The seats summary the legend must not displace is still rendered below it.
+    expect(str).toContain("Row F, Seats 5–6");
+  });
+
+  it("does not render the legend in the State-2 confirmation card", () => {
+    setMockVm(makeMockVm({ leftIsConfirmation: true, leftIsAuditorium: false }));
+    let renderer!: TestRenderer.ReactTestRenderer;
+    TestRenderer.act(() => {
+      renderer = TestRenderer.create(React.createElement(LeftPanel, null));
+    });
+    expect(JSON.stringify(renderer.toJSON())).not.toContain("Seating legend");
+  });
+});

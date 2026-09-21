@@ -7,6 +7,7 @@ import { colors } from "@/theme/colors";
 import { AppText } from "@/components/core/AppText";
 import { Badge } from "@/components/core/Badge";
 import { SeatGrid } from "@/components/map/SeatGrid";
+import { SeatLegend } from "@/components/core/SeatLegend";
 import type { RecoveryOption } from "@seatfirst/core";
 import type { SeatDotData, SeatGridRow } from "@/types/placement";
 import { GhostResultCard } from "./GhostResultCard";
@@ -225,6 +226,10 @@ export function LeftPanel({
               </AppText>
             </View>
             <SeatGrid gridRows={vm.gridRows} variant="full" />
+            {/* UI39 (ADR 0069): shape-vocabulary key directly under the seat map. Compact
+                so the seats summary below never gets pushed off-screen on short viewports.
+                Spacing comes from auditoriumCard's own gap — no extra wrapper needed. */}
+            <SeatLegend compact />
             <AppText weight="600" style={styles.auditoriumSeats}>
               {vm.activePlacement.seats}
             </AppText>

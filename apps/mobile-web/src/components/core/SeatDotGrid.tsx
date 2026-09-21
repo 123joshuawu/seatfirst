@@ -1,6 +1,5 @@
 import type { ReactElement } from "react";
 import { StyleSheet, View } from "react-native";
-import { colors } from "@/theme/colors";
 import { SeatDot } from "./SeatDot";
 import type { RowDotGrid } from "@/lib/rowSummary";
 
@@ -57,27 +56,39 @@ export function SeatDotGrid({ grid, highlightedRange }: SeatDotGridProps): React
         c >= highlightedRange.startCol &&
         c <= highlightedRange.endCol;
       if (isHighlighted) {
-        cells.push(<SeatDot key={c} active hue="amber" size={dotSize} />);
-        continue;
-      }
-      if (cell.free) {
         cells.push(
-          <View
+          <SeatDot
             key={c}
-            accessible={false}
-            importantForAccessibility="no"
-            style={[styles.freeDot, dotSizeStyle]}
+            active
+            hue="amber"
+            size={dotSize}
+            isAccessible={cell.accessible ?? false}
           />,
         );
         continue;
       }
-      // Taken seat — distinct darker shade
+      if (cell.free) {
+        // Available seat — hollow ring (UI39 shape encoding), diamond when accessible.
+        cells.push(
+          <SeatDot
+            key={c}
+            active={false}
+            hue="amber"
+            size={dotSize}
+            isAccessible={cell.accessible ?? false}
+          />,
+        );
+        continue;
+      }
+      // Taken seat — flat recessed disk (UI39 shape encoding), diamond when accessible.
       cells.push(
-        <View
+        <SeatDot
           key={c}
-          accessible={false}
-          importantForAccessibility="no"
-          style={[styles.takenDot, dotSizeStyle]}
+          active={false}
+          hue="amber"
+          size={dotSize}
+          taken
+          isAccessible={cell.accessible ?? false}
         />,
       );
     }
@@ -109,13 +120,5 @@ const styles = StyleSheet.create({
   },
   notASeat: {
     backgroundColor: "transparent",
-  },
-  takenDot: {
-    backgroundColor: colors.seatTaken,
-  },
-  freeDot: {
-    backgroundColor: colors.cardBg,
-    borderWidth: 1,
-    borderColor: "#DCD5C8",
   },
 });
