@@ -1,23 +1,30 @@
-import { useEffect, useRef } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef } from "react";
 import type { ReactNode, RefObject } from "react";
 import type { ReactElement } from "react";
 import {
+  ActivityIndicator,
   Platform,
+  Pressable,
   ScrollView,
   StyleSheet,
+  TextInput,
   useWindowDimensions,
   View,
 } from "react-native";
+import type { TextInputProps } from "react-native";
+import { breakpoints } from "@/theme/breakpoints";
 import { colors } from "@/theme/colors";
 import { AppText } from "./AppText";
 import { Sheet } from "./Sheet";
+import { useCombobox } from "./useCombobox";
+import type { ComboboxInputProps, ComboboxItemProps, ComboboxListProps } from "./useCombobox";
 /**
  * Mobile breakpoint — mirrors `MOBILE_BREAKPOINT` in
- * `useSubmitSearchViewModel` (`vm.isMobile` is `width < 680`). Kept as a local
- * const so this presentational shell stays dependency-free; callers that already
- * know `vm.isMobile` may pass it explicitly via the `isMobile` prop instead.
+ * `useSubmitSearchViewModel` (`vm.isMobile` is `width < 680`). Kept exported
+ * for existing readers (`PopoverList` via `AutocompletePopover`); sourced
+ * from the shared `breakpoints.mobile` token (ADR 0068) so the two never drift.
  */
-export const AUTOCOMPLETE_MOBILE_BREAKPOINT = 680;
+export const AUTOCOMPLETE_MOBILE_BREAKPOINT: number = breakpoints.mobile;
 
 export function AutocompleteFieldShell({
   children,
@@ -295,5 +302,396 @@ const styles = StyleSheet.create({
   sheetList: {
     flex: 1,
     minHeight: 0,
+  },
+});
+
+/**
+ * Compound `<Autocomplete>` family (UI37.2) — additive alongside the legacy
+ * `AutocompleteFieldShell` / `AutocompletePopover` above, which stay exported
+ * and behavior-identical for `PopoverList` (the WHEN date picker path).
+ *
+ * The root holds combobox state via `useCombobox` and shares it through
+ * context; `Input` renders the text field, `Content` the responsive popup
+ * (inline popover on desktop, shared `Sheet` modal on mobile), `Item` an
+ * option row, `Group` a labelled section, and `Empty` / `Loading` the
+ * semantic `role="status"` states. Nothing here is consumed yet — Step 2/3
+ * migrate `MovieField` / `TheaterField` onto it.
+ */
+export interface AutocompleteProps<T> {
+  items: readonly T[];
+  isOpen: boolean;
+  onOpenChange: (open: boolean) => void;
+  onSelect: (item: T) => void;
+  getItemKey: (item: T) => string;
+  /**
+   * Default row label, used only when an `Autocomplete.Item` is rendered
+   * without children. Rich rows (posters, facet counts, checkboxes) pass
+   * explicit children instead.
+   */
+  getItemLabel?: ((item: T) => string) | undefined;
+  /** Overrides the generated listbox id. */
+  listId?: string | undefined;
+  /** Accessible name for the listbox. */
+  label?: string | undefined;
+  /**
+   * Close the popup on selection (single-select). Multi-select consumers
+   * (theatre browsing with checkboxes, UI37.4) pass `false` so the list
+   * stays open across toggles.
+   */
+  closeOnSelect?: boolean | undefined;
+  children: ReactNode;
+}
+
+interface AutocompleteContextValue {
+  items: readonly unknown[];
+  isOpen: boolean;
+  onOpenChange: (open: boolean) => void;
+  onSelect: (item: unknown) => void;
+  getItemLabel: ((item: unknown) => string) | undefined;
+  activeIndex: number;
+  setActiveIndex: (index: number) => void;
+  handleKeyDown: (e: unknown) => void;
+  inputRef: RefObject<TextInput | null>;
+  inputProps: ComboboxInputProps;
+  listProps: ComboboxListProps;
+  getItemProps: (index: number) => ComboboxItemProps;
+  listId: string;
+  label: string;
+}
+
+const AutocompleteContext = createContext<AutocompleteContextValue | null>(null);
+
+function useAutocompleteContext(): AutocompleteContextValue {
+  const ctx = useContext(AutocompleteContext);
+  if (!ctx) throw new Error("Autocomplete compound components must render inside <Autocomplete>.");
+  return ctx;
+}
+
+export function Autocomplete<T>({
+  items,
+  isOpen,
+  onOpenChange,
+  onSelect,
+  getItemKey,
+  getItemLabel,
+  listId: listIdProp,
+  label = "Suggestions",
+  closeOnSelect = true,
+  children,
+}: AutocompleteProps<T>): ReactElement {
+  const inputRef = useRef<TextInput | null>(null);
+  // Selection closes single-select popups; the query/submit path is the
+  // caller's `onSelect` (it updates the query, Step 2/3 wiring).
+  const handleSelect = useCallback(
+    (item: T) => {
+      onSelect(item);
+      if (closeOnSelect) onOpenChange(false);
+    },
+    [onSelect, closeOnSelect, onOpenChange],
+  );
+  const combobox = useCombobox({
+    items,
+    isOpen,
+    onOpenChange,
+    onSelect: handleSelect,
+    getItemKey,
+    listId: listIdProp,
+    label,
+    inputRef,
+  });
+  const value = useMemo<AutocompleteContextValue>(
+    () => ({
+      items,
+      isOpen,
+      onOpenChange,
+      onSelect: (item: unknown) => handleSelect(item as T),
+      getItemLabel: getItemLabel
+        ? (item: unknown) => getItemLabel(item as T)
+        : undefined,
+      activeIndex: combobox.activeIndex,
+      setActiveIndex: combobox.setActiveIndex,
+      handleKeyDown: combobox.handleKeyDown,
+      inputRef,
+      inputProps: combobox.inputProps,
+      listProps: combobox.listProps,
+      getItemProps: combobox.getItemProps,
+      listId: combobox.listId,
+      label,
+    }),
+    [items, isOpen, onOpenChange, handleSelect, getItemLabel, combobox, inputRef, label],
+  );
+  return <AutocompleteContext.Provider value={value}><View>{children}</View></AutocompleteContext.Provider>;
+}
+
+export namespace Autocomplete {
+  export type InputProps = TextInputProps;
+
+  /**
+   * Text input inside the styled field shell. Applies the focused border
+   * (`colors.brandDark`) + focus shadow via `AutocompleteFieldShell`, spreads
+   * the combobox ARIA props, and chains the consumer's `onKeyPress` after
+   * keyboard navigation. Opening the popup stays caller-controlled (`isOpen`).
+   */
+  export function Input({ onKeyPress: consumerKeyPress, ...rest }: InputProps): ReactElement {
+    const ctx = useAutocompleteContext();
+    return (
+      <AutocompleteFieldShell focused={ctx.isOpen}>
+        <TextInput
+          {...rest}
+          // Web-only ARIA passthrough, same cast convention as the legacy
+          // popover below (RN types carry no `aria-*` props; RNW forwards
+          // unknown props to the underlying `<input>` on web).
+          {...(ctx.inputProps as unknown as Record<string, unknown>)}
+          ref={ctx.inputRef}
+          onKeyPress={(e) => {
+            ctx.handleKeyDown(e);
+            consumerKeyPress?.(e);
+          }}
+        />
+      </AutocompleteFieldShell>
+    );
+  }
+
+  export interface ContentProps {
+    /** Visible section title; doubles as the accessible name when set. */
+    header?: string | undefined;
+    /** Accessible name for the popup; defaults to `header`, then `label`. */
+    ariaLabel?: string | undefined;
+    /**
+     * Mobile override — same convention as the legacy `AutocompletePopover`:
+     * forces the Sheet branch in tests / for callers that already know
+     * `vm.isMobile`. Defaults to `width < breakpoints.mobile`.
+     */
+    isMobile?: boolean | undefined;
+    /** Dismiss handler; defaults to `onOpenChange(false)`. */
+    onClose?: (() => void) | undefined;
+    /** Max height of the option list; defaults to the legacy 360. */
+    scrollMaxHeight?: number | undefined;
+    children: ReactNode;
+  }
+
+  /**
+   * Responsive popup. Desktop renders the in-flow popover (same chrome as the
+   * legacy branch: `colors.popoverBorder` border, popover shadow, `zIndex`
+   * 10, `keyboardShouldPersistTaps="handled"` list). Mobile composes the
+   * shared `Sheet` primitive exactly as the legacy mobile branch does
+   * (fixed header, non-scrolling body, `scrollMaxHeight`-capped inner list).
+   * Outside-pointerdown dismiss is shared with the legacy hook above.
+   */
+  export function Content({
+    header,
+    ariaLabel,
+    isMobile,
+    onClose,
+    scrollMaxHeight,
+    children,
+  }: ContentProps): ReactElement | null {
+    const ctx = useAutocompleteContext();
+    const { width } = useWindowDimensions();
+    const showAsSheet = isMobile ?? width < breakpoints.mobile;
+    const labelledBy = ariaLabel ?? header ?? ctx.label;
+    const handleClose = onClose ?? (() => ctx.onOpenChange(false));
+    const popoverRef = useRef<View | null>(null);
+    const popoverDomId = showAsSheet ? `${ctx.listId}-panel` : ctx.listId;
+    // Only armed while open: unlike the legacy popover (mounted only when
+    // open), this component stays mounted and returns null when closed.
+    useOutsidePointerDownDismiss(popoverRef, popoverDomId, ctx.isOpen ? handleClose : undefined);
+    if (!ctx.isOpen) return null;
+    if (showAsSheet) {
+      return (
+        <Sheet open={true} onClose={handleClose} ariaLabel={`${labelledBy} dialog`} maxWidth={400}>
+          {header ? <Sheet.Header title={header} onClose={handleClose} /> : null}
+          <Sheet.Body scrollable={false}>
+            <View
+              ref={popoverRef}
+              style={styles.sheetContent}
+              {...(Platform.OS === "web"
+                ? ({ role: "document", id: `${ctx.listId}-panel` } as unknown as Record<string, unknown>)
+                : {})}
+            >
+              <ScrollView
+                style={[
+                  styles.sheetList,
+                  scrollMaxHeight !== undefined ? { maxHeight: scrollMaxHeight } : null,
+                ]}
+                keyboardShouldPersistTaps="handled"
+                nestedScrollEnabled
+                showsVerticalScrollIndicator
+                {...(Platform.OS === "web"
+                  ? ({
+                      role: "listbox",
+                      id: ctx.listId,
+                      "aria-label": labelledBy,
+                    } as unknown as Record<string, unknown>)
+                  : {})}
+              >
+                {children}
+              </ScrollView>
+            </View>
+          </Sheet.Body>
+        </Sheet>
+      );
+    }
+    return (
+      <View
+        ref={popoverRef}
+        style={[styles.popover, popoverShadow]}
+        accessibilityLabel={labelledBy}
+        {...(Platform.OS === "web"
+          ? ({
+              role: "listbox",
+              id: ctx.listId,
+              "aria-label": labelledBy,
+            } as unknown as Record<string, unknown>)
+          : {})}
+      >
+        {header ? (
+          <AppText weight="700" style={styles.header}>
+            {header}
+          </AppText>
+        ) : null}
+        <ScrollView
+          style={[styles.scroll, scrollMaxHeight !== undefined ? { maxHeight: scrollMaxHeight } : null]}
+          keyboardShouldPersistTaps="handled"
+          nestedScrollEnabled
+          showsVerticalScrollIndicator
+        >
+          {children}
+        </ScrollView>
+      </View>
+    );
+  }
+
+  export interface ItemProps {
+    /** Index into the root `items` (the `useCombobox` active-index model). */
+    index: number;
+    /** Rich row content; falls back to the root `getItemLabel` when omitted. */
+    children?: ReactNode;
+    /** Extra press side effect; selection (`onSelect` + maybe-close) always runs. */
+    onPress?: (() => void) | undefined;
+  }
+
+  /**
+   * Option row: hover syncs the keyboard highlight, press selects. Active
+   * highlight is `colors.brandSoft`; `aria-selected` tracks `activeIndex`.
+   */
+  export function Item({ index, children, onPress: consumerOnPress }: ItemProps): ReactElement | null {
+    const ctx = useAutocompleteContext();
+    const item = ctx.items[index];
+    if (item === undefined) return null;
+    const itemProps = ctx.getItemProps(index);
+    const active = index === ctx.activeIndex;
+    return (
+      <Pressable
+        onPress={() => {
+          ctx.onSelect(item);
+          consumerOnPress?.();
+        }}
+        onHoverIn={() => ctx.setActiveIndex(index)}
+        accessibilityRole="button"
+        accessibilityState={{ selected: active }}
+        style={({ pressed }: { pressed: boolean }) => [
+          comboStyles.item,
+          active && comboStyles.itemActive,
+          pressed && comboStyles.itemPressed,
+        ]}
+        {...(Platform.OS === "web"
+          ? ({
+              role: "option",
+              id: itemProps.id,
+              "aria-selected": active,
+            } as unknown as Record<string, unknown>)
+          : {})}
+      >
+        {children ?? (ctx.getItemLabel ? <AppText>{ctx.getItemLabel(item)}</AppText> : null)}
+      </Pressable>
+    );
+  }
+
+  export interface GroupProps {
+    label: string;
+    children: ReactNode;
+  }
+
+  /** Labelled section (e.g. "NEARBY THEATRES", "CHOOSE A MOVIE"). */
+  export function Group({ label, children }: GroupProps): ReactElement {
+    return (
+      <View
+        accessibilityLabel={label}
+        {...(Platform.OS === "web"
+          ? ({ role: "group", "aria-label": label } as unknown as Record<string, unknown>)
+          : {})}
+      >
+        <AppText weight="700" style={styles.header}>
+          {label}
+        </AppText>
+        {children}
+      </View>
+    );
+  }
+
+  export interface StatusProps {
+    /** Defaults: "No results found" (Empty), "Loading…" (Loading). */
+    message?: string | undefined;
+    children?: ReactNode;
+  }
+
+  /** Semantic empty state (`role="status"`). */
+  export function Empty({ message = "No results found", children }: StatusProps): ReactElement {
+    return (
+      <View
+        style={comboStyles.status}
+        {...(Platform.OS === "web" ? ({ role: "status" } as unknown as Record<string, unknown>) : {})}
+      >
+        {children ?? <AppText style={comboStyles.statusText}>{message}</AppText>}
+      </View>
+    );
+  }
+
+  /** Semantic loading state (`role="status"` + spinner). */
+  export function Loading({ message = "Loading…", children }: StatusProps): ReactElement {
+    return (
+      <View
+        style={comboStyles.status}
+        {...(Platform.OS === "web" ? ({ role: "status" } as unknown as Record<string, unknown>) : {})}
+      >
+        {children ?? (
+          <View style={comboStyles.loadingRow}>
+            <ActivityIndicator />
+            <AppText style={comboStyles.statusText}>{message}</AppText>
+          </View>
+        )}
+      </View>
+    );
+  }
+}
+
+const comboStyles = StyleSheet.create({
+  item: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+    borderRadius: 8,
+  },
+  itemActive: {
+    backgroundColor: colors.brandSoft,
+  },
+  itemPressed: {
+    opacity: 0.7,
+  },
+  status: {
+    paddingHorizontal: 14,
+    paddingVertical: 12,
+  },
+  statusText: {
+    fontSize: 13,
+    color: colors.textMuted,
+  },
+  loadingRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
   },
 });

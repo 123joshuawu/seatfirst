@@ -1,7 +1,11 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import React from "react";
 import TestRenderer, { act } from "react-test-renderer";
-import { AutocompletePopover } from "./Autocomplete";
+import { ActivityIndicator, Pressable, TextInput, View } from "react-native";
+import { colors } from "@/theme/colors";
+import { AppText } from "./AppText";
+import { Autocomplete, AutocompleteFieldShell, AutocompletePopover } from "./Autocomplete";
+import { Sheet } from "./Sheet";
 
 // The popover only renders real DOM in a browser (react-native-web); under
 // react-test-renderer no DOM node exists, so the outside-pointerdown handler
@@ -149,5 +153,259 @@ describe("AutocompletePopover outside-pointerdown dismiss", () => {
     }
     expect(onClose.mock.calls.length).toBeGreaterThanOrEqual(2);
     renderer.unmount();
+  });
+});
+
+// UI37 Step 1: compound `<Autocomplete>` family. The mocked viewport is
+// 1024px wide (desktop), so the mobile Sheet branch is exercised through the
+// explicit `isMobile` override — the same convention as the legacy popover.
+
+interface ComboMovie {
+  id: string;
+  title: string;
+}
+
+const COMBO_MOVIES: ComboMovie[] = [
+  { id: "m1", title: "Dune" },
+  { id: "m2", title: "Dune: Part Two" },
+];
+
+function renderCombo(options?: {
+  isOpen?: boolean;
+  isMobile?: boolean;
+  closeOnSelect?: boolean;
+  items?: ComboMovie[];
+}): {
+  renderer: TestRenderer.ReactTestRenderer;
+  onSelect: ReturnType<typeof vi.fn>;
+  onOpenChange: ReturnType<typeof vi.fn>;
+} {
+  const onSelect = vi.fn();
+  const onOpenChange = vi.fn();
+  const items = options?.items ?? COMBO_MOVIES;
+  let renderer!: TestRenderer.ReactTestRenderer;
+  act(() => {
+    renderer = TestRenderer.create(
+      <Autocomplete
+        items={items}
+        isOpen={options?.isOpen ?? true}
+        onOpenChange={onOpenChange}
+        onSelect={onSelect}
+        getItemKey={(m) => m.id}
+        getItemLabel={(m) => m.title}
+        label="Choose a movie"
+        listId="combo-movies"
+        {...(options?.closeOnSelect === undefined ? {} : { closeOnSelect: options.closeOnSelect })}
+      >
+        <Autocomplete.Input value="" onChangeText={() => {}} placeholder="Search movies" />
+        <Autocomplete.Content
+          header="CHOOSE A MOVIE"
+          {...(options?.isMobile === undefined ? {} : { isMobile: options.isMobile })}
+        >
+          {items.map((m, index) => (
+            <Autocomplete.Item key={m.id} index={index}>
+              <AppText>{m.title}</AppText>
+            </Autocomplete.Item>
+          ))}
+        </Autocomplete.Content>
+      </Autocomplete>,
+    );
+  });
+  return { renderer, onSelect, onOpenChange };
+}
+
+function nodesWithRole(
+  root: TestRenderer.ReactTestInstance,
+  role: string,
+): TestRenderer.ReactTestInstance[] {
+  return root.findAll((node) => (node.props as { role?: unknown }).role === role);
+}
+
+function comboPressables(renderer: TestRenderer.ReactTestRenderer): TestRenderer.ReactTestInstance[] {
+  // Composite Pressables only; the RN mock also renders a host "Pressable"
+  // string node with identical props (Button.test.tsx convention).
+  return renderer.root.findAllByType(Pressable).filter((n) => typeof n.type !== "string");
+}
+
+function comboTextInput(renderer: TestRenderer.ReactTestRenderer): TestRenderer.ReactTestInstance {
+  const nodes = renderer.root.findAllByType(TextInput).filter((n) => typeof n.type !== "string");
+  expect(nodes).toHaveLength(1);
+  return nodes[0]!;
+}
+
+function flatStyle(style: unknown): Record<string, unknown> {
+  const list = Array.isArray(style) ? style : [style];
+  return Object.assign({}, ...list.filter((s) => s && typeof s === "object"));
+}
+
+describe("Autocomplete compound components", () => {
+  let mounted: TestRenderer.ReactTestRenderer[] = [];
+  afterEach(() => {
+    for (const r of mounted.splice(0)) r.unmount();
+  });
+
+  it("desktop renders the inline popover with listbox semantics and combobox input wiring", () => {
+    const { renderer } = renderCombo();
+    mounted.push(renderer);
+    const popovers = nodesWithRole(renderer.root, "listbox");
+    expect(popovers.length).toBeGreaterThanOrEqual(1);
+    expect(popovers[0]!.props.id).toBe("combo-movies");
+    expect(popovers[0]!.props["aria-label"]).toBe("CHOOSE A MOVIE");
+    expect(renderer.root.findAllByType(Sheet)).toHaveLength(0);
+    const input = comboTextInput(renderer);
+    expect(input.props.role).toBe("combobox");
+    expect(input.props["aria-autocomplete"]).toBe("list");
+    expect(input.props["aria-expanded"]).toBe(true);
+    expect(input.props["aria-controls"]).toBe("combo-movies");
+    expect(input.props["aria-activedescendant"]).toBeUndefined();
+    // The input sits in the styled field shell with the focused border
+    // (`findByType` returns the composite, whose props are `{ focused, … }` —
+    // the style lives on the host View it renders).
+    const shell = renderer.root.findByType(AutocompleteFieldShell);
+    const shellView = shell.findAllByType(View)[0]!;
+    expect(flatStyle(shellView.props.style).borderColor).toBe(colors.brandDark);
+  });
+
+  it("closed renders no popup on either branch", () => {
+    const { renderer } = renderCombo({ isOpen: false });
+    mounted.push(renderer);
+    expect(nodesWithRole(renderer.root, "listbox")).toHaveLength(0);
+    expect(renderer.root.findAllByType(Sheet)).toHaveLength(0);
+    expect(comboTextInput(renderer).props["aria-expanded"]).toBe(false);
+  });
+
+  it("mobile renders the shared Sheet modal with the option list inside", () => {
+    const { renderer } = renderCombo({ isMobile: true });
+    mounted.push(renderer);
+    const sheets = renderer.root.findAllByType(Sheet);
+    expect(sheets).toHaveLength(1);
+    expect(sheets[0]!.props.open).toBe(true);
+    expect(sheets[0]!.props.ariaLabel).toBe("CHOOSE A MOVIE dialog");
+    // Header Close button from `Sheet.Header` is wired.
+    const close = renderer.root
+      .findAllByType(Pressable)
+      .find((n) => n.props.accessibilityLabel === "Close CHOOSE A MOVIE");
+    expect(close).toBeDefined();
+    // Options keep their option semantics inside the sheet list. Each row
+    // appears twice (composite Pressable + host node, Button.test.tsx
+    // convention), so assert on ids rather than count.
+    const optionIds = nodesWithRole(renderer.root, "option").map((n) => n.props.id);
+    expect(optionIds).toContain("combo-movies--m1");
+    expect(optionIds).toContain("combo-movies--m2");
+  });
+
+  it("pressing an item selects it and closes the popup", () => {
+    const { renderer, onSelect, onOpenChange } = renderCombo();
+    mounted.push(renderer);
+    const rows = comboPressables(renderer);
+    expect(rows).toHaveLength(2);
+    act(() => {
+      (rows[0]!.props as { onPress: () => void }).onPress();
+    });
+    expect(onSelect).toHaveBeenCalledTimes(1);
+    expect(onSelect).toHaveBeenCalledWith(COMBO_MOVIES[0]);
+    expect(onOpenChange).toHaveBeenCalledWith(false);
+  });
+
+  it("closeOnSelect=false keeps multi-select lists open across toggles", () => {
+    const { renderer, onSelect, onOpenChange } = renderCombo({ closeOnSelect: false });
+    mounted.push(renderer);
+    const rows = comboPressables(renderer);
+    act(() => {
+      (rows[1]!.props as { onPress: () => void }).onPress();
+    });
+    expect(onSelect).toHaveBeenCalledWith(COMBO_MOVIES[1]);
+    expect(onOpenChange).not.toHaveBeenCalled();
+  });
+
+  it("keyboard: ArrowDown highlights, hover syncs, Enter selects, Escape closes", () => {
+    const { renderer, onSelect, onOpenChange } = renderCombo();
+    mounted.push(renderer);
+    const press = (key: string): void => {
+      act(() => {
+        comboTextInput(renderer).props.onKeyPress({ nativeEvent: { key } });
+      });
+    };
+    press("ArrowDown");
+    expect(comboTextInput(renderer).props["aria-activedescendant"]).toBe("combo-movies--m1");
+    const firstOption = nodesWithRole(renderer.root, "option").find(
+      (n) => n.props.id === "combo-movies--m1",
+    );
+    expect(firstOption?.props["aria-selected"]).toBe(true);
+    // Hover syncs the keyboard highlight to the hovered row.
+    const rows = comboPressables(renderer);
+    act(() => {
+      (rows[1]!.props as { onHoverIn: () => void }).onHoverIn();
+    });
+    expect(comboTextInput(renderer).props["aria-activedescendant"]).toBe("combo-movies--m2");
+    press("Enter");
+    expect(onSelect).toHaveBeenCalledWith(COMBO_MOVIES[1]);
+    press("Escape");
+    expect(onOpenChange).toHaveBeenCalledWith(false);
+    expect(comboTextInput(renderer).props["aria-activedescendant"]).toBeUndefined();
+  });
+
+  it("Item falls back to the root getItemLabel without children", () => {
+    const onSelect = vi.fn();
+    const onOpenChange = vi.fn();
+    let renderer!: TestRenderer.ReactTestRenderer;
+    act(() => {
+      renderer = TestRenderer.create(
+        <Autocomplete
+          items={COMBO_MOVIES}
+          isOpen={true}
+          onOpenChange={onOpenChange}
+          onSelect={onSelect}
+          getItemKey={(m) => m.id}
+          getItemLabel={(m) => m.title}
+          listId="combo-labels"
+        >
+          <Autocomplete.Input value="" onChangeText={() => {}} />
+          <Autocomplete.Content header="Movies">
+            <Autocomplete.Item index={0} />
+          </Autocomplete.Content>
+        </Autocomplete>,
+      );
+    });
+    mounted.push(renderer);
+    const label = renderer.root
+      .findAllByType(AppText)
+      .find((n) => n.props.children === "Dune");
+    expect(label).toBeDefined();
+  });
+
+  it("Group/Empty/Loading render labelled sections and status states", () => {
+    let renderer!: TestRenderer.ReactTestRenderer;
+    act(() => {
+      renderer = TestRenderer.create(
+        <Autocomplete
+          items={[]}
+          isOpen={true}
+          onOpenChange={() => {}}
+          onSelect={() => {}}
+          getItemKey={(m: string) => m}
+          listId="combo-status"
+        >
+          <Autocomplete.Input value="" onChangeText={() => {}} />
+          <Autocomplete.Content header="Movies">
+            <Autocomplete.Group label="NEARBY THEATRES">
+              <Autocomplete.Empty />
+            </Autocomplete.Group>
+            <Autocomplete.Loading />
+          </Autocomplete.Content>
+        </Autocomplete>,
+      );
+    });
+    mounted.push(renderer);
+    const groupLabels = nodesWithRole(renderer.root, "group").map((n) => n.props["aria-label"]);
+    expect(groupLabels).toContain("NEARBY THEATRES");
+    expect(nodesWithRole(renderer.root, "status").length).toBeGreaterThanOrEqual(2);
+    const copy = renderer.root
+      .findAllByType(AppText)
+      .map((n) => n.props.children as unknown);
+    expect(copy).toContain("No results found");
+    expect(copy).toContain("Loading…");
+    // …and the loading state pairs its copy with a spinner.
+    expect(renderer.root.findAllByType(ActivityIndicator).length).toBeGreaterThanOrEqual(1);
   });
 });
