@@ -12,6 +12,7 @@ import { recheckInitialState } from "@/store/recheckSlice";
 import { flowInitialState } from "@/store/flowSlice";
 import { DEFAULT_SEARCH_LIMITS } from "@seatfirst/core";
 import { TheaterField } from "./TheaterField";
+import { RecoverySheet } from "./RecoverySheet";
 
 const { mockUseTheatreSearch } = vi.hoisted(() => ({ mockUseTheatreSearch: vi.fn() }));
 vi.mock("@/hooks/useTheatreSearch", () => ({
@@ -1689,6 +1690,279 @@ describe("TheaterField Where — Tab skips the open dropdown (QA finding 6)", ()
     const renderer = renderWhere(false);
     try {
       expect(pressTab(renderer, false)).not.toHaveBeenCalled();
+    } finally {
+      renderer.unmount();
+    }
+  });
+});
+
+describe("TheaterField Where — mobile sheet focus latch (render-loop fix)", () => {
+  // Regression suite for the production focus ping-pong: opening the mobile
+  // 'Places and theatres' sheet mounts a focus-trapping Modal, whose trap
+  // steals focus from the opener input on mount (→ blur → 150ms deferred
+  // close → unmount → WCAG refocus of the opener → reopen), oscillating at
+  // ~6Hz with ~120 DOM mutations/sec and remounting the Close button out from
+  // under the pointer. The sheet latches open on focus and ignores
+  // opener-input blurs while latched; only explicit dismiss closes it.
+  function renderMobileSheet(): TestRenderer.ReactTestRenderer {
+    useSeatfirstStore.setState({ whereQuery: "", whereFocused: true });
+    let renderer!: TestRenderer.ReactTestRenderer;
+    act(() => {
+      renderer = TestRenderer.create(
+        React.createElement(TheaterField, { isLocked: false, isMobile: true }),
+      );
+    });
+    return renderer;
+  }
+  function sheetOpen(renderer: TestRenderer.ReactTestRenderer): boolean {
+    return jsonString(renderer).includes("Close Places and theatres");
+  }
+  function pressByLabel(renderer: TestRenderer.ReactTestRenderer, label: string): void {
+    // Mock RN components render as composite+host pairs carrying identical
+    // props, so every labelled node matches twice; pressing the first (the
+    // composite) invokes the same handler the host would.
+    const matches = renderer.root.findAll(
+      (node) => (node.props as { accessibilityLabel?: unknown }).accessibilityLabel === label,
+    );
+    expect(matches.length, `"${label}" exists`).toBeGreaterThanOrEqual(1);
+    act(() => {
+      (matches[0]!.props as { onPress: () => void }).onPress();
+    });
+  }
+
+  it("ignores the opener blur while latched: no deferred store close is scheduled", () => {
+    vi.useFakeTimers();
+    try {
+      const renderer = renderMobileSheet();
+      expect(sheetOpen(renderer)).toBe(true);
+      // The trap steals focus right after mount; the opener blur must be a
+      // no-op while the latch is open (pre-fix it was `handleBlur`, which
+      // scheduled the 150ms deferred close that drove the loop).
+      const opener = renderer.root.find(
+        (node) => (node.props as { nativeID?: unknown }).nativeID === "seatfirst-where",
+      );
+      expect((opener.props as { onBlur?: unknown }).onBlur).toBeUndefined();
+      act(() => {
+        vi.advanceTimersByTime(1000);
+      });
+      expect(useSeatfirstStore.getState().whereFocused).toBe(true);
+      expect(sheetOpen(renderer)).toBe(true);
+      renderer.unmount();
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it("header Close dismisses the sheet immediately and converges the store blur", () => {
+    vi.useFakeTimers();
+    try {
+      const renderer = renderMobileSheet();
+      expect(sheetOpen(renderer)).toBe(true);
+      pressByLabel(renderer, "Close Places and theatres");
+      // Latched close unmounts synchronously — no remount race for the pointer.
+      expect(sheetOpen(renderer)).toBe(false);
+      act(() => {
+        vi.advanceTimersByTime(200);
+      });
+      expect(useSeatfirstStore.getState().whereFocused).toBe(false);
+      renderer.unmount();
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it("scrim tap dismisses the sheet immediately and converges the store blur", () => {
+    vi.useFakeTimers();
+    try {
+      const renderer = renderMobileSheet();
+      expect(sheetOpen(renderer)).toBe(true);
+      pressByLabel(renderer, "Close dialog");
+      expect(sheetOpen(renderer)).toBe(false);
+      act(() => {
+        vi.advanceTimersByTime(200);
+      });
+      expect(useSeatfirstStore.getState().whereFocused).toBe(false);
+      renderer.unmount();
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it("Escape dismisses the sheet immediately and converges the store blur", () => {
+    vi.useFakeTimers();
+    try {
+      const renderer = renderMobileSheet();
+      expect(sheetOpen(renderer)).toBe(true);
+      act(() => {
+        document.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", bubbles: true }));
+      });
+      expect(sheetOpen(renderer)).toBe(false);
+      act(() => {
+        vi.advanceTimersByTime(200);
+      });
+      expect(useSeatfirstStore.getState().whereFocused).toBe(false);
+      renderer.unmount();
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it("sheet search input shares the field query state and filters the same list", () => {
+    const renderer = renderMobileSheet();
+    try {
+      const search = renderer.root.find(
+        (node) =>
+          (node.props as { accessibilityLabel?: unknown }).accessibilityLabel ===
+          "Search places and theatres",
+      );
+      const searchProps = search.props as {
+        nativeID?: unknown;
+        value?: unknown;
+        onChangeText?: (text: string) => void;
+      };
+      expect(searchProps.nativeID).toBe("seatfirst-where-sheet");
+      expect(searchProps.value).toBe("");
+      expect(searchProps.onChangeText).toBeDefined();
+      act(() => {
+        searchProps.onChangeText!("met");
+      });
+      expect(useSeatfirstStore.getState().whereQuery).toBe("met");
+      const str = jsonString(renderer);
+      expect(str).toContain("AMC Metreon 16");
+      expect(str).not.toContain("AMC Kabuki 8");
+      // The input names the same listbox the opener input controls.
+      expect(
+        (search.props as Record<string, unknown>)["aria-controls"],
+      ).toBe("where-listbox");
+    } finally {
+      renderer.unmount();
+    }
+  });
+
+  it("desktop renders no in-sheet search input", () => {
+    useSeatfirstStore.setState({ whereQuery: "", whereFocused: true });
+    let renderer!: TestRenderer.ReactTestRenderer;
+    act(() => {
+      renderer = TestRenderer.create(React.createElement(TheaterField, { isLocked: false }));
+    });
+    try {
+      expect(
+        renderer.root.findAll(
+          (node) =>
+            (node.props as { accessibilityLabel?: unknown }).accessibilityLabel ===
+            "Search places and theatres",
+        ),
+      ).toHaveLength(0);
+    } finally {
+      renderer.unmount();
+    }
+  });
+
+  it("sheet input Tab stays in the modal; sheet input Escape closes the sheet", () => {
+    const renderer = renderMobileSheet();
+    try {
+      const search = renderer.root.find(
+        (node) =>
+          (node.props as { accessibilityLabel?: unknown }).accessibilityLabel ===
+          "Search places and theatres",
+      );
+      const onKeyPress = (search.props as { onKeyPress: (event: unknown) => void }).onKeyPress;
+      const preventDefault = vi.fn();
+      act(() => {
+        onKeyPress({ key: "Tab", shiftKey: false, preventDefault });
+      });
+      // No Tab-forward to the Movie field from inside the sheet: native modal
+      // tab order applies, and the sheet stays open.
+      expect(preventDefault).not.toHaveBeenCalled();
+      expect(sheetOpen(renderer)).toBe(true);
+      act(() => {
+        onKeyPress({ key: "Escape", preventDefault: vi.fn() });
+      });
+      expect(sheetOpen(renderer)).toBe(false);
+    } finally {
+      renderer.unmount();
+    }
+  });
+
+  it("mobile dialog names itself via aria-labelledby pointing at the visible title", () => {
+    const renderer = renderMobileSheet();
+    try {
+      const dialog = renderer.root.find(
+        (node) => (node.props as { role?: unknown }).role === "dialog",
+      );
+      expect((dialog.props as Record<string, unknown>)["aria-labelledby"]).toBe(
+        "where-listbox-title",
+      );
+      const title = renderer.root.find(
+        (node) => (node.props as { id?: unknown }).id === "where-listbox-title",
+      );
+      expect(title).toBeDefined();
+    } finally {
+      renderer.unmount();
+    }
+  });
+
+  it("mobile listbox carries the id the opener input names in aria-controls", () => {
+    const renderer = renderMobileSheet();
+    try {
+      const opener = renderer.root.find(
+        (node) => (node.props as { nativeID?: unknown }).nativeID === "seatfirst-where",
+      );
+      expect((opener.props as Record<string, unknown>)["aria-controls"]).toBe("where-listbox");
+      // The `AutocompletePopover` composite itself carries the caller's `id`
+      // prop, so match the rendered container (which additionally exposes the
+      // listbox role) rather than the first id-bearing instance.
+      const listboxes = renderer.root.findAll(
+        (node) =>
+          (node.props as { id?: unknown }).id === "where-listbox" &&
+          (node.props as { role?: unknown }).role === "listbox",
+      );
+      expect(listboxes.length).toBeGreaterThanOrEqual(1);
+    } finally {
+      renderer.unmount();
+    }
+  });
+
+  it("RecoverySheet dialog names itself via aria-labelledby pointing at its title", () => {
+    useSeatfirstStore.setState({
+      recoverySheetOpen: true,
+      recheckSelectedShowtimeId: null,
+      recheckResult: {
+        status: "GONE",
+        recovery: [
+          {
+            level: 1 as const,
+            placement: {
+              layoutId: "layout-1",
+              row: 6,
+              startCol: 7,
+              rowSpan: 1,
+              count: 2,
+              seatNames: ["G8", "G9"],
+              placementKey: "g8-g9",
+            },
+            showtimeId: "st-1",
+            relaxed: [],
+            requiresConsent: false,
+          },
+        ],
+      },
+    });
+    let renderer!: TestRenderer.ReactTestRenderer;
+    act(() => {
+      renderer = TestRenderer.create(React.createElement(RecoverySheet));
+    });
+    try {
+      const dialog = renderer.root.find(
+        (node) => (node.props as { testID?: unknown }).testID === "recovery-sheet",
+      );
+      expect((dialog.props as Record<string, unknown>)["aria-labelledby"]).toBe(
+        "recovery-sheet-title",
+      );
+      const title = renderer.root.find(
+        (node) => (node.props as { id?: unknown }).id === "recovery-sheet-title",
+      );
+      expect(title).toBeDefined();
     } finally {
       renderer.unmount();
     }

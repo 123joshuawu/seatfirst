@@ -64,6 +64,8 @@ export interface SubmitSearchViewModel {
   isMobile: boolean;
   isFormCollapsed: boolean;
   showLeftCol: boolean;
+  /** Mobile-only SEATFIRST branding header (app/index.tsx stacked layout). True whenever the LeftPanel — the wordmark's desktop home — is absent on a mobile viewport. */
+  showMobileWordmark: boolean;
   leftIsGhost: boolean;
   leftIsConfirmation: boolean;
   movieTitleDisplay: string;
@@ -110,6 +112,13 @@ export interface SubmitSearchViewModel {
   searchDisabled: boolean;
   matchingShowtimeCount: number | null;
   warmTheatreCount?: number | null;
+  // QA follow-up (BUG-04): transient loading flag for the CTA's theatre count.
+  // True while the FORMAT facet fetch for the current theatre selection is
+  // still in flight on the branch that feeds the numeric
+  // "Search N showtimes across M theatres" label. Layers a loading
+  // affordance over the stale-while-revalidating counts; never changes the
+  // settled counting semantics of warmTheatreCount/submitButtonLabel.
+  theatreCountLoading: boolean;
   ctaAdvisoryLabel?: string | null;
   capacityGateBusy?: boolean;
   capacityBlockLabel?: string | null;
@@ -677,6 +686,16 @@ export function useSubmitSearchViewModel(
       : confirmedMatchingShowtimeCount !== null && selectedTheatres.length > 0
         ? selectedTheatres.length
         : null;
+  // QA follow-up (BUG-04): transient loading flag for the CTA's theatre
+  // count. While the FORMAT facet fetch for the CURRENT selection is still
+  // resolving, formatCountsByPref still holds the previous response
+  // (stale-while-revalidating), so the numeric CTA could transiently
+  // undercount newly-added theatres. Gated to exactly the branch that feeds
+  // that numeric label — confirmed theatre(s) + movie selection + live (not
+  // update-candidate) CTA — so the "Choose where to look"/"Choose a movie"/
+  // "Update search" labels never flicker into a spinner.
+  const theatreCountLoading =
+    theaterConfirmed && hasMovieSelection && !isUpdateCandidate && formatFacet.isLoading === true;
   const submitButtonLabel = !theaterConfirmed
     ? "Choose where to look"
     : !movie.trim() || !hasMovieSelection
@@ -830,6 +849,12 @@ export function useSubmitSearchViewModel(
   }, [selectedTheatres, triggerLiveScheduleCheck, isCheckingLiveSchedule]);
   const showSearchForm = flowScreen === "search" || flowScreen === "checking";
   const showLeftCol = !(isMobile && showSearchForm);
+  // QA mobile branding: on mobile viewports the LeftPanel (the wordmark's
+  // desktop home) never visibly renders — the search-form screen hides it via
+  // showLeftCol, and the stacked results branch doesn't mount it at all — so
+  // the standalone mobile header renders on every mobile screen. Desktop
+  // always mounts a visible LeftPanel, so this stays false there.
+  const showMobileWordmark = isMobile;
   const leftIsGhost = flowScreen === "search" && !hasSelections;
   const leftIsConfirmation = showSearchForm && hasSelections;
 
@@ -837,6 +862,7 @@ export function useSubmitSearchViewModel(
     isMobile,
     isFormCollapsed,
     showLeftCol,
+    showMobileWordmark,
     leftIsGhost,
     leftIsConfirmation,
     movieTitleDisplay,
@@ -901,6 +927,7 @@ export function useSubmitSearchViewModel(
     searchDisabled,
     matchingShowtimeCount,
     warmTheatreCount,
+    theatreCountLoading,
     ctaAdvisoryLabel,
     capacityGateBusy,
     capacityBlockLabel:

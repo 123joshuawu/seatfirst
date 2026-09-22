@@ -58,7 +58,7 @@ export function Chip({
         weight={isSquare ? (active ? "700" : "600") : active ? "600" : "500"}
         style={[
           isSquare ? styles.squareLabel : styles.pillLabel,
-          { color: active ? colors.amberTagText : colors.textPrimary },
+          { color: active ? colors.amberTagTextContrast : colors.textPrimary },
         ]}
       >
         {label}

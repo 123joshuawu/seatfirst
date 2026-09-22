@@ -12,7 +12,7 @@ import { SeatLegend } from "@/components/core/SeatLegend";
 import type { RecoveryOption } from "@seatfirst/core";
 import type { SeatDotData, SeatGridRow } from "@/types/placement";
 import { GhostResultCard } from "./GhostResultCard";
-
+import { Wordmark } from "./Wordmark";
 const posterStripe = StyleSheet.create({
   stripe: {
     backgroundColor: colors.mapEmptyStart,
@@ -96,12 +96,7 @@ export function LeftPanel({
   if (!vm.showLeftCol) return null;
   return (
     <View style={vm.isMobile ? styles.rootMobile : styles.rootDesktop}>
-      <View style={styles.wordmarkRow}>
-        <View style={styles.wordmarkDot} />
-        <AppText weight="700" style={styles.wordmark}>
-          Seatfirst
-        </AppText>
-      </View>
+      <Wordmark />
 
       {vm.leftIsGhost ? <GhostResultCard /> : null}
 
@@ -145,7 +140,7 @@ export function LeftPanel({
                       key={amenity.code}
                       label={amenity.name}
                       background={colors.amberTagBg}
-                      color={colors.amberTagText}
+                      color={colors.amberTagTextContrast}
                     />
                   ))}
                   {venueAmenities.length > MAX_VENUE_AMENITY_BADGES ? (
@@ -270,23 +265,6 @@ const styles = StyleSheet.create({
     gap: 16,
     position: "sticky",
     top: 48,
-  },
-  wordmarkRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 8,
-  },
-  wordmarkDot: {
-    width: 7,
-    height: 7,
-    borderRadius: 3.5,
-    backgroundColor: colors.brand,
-  },
-  wordmark: {
-    fontSize: 12,
-    color: colors.textTertiary,
-    textTransform: "uppercase",
-    letterSpacing: 0.7,
   },
   confirmationCard: {
     backgroundColor: colors.cardBg,

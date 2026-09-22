@@ -1,11 +1,11 @@
 import React from "react";
 import type { ReactElement } from "react";
-import { Platform, Pressable, StyleSheet, TextInput, View } from "react-native";
+import { Platform, Pressable, StyleSheet, TextInput, useWindowDimensions, View } from "react-native";
 import { colors } from "@/theme/colors";
 import { fontFamily } from "@/theme/typography";
 import { AppText } from "@/components/core/AppText";
 import { Checkbox } from "@/components/core/Checkbox";
-import { AutocompletePopover } from "@/components/core/Autocomplete";
+import { AutocompletePopover, AUTOCOMPLETE_MOBILE_BREAKPOINT } from "@/components/core/Autocomplete";
 import { EyebrowLabel } from "@/components/core/EyebrowLabel";
 import {
   useWhereFieldViewModel,
@@ -57,6 +57,34 @@ export function TheaterField({
     ...(suggestPlaceResolver ? { suggestPlaceResolver } : {}),
   });
   const inputRef = React.useRef<TextInput>(null);
+  const sheetInputRef = React.useRef<TextInput>(null);
+  // Mobile sheet open latch (BUG-01/BUG-03): the mobile suggestion list renders
+  // inside a focus-trapping `Modal` (`Sheet`), which steals focus from this
+  // field's opener input on mount (RNW `ModalFocusTrap` focuses the first
+  // focusable descendant — the scrim button) and restores focus to it on
+  // unmount (WCAG refocus). Driving sheet visibility purely off input focus
+  // (`vm.showDropdown`) therefore oscillates open→blur→deferred-blur-close→
+  // refocus→reopen at ~6Hz (the 150ms deferred `onWhereBlur` sets the period),
+  // churning ~120 DOM mutations/sec and remounting the Close button out from
+  // under the pointer. So on mobile the sheet latches open on focus and closes
+  // only via explicit dismiss (header Close, scrim tap, Escape, or
+  // outside-pointerdown — all funnelled through `handleMobileSheetClose`),
+  // while opener-input blurs are ignored for as long as the latch is open.
+  // Desktop keeps the focus-driven `vm.showDropdown` untouched.
+  const { width: viewportWidth } = useWindowDimensions();
+  const mobileSheetViewport = isMobile ?? viewportWidth < AUTOCOMPLETE_MOBILE_BREAKPOINT;
+  const [mobileSheetOpen, setMobileSheetOpen] = React.useState(false);
+  // Sync open on focus (covers store-driven opens with no DOM focus event,
+  // e.g. the place-signpost flow): close is always explicit, never synced, so
+  // the trap's blur/restore cycle cannot shut the sheet.
+  React.useEffect(() => {
+    if (mobileSheetViewport && vm.showDropdown) setMobileSheetOpen(true);
+  }, [mobileSheetViewport, vm.showDropdown]);
+  const handleMobileSheetClose = React.useCallback(() => {
+    setMobileSheetOpen(false);
+    vm.actions.handleBlur();
+  }, [vm.actions.handleBlur]);
+  const showList = mobileSheetViewport ? mobileSheetOpen && !isLocked : vm.showDropdown;
   // ASD-STE100: warm-zero rows render dimmed with an "Any time →" dead-end
   // action instead of a checkbox toggle; the select-all bulk action below
   // must skip exactly these rows, so both paths share this predicate.
@@ -109,6 +137,13 @@ export function TheaterField({
             warmZero && onWidenWindow ? styles.deadEndRow : undefined,
             warmZero ? { opacity: 0.5 } : undefined,
           ]}
+          // Layout-only row (option Pressable + optional "Any time →" action):
+          // transparent for AT listbox→option ownership so the generic View
+          // between the `role="group"`/`role="listbox"` container and the
+          // `role="option"` row doesn't break the required parent-child chain.
+          {...(Platform.OS === "web"
+            ? ({ role: "presentation" } as unknown as Record<string, unknown>)
+            : {})}
         >
           <Pressable
             onPress={isRowDisabled ? undefined : () => vm.actions.handleSelectTheatre(hit)}
@@ -177,6 +212,71 @@ export function TheaterField({
       : vm.suggestCandidates.length > 0
         ? `Selects every AMC within ${formatRadius(vm.whereRadiusKm)}`
         : `No places match “${trimmedQuery}”`;
+  const wherePlaceholder =
+    vm.whereFieldMode === "place"
+      ? "Search for a different place"
+      : vm.whereFieldMode === "theatres"
+        ? "+ Add theatre"
+        : "Add a place or theatre";
+  // The listbox/region id the inputs name in `aria-controls` — mirrors the
+  // `dropdownId` rule in `useWhereFieldViewModel` (the sheet's inner scroller
+  // carries this exact id; see `AutocompletePopover`).
+  const whereListId = vm.whereFieldMode === "place" ? "where-place-panel" : "where-listbox";
+  const handleSheetSearchKeyPress = (e: unknown): void => {
+    const key =
+      (e as { key?: string; nativeEvent?: { key?: string } }).key ??
+      (e as { nativeEvent?: { key?: string } }).nativeEvent?.key;
+    // Native modal tab order: the desktop Tab-forward (which jumps straight to
+    // the Movie field) must not yank focus out of the open sheet.
+    if (key === "Tab") return;
+    vm.actions.handleKeyDown(e, sheetInputRef);
+    if (key === "Escape") handleMobileSheetClose();
+  };
+  // In-sheet search field (BUG-02): the mobile sheet traps focus, so the
+  // opener input above cannot be the typing surface while the sheet is open
+  // (it lives outside the sheet portal — a dialog-scoped DOM query finds zero
+  // inputs). This input binds the SAME `whereQuery` store state/handlers, so
+  // typing filters the same theatre/place list. `autoFocus` also moves focus
+  // inside the dialog on open (correct dialog behavior), so the trap has no
+  // stealing to do. It has no `onBlur`: the latch owns visibility and
+  // `handleMobileSheetClose` is the single closer.
+  const sheetSearchInput = (
+    <View style={styles.sheetSearchWrap}>
+      <TextInput
+        ref={sheetInputRef}
+        nativeID="seatfirst-where-sheet"
+        value={vm.inputValue}
+        onChangeText={isLocked ? undefined : vm.actions.handleChangeText}
+        onFocus={isLocked ? undefined : vm.actions.handleFocus}
+        placeholder={wherePlaceholder}
+        placeholderTextColor={colors.textTertiary}
+        style={styles.sheetSearchInput}
+        editable={!isLocked}
+        selectTextOnFocus={!isLocked}
+        autoFocus={!isLocked}
+        accessibilityLabel="Search places and theatres"
+        accessibilityHint="Type to filter the places and theatres below"
+        onKeyPress={handleSheetSearchKeyPress}
+        {...(Platform.OS === "web"
+          ? vm.whereFieldMode === "place"
+            ? ({
+                id: "seatfirst-where-sheet",
+                "aria-controls": whereListId,
+                "aria-label": "Search places and theatres",
+              } as unknown as Record<string, unknown>)
+            : ({
+                id: "seatfirst-where-sheet",
+                role: "combobox",
+                "aria-expanded": showList ? "true" : "false",
+                "aria-controls": whereListId,
+                "aria-autocomplete": "list",
+                "aria-activedescendant": vm.activeDescendantId ?? undefined,
+                "aria-label": "Search places and theatres",
+              } as unknown as Record<string, unknown>)
+          : {})}
+      />
+    </View>
+  );
 
   // Desktop (isMobile === false) renders the same fields with tighter vertical
   // rhythm so the form CTA clears ~900px viewports. `undefined` (no override
@@ -208,7 +308,7 @@ export function TheaterField({
           style={[
             styles.tokenfield,
             desktop && styles.tokenfieldDesktop,
-            vm.showDropdown && styles.tokenfieldFocused,
+            showList && styles.tokenfieldFocused,
             isLocked && styles.tokenfieldDisabled,
           ]}
         >
@@ -300,15 +400,26 @@ export function TheaterField({
               nativeID="seatfirst-where"
               value={vm.inputValue}
               onChangeText={isLocked ? undefined : vm.actions.handleChangeText}
-              onFocus={isLocked ? undefined : vm.actions.handleFocus}
-              onBlur={vm.actions.handleBlur}
-              placeholder={
-                vm.whereFieldMode === "place"
-                  ? "Search for a different place"
-                  : vm.whereFieldMode === "theatres"
-                    ? "+ Add theatre"
-                    : "Add a place or theatre"
+              // Mobile: focusing latches the sheet open (see the latch above);
+              // blurring while the latch is open is ignored — the trap steals
+              // focus on mount and restores it on unmount, and either event
+              // must not toggle visibility. Explicit dismiss closes instead.
+              onFocus={
+                isLocked
+                  ? undefined
+                  : mobileSheetViewport
+                    ? () => {
+                        setMobileSheetOpen(true);
+                        vm.actions.handleFocus();
+                      }
+                    : vm.actions.handleFocus
               }
+              onBlur={
+                isLocked || (mobileSheetViewport && mobileSheetOpen)
+                  ? undefined
+                  : vm.actions.handleBlur
+              }
+              placeholder={wherePlaceholder}
               placeholderTextColor={colors.textTertiary}
               style={[
                 styles.input,
@@ -319,7 +430,7 @@ export function TheaterField({
               selectTextOnFocus={!isLocked}
               accessibilityLabel="Where — place or theatre"
               accessibilityHint="Type a place or theatre name, or use current location"
-              accessibilityState={{ disabled: !!isLocked, expanded: !!vm.showDropdown }}
+              accessibilityState={{ disabled: !!isLocked, expanded: !!showList }}
               onKeyPress={(e) => vm.actions.handleKeyDown(e, inputRef)}
               {...(Platform.OS === "web"
                 ? ({
@@ -347,7 +458,7 @@ export function TheaterField({
         Suppressing the popover also dismisses the mobile bottom-sheet Modal,
         leaving the single inline error. Typing or refocusing clears the error
         (handleChangeText/handleFocus call clearPlaceError) and reopens the dropdown. */}
-        {vm.showDropdown && !vm.placeError ? (
+        {showList && !vm.placeError ? (
           vm.whereFieldMode === "place" ? (
             <AutocompletePopover
               id="where-place-panel"
@@ -356,7 +467,12 @@ export function TheaterField({
               renderHeader={false}
               role="region"
               isMobile={isMobile}
-              onClose={vm.actions.handleBlur}
+              // Mobile: the latch owns visibility — dismiss funnels through the
+              // explicit closer (Close/scrim/Escape/outside-tap) instead of the
+              // focus-driven blur the trap would otherwise fight. Desktop keeps
+              // the blur close.
+              onClose={mobileSheetViewport ? handleMobileSheetClose : vm.actions.handleBlur}
+              sheetSearchInput={sheetSearchInput}
             >
               <View style={styles.panelHeader}>
                 <AppText weight="600" style={styles.panelKicker}>
@@ -551,7 +667,9 @@ export function TheaterField({
               ariaLabel="Places and theatres"
               renderHeader={false}
               isMobile={isMobile}
-              onClose={vm.actions.handleBlur}
+              // Mobile: latched visibility — see the note on the place panel above.
+              onClose={mobileSheetViewport ? handleMobileSheetClose : vm.actions.handleBlur}
+              sheetSearchInput={sheetSearchInput}
             >
               {vm.whereFieldMode === "empty" && !vm.theatresFirst ? (
                 <View
@@ -1227,6 +1345,25 @@ const styles = StyleSheet.create({
     paddingBottom: 8,
     fontSize: 12,
     color: colors.textMuted,
+  },
+  // In-sheet search field (mobile): same bordered-field chrome as the opener
+  // input, pinned above the option list inside the sheet body.
+  sheetSearchWrap: {
+    paddingHorizontal: 12,
+    paddingTop: 12,
+    paddingBottom: 4,
+  },
+  sheetSearchInput: {
+    borderWidth: 1,
+    borderColor: colors.borderStrong,
+    borderRadius: 10,
+    backgroundColor: colors.cardMutedBg,
+    paddingVertical: 9,
+    paddingHorizontal: 12,
+    fontSize: 15,
+    fontWeight: "500",
+    fontFamily: fontFamily.bodyMedium,
+    color: colors.textPrimary,
   },
   item: {
     justifyContent: "center",

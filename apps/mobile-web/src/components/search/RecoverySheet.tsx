@@ -36,6 +36,7 @@ export function RecoverySheet(): ReactElement | null {
         ? ({
             role: "dialog",
             "aria-label": "Seat recovery options",
+            "aria-labelledby": "recovery-sheet-title",
             "aria-modal": "true",
           } as unknown as Record<string, unknown>)
         : {})}
@@ -49,7 +50,14 @@ export function RecoverySheet(): ReactElement | null {
       />
       <View style={vm.isMobile ? styles.sheetPanel : styles.modalPanel}>
         <View style={styles.headerRow}>
-          <AppText family="display" weight="700" style={styles.title}>
+          <AppText
+            family="display"
+            weight="700"
+            style={styles.title}
+            {...(Platform.OS === "web"
+              ? ({ id: "recovery-sheet-title" } as unknown as Record<string, unknown>)
+              : {})}
+          >
             Those seats were just taken
           </AppText>
           <Pressable

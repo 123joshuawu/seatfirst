@@ -16,6 +16,13 @@ export interface SheetProps {
   open: boolean;
   onClose: () => void;
   ariaLabel: string;
+  /**
+   * Optional id of the visible title element (see `Sheet.Header titleId`).
+   * When provided the dialog root references it via `aria-labelledby`
+   * (standard WAI-ARIA dialog-naming pattern; it takes precedence over the
+   * `aria-label` fallback, which is kept for AT that ignore labelledby).
+   */
+  labelledById?: string;
   maxWidth?: number;
   children: ReactNode;
 }
@@ -52,6 +59,7 @@ function SheetBase({
   open,
   onClose,
   ariaLabel,
+  labelledById,
   maxWidth = 440,
   children,
 }: SheetProps): ReactElement | null {
@@ -76,10 +84,12 @@ function SheetBase({
       <View
         style={styles.overlay}
         {...(Platform.OS === "web"
-          ? ({ role: "dialog", "aria-modal": "true", "aria-label": ariaLabel } as unknown as Record<
-              string,
-              unknown
-            >)
+          ? ({
+              role: "dialog",
+              "aria-modal": "true",
+              "aria-label": ariaLabel,
+              ...(labelledById ? { "aria-labelledby": labelledById } : {}),
+            } as unknown as Record<string, unknown>)
           : {})}
       >
         <Pressable
@@ -102,15 +112,28 @@ function SheetHeader({
   title,
   onClose,
   subtitle,
+  titleId,
 }: {
   title: string;
   onClose: () => void;
   subtitle?: string;
+  /**
+   * Optional DOM id for the visible title; pass the same value as the
+   * parent `Sheet labelledById` so AT announces the dialog by its title.
+   */
+  titleId?: string;
 }): ReactElement {
   return (
     <View style={styles.headerRow}>
       <View style={styles.headerTextWrap}>
-        <AppText family="display" weight="700" style={styles.title}>
+        <AppText
+          family="display"
+          weight="700"
+          style={styles.title}
+          {...(Platform.OS === "web" && titleId
+            ? ({ id: titleId } as unknown as Record<string, unknown>)
+            : {})}
+        >
           {title}
         </AppText>
         {subtitle ? (

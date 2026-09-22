@@ -1239,3 +1239,93 @@ describe("useSubmitSearchViewModel facet suppression on cold dates (UI42.8)", ()
     expect(date?.axes).toEqual([{ kind: "DATE", candidates: ["2026-09-05", "2026-09-06"] }]);
   });
 });
+
+describe("useSubmitSearchViewModel theatreCountLoading (QA BUG-04 follow-up)", () => {
+  const EMPTY_FACET = {
+    data: null,
+    countsMap: new Map<string, { count: number; coldTheatreCount: number }>(),
+    countsRecord: {},
+    isLoading: false,
+    error: null,
+  };
+
+  /** Two theatres selected, five cached showtimes on the selected date (warm scope). */
+  function setTwoTheatreWarmForm(): void {
+    const utc = showtimeInTwoDays();
+    setMovieSet([
+      { showDateTimeUtc: utc, formatCode: "imax" },
+      { showDateTimeUtc: utc, formatCode: "imax" },
+      { showDateTimeUtc: utc, formatCode: null },
+      { showDateTimeUtc: utc, formatCode: null },
+      { showDateTimeUtc: utc, formatCode: null },
+    ]);
+    useSeatfirstStore.setState({
+      serverCoverageSpec: null,
+      selectedTheatres: [
+        { id: "th_1", providerId: "amc", name: "AMC One", city: "SF", distanceKm: 1.1 },
+        { id: "th_2", providerId: "amc", name: "AMC Two", city: "SF", distanceKm: 2.2 },
+      ],
+      movie: "Dune",
+      selectedMovieId: "mv_dune",
+      selectedDates: [laDateOf(utc)],
+      timeOfDay: "All times",
+      selectedBands: [],
+      isCustom: true,
+      whenPreset: "Custom",
+      formatPref: "any",
+    });
+  }
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it("is true while the FORMAT facet fetch for the current selection is in flight", () => {
+    // Stale-while-revalidating: the previous response's ANY entry (1 warm of
+    // 2 theatres) is still rendered while the new fetch resolves.
+    mockFacetCounts.mockImplementation((input: UseFacetCountsInput | null) => {
+      if (input?.axes?.[0]?.kind === "FORMAT") {
+        return {
+          ...EMPTY_FACET,
+          countsMap: new Map([["ANY", { count: 5, coldTheatreCount: 1 }]]),
+          isLoading: true,
+        };
+      }
+      return { ...EMPTY_FACET, countsMap: new Map() };
+    });
+    setTwoTheatreWarmForm();
+    const vm = captureVm();
+    expect(vm.theatreCountLoading).toBe(true);
+    // Settled semantics are untouched: the stale numeric label still computes
+    // exactly as before — the flag layers on top rather than rewriting it.
+    expect(vm.submitButtonLabel).toBe("Search 5 showtimes across 1 theatre");
+  });
+
+  it("is false once the FORMAT facet fetch resolves", () => {
+    mockFacetCounts.mockImplementation((input: UseFacetCountsInput | null) => {
+      if (input?.axes?.[0]?.kind === "FORMAT") {
+        return {
+          ...EMPTY_FACET,
+          countsMap: new Map([["ANY", { count: 5, coldTheatreCount: 1 }]]),
+          isLoading: false,
+        };
+      }
+      return { ...EMPTY_FACET, countsMap: new Map() };
+    });
+    setTwoTheatreWarmForm();
+    const vm = captureVm();
+    expect(vm.theatreCountLoading).toBe(false);
+    expect(vm.submitButtonLabel).toBe("Search 5 showtimes across 1 theatre");
+  });
+
+  it("stays false without a movie selection even while a facet fetch reports loading", () => {
+    // A blanket in-flight fetch must not flip the flag on the
+    // "Choose a movie" branch, which has no stale-count problem.
+    mockFacetCounts.mockImplementation(() => ({ ...EMPTY_FACET, isLoading: true }));
+    setTwoTheatreWarmForm();
+    useSeatfirstStore.setState({ movie: "", selectedMovieId: null });
+    const vm = captureVm();
+    expect(vm.theatreCountLoading).toBe(false);
+    expect(vm.submitButtonLabel).toBe("Choose a movie");
+  });
+});

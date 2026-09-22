@@ -285,7 +285,8 @@ describe("UI5.2 TheaterField / MovieField / ChipRow / PopoverList inert while lo
     }) as unknown as Record<string, unknown>;
     const str = JSON.stringify(el);
     expect(str).toContain("Search or browse what's playing");
-    expect(str).toContain("Choose where to see movie availability.");
+    expect(str).toContain("Choose a theatre first to see movie availability.");
+    expect(str).toContain("Choose a theatre");
     expect(str).toContain("combobox");
   });
 

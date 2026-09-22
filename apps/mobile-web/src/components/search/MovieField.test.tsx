@@ -5,6 +5,7 @@ import { describe, expect, it, vi } from "vitest";
 import { MovieField } from "./MovieField";
 import { AppText } from "@/components/core/AppText";
 import { PopoverList } from "./PopoverList";
+import { useSeatfirstStore } from "@/store/seatfirstStore";
 
 function createRenderer(el: React.ReactElement): TestRenderer.ReactTestRenderer {
   let r!: TestRenderer.ReactTestRenderer;
@@ -1009,6 +1010,32 @@ describe("MovieField combobox keyboard navigation", () => {
     expect(onBlur).toHaveBeenCalledTimes(1);
     expect(renderer.root.findByType(TextInput).props["aria-expanded"]).toBe(false);
     expect(renderer.root.findAll((node) => node.props.id === "movie-listbox")).toHaveLength(0);
+    renderer.unmount();
+  });
+});
+
+describe("MovieField no-theatre empty state", () => {
+  it("renders a Choose a theatre CTA that closes the popover and focuses WHERE", () => {
+    const onBlur = vi.fn();
+    useSeatfirstStore.setState({ whereFocused: false });
+    const renderer = createRenderer(
+      React.createElement(
+        MovieField,
+        ui42Props({ theaterConfirmed: false, movieFocused: true, onBlur }),
+      ),
+    );
+    const jsonStr = JSON.stringify(renderer.toJSON());
+    expect(jsonStr).toContain("Choose a theatre first to see movie availability.");
+    expect(jsonStr).toContain("Choose a theatre");
+    const cta = renderer.root.find(
+      (node) => node.props.accessibilityLabel === "Choose a theatre",
+    );
+    TestRenderer.act(() => {
+      (cta.props as unknown as { onPress: () => void }).onPress();
+    });
+    expect(onBlur).toHaveBeenCalledTimes(1);
+    expect(useSeatfirstStore.getState().whereFocused).toBe(true);
+    useSeatfirstStore.setState({ whereFocused: false });
     renderer.unmount();
   });
 });

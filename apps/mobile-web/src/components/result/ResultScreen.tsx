@@ -246,7 +246,7 @@ export function ResultScreen({
           <Badge
             label="No exact match"
             background={colors.noExactBg}
-            color={colors.noExactText}
+            color={colors.amberTagTextContrast}
             variant="eyebrow"
           />
           <SecondaryButton

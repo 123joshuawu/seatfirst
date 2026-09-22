@@ -128,6 +128,7 @@ export function AutocompletePopover({
   scrollMaxHeight,
   isMobile,
   onClose,
+  sheetSearchInput,
 }: {
   id: string;
   header: string;
@@ -148,7 +149,16 @@ export function AutocompletePopover({
   isMobile?: boolean | undefined;
   /** Dismiss handler: sheet scrim + Close button, Escape (via `Sheet`), and outside-pointerdown. */
   onClose?: (() => void) | undefined;
-}): ReactElement {
+  /**
+   * Optional search field rendered at the top of the mobile sheet, above the
+   * option list. Mobile sheets trap focus (RNW `ModalFocusTrap` moves focus
+   * inside on mount), so the opener input outside the sheet cannot stay the
+   * typing surface — the caller binds this to the same query/filter state as
+   * its field input. Desktop ignores it.
+   */
+  sheetSearchInput?: ReactNode;
+}
+): ReactElement {
   const { width } = useWindowDimensions();
   const showAsSheet = isMobile ?? width < AUTOCOMPLETE_MOBILE_BREAKPOINT;
   // Live node for the outside-pointerdown check: the inline popover itself on
@@ -179,9 +189,21 @@ export function AutocompletePopover({
     // the sheet body itself is non-scrolling, so the cap still bounds the
     // option list (desktop behavior untouched).
     const handleClose = onClose ?? (() => {});
+    // Dialog naming: the visible header title carries `${id}-title`, referenced
+    // from the dialog root via `aria-labelledby` (WAI-ARIA dialog pattern).
+    // The inner scroller is the listbox/region/alert the caller's input names
+    // in `aria-controls` (it carries the caller's exact `id`): previously the
+    // mobile branch only stamped `${id}-panel` on the outer wrapper, leaving
+    // `aria-controls="where-listbox"` (and `"where-place-panel"`) dangling.
     return (
-      <Sheet open={true} onClose={handleClose} ariaLabel={`${ariaLabel} dialog`} maxWidth={400}>
-        <Sheet.Header title={header} onClose={handleClose} />
+      <Sheet
+        open={true}
+        onClose={handleClose}
+        ariaLabel={`${ariaLabel} dialog`}
+        labelledById={`${id}-title`}
+        maxWidth={400}
+      >
+        <Sheet.Header title={header} onClose={handleClose} titleId={`${id}-title`} />
         <Sheet.Body scrollable={false}>
           <View
             ref={popoverRef}
@@ -190,6 +212,7 @@ export function AutocompletePopover({
               ? ({ role: "document", id: `${id}-panel` } as unknown as Record<string, unknown>)
               : {})}
           >
+            {sheetSearchInput}
             <ScrollView
               style={[
                 styles.sheetList,
@@ -198,6 +221,13 @@ export function AutocompletePopover({
               keyboardShouldPersistTaps="handled"
               nestedScrollEnabled
               showsVerticalScrollIndicator
+              {...(Platform.OS === "web"
+                ? ({
+                    role: alert ? "alert" : role,
+                    id,
+                    "aria-label": ariaLabel,
+                  } as unknown as Record<string, unknown>)
+                : {})}
             >
               {children}
             </ScrollView>
@@ -233,6 +263,9 @@ export function AutocompletePopover({
         keyboardShouldPersistTaps="handled"
         nestedScrollEnabled
         showsVerticalScrollIndicator
+        {...(Platform.OS === "web"
+          ? ({ role: "presentation" } as unknown as Record<string, unknown>)
+          : {})}
       >
         {children}
       </ScrollView>
@@ -503,6 +536,12 @@ export interface AutocompleteContentProps {
   scrollMaxHeight?: number | undefined;
   /** Renders the popup itself as an alert instead of a listbox. */
   alert?: boolean | undefined;
+  /**
+   * Optional search field rendered at the top of the mobile sheet, above the
+   * option list (same convention as the legacy `AutocompletePopover`).
+   * Desktop ignores it.
+   */
+  sheetSearchInput?: ReactNode;
   children: ReactNode;
 }
 
@@ -521,6 +560,7 @@ function AutocompleteContent({
   onClose,
   scrollMaxHeight,
   alert = false,
+  sheetSearchInput,
   children,
 }: AutocompleteContentProps): ReactElement | null {
   const ctx = useAutocompleteContext();
@@ -536,8 +576,20 @@ function AutocompleteContent({
   if (!ctx.isOpen) return null;
   if (showAsSheet) {
     return (
-      <Sheet open={true} onClose={handleClose} ariaLabel={`${labelledBy} dialog`} maxWidth={400}>
-        {header ? <Sheet.Header title={header} onClose={handleClose} /> : null}
+      <Sheet
+        open={true}
+        onClose={handleClose}
+        ariaLabel={`${labelledBy} dialog`}
+        labelledById={`${ctx.listId}-title`}
+        maxWidth={400}
+      >
+        {header ? (
+          <Sheet.Header
+            title={header}
+            onClose={handleClose}
+            titleId={`${ctx.listId}-title`}
+          />
+        ) : null}
         <Sheet.Body scrollable={false}>
           <View
             ref={popoverRef}
@@ -549,6 +601,7 @@ function AutocompleteContent({
                 >)
               : {})}
           >
+            {sheetSearchInput}
             <ScrollView
               style={[
                 styles.sheetList,
@@ -599,6 +652,9 @@ function AutocompleteContent({
         keyboardShouldPersistTaps="handled"
         nestedScrollEnabled
         showsVerticalScrollIndicator
+        {...(Platform.OS === "web"
+          ? ({ role: "presentation" } as unknown as Record<string, unknown>)
+          : {})}
       >
         {children}
       </ScrollView>

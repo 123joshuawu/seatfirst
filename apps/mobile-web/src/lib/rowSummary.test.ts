@@ -304,8 +304,8 @@ describe("summarizePlacement", () => {
     const group = mkGroup({ rows: 2, columns: 5, seatNames: {} });
     const hit = mkHit(0, 3);
     const res = summarizePlacement(group, hit, 1);
-    // Should be Row A, Seats 4-4 for single seat (partySize 1)
-    expect(res.rowSeatLabel).toBe("Row A, Seats 4-4");
+    // Singular, no range for a single seat (partySize 1).
+    expect(res.rowSeatLabel).toBe("Row A, Seat 4");
   });
 });
 

@@ -374,12 +374,16 @@ export function ShowtimeRow({
         const rowLetter = String.fromCharCode(65 + canonical.row);
         const firstSeat = canonical.startCol + 1;
         const lastSeat = canonical.startCol + partySize;
+        const seatLabel =
+          firstSeat === lastSeat
+            ? `Row ${rowLetter}, Seat ${firstSeat}`
+            : `Row ${rowLetter}, Seats ${firstSeat}-${lastSeat}`;
         const cols = group.columns ?? 20;
         const rows = (group as unknown as { rows?: number }).rows ?? 10;
         const centred = Math.abs(canonical.startCol + partySize / 2 - cols / 2) < 2;
         const third =
           canonical.row < rows / 3 ? "front" : canonical.row < (2 * rows) / 3 ? "middle" : "back";
-        placementLine = `Row ${rowLetter}, Seats ${firstSeat}-${lastSeat} · ${centred ? "centered" : "off-centre"} · ${third} third`;
+        placementLine = `${seatLabel} · ${centred ? "centered" : "off-centre"} · ${third} third`;
       }
       highlightRange = {
         row: canonical.row,
@@ -403,16 +407,19 @@ export function ShowtimeRow({
             const summary = summarizePlacement(group, best, partySize);
             placementLine = `${summary.rowSeatLabel} · ${summary.centered ? "centered" : "off-centre"} · ${summary.third} third`;
           } catch {
-            // Fallback when group lacks full geometry (e.g., minimal test fixtures): derive locally
             const rowLetter = String.fromCharCode(65 + best.row);
             const firstSeat = best.startCol + 1;
             const lastSeat = best.startCol + partySize;
+            const seatLabel =
+              firstSeat === lastSeat
+                ? `Row ${rowLetter}, Seat ${firstSeat}`
+                : `Row ${rowLetter}, Seats ${firstSeat}-${lastSeat}`;
             const cols = group.columns ?? 20;
             const rows = (group as unknown as { rows?: number }).rows ?? 10;
             const centred = Math.abs(best.startCol + partySize / 2 - cols / 2) < 2;
             const third =
               best.row < rows / 3 ? "front" : best.row < (2 * rows) / 3 ? "middle" : "back";
-            placementLine = `Row ${rowLetter}, Seats ${firstSeat}-${lastSeat} · ${centred ? "centered" : "off-centre"} · ${third} third`;
+            placementLine = `${seatLabel} · ${centred ? "centered" : "off-centre"} · ${third} third`;
           }
           highlightRange = {
             row: best.row,
@@ -494,7 +501,7 @@ export function ShowtimeRow({
                 key={tag}
                 label={tag}
                 background={colors.amberTagBg}
-                color={colors.amberTagText}
+                color={colors.amberTagTextContrast}
               />
             ))}
           </View>
@@ -505,7 +512,7 @@ export function ShowtimeRow({
               {placementLine}
             </AppText>
           ) : effectiveVariant === "hit" ? (
-            <Badge label={text} background={colors.amberTagBg} color={colors.amberTagText} />
+            <Badge label={text} background={colors.amberTagBg} color={colors.amberTagTextContrast} />
           ) : effectiveVariant === "miss" ? (
             <AppText weight="400" style={styles.missText}>
               {statusText}
@@ -739,7 +746,7 @@ const styles = StyleSheet.create({
   },
   topPickBadgeText: {
     fontSize: 10,
-    color: colors.amberTagText,
+    color: colors.amberTagTextContrast,
     letterSpacing: 1.1,
     textTransform: "uppercase",
   },

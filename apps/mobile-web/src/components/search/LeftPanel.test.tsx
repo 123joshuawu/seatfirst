@@ -480,3 +480,23 @@ describe("LeftPanel companion empty state (UI38)", () => {
     renderer.unmount();
   });
 });
+
+describe("LeftPanel wordmark (mobile branding refactor)", () => {
+  it("still renders the Seatfirst wordmark via the shared Wordmark component", () => {
+    setMockVm(makeMockVm({ showLeftCol: true, isMobile: false }));
+    let renderer!: TestRenderer.ReactTestRenderer;
+    TestRenderer.act(() => {
+      renderer = TestRenderer.create(React.createElement(LeftPanel, null));
+    });
+    const marks = renderer.root
+      .findAllByType(AppText)
+      .filter((n) => n.props.children === "Seatfirst");
+    expect(marks).toHaveLength(1);
+    renderer.unmount();
+  });
+
+  it("returns null when showLeftCol hides the panel (mobile search form)", () => {
+    setMockVm(makeMockVm({ showLeftCol: false, isMobile: true }));
+    expect(LeftPanel()).toBeNull();
+  });
+});

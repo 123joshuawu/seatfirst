@@ -148,7 +148,7 @@ export function ChipRow({
                   weight={chip.active ? "700" : "600"}
                   style={{
                     fontSize: 14,
-                    color: chip.active ? colors.amberTagText : colors.textPrimary,
+                    color: chip.active ? colors.amberTagTextContrast : colors.textPrimary,
                   }}
                 >
                   {chipLabel}
@@ -207,7 +207,7 @@ export function ChipRow({
                     weight={chip.active ? "600" : "500"}
                     style={{
                       fontSize: 13,
-                      color: chip.active ? colors.amberTagText : colors.textPrimary,
+                      color: chip.active ? colors.amberTagTextContrast : colors.textPrimary,
                     }}
                   >
                     {chipLabel}

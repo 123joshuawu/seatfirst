@@ -68,7 +68,8 @@ export function percentFull(grid: RowDotGrid): number | null {
 
 export interface PlacementSummary {
   /** "Row {letter}, Seats {first}-{last}" from a groupHits entry, 1-indexed seat numbers
-   *  within its row. Prefers real seatNames values when present for first/last,
+   *  within its row — or singular "Row {letter}, Seat {first}" when first === last
+   *  (partySize 1). Prefers real seatNames values when present for first/last,
    *  falling back to startCol+1 / startCol+partySize. */
   rowSeatLabel: string;
   centered: boolean; // reuses |startCol + partySize/2 - columns/2| < 2 (ShowtimeRow.deriveStatusText centre rule generalized)
@@ -81,7 +82,8 @@ export interface PlacementSummary {
  *   Cites: packages/core/src/group-assembly.ts:258-259 — RUN groups fix rowSpan=1 and memberCols=partySize,
  *   so rowSpan is NOT a seat count.
  * - rowSeatLabel is 1-indexed "Row {letter}, Seats {first}-{last}" — uses seatNames[cell] when
- *   present for first/last cells, otherwise synthetic startCol+1.
+ *   present for first/last cells, otherwise synthetic startCol+1; singular "Row {letter},
+ *   Seat {first}" when first === last (partySize 1).
  *   Cites: result-contracts.ts seatNames + presentation.ts formatPlacementLabel analogy.
  * - centered via run's true centre column vs group.columns/2, threshold <2 consistent with
  *   apps/mobile-web/src/components/search/ShowtimeRow.tsx deriveStatusText (`|startCol+1 - columns/2| <2`).
@@ -128,7 +130,10 @@ export function summarizePlacement(
     firstStr = String(hit.startCol + 1);
     lastStr = String(hit.startCol + partySize);
   }
-  const rowSeatLabel = `Row ${rowLetter}, Seats ${firstStr}-${lastStr}`;
+  const rowSeatLabel =
+    firstStr === lastStr
+      ? `Row ${rowLetter}, Seat ${firstStr}`
+      : `Row ${rowLetter}, Seats ${firstStr}-${lastStr}`;
 
   // Centered: run's true centre vs columns/2, threshold <2.
   // Cites ShowtimeRow.deriveStatusText centre rule (|startCol+1 - columns/2| <2) generalized to partySize/2.

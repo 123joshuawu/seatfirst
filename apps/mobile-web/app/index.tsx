@@ -3,6 +3,7 @@ import type { RecoveryOption } from "@seatfirst/core";
 import { ScrollView, View, useWindowDimensions } from "react-native";
 import { colors } from "@/theme/colors";
 import { LeftPanel } from "@/components/search/LeftPanel";
+import { Wordmark } from "@/components/search/Wordmark";
 import { useSeatfirstStore } from "@/store/seatfirstStore";
 import { SearchForm } from "@/components/search/SearchForm";
 import { CollapsedFormBar } from "@/components/search/CollapsedFormBar";
@@ -69,11 +70,19 @@ export default function SeatfirstScreen() {
       {isStackedLayout ? (
         showResults ? (
           <View style={{ width: "100%" as const, maxWidth: 920, gap: 16 }}>
+            {/* QA mobile branding: the stacked results branch never mounts
+                LeftPanel, so render the standalone wordmark on mobile
+                viewports (purely additive — wider viewports untouched). */}
+            {isMobile ? <Wordmark /> : null}
             {isFormCollapsed ? <CollapsedFormBar /> : null}
             <ResultScreen startSearch={startSearch} />
           </View>
         ) : (
           <View style={styles.notResultRowMobile}>
+            {/* QA mobile branding: on mobile viewports LeftPanel hides itself
+                (showLeftCol) behind the search form, so render the standalone
+                wordmark above it. Desktop/tablet render LeftPanel's own. */}
+            {isMobile ? <Wordmark /> : null}
             <LeftPanel
               focusedRecoveryOption={activeRecoveryOption}
               isReplacement={screen === "replacement"}

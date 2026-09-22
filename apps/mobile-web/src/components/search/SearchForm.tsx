@@ -207,12 +207,22 @@ export function SearchForm({ startSearch }: SearchFormProps = {}): ReactElement 
               {vm.zeroMatchDiagnosis}
             </AppText>
           ) : null}
+          {/* QA follow-up (BUG-04): while the FORMAT facet fetch for the
+          current theatre selection is still resolving, the numeric CTA could
+          transiently undercount newly-added theatres (stale-while-
+          revalidating counts). Show the PrimaryButton's built-in loading
+          affordance (inline spinner + busy state) with a non-numeric label
+          instead of a possibly-stale number. */}
           <PrimaryButton
-            label={vm.submitButtonLabel}
+            label={vm.theatreCountLoading ? "Checking more theatres…" : vm.submitButtonLabel}
             onPress={actions.startSearch}
             disabled={
-              vm.searchDisabled || (isLocked && !hasServerSearch) || vm.capacityGateBusy === true
+              vm.searchDisabled ||
+              (isLocked && !hasServerSearch) ||
+              vm.capacityGateBusy === true ||
+              vm.theatreCountLoading === true
             }
+            loading={vm.theatreCountLoading === true}
           />
         </View>
       ) : (
@@ -223,12 +233,18 @@ export function SearchForm({ startSearch }: SearchFormProps = {}): ReactElement 
               {vm.zeroMatchDiagnosis}
             </AppText>
           ) : null}
+          {/* QA follow-up (BUG-04): same transient loading affordance as the
+          mobile sticky CTA above — never a possibly-stale numeric label. */}
           <PrimaryButton
-            label={vm.submitButtonLabel}
+            label={vm.theatreCountLoading ? "Checking more theatres…" : vm.submitButtonLabel}
             onPress={actions.startSearch}
             disabled={
-              vm.searchDisabled || (isLocked && !hasServerSearch) || vm.capacityGateBusy === true
+              vm.searchDisabled ||
+              (isLocked && !hasServerSearch) ||
+              vm.capacityGateBusy === true ||
+              vm.theatreCountLoading === true
             }
+            loading={vm.theatreCountLoading === true}
           />
         </>
       )}

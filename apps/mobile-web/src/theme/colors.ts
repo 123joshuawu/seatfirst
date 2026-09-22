@@ -35,6 +35,10 @@ export const colors = {
   indigoTagText: "#37409a",
   amberTagBg: "#f6e6d6",
   amberTagText: "#a75f1f",
+  // ADR-0068: darker amber text for normal-size text on amberTagBg/brandSoft
+  // (#974d0e on #f6e6d6 = 5.20:1, clears WCAG AA 4.5:1; amberTagText at 4.00:1
+  // does not). amberTagText stays for large-text/dark-surface uses per the ADR.
+  amberTagTextContrast: "#974d0e",
 
   statusGreen: "#3d8361",
 

@@ -3,6 +3,7 @@ import { Image, StyleSheet, Platform, Pressable, View } from "react-native";
 import { colors } from "@/theme/colors";
 import { fontFamily } from "@/theme/typography";
 import type { MovieSuggestion } from "@/hooks/viewModels/useSubmitSearchViewModel";
+import { useSeatfirstStore } from "@/store/seatfirstStore";
 import { AppText } from "@/components/core/AppText";
 import { Autocomplete } from "@/components/core/Autocomplete";
 import { EyebrowLabel } from "@/components/core/EyebrowLabel";
@@ -564,10 +565,24 @@ export function MovieField({
             onClose={onBlur}
           >
             {!theaterConfirmed ? (
-              <View style={styles.item}>
+              <View style={[styles.item, styles.emptyStateColumn]}>
                 <AppText style={styles.itemLabelMuted}>
-                  Choose where to see movie availability.
+                  Choose a theatre first to see movie availability.
                 </AppText>
+                <Pressable
+                  onPress={() => {
+                    onBlur();
+                    useSeatfirstStore.getState().onWhereFocus();
+                  }}
+                  accessibilityRole="button"
+                  accessibilityLabel="Choose a theatre"
+                  accessibilityHint="Opens the theatre picker"
+                  focusable
+                >
+                  <AppText weight="600" style={styles.footerLink}>
+                    Choose a theatre
+                  </AppText>
+                </Pressable>
               </View>
             ) : movieSearchError ? (
               <View style={styles.item}>
@@ -587,7 +602,12 @@ export function MovieField({
               <>
                 {liveScheduleStatusBlock}
                 {showCustomEventRow ? (
-                  <View style={styles.moviesGrid}>
+                  <View
+                    style={styles.moviesGrid}
+                    {...(Platform.OS === "web"
+                      ? ({ role: "presentation" } as unknown as Record<string, unknown>)
+                      : {})}
+                  >
                     <MovieCustomEventRow
                       query={trimmedEventQuery}
                       onSelect={onSelectCustomEvent}
@@ -597,13 +617,22 @@ export function MovieField({
                   </View>
                 ) : null}
                 {hasLiveGroup ? (
-                  <View>
+                  <View
+                    {...(Platform.OS === "web"
+                      ? ({ role: "presentation" } as unknown as Record<string, unknown>)
+                      : {})}
+                  >
                     {hasNowPlayingGroup ? (
                       <AppText weight="700" style={styles.sectionHeader} accessibilityRole="header">
                         {liveScheduleHeader}
                       </AppText>
                     ) : null}
-                    <View style={styles.moviesGrid}>
+                    <View
+                      style={styles.moviesGrid}
+                      {...(Platform.OS === "web"
+                        ? ({ role: "presentation" } as unknown as Record<string, unknown>)
+                        : {})}
+                    >
                       {liveScheduleMovies.map((item, index) => (
                         <MovieCountedCard
                           key={getMovieComboboxItemKey("live-schedule", item.label, index)}
@@ -620,13 +649,23 @@ export function MovieField({
                   </View>
                 ) : null}
                 {hasNowPlayingGroup ? (
-                  <View style={hasLiveGroup ? styles.sectionDivider : undefined}>
+                  <View
+                    style={hasLiveGroup ? styles.sectionDivider : undefined}
+                    {...(Platform.OS === "web"
+                      ? ({ role: "presentation" } as unknown as Record<string, unknown>)
+                      : {})}
+                  >
                     {hasLiveGroup ? (
                       <AppText weight="700" style={styles.sectionHeader} accessibilityRole="header">
                         {nowPlayingHeader}
                       </AppText>
                     ) : null}
-                    <View style={styles.moviesGrid}>
+                    <View
+                      style={styles.moviesGrid}
+                      {...(Platform.OS === "web"
+                        ? ({ role: "presentation" } as unknown as Record<string, unknown>)
+                        : {})}
+                    >
                       {nowPlayingSuggestions.map((item, index) => (
                         <MoviePlainCard
                           key={getMovieComboboxItemKey("now-playing", item.label, index)}
@@ -643,7 +682,12 @@ export function MovieField({
               <>
                 {liveScheduleStatusBlock}
                 {showCustomEventRow ? (
-                  <View style={styles.moviesGrid}>
+                  <View
+                    style={styles.moviesGrid}
+                    {...(Platform.OS === "web"
+                      ? ({ role: "presentation" } as unknown as Record<string, unknown>)
+                      : {})}
+                  >
                     <MovieCustomEventRow
                       query={trimmedEventQuery}
                       onSelect={onSelectCustomEvent}
@@ -786,7 +830,7 @@ const styles = StyleSheet.create({
     fontSize: 11,
   },
   badgeTextAmc: {
-    color: colors.amberTagText,
+    color: colors.amberTagTextContrast,
   },
   badgeTextUnverified: {
     color: colors.textTertiary,
@@ -868,5 +912,9 @@ const styles = StyleSheet.create({
   },
   itemDisabled: {
     opacity: 0.5,
+  },
+  emptyStateColumn: {
+    flexDirection: "column",
+    alignItems: "flex-start",
   },
 });
