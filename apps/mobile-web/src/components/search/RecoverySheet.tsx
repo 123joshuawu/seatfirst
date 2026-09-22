@@ -54,9 +54,7 @@ export function RecoverySheet(): ReactElement | null {
             family="display"
             weight="700"
             style={styles.title}
-            {...(Platform.OS === "web"
-              ? ({ id: "recovery-sheet-title" } as unknown as Record<string, unknown>)
-              : {})}
+            {...(Platform.OS === "web" ? { id: "recovery-sheet-title" } : {})}
           >
             Those seats were just taken
           </AppText>

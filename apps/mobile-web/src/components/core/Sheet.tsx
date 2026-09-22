@@ -130,9 +130,7 @@ function SheetHeader({
           family="display"
           weight="700"
           style={styles.title}
-          {...(Platform.OS === "web" && titleId
-            ? ({ id: titleId } as unknown as Record<string, unknown>)
-            : {})}
+          {...(Platform.OS === "web" && titleId ? { id: titleId } : {})}
         >
           {title}
         </AppText>

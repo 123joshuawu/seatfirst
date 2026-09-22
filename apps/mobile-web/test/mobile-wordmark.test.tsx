@@ -1,4 +1,5 @@
 import TestRenderer, { act } from "react-test-renderer";
+import type * as ReactNative from "react-native";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { AppText } from "@/components/core/AppText";
 import { useSeatfirstStore } from "@/store/seatfirstStore";
@@ -24,7 +25,7 @@ vi.mock("@/hooks/useSearchSubscription", () => ({
 
 const widthState = vi.hoisted(() => ({ width: 390 }));
 vi.mock("react-native", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("react-native")>();
+  const actual = await importOriginal<typeof ReactNative>();
   return {
     ...actual,
     useWindowDimensions: () => ({
