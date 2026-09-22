@@ -61,9 +61,7 @@ function renderScreen(): TestRenderer.ReactTestRenderer {
 
 /** The shared mobile branding header renders the "Seatfirst" wordmark text. */
 function wordmarkNodes(root: TestRenderer.ReactTestInstance): TestRenderer.ReactTestInstance[] {
-  return root
-    .findAllByType(AppText)
-    .filter((n) => n.props.children === "Seatfirst");
+  return root.findAllByType(AppText).filter((n) => n.props.children === "Seatfirst");
 }
 
 describe("SeatfirstScreen mobile branding header (QA: missing SEATFIRST wordmark)", () => {

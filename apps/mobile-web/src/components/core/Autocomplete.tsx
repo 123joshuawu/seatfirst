@@ -157,8 +157,7 @@ export function AutocompletePopover({
    * its field input. Desktop ignores it.
    */
   sheetSearchInput?: ReactNode;
-}
-): ReactElement {
+}): ReactElement {
   const { width } = useWindowDimensions();
   const showAsSheet = isMobile ?? width < AUTOCOMPLETE_MOBILE_BREAKPOINT;
   // Live node for the outside-pointerdown check: the inline popover itself on
@@ -584,11 +583,7 @@ function AutocompleteContent({
         maxWidth={400}
       >
         {header ? (
-          <Sheet.Header
-            title={header}
-            onClose={handleClose}
-            titleId={`${ctx.listId}-title`}
-          />
+          <Sheet.Header title={header} onClose={handleClose} titleId={`${ctx.listId}-title`} />
         ) : null}
         <Sheet.Body scrollable={false}>
           <View

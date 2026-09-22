@@ -1831,9 +1831,7 @@ describe("TheaterField Where — mobile sheet focus latch (render-loop fix)", ()
       expect(str).toContain("AMC Metreon 16");
       expect(str).not.toContain("AMC Kabuki 8");
       // The input names the same listbox the opener input controls.
-      expect(
-        (search.props as Record<string, unknown>)["aria-controls"],
-      ).toBe("where-listbox");
+      expect((search.props as Record<string, unknown>)["aria-controls"]).toBe("where-listbox");
     } finally {
       renderer.unmount();
     }

@@ -512,7 +512,11 @@ export function ShowtimeRow({
               {placementLine}
             </AppText>
           ) : effectiveVariant === "hit" ? (
-            <Badge label={text} background={colors.amberTagBg} color={colors.amberTagTextContrast} />
+            <Badge
+              label={text}
+              background={colors.amberTagBg}
+              color={colors.amberTagTextContrast}
+            />
           ) : effectiveVariant === "miss" ? (
             <AppText weight="400" style={styles.missText}>
               {statusText}

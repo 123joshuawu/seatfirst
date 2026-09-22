@@ -1027,9 +1027,7 @@ describe("MovieField no-theatre empty state", () => {
     const jsonStr = JSON.stringify(renderer.toJSON());
     expect(jsonStr).toContain("Choose a theatre first to see movie availability.");
     expect(jsonStr).toContain("Choose a theatre");
-    const cta = renderer.root.find(
-      (node) => node.props.accessibilityLabel === "Choose a theatre",
-    );
+    const cta = renderer.root.find((node) => node.props.accessibilityLabel === "Choose a theatre");
     TestRenderer.act(() => {
       (cta.props as unknown as { onPress: () => void }).onPress();
     });

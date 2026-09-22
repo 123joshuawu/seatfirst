@@ -1,11 +1,21 @@
 import React from "react";
 import type { ReactElement } from "react";
-import { Platform, Pressable, StyleSheet, TextInput, useWindowDimensions, View } from "react-native";
+import {
+  Platform,
+  Pressable,
+  StyleSheet,
+  TextInput,
+  useWindowDimensions,
+  View,
+} from "react-native";
 import { colors } from "@/theme/colors";
 import { fontFamily } from "@/theme/typography";
 import { AppText } from "@/components/core/AppText";
 import { Checkbox } from "@/components/core/Checkbox";
-import { AutocompletePopover, AUTOCOMPLETE_MOBILE_BREAKPOINT } from "@/components/core/Autocomplete";
+import {
+  AutocompletePopover,
+  AUTOCOMPLETE_MOBILE_BREAKPOINT,
+} from "@/components/core/Autocomplete";
 import { EyebrowLabel } from "@/components/core/EyebrowLabel";
 import {
   useWhereFieldViewModel,
